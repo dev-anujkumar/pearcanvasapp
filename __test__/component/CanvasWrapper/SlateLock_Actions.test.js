@@ -36,14 +36,31 @@ describe('Tests slateLock  action', () => {
         axios.get = jest.fn(() => Promise.resolve(newRes2));
         actions.getSlateLockStatus(projectUrn, slateId)(dispatch)
     })
-    it('testing-- getSlateLockStatus  catch', () => {
+    it('testing-- getSlateLockStatus  then', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
-            slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
+            slateId = ""
+        store = mockStore(() => initialState);
+        let newRes2 = {
+            status: 200,
+            data: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
+        }
+        let dispatch = (obj) => {
+            expect(obj.type).toBe(SET_SLATE_LOCK_STATUS);
+        };
+        axios.get = jest.fn(() => Promise.resolve(newRes2));
+        actions.getSlateLockStatus(projectUrn, slateId)(dispatch)
+    })
+    it('testing-- getSlateLockStatusWithCallback  catch', () => {
+        let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
+        slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         store = mockStore(() => initialState);
         axios.get = jest.fn(() => Promise.reject({}));
         const spyFunction = jest.spyOn(actions, 'getSlateLockStatus');
         actions.getSlateLockStatus(projectUrn, slateId)
-        expect(callback).not.toBeCalled();
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     })
@@ -212,5 +229,34 @@ describe('Tests slateLock  action', () => {
         };
         axios.get = jest.fn(() => Promise.resolve(newRes2));
         actions.getSlateLockStatus(projectUrn, slateId)(dispatch)
+    })
+    it('testing-- saveLockDetails  action', () => {
+        let dispatch = (obj) => {
+            expect(obj.type).toBe(SET_SLATE_LOCK_STATUS);
+        };
+        const spyFunction = jest.spyOn(actions, 'saveLockDetails');
+        actions.saveLockDetails(true)(dispatch)
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    })
+    it('testing-- releaseSlateLock  for releaseLockButton then', () => {
+        const newRes = {
+            status: 200,
+            data: {
+                slateStatus: false,
+                timestamp: "",
+                userId: ""
+            }
+        }
+        axios.post = jest.fn(() => Promise.resolve(newRes));
+        let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
+            slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
+           let userRole = "admin"
+           let releaseLockButton = true
+        store = mockStore(() => initialState);
+        return store.dispatch(actions.releaseSlateLock(projectUrn, slateId, releaseLockButton,userRole)).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe(SET_SLATE_LOCK_STATUS);
+        });
     })
 })

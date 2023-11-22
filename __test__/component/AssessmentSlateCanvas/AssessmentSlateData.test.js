@@ -27,7 +27,8 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+    isSubscriberRole: jest.fn()
 }))
 // jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
 //     return function () {
@@ -218,7 +219,6 @@ describe('Testing Assessment Slate Data component', () => {
             })
             component.update();
             assessmentSlateInstance.forceUpdate();
-            assessmentSlateInstance.showCustomPopup();
             expect(assessmentSlateInstance.state.showUpdatePopup).toBe(true)
         })
         it('Test 2.6- showUpdateAssessmentTypePopup', () => {
@@ -473,52 +473,6 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance6.state.showElmComponent).toBe(false)
             expect(assessmentSlateInstance6.state.activeAssessmentUsageType).toBe('Homework')
             expect(assessmentSlateInstance6.props.getAssessmentDataPopup).toBe(false)
-        })
-        it('Test 7.2-updateElm', () => {
-            let event = {
-                stopPropagation: jest.fn(),
-                preventDefault: jest.fn()
-            }
-            assessmentSlateInstance6.setState({
-                showUpdatePopup: true,
-            })
-            jest.spyOn(assessmentSlateInstance6, 'updateElm')
-            assessmentSlateInstance6.updateElm(event);
-            expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(true)
-        })
-        it('Test 7.2-updateElm', () => {
-            let event = {
-                stopPropagation: jest.fn(),
-                preventDefault: jest.fn()
-            }
-            assessmentSlateInstance7.setState({
-                showUpdatePopup: false,
-            })
-            jest.spyOn(assessmentSlateInstance7, 'updateElm')
-            assessmentSlateInstance7.updateElm(event);
-            expect(assessmentSlateInstance7.state.showUpdatePopup).toBe(true)
-        })
-        it('Test 7.3-showCustomPopup', () => {
-            assessmentSlateInstance6.setState({
-                showUpdatePopup: true,
-                activeAssessmentUsageType: 'Homework'
-            })
-            component6.update();
-            assessmentSlateInstance6.forceUpdate();
-            jest.spyOn(assessmentSlateInstance6, 'showCustomPopup')
-            assessmentSlateInstance6.showCustomPopup();
-            expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(true)
-        })
-        it('Test 7.3-showCustomPopup -- else case', () => {
-            assessmentSlateInstance6.setState({
-                showUpdatePopup: false,
-                activeAssessmentUsageType: 'Homework'
-            })
-            component6.update();
-            assessmentSlateInstance6.forceUpdate();
-            jest.spyOn(assessmentSlateInstance6, 'showCustomPopup')
-            assessmentSlateInstance6.showCustomPopup();
-            expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(false)
         })
         it('Test 7.4-updateElmAssessment', () => {
             document.getElementById = () => {

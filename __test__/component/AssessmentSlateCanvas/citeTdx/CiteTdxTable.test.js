@@ -23,6 +23,7 @@ let initialState = {
         sortBy:"modifiedDate"
 
  },
+ projectInfo: {isBannerVisible: true}
 };
 
 
@@ -192,6 +193,7 @@ describe('Table component', () => {
             sortBy:"modifiedDate"
     
      },
+     projectInfo: {isBannerVisible: false}
     }
     
     let store1 = mockStore(initialState1);
@@ -228,6 +230,10 @@ describe('Table component', () => {
                                 </Provider>)
         console.log(component.debug())
         expect(component.find('.assessment-table-class')).toHaveLength(1)
+        component.find('.radio-button').at(0).simulate('click');
+        component.find('.radio-button').at(1).simulate('click');
+        component.find('.sort-icon').at(0).simulate('click');
+        component.find('.sort-icon').at(1).simulate('click');
     })
 
     it('checking for div with classname no results is rendered', () => {
@@ -262,7 +268,8 @@ describe('Table component', () => {
             assessmenterrFlag:false,
             sortBy:"modifiedDate"
     
-     },
+            },
+            projectInfo: {isBannerVisible: false}
     }
 
     let store2 = mockStore(initialState2);

@@ -139,7 +139,24 @@
     float: left;
     width: 24.2%;
     font-size: 14px;
-    
+  }
+  .slate_assessment_data_label_tcc{
+    font-family: "Open Sans", sans-serif;
+    float: left;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+    width: 24.2%;
+    font-size: 14px;
+  }
+  .slate_assessment_data_label_subtype{
+    margin-top: 24px;
+    font-family: "Open Sans", sans-serif;
+    letter-spacing: 0.2px;
+    float: left;
+    line-height: 20px;
+    font-weight: 500;
+    width: 24.2%;
+    font-size: 14px;
   }
   .enhanced_label{
     margin-top: 5%;
@@ -155,7 +172,14 @@
     text-overflow: ellipsis;
     word-break: break-all;
     white-space: nowrap;
-    
+  }
+  .slate_assessment_detail_subtype{
+    margin-top: 24px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 15px;
   }
   .slate_assessment_data_title:hover{
     overflow: visible; 
@@ -165,7 +189,6 @@
   .enhanced_title {
     margin-top: 6%;
   }
-
   .slate_assessment_data_id{
     font-size: 14px;
     overflow:hidden;
@@ -181,6 +204,24 @@
   .slate_pdf_data_id {
     font-size: 14px;
     white-space: nowrap;
+  }
+  .slate_lti_data_link {
+    cursor: pointer;
+    font-family: "Open Sans",sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+    word-wrap: break-word;
+  }
+  .slate_assessment_tcc_data_note{
+    margin-left: -88px;
+    font-size: 11px;
+    margin-top: 376px;
+    font-weight: 500;
+    font-family: "Open Sans",sans-serif;
+    letter-spacing: 0.2px;
+    position: absolute;
   }
   .slate_assessment_change_button{
     font-size: 13px;
@@ -303,7 +344,7 @@ div.elm-update-button b.elm-update-button-text {
 }
 
 
-.elm-int-status-alignment .approved-button {
+.elm-int-status-alignment .approved-button, .elm-int-status-alignment .approved-button-embedded {
   margin-top: 1px !important;
 }
 span.approved-button {
@@ -313,12 +354,19 @@ span.approved-button {
   margin-top: 3px;
 }
 
-span.approved-button.disable svg path#path2 {
+span.approved-button-embedded {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  margin-top: 3px;
+}
+
+span.approved-button.disable svg path#path2, span.approved-button-embedded.disable svg path#path2 {
   opacity: 0.2;
   background-color: #000000;
 }
 
-span.approved-button.enable svg path#path2 {
+span.approved-button.enable svg path#path2, span.approved-button-embedded.enable svg path#path2 {
   fill: #15850c;
 }
 
@@ -332,13 +380,26 @@ span.approved-button.enable svg path#path2 {
   letter-spacing: normal;
 }
 
-.elm-status-div p.approved-button-text.enable {
+.elm-status-div p.approved-button-text-embedded {
+  padding-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: Open Sans, sans-serif;
+}
+
+.elm-status-div p.approved-button-text.enable, .elm-status-div p.approved-button-text-embedded.enable {
   color: #15850c;
 }
 
 .elm-status-div p.approved-button-text.disable {
   opacity: 0.7;
   color: rgba(0, 0, 0, 0.8);
+}
+
+.elm-status-div p.approved-button-text-embedded.disable, .last-updated-time {
+  color: #252525;
+  font-weight: 700;
+  font-family: Open Sans, sans-serif;
 }
 
 .elm-status-div {
@@ -425,5 +486,29 @@ font-size: 14px;
 font-weight: bold;
 }
 
-
 /* Ends - PDF Slate Canvas css */
+
+/* Assessment/Assessment-item auto update */
+.last-updated-time-format {
+  color: #252525;
+  padding-left: 4px;
+  font-weight: 400 !important;
+}
+.assessment-dateModified{
+  display: flex;
+  margin-top: 2px;
+}
+.assessmentItem_Timestamp {
+  margin-top: 10px;
+}
+.embedded-assessment-status {
+  display: flex;
+  height: 40px;
+  margin-top: 10px;
+}
+.embedded-assessment-time {
+  display: flex;
+}
+.time-updated-embedded {
+  padding-top: 1px;
+}

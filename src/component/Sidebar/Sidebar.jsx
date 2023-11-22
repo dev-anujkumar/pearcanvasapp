@@ -8,19 +8,20 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE, DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Autocomplete, TextField } from '@mui/material';
+import modalIcon from '../../images/Sidebar/modalIcon.svg'
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -56,7 +57,13 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
+            decorativePopupWarning: false,
+            sidebarValue: "",
+            isPlayBackDropdownOpen: false,
+            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
         };
+        this.playbackModeRef = React.createRef();
+        this.playbackModeLabelRef = React.createRef();
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -64,14 +71,19 @@ class Sidebar extends Component {
             let elementDropdown = prevState.elementDropdown;
             let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
-            let podOption = prevState.podOption
+            let podOption = prevState.podOption;
+            let isPlayBackDropdownOpen = prevState.isPlayBackDropdownOpen;
+            let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 fontBulletElementDropdown = "";
                 podValue = nextProps.activeElement.podwidth;
-                podOption = false
+                podOption = false;
+                isPlayBackDropdownOpen = false;
             }
-            
+            if(nextProps?.activeElement?.secondaryOption === SECONDARY_3PI_SMARTLINK && nextProps?.activeElement?.assetIdFor3PISmartlink){
+                selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue;
+            }
             return {
                 elementDropdown: elementDropdown,
                 fontBulletElementDropdown,
@@ -80,7 +92,7 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activefontStyle: nextProps?.activeElement?.fontStyle,
                 activebulletIcon: nextProps?.activeElement?.bulletIcon,
-                activeSecondaryOption: nextProps.activeElement.secondaryOption,         
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom: nextProps.activeElement.startNumber,
                 bceToggleValue: nextProps.activeElement.numbered,
@@ -88,12 +100,29 @@ class Sidebar extends Component {
                 podValue: podValue,
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
+                selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue,
+                isPlayBackDropdownOpen: isPlayBackDropdownOpen
             };
         }
 
         return null;
     }
 
+    handleClickOutside = (event) => {
+        if (this.playbackModeRef && this?.playbackModeRef?.current && this.playbackModeLabelRef && this?.playbackModeLabelRef?.current && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
+            this.setState({
+                isPlayBackDropdownOpen: false
+            })
+        }
+    }
+    /**handling intendedPlaymode on outside click*/
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
     setToggleForAside = (activeElement, asideTitleData) => {
         if (activeElement && asideTitleData) {
             const asideObj = asideTitleData.filter(obj => {
@@ -111,12 +140,33 @@ class Sidebar extends Component {
 
     handlePrimaryOptionChange = (e) => {
       let value = e.target.getAttribute("data-value");
+      this.setState({ sidebarValue: value });
       let secondaryelementList =
         elementList[this.state.activeElementType][value].subtype;
       let secondaryFirstOption = Object.keys(secondaryelementList)[0];
       let labelText = secondaryelementList[secondaryFirstOption].labelText;
       const {activefontStyle, activebulletIcon} = this.state
 
+    // Retrieving values of image element fields
+      let titleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-0`),
+      numberDOM = document.getElementById(`cypress-${this.props.activeElement.index}-1`),
+      subtitleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-2`),
+      captionDOM = document.getElementById(`cypress-${this.props.activeElement.index}-3`),
+      settingDOM = document.getElementById(`autonumberSetting`)
+
+      let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+      numberHTML = numberDOM ? numberDOM.innerHTML : "",
+      subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+      captionHTML = captionDOM ? captionDOM.innerHTML : "",
+      settingHTML = settingDOM ? settingDOM.innerText : ""
+
+      titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
+      numberHTML = numberHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+      subtitleHTML = subtitleHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+      captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+
+    // showing set to decorative image popup only if image element fields have any values in them
+      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
@@ -152,15 +202,45 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
-          this.props.conversionElement({
-            elementId: this.props.activeElement.elementId,
-            elementType: this.state.activeElementType,
-            primaryOption: value,
-            fontBulletOption: value,
-            secondaryOption: secondaryFirstOption,
-            labelText,
-            toolbar: elementList[this.state.activeElementType][value].toolbar,
-          });
+            // checking if dont ask me again checkbox is checked
+            const disableDIConversionWarning = getCookieByName("DISABLE_DI_CONVERSION_WARNING");
+            if (value != this.props.activeElement.primaryOption && value === DECORATIVE_IMAGE) {
+                if (disableDIConversionWarning) {
+                    this.props.conversionElement({
+                        elementId: this.props.activeElement.elementId,
+                        elementType: this.state.activeElementType,
+                        primaryOption: value,
+                        fontBulletOption: value,
+                        secondaryOption: secondaryFirstOption,
+                        labelText,
+                        toolbar: elementList[this.state.activeElementType][value].toolbar,
+                    })
+                }
+                else {
+                    popupEnableCheckForDecoConversion ?
+                        this.props.conversionElement({
+                            elementId: this.props.activeElement.elementId,
+                            elementType: this.state.activeElementType,
+                            primaryOption: value,
+                            fontBulletOption: value,
+                            secondaryOption: secondaryFirstOption,
+                            labelText,
+                            toolbar: elementList[this.state.activeElementType][value].toolbar,
+                        })
+                        :
+                        this.handleDecorativePopup(true);
+                }
+            } else {
+                this.props.conversionElement({
+                    elementId: this.props.activeElement.elementId,
+                    elementType: this.state.activeElementType,
+                    primaryOption: value,
+                    fontBulletOption: value,
+                    secondaryOption: secondaryFirstOption,
+                    labelText,
+                    toolbar: elementList[this.state.activeElementType][value].toolbar,
+                });
+            }
         }
       }
     };
@@ -232,7 +312,7 @@ class Sidebar extends Component {
         }
         let elementDropdown = e.target.getAttribute('data-element');
 
-        
+
         if (elementDropdown == 'font' || elementDropdown == 'bullet'){
             if(this.state.fontBulletElementDropdown === elementDropdown)  elementDropdown = '';
             this.setState({fontBulletElementDropdown: elementDropdown});
@@ -240,16 +320,21 @@ class Sidebar extends Component {
             if(this.state.elementDropdown === elementDropdown) elementDropdown = '';
             this.setState({elementDropdown, fontBulletElementDropdown: ""});
         }
-        this.setState({ podOption: false });
+        this.setState({
+            podOption: false,
+            isPlayBackDropdownOpen: false
+        });
     }
 
     primaryOption = () => {
         const { activePrimaryOption } = this.state
+        const isReadOnly =  hasReviewerRole() ? 'pointer-events-none' : ''
         let primaryOptions = '';
         if (this.state.activeElementType) {
             let className = ""
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
+            const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE: '';
             if (primaryOptionList.length > 0) {
                 if (this.state.activeElementType === 'element-assessment') {
                     delete primaryOptionList[1];
@@ -273,7 +358,8 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
-                    <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
+                    {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
+                    <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
                     </div>
@@ -298,7 +384,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                 <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                 <p>Show Module Name</p>
-                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule ? true : false} /><span className="slider round"></span></label>
+                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
             </div>;
             return primaryOptions;
         }
@@ -326,7 +412,7 @@ class Sidebar extends Component {
         fontBulletOptions = fontBulletOptionList.map(item => {
             if (item !== 'enumType') {
                 return <li key={item} data-value={item} onClick={this.handleFontBulletOptionChange}>
-                    {fontBulletOptionObject[item].text}    
+                    {fontBulletOptionObject[item].text}
                 </li>;
             }
         });
@@ -334,9 +420,9 @@ class Sidebar extends Component {
         let active = '';
         if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
-        } 
+        }
         const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
-        
+
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
             <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
@@ -347,10 +433,43 @@ class Sidebar extends Component {
                 {fontBulletOptions}
             </ul>
         </div> : null;
-        
+
         return fontBulletOptions;
     }
-    
+
+    // function to toggle decorative popup
+    handleSetDecorativeImagePopup = () => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            decorativePopupWarning: false,
+        })
+    }
+
+    // function called when set as decorative image button is clicked
+    setDecorativeImage = () => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            decorativePopupWarning: false,
+        })
+        let secondaryelementList =
+        elementList[this.state.activeElementType][this.state.sidebarValue].subtype;
+        let secondaryFirstOption = Object.keys(secondaryelementList)[0];
+        let labelText = secondaryelementList[secondaryFirstOption].labelText;
+        this.props.conversionElement({
+            elementId: this.props.activeElement.elementId,
+            elementType: this.state.activeElementType,
+            primaryOption: this.state.sidebarValue,
+            fontBulletOption: this.state.sidebarValue,
+            secondaryOption: secondaryFirstOption,
+            labelText,
+            toolbar: elementList[this.state.activeElementType][this.state.sidebarValue].toolbar,
+        });
+    }
+
     showUpdateAssessmentTypePopup=()=>{
         this.props.showCanvasBlocker(true);
         hideToc();
@@ -422,7 +541,8 @@ class Sidebar extends Component {
                 elementDropdown:'',
                 activeSecondaryOption: value,
                 activeLabelText: labelText,
-                podOption: false
+                podOption: false,
+                isPlayBackDropdownOpen: false
             });
         }
         else {
@@ -441,6 +561,7 @@ class Sidebar extends Component {
             activeLabelText: labelText,
             podOption: false,
             podValue: POD_DEFAULT_VALUE,
+            isPlayBackDropdownOpen: false
         });
 
         if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -458,6 +579,7 @@ class Sidebar extends Component {
         let secondaryOptions = '';
         let languageDropdownOptions = [];
         let enableColumn3SecondaryOption = false;
+        const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE : '';
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
@@ -503,12 +625,14 @@ class Sidebar extends Component {
                 //Removing Select option from dropdown values
                 if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>}
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
-                    </div>) : (<div className={`element-dropdown-title bce ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         <Autocomplete
                             disablePortal
                             disableClearable
@@ -516,7 +640,7 @@ class Sidebar extends Component {
                             noOptionsText={'No result found'}
                             style={{ width: 210 }}
                             ListboxProps={{ style: { maxHeight: "270px" } }}
-                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? '' : secondaryOptionObject[this.state.activeSecondaryOption]}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} : secondaryOptionObject[this.state.activeSecondaryOption]}
                             options={languageDropdownOptions}
                             onChange={(e,value)=>{this.handleSecondaryLanguageChange(e,value)}}
                             getOptionLabel={(option) => option.text}
@@ -531,14 +655,13 @@ class Sidebar extends Component {
                                     }}
                                 />
                             )}
-                        /> 
+                        />
                     </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
                     </ul>
                 </div>;
             }
-
             return secondaryOptions;
         }
 
@@ -583,6 +706,75 @@ class Sidebar extends Component {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.isSavingElement = true
         this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null);
+    }
+
+
+    /* handles IntendedPlaybackMode Dropdown for 3PI smartlink  with asset
+    This function triggers sets activeElement attribute and triggers save call
+    */
+    handleIntendedPlaybackDropdown = (e) =>{
+        let value = e.target.getAttribute("data-value");
+        this.props.setBCEMetadata('selectedIntendedPlaybackModeValue', value);
+        this.setState({
+            isPlayBackDropdownOpen : false,
+            selectedIntendedPlaybackModeValue: value
+        },() => this.handleBceBlur());
+    }
+
+    /**@description render playbackMode for 3PI smartlink for added alfresco assets*/
+    playbackMode = () => {
+        let playbackMode = '';
+        const disablePlaybackMode = DISABLE_PLAYBACK_MODE_VENDORS.includes(removeBlankSpaceAndConvertToLowercase(this.props?.activeElement?.vendor))
+        if (this.state.activeElementType) {
+            playbackMode = intendedPlaybackModeDropdown.map(item => {
+                return <li key={item?.value} data-value={item?.value} onClick={this.handleIntendedPlaybackDropdown}>
+                    {item.label}
+                </li>;
+            });
+            let active = '';
+            if (this.state.isPlayBackDropdownOpen) {
+                active = 'active';
+            }
+            let disableClass = hasReviewerRole()  ? "pointer-events-none" : '';
+            disableClass = `${disableClass} ${disablePlaybackMode ? "disablePlaybackMode" : ""}`
+            playbackMode = <div
+                className={`element-dropdown`}>
+                <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
+                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
+                    {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
+                    <span> {dropdownArrow} </span>
+                </div>
+                {this.modalBanner()}
+                <ul ref={this.playbackModeRef} className={`element-dropdown-content secondary-options playback-dropdown ${active}`}>
+                    {playbackMode}
+                </ul>
+            </div>;
+            return playbackMode;
+        }
+    }
+
+    modalBanner = () => {
+        let modalBanner = ''
+        modalBanner = <div className='modalBanner'>
+                    <img className='modalIcon' src={modalIcon} />
+                    <p className='modalText'>{MODAL_MESSAGE}</p></div>
+        return modalBanner
+    }
+
+    toggleIntendedPlaybackDropdown = () => {
+        this.setState({
+            isPlayBackDropdownOpen : !this.state.isPlayBackDropdownOpen,
+            podOption : false,
+            elementDropdown: ''
+        })
+    }
+
+    renderIntendedPlaybackDropdownLabel = (value) => {
+        if (value === "default") {
+            return "Default"
+        }
+        const finalValue = intendedPlaybackModeDropdown.find(obj => obj.value === value);
+        if (finalValue) return finalValue.label;
     }
 
     attributions = () => {
@@ -725,10 +917,14 @@ class Sidebar extends Component {
     }
 
     handleBceBlur = () => {
-        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-2`)
+        let activeBCEElementNode_Decorative = document.getElementById(`cypress-${this.props.activeElement.index}-4`)
         if (activeBCEElementNode) {
             activeBCEElementNode.focus()
             activeBCEElementNode.blur()
+        } else if(this.state.activePrimaryOption === DECORATIVE_IMAGE && activeBCEElementNode_Decorative) {
+            activeBCEElementNode_Decorative.focus()
+            activeBCEElementNode_Decorative.blur()
         }
     }
 
@@ -777,7 +973,6 @@ class Sidebar extends Component {
             case 'dialogue':
             case 'bce':
             default:
-                let activeElementNode2 = document.querySelector('.element-container.pe')
                 break;
         }
     }
@@ -841,6 +1036,20 @@ class Sidebar extends Component {
         this.props.showCanvasBlocker(value);
         this.setState({
             showSyntaxHighlightingPopup: value
+        })
+    }
+
+    // function to show decorative popup
+    handleDecorativePopup = (value) => {
+        if (value) {
+            showBlocker();
+        }
+        else {
+            hideBlocker()
+        }
+        this.props.showCanvasBlocker(value);
+        this.setState({
+            decorativePopupWarning: value
         })
     }
 
@@ -935,12 +1144,12 @@ class Sidebar extends Component {
     }
 
     /**
-     * Responsible for toggling of print of Demand dropdown 
+     * Responsible for toggling of print of Demand dropdown
      * @param {*} e
      */
 
     togglePODDropdown = (e) => {
-        
+
         let selValue = e.target.getAttribute('data-value');
         if(selValue) {
             this.props.setBCEMetadata('podwidth', selValue);
@@ -948,19 +1157,20 @@ class Sidebar extends Component {
         this.setState({
             podOption: !this.state.podOption,
             podValue: selValue ? selValue : this.state.podValue,
-            elementDropdown: ''
+            elementDropdown: '',
+            isPlayBackDropdownOpen: false
         }, () => this.handleBceBlur())
     }
 
     /**
-     * Responsible for rendering of print of Demand 
-     * @param {*} 
+     * Responsible for rendering of print of Demand
+     * @param {*}
      */
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation' || 
-            (this.state.activePrimaryOption === 'primary-smartlink' && 
+            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE ||
+            (this.state.activePrimaryOption === 'primary-smartlink' &&
             (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';
             if (this.state.podOption) {
@@ -977,12 +1187,13 @@ class Sidebar extends Component {
             if (attrNode) {
                 attrNode.setAttribute("podwidth", showPodValue)
             }
+            const hasReviewerClass = hasReviewerRole() ? 'pointer-events-none' : ''
 
             return (
                 <div className='printOnDemand'>
                     <label>POD Width Options</label>
                     <div className='element-dropdown'>
-                        <div className="element-dropdown-pod" data-element="pod" onClick={this.togglePODDropdown}>
+                        <div className={`element-dropdown-pod ${hasReviewerClass}`} data-element="pod" onClick={this.togglePODDropdown}>
                             <label className='pod-value' id='pod-value'>{printValue}</label>
                             <ul className={`element-dropdown-content pod-options ${active}`}>
                                 <li data-value="print25">25%</li>
@@ -998,18 +1209,21 @@ class Sidebar extends Component {
             )
         }
         return null
-    }  
+    }
 
     render = () => {
+        const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
+        const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
-                    {this.attributions()}
+                    {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
+                    {!isDecorativeImage && this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>
@@ -1031,8 +1245,20 @@ class Sidebar extends Component {
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
                         permissions = {this.props.permissions}
+                        isSlateLocked = {isSlateLocked()}
                     />}
                 {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
+                {this.state.decorativePopupWarning &&
+                    <PopUp
+                        togglePopup={this.handleSetDecorativeImagePopup}
+                        dialogText={SET_AS_DECORATIVE_IMAGE}
+                        lOPopupClass="lo-warning-txt"
+                        warningHeaderText={`Set Image as Decorative`}
+                        setDecorativePopup={true}
+                        agree={this.setDecorativeImage}
+                        isAutoNumberingEnabled={this.props.isAutoNumberingEnabled}
+                    />
+                }
             </>
         );
     }

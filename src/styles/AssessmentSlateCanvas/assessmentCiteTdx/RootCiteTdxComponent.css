@@ -420,6 +420,14 @@ svg#assessmentSlate-item-icon{
     min-height: 250px;
     max-height: 250px;
   }
+  .cite-wrapper-banner {
+    min-height: 400px;
+    max-height: 450px;
+  }
+  .root-container-banner {
+    min-height: 190px;
+    max-height: 190px;
+  }
 }
 
 .elm-loading{

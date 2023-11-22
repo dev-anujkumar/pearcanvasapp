@@ -60,7 +60,10 @@ import {
     UPDATE_TABLE_ELEMENT_EDITED_DATA,
     UPDATE_CARET_OFFSET,
     DELETE_ELEMENT_KEYS,
-    SET_REQUIRED_SLATE_DATA
+    SET_REQUIRED_SLATE_DATA,
+    APPROVED_SLATE_POPUP_STATUS,
+    DECO_TO_OTHER_IMG_TYPES,
+    FETCH_CONVERSION_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -131,7 +134,10 @@ const INITIAL_STATE = {
     tableElementEditedData: {},
     caretPosition: '',
     deletedElementKeysData: {},
-    getRequiredSlateData: {}
+    getRequiredSlateData: {},
+    approvedSlatePopupstatus: false,
+    decoToOtherTypes: false,
+    conversionData: {}
 };
 
 const INITIAL_ACTION = {
@@ -313,18 +319,18 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 oldFiguredata: action.payload.oldFiguredata
             }
-        case WIRIS_ALT_TEXT_POPUP : 
+        case WIRIS_ALT_TEXT_POPUP :
         return {
             ...state,
             wirisAltText : action.payload
         }
 
-        case LEARNOSITY_PROJECT_INFO : 
+        case LEARNOSITY_PROJECT_INFO :
         return {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
-        case SET_FIGURE_GLOSSARY : 
+        case SET_FIGURE_GLOSSARY :
         return {
             ...state,
             figureGlossaryData : action.payload
@@ -435,6 +441,21 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return{
                 ...state,
                 getRequiredSlateData: action.payload
+            }
+        case APPROVED_SLATE_POPUP_STATUS:
+            return {
+                ...state,
+                approvedSlatePopupstatus: action.payload
+            }
+        case DECO_TO_OTHER_IMG_TYPES:
+            return {
+                ...state,
+                decoToOtherTypes: action.payload
+            }
+        case FETCH_CONVERSION_DATA:
+            return {
+                ...state,
+                conversionData: action.payload
             }
         default:
             return state;

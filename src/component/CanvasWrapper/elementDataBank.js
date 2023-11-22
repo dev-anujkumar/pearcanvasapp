@@ -4,7 +4,7 @@ const elementDataBank = {
         "elementType" : "element-authoredtext",
         "primaryOption" : "primary-paragraph",
         "secondaryOption" : "secondary-paragraph"
-    }, 
+    },
      "manifestlist" : {
         "elementType" : "manifestlist",
         "primaryOption" : "primary-column-1",
@@ -86,7 +86,7 @@ const elementDataBank = {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-4"
-        },   
+        },
         "upper-roman" : {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
@@ -103,11 +103,39 @@ const elementDataBank = {
             "secondaryOption" : "secondary-list-7"
         }
     },
-    
+
     "figure" : {
         "image" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
+            "informalfigure" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
+            "image50Text" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
+            "imageTextWidth" : {
+                "secondaryOption" : "secondary-image-figure-width"
+            },
+            "imageWiderThanText" : {
+                "secondaryOption" : "secondary-image-figure-wider"
+            },
+            "imageFullscreen" : {
+                "secondaryOption" : "secondary-image-figure-full"
+            },
+            "image25Text" : {
+                "secondaryOption" : "secondary-image-figure-quarter"
+            },
+            "image75Text" : {
+                "secondaryOption" : "secondary-image-figure-three-quarter"
+            },
+            "imageactualsize" : {
+                "secondaryOption" : "secondary-image-figure-actual"
+            }
+        },
+        "decorativeImage" : {
+            "elementType" : "figure",
+            "primaryOption" : "primary-image-decorative",
             "informalfigure" : {
                 "secondaryOption" : "secondary-image-figure-half"
             },
@@ -374,6 +402,25 @@ const elementDataBank = {
         },
         "wider-33-33-33" : {
             "secondaryOption" : "secondary-multicolumn-3c-wider"
+        }
+    },
+    "group": {
+        "elementType" : "group",
+        "primaryOption" : "primary-tab",
+        "tab-text-width-30-70" : {
+            "secondaryOption" : "secondary-tabbed-30-70"
+        },
+        "tab-text-width-40-60" : {
+            "secondaryOption" : "secondary-tabbed-40-60"
+        },
+        "tab-text-width-50-50" : {
+            "secondaryOption" : "secondary-tabbed-50-50"
+        },
+        "tab-text-width-60-40" : {
+            "secondaryOption" : "secondary-tabbed-60-40"
+        },
+        "tab-text-width-70-30" : {
+            "secondaryOption" : "secondary-tabbed-70-30"
         }
     },
     "element-dialogue" : {

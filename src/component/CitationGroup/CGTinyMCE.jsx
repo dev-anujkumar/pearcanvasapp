@@ -51,7 +51,7 @@ export const createPopupUnit = (popupField, forceupdate, index, parentElement, p
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.popupCreationCallInProgress = true;
     let cgTitleFieldData = {};
-    // PCAT-12764 - changed the name of asideData in props to citationAsideData for fixing bug 
+    // PCAT-12764 - changed the name of asideData in props to citationAsideData for fixing bug
     // if (props.asideData?.parent?.type === "showhide") {
     //     cgTitleFieldData.asideData = props.asideData;
     //     cgTitleFieldData.parentElement = context.element;

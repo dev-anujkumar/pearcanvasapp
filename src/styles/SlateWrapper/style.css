@@ -8,6 +8,9 @@
     padding: 10px 8px;
     overflow: auto;
 }
+.slate-wrapper.hide-scrollbar{
+    overflow-x: hidden;
+}
 
 .slate-wrapper.popup-slate {
     height: calc(100% - 115px);
@@ -335,6 +338,10 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
     margin-top: 2%;
 }
 
-.ownerSlateBackGround{
+.subscribedSlateBackGround{
     background-color: #FCF1E5 !important;
+}
+
+.ownerSlateBackGround{
+    background-color: #E7F7F6 !important;
 }

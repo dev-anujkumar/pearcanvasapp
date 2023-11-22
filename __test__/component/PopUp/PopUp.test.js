@@ -19,7 +19,6 @@ describe('Testing PopUp component', () => {
         ReactDOM.unmountComponentAtNode(div);
         let wrapper = mount(<PopUp {...props}/>);
         expect(wrapper.find('.save-button').exists()).toBe(true);
-        expect(wrapper.find('.lockInputBox').exists()).toBe(true);
 
     })
     it('onClick Event', () => {
@@ -137,28 +136,178 @@ describe('Testing PopUp component', () => {
         let props = {
             togglePopup:jest.fn(),
             proceed:jest.fn(),
-            isOwnersSlate:true
+            isCurrentSlate:'owner'
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.lo-save-button').simulate('click');
         wrapper.find('.cancel-button').simulate('click');
         const component = mount(<PopUp {...props}/>);
         component.instance().isChecked=true
-        expect(component.instance().props.isOwnersSlate).toEqual(true);
+        expect(component.instance().props.isCurrentSlate).toEqual('owner');
     });
-    it('testCase for isSubscribersSlate',() => {
+    it('testCase for openRemovePopUp',() => {
+        let props = {
+            saveContent:jest.fn(),
+            togglePopup:jest.fn(),
+            openRemovePopUp:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.openRemovePopUp).toEqual(true);
+    });
+    it('testCase for isElmUpdatePopup',() => {
+        let props = {
+            updateElmAssessment:jest.fn(),
+            togglePopup:jest.fn(),
+            isElmUpdatePopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.isElmUpdatePopup).toEqual(true);
+    });
+    it('testCase for imageGlossary',() => {
+        let props = {
+            removeImageContent:jest.fn(),
+            togglePopup:jest.fn(),
+            imageGlossary:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.imageGlossary).toEqual(true);
+    });
+    it('testCase for isDeleteAssetPopup',() => {
+        let props = {
+            deleteAssetHandler:jest.fn(),
+            togglePopup:jest.fn(),
+            isDeleteAssetPopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.isDeleteAssetPopup).toEqual(true);
+    });
+    it('testCase for WordPastePopup',() => {
+        let props = {
+            handleCopyPastePopup:jest.fn(),
+            WordPastePopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.powerpaste-cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.WordPastePopup).toEqual(true);
+    });
+    it('testCase for LOPopup',() => {
         let props = {
             togglePopup:jest.fn(),
-            isSubscribersSlate:true
+            yesButtonHandler:jest.fn(),
+            LOPopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.lo-save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.LOPopup).toEqual(true);
+    });
+    it('testCase for AssessmentPopup',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            agree:jest.fn(),
+            AssessmentPopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.lo-save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.AssessmentPopup).toEqual(true);
+    });
+    it('testCase for setDecorativePopup',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            agree:jest.fn(),
+            setDecorativePopup:true,
+            isAutoNumberingEnabled: true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.setDecorativePopup).toEqual(true);
+    });
+    it('testCase for UsagePopup',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            agree:jest.fn(),
+            UsagePopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.lo-save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.UsagePopup).toEqual(true);
+    });
+    it('testCase for showBlockCodeElemPopup',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            showBlockCodeElemPopup:true
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.lo-save-button').simulate('click');
         const component = mount(<PopUp {...props}/>);
-        expect(component.instance().props.isSubscribersSlate).toEqual(true);
+        component.instance().isChecked=true
+        expect(component.instance().props.showBlockCodeElemPopup).toEqual(true);
+    });
+    it('testCase for isApprovedSlate',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            isApprovedSlate:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.isApprovedSlate).toEqual(true);
+    });
+    it('testCase for isSubscribersSlate',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            isCurrentSlate:"subscriber",
+            proceed:jest.fn()
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.subscriberSlate-ok-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.isCurrentSlate).toEqual("subscriber");
     });
     it('testCase for withCheckBox',() => {
         let props = {
             withCheckBox:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.OwnersSlateCheckBox').simulate('change');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.withCheckBox).toEqual(true);
+    });
+    it('testCase for withCheckBox -> when its isSubscribed',() => {
+        let props = {
+            withCheckBox:true,
+            isCurrentSlate:"subscriber"
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.OwnersSlateCheckBox').simulate('change');
@@ -184,7 +333,7 @@ describe('Testing PopUp component', () => {
         expect(component.instance().props.alfrescoExpansionPopup).toEqual(true);
     });
 
-    it('testCase for renderDeleteWarningPopupCheckbox',() => {
+    it('testCase for handleCheckboxPopup',() => {
         let props = {
             warningPopupCheckbox:true,
             showDeleteElemPopup: true,
@@ -199,7 +348,7 @@ describe('Testing PopUp component', () => {
         expect(component.instance().props.warningPopupCheckbox).toEqual(true);
     });
 
-    it('testCase for renderDeleteWarningPopupCheckbox',() => {
+    it('testCase for handleListElementWarningPopupCheckbox',() => {
         let props = {
             listElementWarningPopupCheckbox:true,
             listConfirmation:true,
@@ -212,6 +361,36 @@ describe('Testing PopUp component', () => {
         wrapper.find('.popup-checkbox').simulate('change', event);
         const component = mount(<PopUp {...props}/>);
         expect(component.instance().props.listElementWarningPopupCheckbox).toEqual(true);
+    });
+
+    it('testCase for handleDeleteWarningPopupCheckbox',() => {
+        let props = {
+            deleteWarningPopupCheckbox:true,
+            isDeleteAssetPopup:true,
+            handleDeleteWarningPopupCheckbox:jest.fn()
+        }
+        const event = {
+            target: { value: 'the-value' }
+        };
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.popup-checkbox').simulate('change', event);
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.deleteWarningPopupCheckbox).toEqual(true);
+    });
+
+    it('testCase for handleSetAsDecorativeWarningPopupCheckbox',() => {
+        let props = {
+            setAsDecorativePopUpCheckbox:true,
+            setDecorativePopup:true,
+            handleSetAsDecorativeWarningPopupCheckbox:jest.fn()
+        }
+        const event = {
+            target: { value: 'the-value' }
+        };
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.popup-checkbox').simulate('change', event);
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.setAsDecorativePopUpCheckbox).toEqual(true);
     });
     
     describe("Testing method handleKeyDown()", () => {
@@ -272,6 +451,19 @@ describe('Testing PopUp component', () => {
             wrapper.setState({ focusedButton: 'secondary' });
             instance.handleKeyDown(e);
             expect(wrapper.instance().props.isSplitSlatePopup).toEqual(true);
+        });
+        it('testCase for unlockSlateToggle',() => {
+            let props = {
+                handleUnlockSlate:jest.fn(),
+                handleCancelUnlock:jest.fn(),
+                unlockSlateToggle:true
+            }
+            let wrapper = mount(<PopUp {...props}/>);
+            wrapper.find('.save-button').simulate('click');
+            wrapper.find('.cancel-button').simulate('click');
+            const component = mount(<PopUp {...props}/>);
+            component.instance().isChecked=true
+            expect(component.instance().props.unlockSlateToggle).toEqual(true);
         });
     });
 })

@@ -28,4 +28,13 @@ describe('Test elemetStatusReducer', () => {
             }
         })
     })
+    it(' else Case for SET_ELEMENT_STATUS', () => {
+        reducer(INITIAL_STATE,{
+            type:"test",
+            payload: {
+                clearEntries: true
+
+            }
+        })
+    })
 });

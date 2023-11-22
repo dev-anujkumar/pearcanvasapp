@@ -33,7 +33,9 @@ import {
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    SUBSCRIBERS_SUBSCRIBED_SLATE,
+    SET_TOC_SLATE_LABEL
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -42,11 +44,6 @@ import { slateTestData } from './mockData.js';
 import { PROJECT_SHARING_ROLE } from '../../../src/constants/IFrameMessageTypes';
 /**********************Mock Helper Functions***********************/
 jest.mock('axios');
-jest.mock('../../../src/constants/ga', () => {
-    return {
-        sendToDataLayer: jest.fn()
-    }
-});
 jest.mock('../../../src/constants/IFrameMessageTypes.js', () => {
     return {
         HideLoader: jest.fn()
@@ -79,7 +76,8 @@ jest.mock('../../../src/constants/utility.js', () => {
             return "<p><label>LABEL&nbsp;</label>TITLE</p>"
         },
         requestConfigURI: jest.fn(),
-        createLabelNumberTitleModel: jest.fn()
+        createLabelNumberTitleModel: jest.fn(),
+        removeBlankSpaceAndConvertToLowercase: jest.fn(() => "pearsoncanadainline")
     }
 });
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility', () => {
@@ -374,6 +372,23 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             // expect(spyFunction).toHaveReturnedWith('HS');
             spyFunction.mockClear()
         })
+
+        it('Test-1.25-fetchElementTag - element type is group', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[20];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 20);
+            expect(spyFunction).toHaveBeenCalled();
+            // expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
+        it('Test-1.25-fetchElementTag - element type is groupedcontent and subtype is tab', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[21];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 21);
+            expect(spyFunction).toHaveBeenCalled();
+            // expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
         describe('isLearnosityProjectInfo', () => {
             beforeEach(()=>{
                 jest.mock('../../../src/appstore/store.js', () => ({
@@ -451,6 +466,25 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 figuredata: {
                     alttext: 'alttext',
                     longdescription: 'longdescription '
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.30-fetchElementTag - elementType - figure and figuretype - interactive else case', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'interactive',
+                figuredata: {
+                    alttext: 'alttext',
+                    longdescription: 'longdescription ',
+                    interactivetype:'3rd-party',
+                    interactiveid: "123",
+                    intendedPlaybackMode:"test"
                 }
             }
             let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
@@ -1690,6 +1724,90 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })
+        it('Test-4.15-fetchSlateData - tabbed2column', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "groupedcontent",
+                    indexes: [11,0,2,1],
+                    parent:{type : 'groupedcontent'},
+                    subtype: 'tab'
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.16-fetchSlateData - tabbed2column when indexes not provided', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "groupedcontent",
+                    index:'0-0-0-0',
+                    parent:{type : 'groupedcontent'},
+                    subtype: 'tab'
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
     })
     describe('Test-4- fetchSlateData', () => {
         it('Test-4.1-fetchSlateData - Assessment Slate', () => {
@@ -2075,6 +2193,40 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 return {
                     appStore: {
                         slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = slateTestData.popupSlateLabelVersioning,
+                calledFrom = '',
+                versionPopupReload = false
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.8-fetchSlateData - Popup Slate - Versioning config.cachedActiveElement', () => {
+            config.cachedActiveElement = {
+                element: {
+                    type: "manifest",
+                    id : "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2671"
+            let responseData = { data: { ...slateTestData.approvedSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.approvedSlate,
                         activeElement: {},
                     }
                 };
@@ -2643,20 +2795,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         config.book_title = 'Dev_LF_Ext_01'
         it('Test-10.1-fetchProjectLFs', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: [{
-                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
-                    "label": {
-                        "en": "The Sociology Project 2.5"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
-                }]
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2671,14 +2810,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.2-fetchProjectLFs Only External LF', () => {
             let expectedPayload = {
-                cypressLF: {},
-                externalLF: [{
-                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
-                    "label": {
-                        "en": "The Sociology Project 2.5"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
-                }]
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2693,14 +2825,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.3-fetchProjectLFs Only Cypress LF', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: []
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2737,14 +2862,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.6-fetchProjectLFs Only Cypress LF and no External LF', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: []
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2852,28 +2970,6 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         })
 
         
-    });
-    describe('Test-12- tcmCosConversionSnapshot ', () => {
-        it('Test-12.1 tcmCosConversionSnapshot  - then Block', async () => {
-            let firstResponseData = {}
-            let dispatch = jest.fn();
-            axios.patch.mockImplementation(() => Promise.resolve(firstResponseData))
-            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
-            await canvasActions.tcmCosConversionSnapshot()(dispatch)
-            expect(dispatch).not.toHaveBeenCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        })
-        it('Test-12.2 tcmCosConversionSnapshot  - catch Block', async () => {
-            let firstResponseData = {}
-            let dispatch = jest.fn();
-            axios.patch.mockImplementation(() => Promise.reject(firstResponseData))
-            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
-            await canvasActions.tcmCosConversionSnapshot()(dispatch)
-            expect(dispatch).not.toHaveBeenCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        })
     });
     describe('Test-12- fetchSlateAncestorData ', () => {
         it('Test-12.1 fetchSlateAncestorData', () => {
@@ -3175,50 +3271,62 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled()
             spyFunction.mockClear()
         })
-    });
-    describe('Test-14- fetchFigureDropdownOptions', () => {
-        let getState = () => {
-            return {
-                autoNumberReducer:{
-                    isAutoNumberingEnabled: true
+        it('Test-13.8 appendCreatedElement - TB->Tab->AS/WE->HEAD->Popup', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
                 }
             }
-        }
-        it('Test-14.1 fetchFigureDropdownOptions - then Block', async () => {
-            let firstResponseData = {
-                "data": {
-                    audio: ["No Label", "Custom"],
-                    image: ["No Label", "Custom"],
-                    smartlinks: ["No Label", "Custom"],
-                    video: ["No Label", "Custom"]
+            let responseData3 = { ...slateTestData.popupLabelResponse }
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[22].groupeddata.bodymatter[0].groupdata.bodymatter[0].groupeddata.bodymatter[0].groupdata.bodymatter[0].elementdata.bodymatter[1],
+                popupElementIndex = '22-0-0-0-1-0',
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData3)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-13. 9appendCreatedElement - TB->Tab->AS/WE->HEAD->Popup', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
                 }
             }
-            let dispatch = jest.fn();
-            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
-            expect(dispatch).toHaveBeenCalled();
-        })
-
-        xit('Test-14.2 fetchFigureDropdownOptions - then Block with empty obj', async () => {
-            let firstResponseData = {
-                "data": {}
+            let responseData3 = { ...slateTestData.popupLabelResponse }
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[23].groupeddata.bodymatter[0].groupdata.bodymatter[0].groupeddata.bodymatter[0].groupdata.bodymatter[0].elementdata.bodymatter[1].contents.bodymatter[1],
+                popupElementIndex = '23-0-0-0-1-1-0',
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
             }
-            let dispatch = jest.fn();
-            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
-            expect(dispatch).not.toHaveBeenCalled();
-        })
-
-        it('Test-14.3 fetchFigureDropdownOptions - catch Block', async () => {
-            let firstResponseData = { }
-            let dispatch = jest.fn();
-            axios.get.mockImplementation(() => Promise.reject(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
-            expect(dispatch).not.toHaveBeenCalled();
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData3)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
         })
     });
 });
-
 describe('Test-15 updateFigureDropdownValues', () => {
     let getState = () => {
         return {
@@ -3282,6 +3390,37 @@ it('Test: isOwnersSubscribedSlate function', () => {
 
     const spyFunction = jest.spyOn(canvasActions, 'isOwnersSubscribedSlate')
     canvasActions.isOwnersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+it('Test: isSubscribersSubscribedSlate function', () => {
+    const expectedActions = {
+        type: SUBSCRIBERS_SUBSCRIBED_SLATE,
+        payload: true
+    };
+    const showPopup = true
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+
+    const spyFunction = jest.spyOn(canvasActions, 'isSubscribersSubscribedSlate')
+    canvasActions.isSubscribersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+
+it('Test: setTocSlateLabel function', () => {
+    const expectedActions = {
+        type: SET_TOC_SLATE_LABEL,
+        payload: "slate"
+    };
+    const label = "slate"
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+
+    const spyFunction = jest.spyOn(canvasActions, 'setTocSlateLabel')
+    canvasActions.setTocSlateLabel(label)(dispatch);
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
@@ -3398,32 +3537,10 @@ it('Testing getLOBDiscussionItems - catch block', async () => {
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
-it('Testing fetchUserLocation - try block', async () => {
-    const response = {
-        status: 200,
-        data : 
-            {
-                id : "uthalki",
-                username: "uthalki",
-                mail: "kira.marbit@pedev.com",
-                houseIdentifier: "US-NJ-Hoboken-221 River",
-            }
-        }
-    let dispatch = jest.fn();
-    const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation');
-    axios.get = jest.fn(() => Promise.resolve(response))
-    canvasActions.fetchUserLocation()(dispatch);
-    expect(spyFunction).toHaveBeenCalled();
-    expect(dispatch).not.toHaveBeenCalled();
-    spyFunction.mockClear();
- 
-});
+it('Testing getDefaultPlaybackMode - else', () => {
 
-it('Testing fetchUserLocation - catch block', async () => {
-    const state = {}
-    const store = mockStore(() => state);
-    const spyFunction = jest.spyOn(canvasActions,'fetchUserLocation');
-    axios.get = jest.fn(() => Promise.reject({}));
-    await store.dispatch(canvasActions.fetchUserLocation());
+    const spyFunction = jest.spyOn(canvasActions, 'getDefaultPlaybackMode')
+    canvasActions.getDefaultPlaybackMode('');
     expect(spyFunction).toHaveBeenCalled();
-});
+    spyFunction.mockClear()
+})

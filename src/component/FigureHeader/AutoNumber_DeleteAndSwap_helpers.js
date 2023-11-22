@@ -7,24 +7,22 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence, getSlateLevelData, updateChapterPopupData } from './AutoNumberActions';
+import ElementConstants from '../ElementContainer/ElementConstants';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
 /**
  * Handle AUTO-NUMBERING on Delete
- * @param {*} params 
+ * @param {*} params
  */
 export const handleAutoNumberingOnDelete = async (params) => {
     const {
-        element,
         type,
         contentUrn,
         getState,
         dispatch,
-        isAutoNumberingEnabled,
-        asideData
-    } = params
+        isAutoNumberingEnabled    } = params
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const autoNumberedElements = getState()?.autoNumberReducer.autoNumberedElements;
@@ -46,10 +44,10 @@ export const handleAutoNumberingOnDelete = async (params) => {
 }
 /**
  * This function resets sequence after DELETE when figure is deleted
- * @param {*} parentIndex 
- * @param {*} contentUrn 
- * @param {*} numberedElements 
- * @param {*} dispatch 
+ * @param {*} parentIndex
+ * @param {*} contentUrn
+ * @param {*} numberedElements
+ * @param {*} dispatch
  */
 export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements) => (dispatch) => {
     if (parentIndex && contentUrn && numberedElements) {
@@ -74,10 +72,10 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
 
 /**
  * This function resets sequence after DELETE when a container having figure is deleted
- * @param {*} parentIndex 
- * @param {*} contentUrn 
- * @param {*} getState 
- * @param {*} dispatch 
+ * @param {*} parentIndex
+ * @param {*} contentUrn
+ * @param {*} getState
+ * @param {*} dispatch
  */
 export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, getState, dispatch) => {
     let { autoNumberedElements } = getState().autoNumberReducer;
@@ -101,7 +99,7 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
                         const condition = element.slateEntityUrn == getSlateEntityUrn() && eleIndex === -1
                         condition && removeValFromIndex.push(index);
                     }
-                    
+
                 } else {
                     for (let [index, element] of elementsInTocContainer.entries()) {
                         if (element.slateEntityUrn == getSlateEntityUrn()) {
@@ -137,7 +135,7 @@ export const deleteElementByLabelFromStore = (numberedElements, element, parentI
 
 /**
  * Handle AUTO-NUMBERING on Swapping
- * @param {*} params 
+ * @param {*} params
  */
 export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, params) => {
     const {
@@ -149,7 +147,7 @@ export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, para
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
     const autoNumber_ElementTypeKey = getState()?.autoNumberReducer.autoNumber_ElementTypeKey
-    const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
+    const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside', 'group']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after swap
         const bodyMatter = currentSlateData.contents.bodymatter
@@ -175,7 +173,7 @@ export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, para
 
 /**
  * This function resets sequence after DELETE when figure is swapped
- * @param {*} params 
+ * @param {*} params
  */
 export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     const {
@@ -244,7 +242,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     let nearestElement = {}
     let containerElementsOnSlate = [];
     let popupElementsList = [];
-    
+
     if(swappedElementData.type === "popup"){
         popupElementsList = await getSlateLevelData(swappedElementData.versionUrn, swappedElementData.contentUrn);
         await getSwappedElementsURN(popupElementsList, swappedElementsUrn);
@@ -263,7 +261,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
             if (elementArray && elementArray?.length > 0) {
                 elementArray.forEach((element, i) => {
                     if(swappedElementsUrn[label].includes(element?.contentUrn)){
-                        swappedElementList.push(element);   
+                        swappedElementList.push(element);
                     }
                 });
                 elementArray = elementArray.filter(element =>  !swappedElementsUrn[label].includes(element?.contentUrn));
@@ -300,7 +298,17 @@ const getSwappedElementsURN = async (swappedElement, data) => {
             await getContentUrnFromShowHide(swappedElement?.interactivedata, data);
             break;
         case containerElements.MULTI_COLUMN:
-            await getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
+            if (swappedElement?.subtype === ElementConstants.TAB) {
+                let tabElements = swappedElement?.groupeddata?.bodymatter;
+                for (let tab of tabElements) {
+                    await getContentUrnFromMultiColumn(tab.groupdata.bodymatter[0].groupeddata?.bodymatter, data);
+                }
+            } else {
+                await getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
+            }
+            break;
+        case containerElements.GROUP:
+            await getContentUrnFromMultiColumn(swappedElement?.groupdata?.bodymatter[0].groupeddata?.bodymatter, data);
             break;
         case containerElements.ASIDE:
             storeSwappedUrn(swappedElement?.contentUrn, swappedElement?.displayedlabel, data);
@@ -330,7 +338,7 @@ const checkForSwappedElement = async (elemData, data) => {
 }
 
 const getContentUrnFromMultiColumn = async (bodymatter, data) => {
-    if(bodymatter.length > 0) {
+    if(bodymatter?.length > 0) {
         for(let i in bodymatter){
             let colData = bodymatter[i];
             if(colData?.groupdata?.bodymatter.length > 0){
@@ -379,7 +387,7 @@ const getNearestElement = (swappedElementsUrn, containerElementsOnSlate, slateFi
         let status = {}
         let displayLabelList = Object.keys(getState().autoNumberReducer.autoNumber_KeyMapper)
         let swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelList.includes(label))
-    
+
         swappedElementDisplaylabled.forEach(label => {
             status[label] = false;
             nearestElement[label] = {
@@ -387,7 +395,7 @@ const getNearestElement = (swappedElementsUrn, containerElementsOnSlate, slateFi
                 pos: ""
             }
         });
-    
+
         addNearestElement(slateFigures, status, nearestElement, swappedElementDisplaylabled, swappedElementsUrn);
         addNearestElement(containerElementsOnSlate, status, nearestElement, swappedElementDisplaylabled, swappedElementsUrn);
 }
@@ -395,7 +403,7 @@ const getNearestElement = (swappedElementsUrn, containerElementsOnSlate, slateFi
 const addNearestElement = (elementsList, status, nearestElement, swappedElementDisplaylabled, swappedElementsUrn) => {
     if(elementsList?.length > 0){
         elementsList.forEach(element => {
-            let label = element?.displayedlabel; 
+            let label = element?.displayedlabel;
             if(swappedElementDisplaylabled.includes(label)){
                 if(swappedElementsUrn[label].includes(element?.contentUrn)){
                     status[label] = true;

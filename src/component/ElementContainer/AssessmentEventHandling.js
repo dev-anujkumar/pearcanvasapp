@@ -17,39 +17,43 @@ export const handleElmPortalEvents = (action,eventType) => {
     if (!checkSlateLock(slateLockInfo)) {
 
         let elmAssessmentUpdate = async (event) => {
-            try {
-                const { data } = event;
+            if (event?.data?.type === 'bannerIsVisible' || event?.data?.type === 'disablePrev' || event?.data?.type === 'enableNext' || event?.data?.type === "enablePrev" || event?.data?.type === "lockUserDetailsFromCount" || event?.data?.type === "releaseLockPopup") {
+                return false
+            } else {
+              try {
+                const { data } = event
                 // console.log('%c Interactive edit-in-place messages>>>BEFORE>>>','background: #222; color: white',data)
                 if (eventType == 'fromUpdate') {
-                    if (action == 'add' && data && data.source == 'elm') {
-                        //console.log('Event From ELM Portal>>>', data)
-                        if (data.type.includes('item|')) {
-                            const itemMetadata = prepareItemMetadata(data.type)
-                            store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
-                            store.dispatch(setItemUpdateEvent(true))
-                        }
-                        if (data.action == 'approve') {
-                            window.removeEventListener('message', elmAssessmentUpdate, false);
-                        }
-                        if (data.type == 'assessment') {
-                            handleRefreshSlate(store.dispatch);
-                        }
-                    } else {
-                        // console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
-                        /* To edit interactive using edit button */
-                        const intObj = getInteractivePostMsg(data)
-                        window.removeEventListener('message', elmAssessmentUpdate, false);
-                        if (intObj?.id && intObj.title && intObj.interactiveType) {
-                            /* save item data into store */
-                            handleRefreshSlate(store.dispatch);
-                        }
+                  if (action == 'add' && data && data.source == 'elm') {
+                    //console.log('Event From ELM Portal>>>', data)
+                    if (data.type.includes('item|')) {
+                      const itemMetadata = prepareItemMetadata(data.type)
+                      store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
+                      store.dispatch(setItemUpdateEvent(true))
                     }
+                    if (data.action == 'approve') {
+                      window.removeEventListener('message', elmAssessmentUpdate, false);
+                    }
+                    if (data.type == 'assessment') {
+                      handleRefreshSlate(store.dispatch);
+                    }
+                  } else {
+                    // console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
+                    /* To edit interactive using edit button */
+                    const intObj = getInteractivePostMsg(data)
+                    window.removeEventListener('message', elmAssessmentUpdate, false);
+                    if (intObj?.id && intObj.title && intObj.interactiveType) {
+                      /* save item data into store */
+                      handleRefreshSlate(store.dispatch);
+                    }
+                  }
                 }
                 if (action == 'remove') {
-                    window.removeEventListener('message', elmAssessmentUpdate, false);
+                  window.removeEventListener('message', elmAssessmentUpdate, false)
                 }
-            } catch (err) {
-                console.error('catch with err', err);
+              } catch (err) {
+                console.error('catch with err', err)
+              }
             }
         }
         window.addEventListener('message', elmAssessmentUpdate, false);
@@ -106,9 +110,9 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
                 if(eventType == 'fromCreate'){
                     /* Get the item data from store */
                     const itemData = store.getState().assessmentReducer?.item ?? {};
-                    if (data.source === "elm") {                  
-                        const items = data.type?.split("|") ?? []; 
-                        if(items.length >= 4){                  
+                    if (data.source === "elm") {
+                        const items = data.type?.split("|") ?? [];
+                        if(items.length >= 4){
                             /* Update newly added Assessment */
                             if (items[0] === "assessment") {
                                 getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment);
@@ -147,7 +151,7 @@ export function getInteractivePostMsg(data){
         const interactives = data?.split("|") ?? [];
         if (interactives?.length && interactives[0] === "interactive") {
             let dataToSend = {}
-            interactives.map((key) => {
+            interactives.forEach((key) => {
                 const itemKey = key?.split("_");
                 switch (itemKey[0]) {
                     case 'wUrn':
@@ -166,7 +170,7 @@ export function getInteractivePostMsg(data){
             })
             return dataToSend
         }
-    }  
+    }
 }
 /* get assessment items data from post message */
 export function getAssessmentItemPostMsg(items){
@@ -174,7 +178,7 @@ export function getAssessmentItemPostMsg(items){
         itemid: items[1]?.split("_")[1],
         elementUrn: items[2]?.split("_")[1],
         itemTitle: items[3]?.split("_")[1],
-        calledFrom:'createElm'                               
+        calledFrom:'createElm'
     };
     /* save item data into store */
     store.dispatch(setNewItemFromElm(itemDataFromMsg));

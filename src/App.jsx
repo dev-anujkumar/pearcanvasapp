@@ -12,12 +12,13 @@ import store from './appstore/store';
 import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
+import { initializeGTM } from '../src/js/ga'
 import CanvasWrapper from './component/CanvasWrapper';
-import { modifyObjKeys } from './js/appUtils'
-// IMPORT - Assets // 
+import { modifyObjKeys } from './js/appUtils';
+// IMPORT - Assets //
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-1.42.5 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.53.3 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -25,9 +26,13 @@ class App extends Component {
         this.state = {
             isConfigLoaded : false
         };
+        let isRefreshBrowser = localStorage.getItem('browser_refresh');
+        if (isRefreshBrowser == '0') {
+            localStorage.setItem('isChangeInSlate', 'false');
+        }
         this.getEnvConfig();
     }
-    
+
     getEnvConfig = () => {
         let requestURI = requestConfigURI();
         return axios.get(`${cypressConfig.getENVConfig}v1/getEnvConfig/${requestURI}`, {
@@ -39,6 +44,7 @@ class App extends Component {
                 let uri = response.data.env;
                 cypressConfig.currentEnv = uri;
                 modifyObjKeys(config, response.data)
+                initializeGTM(response.data)
                 const search = window.location.search;
                 const params = new URLSearchParams(search);
                 const projectUrn = params.get('projectUrn');
@@ -48,8 +54,8 @@ class App extends Component {
                 const ssoToken = params.get('ssoToken')
                 this.getQueryParameter(projectUrn, projectEntityUrn, slateEntityURN,slateManifestURN,ssoToken);
             }
-            
-            
+
+
         }).catch((error) => {
             console.log("Error in fetching origin:", error)
         })

@@ -74,7 +74,7 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
                 linkButtonDisable : false
             }
         }
-        case TOGGLE_LT_POPUP: {               
+        case TOGGLE_LT_POPUP: {
             return {
                 ...state,
                 toggleLT : action.payload.toggleLT,
@@ -84,13 +84,13 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
                 learningToolDisValue : ''
             }
         }
-        case LEARNING_TOOL_DIS_VALUE: {               
+        case LEARNING_TOOL_DIS_VALUE: {
             return {
                 ...state,
                 learningToolDisValue : action.payload.learningToolDisValue
             }
         }
-        case GET_DISCIPLINE: {                 
+        case GET_DISCIPLINE: {
             return {
                 ...state,
                 showDisFilterValues : action.payload.showDisFilterValues,
@@ -101,10 +101,10 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
             return {
                 ...state,
                 selectedResultFormApi : "",
-             
+
             }
-        }        
-        case GET_LEARNING_SYSTEMS: {                
+        }
+        case GET_LEARNING_SYSTEMS: {
             return {
                 ...state,
                 learningSystems : action.payload.learningSystems,

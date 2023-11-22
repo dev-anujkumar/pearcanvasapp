@@ -1,6 +1,6 @@
 import config from '../../src/config/config.js';
 import * as actions from '../../src/js/getAllSlatesData.js';
-import {allSlatesData,returnAllSlateData} from '../../fixtures/AllSlatesTestData';
+import {allSlatesData,returnAllSlateData, returnAllSlateDataElse, returnAllSlateDataEmpty, returnFrontmatter} from '../../fixtures/AllSlatesTestData';
 import { communicationAssessmentSlateData } from '../../fixtures/slateTestingData'
 jest.mock('../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
@@ -84,4 +84,62 @@ it('Test Function----->fetchAnySlateData ',()=>{
     actions.fetchAnySlateData(communicationAssessmentSlateData.getRequiredSlateData)(dispatch)
     expect(spyFunction).toHaveBeenCalled()
 })
+    it('Test Function----->setCurrentSlateAncestorData - Conditional Coverage - backmatter',()=>{
+        config.parentOfParentItem='backmatter'
+        const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
+        }
+        actions.setCurrentSlateAncestorData(returnAllSlateDataEmpty)(dispatch)
+        expect(spyFunction).toHaveBeenCalled()
+    })
+    it('Test Function----->setCurrentSlateAncestorData - Conditional Coverage - frontmatter',()=>{
+        config.parentOfParentItem='frontmatter'
+        const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
+        }
+        actions.setCurrentSlateAncestorData(returnAllSlateDataEmpty)(dispatch)
+        expect(spyFunction).toHaveBeenCalled()
+    })
+    it('Test Function----->setCurrentSlateAncestorData - Conditional Coverage - default - frontmatter',()=>{
+        config.parentLabel= 'frontmatter'
+        config.parentOfParentItem=''
+        const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
+        }
+        actions.setCurrentSlateAncestorData(returnFrontmatter)(dispatch)
+        expect(spyFunction).toHaveBeenCalled()
+    })
+    it('Test Function----->setCurrentSlateAncestorData - Conditional Coverage - default - frontmatter',()=>{
+        config.parentLabel= 'frontmatter'
+        config.parentOfParentItem=''
+        const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
+        }
+        actions.setCurrentSlateAncestorData(returnAllSlateDataEmpty)(dispatch)
+        expect(spyFunction).toHaveBeenCalled()
+    })
+    it('Test Function----->setCurrentSlateAncestorData - Conditional Coverage - default - backmatter',()=>{
+        config.parentLabel= 'backmatter'
+        config.parentOfParentItem=''
+        const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
+        }
+        actions.setCurrentSlateAncestorData(returnAllSlateDataEmpty)(dispatch)
+        expect(spyFunction).toHaveBeenCalled()
+    })
+    it('Test Function----->setCurrentSlateAncestorData - Conditional Coverage - default - backmatter',()=>{
+        config.parentLabel= 'BodyMatter'
+        config.parentOfParentItem=''
+        const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
+        }
+        actions.setCurrentSlateAncestorData(returnAllSlateDataEmpty)(dispatch)
+        expect(spyFunction).toHaveBeenCalled()
+    })
 })

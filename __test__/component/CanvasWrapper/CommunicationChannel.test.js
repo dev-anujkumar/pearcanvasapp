@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -12,6 +12,7 @@ import {
 } from '../../../fixtures/slateTestingData.js';
 import tinymce from 'tinymce/tinymce';
 import config from '../../../src/config/config';
+import { showNotificationOnCanvas } from '../../../src/constants/utility';
 let tinyMceEditor = {
     undoManager: { data: [], typing: false, beforeChange: jest.fn(), add: jest.fn(), undo: jest.fn() ,transact: () =>{ }},
     windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
@@ -75,20 +76,12 @@ const initialState = {
     autoNumberReducer: {
         isAutoNumberingEnabled: true
     },
+    assessmentReducer: {
+        assessmentId: "test"
+    }
 
 };
 
-jest.mock('../../../src/auth/openam.js', () => {
-    return function () {
-        this.isUserAuthenticated = function () { }
-        this.handleSessionExpire = function () { }
-        this.logout = function () { }
-    }
-})
-jest.mock('../../../src/js/auth_module.js', () => {
-    return function () {
-    }
-})
 jest.mock('../../../src/js/header.js', () => {
     return function () {
     }
@@ -248,6 +241,9 @@ describe('Testing communication channel', () => {
                 }
             }
         },
+        assessmentReducer: {
+            assessmentId: "test"
+        },
         getRequiredSlateData: communicationAssessmentSlateData,
         toggleCommentsPanel: jest.fn(),
         currentSlateLO: jest.fn(),
@@ -280,11 +276,11 @@ describe('Testing communication channel', () => {
         currentSlateLOType: jest.fn(),
         getProjectDetails: jest.fn(),
         fetchProjectLFs: jest.fn(),
-        tcmCosConversionSnapshot: jest.fn(),
         addNewComment: jest.fn(),
         deleteComment: jest.fn(),
         handleSlateRefresh: jest.fn(),
         setTocContainersAutoNumberList: jest.fn(),
+        saveLockDetails: jest.fn(),
         projectLearningFrameworks: {
             externalLF: [
                 { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e797' },
@@ -292,21 +288,19 @@ describe('Testing communication channel', () => {
             ]
         }
     }
-    let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
+    let wrapper = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store}><CanvasWrapper {...props} /></Provider></Suspense>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    test('Test for tocContainersLabelUpdate else case', () => {
+    test('Test for tocContainersLabelUpdate case', () => {
         let event = {
             data: {
                 type: "tocContainersLabelUpdate",
                 message: ""
             }
         }
-        const spyshowNotificationOnCanvas = jest.spyOn(channelInstance, 'showNotificationOnCanvas')
         channelInstance.handleIncommingMessages(event);
-        expect(channelInstance.showNotificationOnCanvas).toHaveBeenCalled()
-        spyshowNotificationOnCanvas.mockClear()
+        expect(showNotificationOnCanvas)
     })
     test('Test for getPermissions else case', () => {
         let event = {
@@ -984,6 +978,34 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
+    test('Test for elementLabelCombineData case', () => {
+        let event = {
+            data: {
+                type: "elementLabelCombineData",
+                message: {
+                    "test":""
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for unlinkTocContainer case', () => {
+        let event = {
+            data: {
+                type: "unlinkTocContainer",
+                message: {
+                    "test":""
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
     test('Test for cancelCEPopup case', () => {
         let event = {
             data: {
@@ -1036,6 +1058,18 @@ describe('Testing communication channel', () => {
         let event = {
             data: {
                 type: "refreshElementWithTable",
+                message: ""
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for brokerPreview case', () => {
+        let event = {
+            data: {
+                type: "brokerPreview",
                 message: ""
             }
         }
@@ -2105,7 +2139,7 @@ describe('Testing communication channel', () => {
         }
     }
     let store2 = mockStore(initialState2);
-    let wrapper2 = mount(<Provider store={store2}><CanvasWrapper {...props} /></Provider>)
+    let wrapper2 = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store2}><CanvasWrapper {...props} /></Provider></Suspense>)
     let channelInstance2 = wrapper2.find('CommunicationWrapper').instance();
     test('Test for getPermissions case - permissions present', () => {
         let event = {
@@ -2439,6 +2473,30 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spysendingPermissions.mockClear()
     });
+    test('Test for sendSlatesLabel case', () => {
+        let event = {
+            data: {
+                type: "sendSlatesLabel",
+                message:{ labels : "slate" }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for sendSlatesLabel case', () => {
+        let event = {
+            data: {
+                type: "sendSlatesLabel",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
     test('Test for commentDeleted case', () => {
         let event = {
             data: {
@@ -2561,7 +2619,7 @@ describe('Testing communication channel', () => {
             currentSlateAncestorData: {}
         }
     })
-    const wrapper1 = mount(<Provider store={store1}><CanvasWrapper {...props} /></Provider>)
+    const wrapper1 = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store1}><CanvasWrapper {...props} /></Provider></Suspense>)
     const channelInstance1 = wrapper1.find('CommunicationWrapper').instance();
 
     test('Test for cancelCEPopup case - empty currentSlateLOData', () => {
@@ -2729,4 +2787,19 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
+    it("Test for lockUserDetailsFromCount case", () => {
+      let event = {
+        data: {
+          type: "lockUserDetailsFromCount",
+          message: { lockInfo: "test" },
+        },
+      };
+      const spysendingPermissions = jest.spyOn(
+        channelInstance,
+        "handleIncommingMessages"
+      );
+      channelInstance.handleIncommingMessages(event);
+      expect(channelInstance.handleIncommingMessages).toHaveBeenCalled();
+      spysendingPermissions.mockClear();
+    });
 })

@@ -11,14 +11,15 @@ describe('Filter Assessment component', () => {
     let props = {
         setCurrentAssessment: {
             "title": 'Pearson Assessments',
-            "id": ""
+            "id": "urn:setCurrentAssessment"
         },
         "openedFrom":"singleSlateAssessmentInner",
         setCurrentCiteTdx:jest.fn(),
         setCurrentInnerCiteTdx:jest.fn(),
         AssessmentSearchTitle:jest.fn(),
-        resetPage:jest.fn()
-
+        resetPage:jest.fn(),
+        filterUUID: "urn:test",
+        searchTitle: "title:test"
     }
     let initialState={
         citeTdxReducer:{
@@ -82,3 +83,55 @@ describe('Filter Assessment component', () => {
     })
 
 });
+describe('Conditional Coverage for Filter Assessment Data', () => {
+    let props2 = {
+        setCurrentAssessment: {
+            "title": 'Pearson Assessments',
+            "id": ''
+        },
+        "openedFrom":"",
+        setCurrentCiteTdx:jest.fn(),
+        setCurrentInnerCiteTdx:jest.fn(),
+        AssessmentSearchTitle:jest.fn(),
+        resetPage:jest.fn()
+    }
+    let props3 = {
+        "openedFrom":"",
+        setCurrentCiteTdx:jest.fn(),
+        setCurrentInnerCiteTdx:jest.fn(),
+        AssessmentSearchTitle:jest.fn(),
+        resetPage:jest.fn()
+    }
+    let initialState2={
+        citeTdxReducer:{
+            sortBy:"name",
+            sortOrder:1
+        }
+    }
+    let store = mockStore(initialState2);
+    const component2 = mount(<Provider store={store}><FilterAssessmentData {...props2} /></Provider>);
+    let componentInstance2 = component2.find('FilterAssessmentData').instance();
+    const spyHandleSearch2 = jest.spyOn(componentInstance2, 'handleSearch')
+
+    const component3 = mount(<Provider store={store}><FilterAssessmentData {...props3} /></Provider>);
+    let componentInstance3 = component3.find('FilterAssessmentData').instance();
+    const spyHandleSearch3 = jest.spyOn(componentInstance3, 'handleSearch')
+
+    it('handleSearch Function', () => {
+        const event = {
+            preventDefault() { }
+        }
+        componentInstance2.handleSearch(event);
+        expect(spyHandleSearch2).toHaveBeenCalled()
+        spyHandleSearch2.mockClear()
+    })
+
+    it('handleSearch Function -> conditional coverage', () => {
+        const event = {
+            preventDefault() { }
+        }
+        componentInstance3.handleSearch(event);
+        expect(spyHandleSearch3).toHaveBeenCalled()
+        spyHandleSearch3.mockClear()
+    })
+})

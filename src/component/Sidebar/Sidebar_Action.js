@@ -7,13 +7,13 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
-    CHECK_ASIDE_NUMBER 
+    CHECK_ASIDE_NUMBER
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
+import { DECORATIVE, DECORATIVE_IMAGE, POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -22,8 +22,11 @@ import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_Sho
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
-import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getContainerEntityUrn, updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+import ElementConstants from '../ElementContainer/ElementConstants';
+import { decoToOtherTypeConversion, fetchOldDataAfterConversion } from '../ElementContainer/ElementContainer_Actions';
+import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -40,6 +43,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
 
+    // setting secondaryOption as default when newElementData does not have secondaryOption after conversion from any other figure type to decorative image
+    if(newElementData?.secondaryOption === '' && newElementData?.primaryOption === 'primary-image-figure') {
+        newElementData.secondaryOption = 'secondary-image-figure-width'
+    } else if(newElementData?.primaryOption === 'primary-image-equation' && newElementData?.secondaryOption === '') {
+        newElementData.secondaryOption = 'secondary-image-equation-half'
+    } else if(newElementData?.primaryOption === 'primary-image-table' && newElementData?.secondaryOption === '') {
+        newElementData.secondaryOption = 'secondary-image-table-half'
+    }
+
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
         outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
@@ -48,7 +60,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
         if (oldElementData.type === "figure") {
-            if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption'])) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
+            if (!(imageSource.includes(oldElementData.figuretype) && (imageDestination.includes(newElementData['primaryOption']) || newElementData.primaryOption === DECORATIVE_IMAGE)) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
                 oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
             }
             if(oldElementData.figuredata.srctype){
@@ -64,7 +76,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
 
             /* On conversion of primary option type, change the POD value to default value */
-            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" || oldElementData.figuredata?.decorative) &&
             inputPrimaryOptionType !== outputPrimaryOptionType ){
                 oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
             }
@@ -91,7 +103,50 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if (figureElementsType.includes(oldElementData.figuretype)) {
                 oldElementData.hasOwnProperty('subtitle') ? delete oldElementData.subtitle : oldElementData;  // conversion of old figure to new type at the time of conversion
             }
-        
+
+            const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
+
+            // Removing fields on conversion from other figure types to decorative image
+            if (newElementData?.primaryOption === DECORATIVE_IMAGE) {
+                if(isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')){
+                    oldElementData.numberedandlabel = false
+                }
+                delete oldElementData?.title
+                delete oldElementData?.captions
+                delete oldElementData.html?.captions
+                delete oldElementData.html?.text
+                delete oldElementData.html?.title
+                delete oldElementData.figuredata?.type
+            }
+            // Resetting fields on conversion from decorative image to other figure types
+            else if (oldElementData.figuredata?.decorative) {
+                dispatch(decoToOtherTypeConversion(true));
+                dispatch(fetchOldDataAfterConversion(oldElementData));
+                if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
+                    oldElementData.numberedandlabel = true
+                    oldElementData.displayedlabel = "Figure"
+                    if(oldElementData?.hasOwnProperty('manualoverride')){
+                        delete oldElementData.manualoverride
+                    }
+                }
+                oldElementData.title = {
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: ""
+                }
+                oldElementData.captions = {
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: ""
+                }
+                oldElementData.html = {
+                    ...oldElementData.html,
+                    title: "<p><br></p>",
+                    text: "",
+                    captions: "<p><br></p>",
+                    credits: oldElementData?.html?.credits
+                }
+                delete oldElementData?.figuredata?.decorative
+                oldElementData.figuredata.type = "image"
+            }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],
@@ -215,7 +270,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
         conversionDataToSend = {
             ...conversionDataToSend,
-            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'      
+            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'
         }
     }
 
@@ -228,43 +283,49 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     }
     config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    axios.post(url, JSON.stringify(conversionDataToSend), { 
+    axios.post(url, JSON.stringify(conversionDataToSend), {
         headers: {
             "Content-Type": "application/json",
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async res =>{
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         let parentData = store;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
-        if (elementType.indexOf(oldElementData.type) !== -1) {
-            if(oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")){
-                oldElementData.figuredata = oldElementFigureData
-            }           
-            let elementConversionData ={
-                currentSlateData:{
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
-                oldElementData:oldElementData,
-                response:res.data
-            }
-            if (config.isPopupSlate) {
-                elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
-            }
-            if (currentSlateData && currentSlateData.status === 'approved') {
-                await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
-            }
-            else {
-                /**
-                * @param {Object} newAppStore 
-                * @description - Adding showhide data into appstore variable to form snapshots of conversion
-                */
-                const newAppStore = showHideObj?.element?.type === "showhide" ? {...appStore, showHideObj } : appStore;
-                tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
-            }
+        // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
+        const isTbElement = appStore?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.parent?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        if (!isTbElement) {
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                if (oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")) {
+                    oldElementData.figuredata = oldElementFigureData
+                }
+                let elementConversionData = {
+                    currentSlateData: {
+                        status: currentSlateData.status,
+                        contentUrn: currentSlateData.contentUrn
+                    },
+                    oldElementData: oldElementData,
+                    response: res.data
+                }
+                if (config.isPopupSlate) {
+                    elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
+                }
+                if (currentSlateData && currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+                }
+                else {
+                    /**
+                    * @param {Object} newAppStore
+                    * @description - Adding showhide data into appstore variable to form snapshots of conversion
+                    */
+                    const newAppStore = showHideObj?.element?.type === "showhide" ? { ...appStore, showHideObj } : appStore;
+                    tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
+                }
 
+            }
         }
         /**-----------------------------------------------------------------------------------------------------------*/
 
@@ -303,7 +364,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 }, 0)
                 ctaNode.classList.add("place-holder")
             }
-        } 
+        }
         /**-------------------------------------------------------------------------------------------------------- */
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
@@ -320,10 +381,22 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                         break;
                 }
             } else {
-                onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
-            }
+                onUpdateSuccessInShowHide(res?.data, bodymatter, indexes, appStore?.asideData);
+            } // Update store for element inside Tab of TB
+        } else if (appStore?.asideData?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.subtype === ElementConstants.TAB) {
+            bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]] = res.data;
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
+            // TB->Tab->AS/WE->Element
+        } else if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) {
+            switch(indexes.length) {
+                case 5:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = res.data;
+                    break;
+                case 6:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = res.data;
+                    break;
+            }
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
             switch(indexes.length) {
                 case 4:
@@ -333,6 +406,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
                     break;
             }
+            // Tab Element of TB element
+        } else if (appStore?.asideData?.parentElementType === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parentElementSubtype === ElementConstants.TAB) {
+            focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0] = res.data;
         }
         else {
             indexes.forEach(index => {
@@ -371,7 +447,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             activeElementObject.numbered= res.data.figuredata.numbered
           activeElementObject.startNumber= res.data.figuredata.startNumber
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
-            
+
         }
         const asideElementTypes = ['element-aside', 'element-workedexample'];
         if (asideElementTypes.includes(newElementData.elementType)) {
@@ -388,6 +464,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
         }
+        // Handling autonumbering when figure type is changed to decorative
+        else if(isAutoNumberingEnabled && outputPrimaryOptionEnum === DECORATIVE && !isBCE_Element) {
+            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
+            const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
+            dispatch(updateAutoNumberSequenceOnDelete(parentIndex, res.data.contentUrn, autoNumberedElements))
+        }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
          * Setting the correct active element to solve this issue.
@@ -402,12 +485,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 elementWipType: "element-authoredtext"
             }
         }
-        //tcm conversion code   
-        if (config.tcmStatus) {
+
+        //tcm conversion code
+        if (config.tcmStatus && !isTbElement) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
-                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id, res.data);
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch, res.data.id, res.data);
             }
-        }   
+        }
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
@@ -418,7 +502,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             node2?.focus()
         }
     })
-    
+
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -498,8 +582,8 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
         /** latest version for WE/CE/PE/AS/2C*/
         convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
-        /** 
-        * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare 
+        /**
+        * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare
         * snapshots of showhide element
         * @param {String} typeOfElement
         */
@@ -515,7 +599,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
             actionStatusVersioning.status ="accepted"
             prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
         }
-       
+
         prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
     } catch(error){
         console.log("Error: ", error)
@@ -547,7 +631,7 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
     if (oldElementData && oldElementData.title && oldElementData.title.text) {
         oldElementData.title.text = "";
     }
-    
+
     /** [PCAT-6792] | WIP changes in embedded assessment */
     /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
     if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id == "")) {
@@ -572,11 +656,11 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
-        indexes = indexes.toString().split("-");
+        indexes = indexes?.toString().split("-");
         //Separate case for element conversion in showhide
         if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
             const innerElementType = activeElement.elementType
-            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
+            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj, '', appStore?.asideData);
             let showhideElement = {
                 currentElement: oldElementData.currentElement,
                 index: activeElement.index,
@@ -603,9 +687,25 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                 showHideType: findSectionType(indexes[1])
             }
             dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
+            // If Element is inside Tab Element of TB element
+        } else if (appStore?.asideData?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.subtype === ElementConstants.TAB) {
+            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+            // TB->Tab->AS/WE->Element
+        } else if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) {
+            let elementOldDataTab;
+            switch(indexes.length) {
+                case 5:
+                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    break;
+                case 6:
+                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    break;
+            }
+            dispatch(convertElement(elementOldDataTab, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
             let elementOldData2C;
             switch(indexes.length) {
@@ -617,6 +717,10 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+            // Tab Element of TB element
+        } else if (appStore?.asideData?.parentElementType === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parentElementSubtype === ElementConstants.TAB) {
+            let elementOldData = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0];
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         }
         else {
             indexes.forEach(index => {
@@ -627,19 +731,19 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                         if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
                             bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                         }
-                        
+
                     }
                 }
-            
+
             });
         }
     }
-    
+
     return store;
 }
 
 /**
- * 
+ *
  * @param {Object} elementData | element's data which is being converted
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
@@ -699,13 +803,13 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
                 let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
-            } // For Nested BL inside AS i.e Slate->AS/WE(header)->BL 
+            } // For Nested BL inside AS i.e Slate->AS/WE(header)->BL
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "groupedcontent"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.groupeddata?.bodymatter[slateLevelBLIndex[1]]?.groupdata?.bodymatter[slateLevelBLIndex[2]], dataToSend)
-            }// For Nested BL inside 2C & 3C i.e Slate->2C/3C->BL 
+            }// For Nested BL inside 2C & 3C i.e Slate->2C/3C->BL
             else if((dataToUpdate?.slateLevelBLIndex?.length)%2 === 0 && parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "element-aside"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]], dataToSend)
-            } // For Nested BL inside AS i.e Slate->WE(Body)->BL 
+            } // For Nested BL inside AS i.e Slate->WE(Body)->BL
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "element-aside"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.elementdata?.bodymatter[slateLevelBLIndex[1]]?.contents?.bodymatter[slateLevelBLIndex[2]], dataToSend)
             }//For BL on Slate Level i.e Slate->BL
@@ -913,7 +1017,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                     newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
                     updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
                     break;
-    
+
                 case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
                     if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
@@ -931,7 +1035,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                    break;
     }
         }
-    } 
+    }
         elementEntityUrn = updatedElement?.contentUrn
 
         if (typeof tmpIndex === 'number') {
@@ -947,7 +1051,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                 case 3:
                     if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
-                    } 
+                    }
                     if (newBodymatter[tmpIndex[0]].type == "element-aside") {
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
                     }

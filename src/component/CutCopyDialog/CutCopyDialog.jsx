@@ -2,24 +2,29 @@ import React from 'react'
 import store from '../../appstore/store';
 import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
+import elementConstant from '../ElementSaprator/ElementSepratorConstants';
+import { hasReviewerRole } from '../../constants/utility';
+import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions';
 
 // function to be called on click of refresh option
 const refreshElement = (props) => {
     let index = null;
-    // handling blockquote index for element refresh 
+    // handling blockquote index for element refresh
     if(props?.element?.elementdata?.type === 'blockquote' && props?.index) {
         index = props?.index + '-0';
     }
     props.handleBlur(true, null, index, null, null, null, 'REFRESH_ELEMENT');
+    // calling the function to close copy menu
+    props.toggleCopyMenu(false);
 }
 
 const CutCopyDialog = props => {
-    
+
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
-    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping', 'element-pdf', 'element-assessment', 'manifest'];
+    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping', 'element-pdf', 'element-assessment', 'manifest','element-tcc'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
-    const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
+    const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
@@ -27,7 +32,7 @@ const CutCopyDialog = props => {
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             {
-                showRefreshOption && <div className="copyUrn" onClick={() => refreshElement(props)}>
+                showRefreshOption && !hasReviewerRole() && <div className="copyUrn" onClick={() => refreshElement(props)}>
                     Refresh
                 </div>
             }
@@ -39,11 +44,10 @@ const CutCopyDialog = props => {
 export default CutCopyDialog;
 
 export const renderCutCopyOption = (componentProps) => {
-    const { userRole,permissions, element: { type,subtype } } = componentProps
+    const { userRole,permissions, asideData, element: { type,subtype } } = componentProps
     const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure", "stanza", "element-citation","citations","poetry","groupedcontent","showhide","discussion","popup","element-dialogue"],
-            allowedRoles = ["admin", "manager", "edit", "default_user"],
-            restrictedTypes = ["manifestlist"];
-    if (!restrictedTypes.includes(type) && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) ) {
+            allowedRoles = ["admin", "manager", "edit", "default_user"]
+    if ( !hasReviewerRole() && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) && asideData?.parent?.subtype !== elementConstant.TAB && asideData?.grandParent?.asideData?.parent?.subtype !== elementConstant.TAB && type !== elementConstant.TCC_ELEMENT_TYPE) {
         return (
             <>
                 <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>
@@ -89,9 +93,12 @@ export const performCutCopy = (event, componentProps, type) => {
     popupCutCopyParentData(data);
 }
 
-export const copyToClipBoard = (e, _props) => {
+export const copyToClipBoard = async (e, _props) => {
     e.stopPropagation();
-    const text = _props.element.id || _props.element.versionUrn
+    let text = _props.element.id || _props.element.versionUrn
+    if (text.includes('manifest')) {
+        text = await getLatestVersion(_props.element.contentUrn)
+    }
     const tempElement = document.createElement('textarea');
     tempElement.value = text;
     document.body.appendChild(tempElement);

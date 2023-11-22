@@ -7,16 +7,16 @@ import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
-import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
+import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_AUTONUM, SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
-import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes';
+import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -29,7 +29,9 @@ class PopUp extends React.Component {
             wordPasteProceed: false,
             isChecked: false,
             focusedButton: this.setFocus(props),
-            deleteWarningPopupCheckbox: false
+            deleteWarningPopupCheckbox: false,
+            isPowerPasteInvalidContent: false,
+            setAsDecorativePopUpCheckbox: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -54,6 +56,9 @@ class PopUp extends React.Component {
         return newHtml;
     }
 
+    checkInvalidPowerPasteContent = (flag) => {
+        this.setState({isPowerPasteInvalidContent: flag})
+    }
     componentDidMount() {
         const refVal = this
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
@@ -79,7 +84,7 @@ class PopUp extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.showConfirmation) {
+        if (this.props.showConfirmation || this.props.isApprovedSlate) {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
@@ -107,6 +112,7 @@ class PopUp extends React.Component {
             || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN'
             || e.target.matches('dfn')
             || e.target.parentNode && (e.target.parentNode.tagName == 'INS' || e.target.parentNode && e.target.parentNode.tagName == 'DFS')
+            || (e.target.matches('abbr') || e.target.parentNode.matches('abbr')) && (e.target.getAttribute('asset-id') || e.target.parentNode.getAttribute('asset-id'))
         ) {
             if (config.isSavingElement) {
                 return false
@@ -145,7 +151,7 @@ class PopUp extends React.Component {
                 return PRIMARY_BUTTON
             }
         } else {
-            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup ) {
+            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.setDecorativePopup) {
                 return PRIMARY_BUTTON;
             } else {
                 return SECONDARY_BUTTON;
@@ -161,7 +167,7 @@ class PopUp extends React.Component {
         if(this.props.WordPastePopup) {
             isButtonDisabled = element?.classList?.contains('disabled');
         }
-        //Check if TCM Canvas Popup Revert Button is disabled if not disabled then perform click operation 
+        //Check if TCM Canvas Popup Revert Button is disabled if not disabled then perform click operation
         else if(this.props.isTCMCanvasPopup) {
             isButtonDisabled = element?.classList?.contains('disable');
         }
@@ -242,12 +248,26 @@ class PopUp extends React.Component {
         });
     }
 
+    // When "Set as Decorative Image" button is clicked
+    handleClickOnSetButton = () => {
+        if (this.state.setAsDecorativePopUpCheckbox) sendDataToIframe({ 'type': DISABLE_DI_CONVERSION_WARNING, 'message': { disableDIConversionWarning: true } });
+    }
+
+    // When "Don't ask me again" checkbox of decorative popup is checked
+    handleSetAsDecorativeWarningPopupCheckbox = (event) => {
+        this.setState({
+            setAsDecorativePopUpCheckbox: event?.target?.checked
+        });
+    }
+
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
-    * @param {event} 
+    * @param {event}
     */
     renderButtons = (props) => {
-        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage) { //Slate lock popup
+        if(props.isSlateLocked) return null;
+
+        if (props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
                 <div className={`dialog-buttons ${props.slateLockClass}`}>
@@ -294,6 +314,14 @@ class PopUp extends React.Component {
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
                     <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Ok</span>
                     <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Cancel</span>
+                </div>
+            )
+        }
+        if (props.removeMarkedIndex) {
+            return (
+                <div className={`dialog-buttons ${props.removeMarkedClass}`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.removeMarkedClass}`} onClick={(e) => props.removeMarkedIndexContent(e)}>Yes</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.removeMarkedClass}`} id='close-container' onClick={(e) => props.toggleMarkedIndexPopup(e)}>Cancel</span>
                 </div>
             )
         }
@@ -362,6 +390,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.setDecorativePopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={(e) => {props.agree(false, e);this.handleClickOnSetButton();}}>{props.setAsDecorative}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         if (props.UsagePopup) {
             return (
                 <div className={`dialog-buttons`}>
@@ -370,17 +406,25 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if (props.isOwnersSlate) {
+        if (props.isCurrentSlate === 'owner') {
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.proceed(this.state.isChecked, false, e)}>{props.proceedButton}</span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
-        } else if (props.isSubscribersSlate) {
+        }
+        if (props.unlockSlateToggle) { // Warning buttons actions on unlock button clicked by Admin
+            return (
+                <div className={`dialog-buttons`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={(e) =>props.handleUnlockSlate('ok')}>OK</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button`} onClick={(e) => props.handleCancelUnlock('cancel')}>{props.cancelBtnText}</span>
+                </div>
+            )
+        } else if (props.isCurrentSlate === 'subscriber') {
             return (
                 <div className={`subscriberSlate-buttons`}>
-                    <span option={PRIMARY_BUTTON} className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
+                    <span option={PRIMARY_BUTTON} className="subscriberSlate-ok-button" onClick={(e) => props.proceed(this.state.isChecked, false, e)}>OK</span>
                 </div>
             )
         }
@@ -403,16 +447,11 @@ class PopUp extends React.Component {
     }
     /**
     * @description - This function is responsible for handling the Input box of the popup.
-    * @param {event} 
+    * @param {event}
     */
     renderInputBox = (props) => {
-        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle) {
             return null
-        }
-        else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
-            return (
-                <div className="lockInputBox">{props.addonText}<input disabled value={props.inputValue} /></div>
-            )
         }
         else if (props.assessmentAndInteractive) {
             return (
@@ -425,6 +464,8 @@ class PopUp extends React.Component {
                     index={props.index}
                     onPowerPaste={props.onPowerPaste}
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
+                    checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
+                    isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
                 />
             )
         } else if (props.withCheckBox) {
@@ -432,7 +473,7 @@ class PopUp extends React.Component {
             return (
                 <div className="OwnersSlateInputLine">
                     <input className="OwnersSlateCheckBox" type="checkbox" checked={isChecked} onChange={this.handleChange} />
-                    <p>{DO_NOT_SHOW_TXT}</p>
+                    {props.isCurrentSlate === "subscriber" ? <p>{DONT_ASK_TEXT}</p> : <p>{DO_NOT_SHOW_TXT}</p>}
                 </div>
             )
         }
@@ -449,7 +490,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle) {
             return null
         }
         else {
@@ -461,29 +502,29 @@ class PopUp extends React.Component {
 
     /**
     * @description - This function is responsible for rendering the Dialog text in the popup.
-    * @param {event} 
+    * @param {event}
     */
 
     renderDialogText = (props) => {
         if(props.alfrescoExpansionPopup){
             let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
                   <div className='imageContainer'>
-                    <img 
-                      className='img-inside-container' 
-                      src={image.imgSrc} 
+                    <img
+                      className='img-inside-container'
+                      src={image.imgSrc}
                       id={image.imgId}
                       onClick={() => this.processImageID(image.imgId)}
-                    /> 
-                  </div>    
+                    />
+                  </div>
                 ))
             return (
-                <> 
+                <>
                    <div className='tableAlfrescoPopupHeader'>{props?.alfrescoExpansionMetaData?.headerText}</div>
                     <div className="Please-select-an-image">{props?.alfrescoExpansionMetaData?.normalText}</div>
                     <div className='tableElement-img-container'>
                         {props.alfrescoExpansionMetaData.renderImages.length > 0 ? imgList : <LargeLoader/>}
                     </div>
-                    
+
                 </>
             )
         }
@@ -516,6 +557,15 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.removeMarkedIndex) {
+            //jsx dialog text
+            return (
+                <>
+                    <h2 className='markedIndexWarning'>Warning</h2>
+                    {<div className={`dialog-window  ${props.removeMarkedClass}`} >{props.dialogText}</div>}
+                </>
+            )
+        }
         else if (props.isLockReleasePopup) {
             return (
                 <div className={`dialog-window delete-element-text ${props.isElmApiError ? props.isElmApiError : ''} ${props.slateLockClass}`} >{props.dialogText}</div>
@@ -526,7 +576,7 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
             )
         }
-        else if (props.isLockPopup || props.sytaxHighlight) {
+        else if (props.sytaxHighlight) {
             return (
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
             )
@@ -567,6 +617,7 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
+                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
                 </>
             )
         } else if (props.LOPopup) {
@@ -589,6 +640,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.setDecorativePopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{this.props.isAutoNumberingEnabled ? SET_AS_DECORATIVE_IMAGE_AUTONUM : SET_AS_DECORATIVE_IMAGE_NON_AUTONUM}<br /><br />{SET_AS_DECORATIVE_IMAGE_NOTE}</div>
+                </>
+            )
+        }
         else if (props.UsagePopup) {
             return (
                 <>
@@ -597,7 +656,7 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if (props.isOwnersSlate) {
+        else if (props.isCurrentSlate === 'owner') {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
@@ -605,10 +664,11 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if (props.isSubscribersSlate) {
+        else if (props.isCurrentSlate === 'subscriber') {
             return (
                 <>
-                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</div>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</div>
                 </>
             )
         }
@@ -616,6 +676,23 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className={`dialog-window blockcode-warning-text`}>Please select a language from element settings panel to start editing the Block Code element.</div>
+                </>
+            )
+        }
+        else if (props.isApprovedSlate) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.approvePopupClass}`}>{props.dialogText}<br /><br /></div>
+                </>
+            )
+        }
+        else if (props.unlockSlateToggle) {
+            //jsx dialog text to show unlock warning message on Admin side
+            return (
+                <>
+                    <h2 className='tocDeleteHeader'>Warning</h2>
+                    {<div className={`dialog-window  ${props.tocDeleteClass}`} >{props.dialogText}</div>}
                 </>
             )
         }
@@ -628,7 +705,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.unlockSlateToggle) {
             return null
         }
         else {
@@ -641,7 +718,7 @@ class PopUp extends React.Component {
     }
 
     renderCommentPanelInput = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.unlockSlateToggle) {
             return null
         }
         else {
@@ -676,24 +753,32 @@ class PopUp extends React.Component {
                     <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
-        } else {
+        } else if (props.setDecorativePopup) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={this.state.setAsDecorativePopUpCheckbox} checked={this.state.setAsDecorativePopUpCheckbox} onChange={(event) => this.handleSetAsDecorativeWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        }
+        else {
             return null
         }
     }
 
     render() {
-        const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData } = this.props;
+        const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData, assessmentConfirmation } = this.props;
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
-                                {this.renderCloseSymbol(this.props)}
+                                {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}
                                 {this.renderPopupCheckbox(this.props)}
-                                <div ref={this.wordPastePopupTextAreaRef} className={this.props.isWordPastePopup ? `dialog-input-poc ${this.state.wordPasteProceed && 'disable-mouse-click'}` : `dialog-input ${assessmentClass}`}>
+                                <div ref={this.wordPastePopupTextAreaRef} className={this.props.isWordPastePopup ? `dialog-input-poc ${this.state.wordPasteProceed && 'enable-scrolling'}` : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 {!isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
@@ -715,11 +800,11 @@ PopUp.defaultProps = {
     rows: "5",
     active: true,
     saveButtonText: "Save",
-    isLockPopup: false,
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",
-    proceedButton: "Proceed"
+    proceedButton: "Proceed",
+    setAsDecorative: "Set as Decorative Image"
 
 }
 

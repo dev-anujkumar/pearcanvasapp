@@ -1,16 +1,16 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as updateHelpers from '../../../src/component/ElementContainer/ElementContainerUpdate_helpers';
-import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData, slateWithShowhideData, updateBL, updateBL2, updateBL3, updateBL4, updateBL_IN_AS, updateBL_IN_AS2, updateBL_IN_AS3, updateBL_IN_AS4, updateBL_IN_SH, updateBL_IN_SH2, updateBL_IN_SH3, updateBL_IN_WE, updateBL_IN_WE2, updateBL_IN_WE3, updateBL_IN_WE4, updateBL_IN_2C_3C, updateBL_IN_2C_3C2, updateBL_IN_2C_3C3, updateBL_IN_2C_3C4, communicationAssessmentSlateData} from "../../../fixtures/slateTestingData"
+import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData, slateWithShowhideData, updateBL, updateBL2, updateBL3, updateBL4, updateBL_IN_AS, updateBL_IN_AS2, updateBL_IN_AS3, updateBL_IN_AS4, updateBL_IN_SH, updateBL_IN_SH2, updateBL_IN_SH3, updateBL_IN_WE, updateBL_IN_WE2, updateBL_IN_WE3, updateBL_IN_WE4, updateBL_IN_2C_3C, updateBL_IN_2C_3C2, updateBL_IN_2C_3C3, updateBL_IN_2C_3C4, communicationAssessmentSlateData, update_BL_in_TB1, update_BL_in_TB2, update_BL_in_TB3, update_BL_in_TB4} from "../../../fixtures/slateTestingData"
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData } from "../../../fixtures/containerActionsTestingData"
+import { slateLevelData, newTabSlate } from "../../../fixtures/containerActionsTestingData"
 import { AUTHORING_ELEMENT_UPDATE } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import metadataTestData from '../../../fixtures/ElementMetadataAnchorTestData';
 import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../../src/component/FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFigureTypesAllowed } from '../../../src/component/FigureHeader/AutoNumberConstants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
@@ -981,6 +981,352 @@ it("Versioned element - updateNewVersionElementInStore4", () => {
             expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
             spyupdateElementInStore.mockClear()
         })
+
+       it("updateElementInStore - update element in Tab inside TB element", () => {
+
+          const elementToUpdate = {
+             "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+             "type": "figure",
+             "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+             "html": {
+                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+             },
+             "comments": false,
+             "tcm": true,
+             "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+             "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+             "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
+          }
+          let store = mockStore(() => initialState);
+          let args = {
+             updatedData: elementToUpdate,
+             asideData: {subtype: 'tab'},
+             parentUrn: null,
+             elementIndex: { split: () => { return [1, 0, 0, 3]}},
+             showHideType: null,
+             parentElement: {type: 'groupedcontent'},
+             dispatch: store.dispatch,
+             newslateData: newTabSlate.slateLevelData,
+             autoNumberDetails: {
+                autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbd" },
+                isAutoNumberingEnabled: true
+             }
+          }
+          const expectedAction = {
+             type: AUTHORING_ELEMENT_UPDATE,
+             payload: {
+                slateLevelData: newTabSlate.slateLevelData
+             }
+          }
+          const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+          updateHelpers.updateElementInStore(args)
+          expect(spyupdateElementInStore).toHaveBeenCalled()
+          expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+          spyupdateElementInStore.mockClear()
+       })
+       it("updateElementInStore - update element in Tab inside TB element else case conditional coverage", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "figure",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "html": {
+               "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+            },
+            "comments": false,
+            "tcm": true,
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {subtype: 'tab'},
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 0, 3]}},
+            showHideType: null,
+            parentElement: {type: 'groupedcontent'},
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbe" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->HEAD->Popup if case (postertextobject)", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "popup",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+            "sectionType": "postertextobject"
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 0, 4, 0]}},
+            showHideType: null,
+            parentElement: {type: 'popup'},
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbe" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->HEAD->Popup else case for conditional coverage", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "popup",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 0, 4, 0]}},
+            showHideType: null,
+            parentElement: {type: 'popup'},
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbe" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->BODY->Popup if case (postertextobject)", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "popup",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+            "sectionType": "postertextobject"
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 0, 4, 1, 1]}},
+            showHideType: null,
+            parentElement: {type: 'popup'},
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbe" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->BODY->Popup else case for conditional coverage", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "popup",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 0, 4, 1, 1]}},
+            showHideType: null,
+            parentElement: {type: 'popup'},
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbe" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->HEAD->figure case 5 index length", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "figure",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 1, 1, 0]}},
+            showHideType: null,
+            parentElement: null,
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbd" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->HEAD->figure case 6 index length", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "figure",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 1, 1, 1, 0]}},
+            showHideType: null,
+            parentElement: null,
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbd" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update element in TB->Tab->WE->HEAD->figure case 6 index length else case for conditional coverage", () => {
+
+         const elementToUpdate = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "type": "figure",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            "slateVersionUrn": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+         }
+         let store = mockStore(() => initialState);
+         let args = {
+            updatedData: elementToUpdate,
+            asideData: {type: 'element-aside', parent: {type: 'groupedcontent', subtype: 'tab'} },
+            parentUrn: null,
+            elementIndex: { split: () => { return [1, 0, 1, 1, 1, 0]}},
+            showHideType: null,
+            parentElement: null,
+            dispatch: store.dispatch,
+            newslateData: newTabSlate.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: { entityUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbe" },
+               isAutoNumberingEnabled: true
+            }
+         }
+         const expectedAction = {
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+               slateLevelData: newTabSlate.slateLevelData
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+      })
         it("updateElementInStore - opener element in a slate", () => {
             
             const elementToUpdate = { 
@@ -1441,6 +1787,30 @@ it("Versioned element - updateNewVersionElementInStore4", () => {
             expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
             spyupdateElementInStore.mockClear()
         })
+       it("updateNewVersionElementInStore - TB element ", () => {
+          let store = mockStore(() => initialState);
+          let args = {
+             updatedData: {"slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"},
+             asideData: { type: 'groupedcontent', subtype: 'tab', parent: { id: 'test id', contentUrn: 'test contentUrn' } },
+             parentUrn: null,
+             elementIndex: 0,
+             showHideType: null,
+             parentElement: {id: 'test id'},
+             versionedData: {newParentVersion: ''},
+             dispatch: jest.fn(),
+             fetchSlateData: jest.fn(),
+             newslateData: slateLevelData.slateLevelData,
+             autoNumberDetails: {
+                autoNumberSettingsOption: '',
+                isAutoNumberingEnabled: true
+             }
+          }
+          const spyupdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+          updateHelpers.updateNewVersionElementInStore(args);
+          expect(spyupdateNewVersionElementInStore).toHaveBeenCalled();
+          spyupdateNewVersionElementInStore.mockClear();
+       })
+
         it("updateElementInStore - showhide inside aside element ", () => {
             let store = mockStore(() => initialState);
             let updatedDataAsideShowhide = {
@@ -5547,6 +5917,738 @@ it("Versioned element - updateNewVersionElementInStore4", () => {
          expect(spyupdateElementInStore).toHaveBeenCalled()
          spyupdateElementInStore.mockClear()
      })
+       it("updateElementInStore - update BL element inside TB - l6", () => {
+          let store = mockStore(() => initialState19);
+          let args = {
+             updatedData: {
+                "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                "type": "element-authoredtext",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                   "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc sdsdsadasv "
+                },
+                "html": {
+                   "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc sdsdsadasv&nbsp;</p>",
+                   "footnotes": {
+
+                   },
+                   "glossaryentries": {
+
+                   },
+                   "indexEntries": {
+
+                   }
+                },
+                "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a",
+                "inputType": "AUTHORED_TEXT",
+                "inputSubType": "NA",
+                "elementParentEntityUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                "slateVersionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+                "index": "0",
+                "projectUrn": "urn:pearson:distributable:eb90768b-651c-4800-b8f1-f378a112e4f3"
+             },
+             asideData: {
+                "type": "manifestlist",
+                "subtype": "decimal",
+                "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                "element": {
+                   "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                   "type": "manifestlist",
+                   "subtype": "decimal",
+                   "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                   "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                   "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                   "status": "wip",
+                   "listdata": {
+                      "bodymatter": [
+                         {
+                            "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                            "type": "manifestlistitem",
+                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                            "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                            "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                            "status": "wip",
+                            "listitemdata": {
+                               "bodymatter": [
+                                  {
+                                     "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                     "type": "element-authoredtext",
+                                     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                     "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                     },
+                                     "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                        "footnotes": {
+
+                                        },
+                                        "assetsPopover": {
+
+                                        },
+                                        "glossaryentries": {
+
+                                        },
+                                        "indexEntries": {
+
+                                        }
+                                     },
+                                     "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                     "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                  }
+                               ]
+                            }
+                         }
+                      ]
+                   },
+                   "listtype": "ordered",
+                   "startNumber": 1,
+                   "columnnumber": 1,
+                   "iconcolor": "iconColor1",
+                   "fontstyle": "fontStyle1",
+                   "indexPos": [
+                      "0"
+                   ],
+                   "parentDetails": [
+                      "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                   ]
+                },
+                "index": "0-0-0",
+                "parent": {
+                   "id": "urn:pearson:manifest:964b0f8d-b80a-4fef-afaf-837d7e97d3c4",
+                   "type": "groupedcontent",
+                   "subtype": 'tab',
+                   "contentUrn": "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c",
+                },
+                "parentManifestList": {
+                   "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                   "type": "manifestlist",
+                   "subtype": "decimal",
+                   "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                   "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                   "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                   "status": "wip",
+                   "listdata": {
+                      "bodymatter": [
+                         {
+                            "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                            "type": "manifestlistitem",
+                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                            "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                            "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                            "status": "wip",
+                            "listitemdata": {
+                               "bodymatter": [
+                                  {
+                                     "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                     "type": "element-authoredtext",
+                                     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                     "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                     },
+                                     "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                        "footnotes": {
+
+                                        },
+                                        "assetsPopover": {
+
+                                        },
+                                        "glossaryentries": {
+
+                                        },
+                                        "indexEntries": {
+
+                                        }
+                                     },
+                                     "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                     "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                  }
+                               ]
+                            }
+                         }
+                      ]
+                   },
+                   "listtype": "ordered",
+                   "startNumber": 1,
+                   "columnnumber": 1,
+                   "iconcolor": "iconColor1",
+                   "fontstyle": "fontStyle1",
+                   "indexPos": [
+                      "0"
+                   ],
+                   "parentDetails": [
+                      "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                   ]
+                }
+             },
+             parentUrn: {},
+             elementIndex: "0-0-0-1-0-0",
+             parentElement: { "index": "0-0-0-1-0-0" },
+             dispatch: store.dispatch,
+             newslateData: update_BL_in_TB1.slateLevelData,
+             autoNumberDetails: {
+                autoNumberSettingsOption: '',
+                isAutoNumberingEnabled: true
+             }
+          }
+          const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+          updateHelpers.updateElementInStore(args)
+          expect(spyupdateElementInStore).toHaveBeenCalled()
+          spyupdateElementInStore.mockClear()
+       })
+       it("updateElementInStore - update BL element inside TB - l8", () => {
+         let store = mockStore(() => initialState19);
+         let args = {
+            updatedData: {
+               "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+               "type": "element-authoredtext",
+               "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+               "elementdata": {
+                  "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc sdsdsadasv "
+               },
+               "html": {
+                  "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc sdsdsadasv&nbsp;</p>",
+                  "footnotes": {
+
+                  },
+                  "glossaryentries": {
+
+                  },
+                  "indexEntries": {
+
+                  }
+               },
+               "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+               "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a",
+               "inputType": "AUTHORED_TEXT",
+               "inputSubType": "NA",
+               "elementParentEntityUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+               "slateVersionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+               "index": "0",
+               "projectUrn": "urn:pearson:distributable:eb90768b-651c-4800-b8f1-f378a112e4f3"
+            },
+            asideData: {
+               "type": "manifestlist",
+               "subtype": "decimal",
+               "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+               "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+               "element": {
+                  "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "type": "manifestlist",
+                  "subtype": "decimal",
+                  "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                  "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                  "status": "wip",
+                  "listdata": {
+                     "bodymatter": [
+                        {
+                           "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "type": "manifestlistitem",
+                           "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                           "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                           "status": "wip",
+                           "listitemdata": {
+                              "bodymatter": [
+                                 {
+                                    "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "type": "element-authoredtext",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                       "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                    },
+                                    "html": {
+                                       "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                       "footnotes": {
+
+                                       },
+                                       "assetsPopover": {
+
+                                       },
+                                       "glossaryentries": {
+
+                                       },
+                                       "indexEntries": {
+
+                                       }
+                                    },
+                                    "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "listtype": "ordered",
+                  "startNumber": 1,
+                  "columnnumber": 1,
+                  "iconcolor": "iconColor1",
+                  "fontstyle": "fontStyle1",
+                  "indexPos": [
+                     "0"
+                  ],
+                  "parentDetails": [
+                     "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                  ]
+               },
+               "index": "0-0-0",
+               "parent": {
+                  "id": "urn:pearson:manifest:964b0f8d-b80a-4fef-afaf-837d7e97d3c4",
+                  "type": "groupedcontent",
+                  "subtype": 'tab',
+                  "contentUrn": "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c",
+               },
+               "parentManifestList": {
+                  "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "type": "manifestlist",
+                  "subtype": "decimal",
+                  "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                  "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                  "status": "wip",
+                  "listdata": {
+                     "bodymatter": [
+                        {
+                           "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "type": "manifestlistitem",
+                           "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                           "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                           "status": "wip",
+                           "listitemdata": {
+                              "bodymatter": [
+                                 {
+                                    "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "type": "element-authoredtext",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                       "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                    },
+                                    "html": {
+                                       "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                       "footnotes": {
+
+                                       },
+                                       "assetsPopover": {
+
+                                       },
+                                       "glossaryentries": {
+
+                                       },
+                                       "indexEntries": {
+
+                                       }
+                                    },
+                                    "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "listtype": "ordered",
+                  "startNumber": 1,
+                  "columnnumber": 1,
+                  "iconcolor": "iconColor1",
+                  "fontstyle": "fontStyle1",
+                  "indexPos": [
+                     "0"
+                  ],
+                  "parentDetails": [
+                     "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                  ]
+               }
+            },
+            parentUrn: {},
+            elementIndex: "0-0-0-1-0-0-0-0",
+            parentElement: { "index": "0-0-0-1-0-1-0-0" },
+            dispatch: store.dispatch,
+            newslateData: update_BL_in_TB2.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: '',
+               isAutoNumberingEnabled: true
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update BL element inside TB - l10", () => {
+         let store = mockStore(() => initialState19);
+         let args = {
+            updatedData: {
+               "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+               "type": "element-authoredtext",
+               "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+               "elementdata": {
+                  "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc sdsdsadasv "
+               },
+               "html": {
+                  "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc sdsdsadasv&nbsp;</p>",
+                  "footnotes": {
+
+                  },
+                  "glossaryentries": {
+
+                  },
+                  "indexEntries": {
+
+                  }
+               },
+               "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+               "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a",
+               "inputType": "AUTHORED_TEXT",
+               "inputSubType": "NA",
+               "elementParentEntityUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+               "slateVersionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+               "index": "0",
+               "projectUrn": "urn:pearson:distributable:eb90768b-651c-4800-b8f1-f378a112e4f3"
+            },
+            asideData: {
+               "type": "manifestlist",
+               "subtype": "decimal",
+               "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+               "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+               "element": {
+                  "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "type": "manifestlist",
+                  "subtype": "decimal",
+                  "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                  "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                  "status": "wip",
+                  "listdata": {
+                     "bodymatter": [
+                        {
+                           "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "type": "manifestlistitem",
+                           "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                           "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                           "status": "wip",
+                           "listitemdata": {
+                              "bodymatter": [
+                                 {
+                                    "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "type": "element-authoredtext",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                       "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                    },
+                                    "html": {
+                                       "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                       "footnotes": {
+
+                                       },
+                                       "assetsPopover": {
+
+                                       },
+                                       "glossaryentries": {
+
+                                       },
+                                       "indexEntries": {
+
+                                       }
+                                    },
+                                    "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "listtype": "ordered",
+                  "startNumber": 1,
+                  "columnnumber": 1,
+                  "iconcolor": "iconColor1",
+                  "fontstyle": "fontStyle1",
+                  "indexPos": [
+                     "0"
+                  ],
+                  "parentDetails": [
+                     "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                  ]
+               },
+               "index": "0-0-0",
+               "parent": {
+                  "id": "urn:pearson:manifest:964b0f8d-b80a-4fef-afaf-837d7e97d3c4",
+                  "type": "groupedcontent",
+                  "subtype": 'tab',
+                  "contentUrn": "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c",
+               },
+               "parentManifestList": {
+                  "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "type": "manifestlist",
+                  "subtype": "decimal",
+                  "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                  "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                  "status": "wip",
+                  "listdata": {
+                     "bodymatter": [
+                        {
+                           "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "type": "manifestlistitem",
+                           "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                           "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                           "status": "wip",
+                           "listitemdata": {
+                              "bodymatter": [
+                                 {
+                                    "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "type": "element-authoredtext",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                       "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                    },
+                                    "html": {
+                                       "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                       "footnotes": {
+
+                                       },
+                                       "assetsPopover": {
+
+                                       },
+                                       "glossaryentries": {
+
+                                       },
+                                       "indexEntries": {
+
+                                       }
+                                    },
+                                    "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "listtype": "ordered",
+                  "startNumber": 1,
+                  "columnnumber": 1,
+                  "iconcolor": "iconColor1",
+                  "fontstyle": "fontStyle1",
+                  "indexPos": [
+                     "0"
+                  ],
+                  "parentDetails": [
+                     "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                  ]
+               }
+            },
+            parentUrn: {},
+            elementIndex: "0-0-0-1-0-0-0-0",
+            parentElement: { "index": "0-0-0-1-0-1-0-1-0-0" },
+            dispatch: store.dispatch,
+            newslateData: update_BL_in_TB3.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: '',
+               isAutoNumberingEnabled: true
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         spyupdateElementInStore.mockClear()
+      })
+      it("updateElementInStore - update BL element inside TB - l12", () => {
+         let store = mockStore(() => initialState19);
+         let args = {
+            updatedData: {
+               "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+               "type": "element-authoredtext",
+               "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+               "elementdata": {
+                  "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc sdsdsadasv "
+               },
+               "html": {
+                  "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc sdsdsadasv&nbsp;</p>",
+                  "footnotes": {
+
+                  },
+                  "glossaryentries": {
+
+                  },
+                  "indexEntries": {
+
+                  }
+               },
+               "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+               "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a",
+               "inputType": "AUTHORED_TEXT",
+               "inputSubType": "NA",
+               "elementParentEntityUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+               "slateVersionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+               "index": "0",
+               "projectUrn": "urn:pearson:distributable:eb90768b-651c-4800-b8f1-f378a112e4f3"
+            },
+            asideData: {
+               "type": "manifestlist",
+               "subtype": "decimal",
+               "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+               "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+               "element": {
+                  "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "type": "manifestlist",
+                  "subtype": "decimal",
+                  "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                  "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                  "status": "wip",
+                  "listdata": {
+                     "bodymatter": [
+                        {
+                           "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "type": "manifestlistitem",
+                           "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                           "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                           "status": "wip",
+                           "listitemdata": {
+                              "bodymatter": [
+                                 {
+                                    "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "type": "element-authoredtext",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                       "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                    },
+                                    "html": {
+                                       "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                       "footnotes": {
+
+                                       },
+                                       "assetsPopover": {
+
+                                       },
+                                       "glossaryentries": {
+
+                                       },
+                                       "indexEntries": {
+
+                                       }
+                                    },
+                                    "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "listtype": "ordered",
+                  "startNumber": 1,
+                  "columnnumber": 1,
+                  "iconcolor": "iconColor1",
+                  "fontstyle": "fontStyle1",
+                  "indexPos": [
+                     "0"
+                  ],
+                  "parentDetails": [
+                     "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                  ]
+               },
+               "index": "0-0-0",
+               "parent": {
+                  "id": "urn:pearson:manifest:964b0f8d-b80a-4fef-afaf-837d7e97d3c4",
+                  "type": "groupedcontent",
+                  "subtype": 'tab',
+                  "contentUrn": "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c",
+               },
+               "parentManifestList": {
+                  "id": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "type": "manifestlist",
+                  "subtype": "decimal",
+                  "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                  "versionUrn": "urn:pearson:manifest:54046288-edaf-4503-8f58-34aec6a1f838",
+                  "contentUrn": "urn:pearson:entity:aee8f706-19fe-46e4-a802-f450619c30a3",
+                  "status": "wip",
+                  "listdata": {
+                     "bodymatter": [
+                        {
+                           "id": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "type": "manifestlistitem",
+                           "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                           "versionUrn": "urn:pearson:manifest:d9639bdf-315a-49e9-813c-dca092214402",
+                           "contentUrn": "urn:pearson:entity:2dbd7985-9c9c-499a-a33e-b8b00f525aaa",
+                           "status": "wip",
+                           "listitemdata": {
+                              "bodymatter": [
+                                 {
+                                    "id": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "type": "element-authoredtext",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                       "text": "adasdsdfsdf dfsdfsdfsdfdsf  xvxcvxcxc"
+                                    },
+                                    "html": {
+                                       "text": "<p class=\"paragraphNumeroUno\">adasdsdfsdf dfsdfsdfsdfdsf&nbsp; xvxcvxcxc</p>",
+                                       "footnotes": {
+
+                                       },
+                                       "assetsPopover": {
+
+                                       },
+                                       "glossaryentries": {
+
+                                       },
+                                       "indexEntries": {
+
+                                       }
+                                    },
+                                    "versionUrn": "urn:pearson:work:e64d01ba-f1df-4650-ae17-ab0f0075df3c",
+                                    "contentUrn": "urn:pearson:entity:b17eb9fa-a921-4650-b3a7-c67d678e172a"
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "listtype": "ordered",
+                  "startNumber": 1,
+                  "columnnumber": 1,
+                  "iconcolor": "iconColor1",
+                  "fontstyle": "fontStyle1",
+                  "indexPos": [
+                     "0"
+                  ],
+                  "parentDetails": [
+                     "urn:pearson:entity:8dd19ec9-5c30-4ca1-8c95-4df4cee6d14c"
+                  ]
+               }
+            },
+            parentUrn: {},
+            elementIndex: "0-0-0-1-0-0-0-0",
+            parentElement: { "index": "0-0-0-1-0-1-0-1-0-1-0-0" },
+            dispatch: store.dispatch,
+            newslateData: update_BL_in_TB4.slateLevelData,
+            autoNumberDetails: {
+               autoNumberSettingsOption: '',
+               isAutoNumberingEnabled: true
+            }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         spyupdateElementInStore.mockClear()
+      })
 
 
         it("updateElementInStore - update BL element inside AS - l4", () => {

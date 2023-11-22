@@ -1,9 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { slateData, slateData2 } from '../../../fixtures/slateTestingData.js'
+import { slateData, slateData2, popupSlateData } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import * as utils from '../../../src/constants/utility';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -45,6 +46,8 @@ jest.mock('../../../src/component/ElementSaprator', () => {
 jest.mock('../../../src/constants/utility', () => {
     return { 
         sendDataToIframe: jest.fn(),
+        hasReviewerRole: jest.fn(),
+        isApproved: jest.fn(),
         defaultMathImagePath: ()=>{
             return true
         },
@@ -70,7 +73,7 @@ const initialState = {
         userId: 'c5Test01'
     }, withinLockPeriod: true },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-    toolbarReducer: { elemBorderToggle: true },
+    toolbarReducer: { elemBorderToggle: true, unlockSlateToggle: false },
     metadataReducer: { currentSlateLOData: [{}] },
     audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
     searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
@@ -149,7 +152,8 @@ const actionProps = {
     showWrongImagePopup: jest.fn(),
     alfrescoPopup: jest.fn(),
     showRemoveImageGlossaryPopup: jest.fn(),
-    isOwnersSubscribedSlate: jest.fn()
+    isOwnersSubscribedSlate: jest.fn(),
+    isSubscribersSubscribedSlate: jest.fn()
 }
 const slateWrapInstance = (props, initialSt = initialState) => {
     const store = mockStore(initialSt);
@@ -158,9 +162,32 @@ const slateWrapInstance = (props, initialSt = initialState) => {
 }
 
 describe("SlateWrapper Component", () => {
+    jest.mock('../../../src/constants/utility', () => {
+        return { 
+            sendDataToIframe: jest.fn(),
+            isApproved: jest.fn(),
+            defaultMathImagePath: ()=>{
+                return true
+            },
+            guid: ()=>{
+                return "abcd123"
+            },
+            isOwnerRole:()=>{
+                return true
+            },
+            isSubscriberRole:()=>{
+                return true
+            },
+            getSlateType:()=>{
+                return 'slateType'
+            },
+            getCookieByName: () => false
+        }
+    });
     config.ssoToken = "1214";
     let props = {
         slateData: slateData,
+        popupSlateData: popupSlateData,
         permissions : [],
         toggleTocDelete: true,
         loadMorePages:jest.fn(),
@@ -173,6 +200,7 @@ describe("SlateWrapper Component", () => {
         getCommentElements: jest.fn(),
         updateTimer: jest.fn(),
         commentSearchScrollTop : {},
+        slateVersioning: jest.fn(),
         ...actionProps
     };
     it("1.2 Test - componentDidMount ", () => {
@@ -461,6 +489,16 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
+        it('1.14.3  Test - when slate type is LTI ', () => {
+            config.savingInProgress = true;
+            config.slateType="ltislate"
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'checkSlateLockStatus')
+            compInstance.checkSlateLockStatus(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+            config.slateType="section"
+        })
     })
     it('1.15  Test - openCustomPopup ', () => {
         const compInstance = slateWrapInstance(props);
@@ -512,8 +550,8 @@ describe("SlateWrapper Component", () => {
             'worked-exp-elem', 'opener-elem', 'section-break-elem', 'metadata-anchor', 'citation-elem',
             'citations-group-elem', 'show-hide-elem', 'popup-elem', 'smartlink-elem', 'poetry-elem',
             'stanza-elem', 'figure-mml-elem', 'blockcode-elem', 'table-editor-elem-button', 'multi-column-group',
-            'multi-column-group-column-3', 'elm-interactive-elem', 'element-dialogue', 'element-discussion',
-            'text-elem'];
+            'multi-column-group-column-3','multi-column-group-tabbed-tab','multi-column-group-tabbed_2_column', 'elm-interactive-elem', 'element-dialogue', 'element-discussion',
+            'text-elem','blocklist-elem'];
         const index = 0, firstOne = true, outerAsideIndex = 1, poetryData = {};
         const parentUrn = {id:"123"};
         const asideData = {id:"123"};
@@ -723,23 +761,6 @@ describe("SlateWrapper Component", () => {
             const compInstance = slateWrapInstance(props);
             const spy = jest.spyOn(compInstance, 'toggleWrongAudioPopup')
             compInstance.toggleWrongAudioPopup(false, 1);
-            expect(spy).toHaveBeenCalled();
-            spy.mockClear()
-        })
-    })
-    describe("1.33 Test - toggleAssessmentPopup ", () => {
-        it('1.33.1  Test - if case ', () => {
-            const newInitialState = {...initialState, assessmentReducer: {showConfirmationPopup: true}};
-            const compInstance = slateWrapInstance(props, newInitialState);
-            const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
-            compInstance.toggleAssessmentPopup(true, 1);
-            expect(spy).toHaveBeenCalled();
-            spy.mockClear()
-        })
-        it('1.33.2  Test - else case ', () => {
-            const compInstance = slateWrapInstance(props);
-            const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
-            compInstance.toggleAssessmentPopup(false, 1);
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
@@ -1037,10 +1058,22 @@ describe("SlateWrapper Component", () => {
             compInstance.setState({ showOwnerSlatePopup: false });
         });
     });
-
+    describe("1.49 Test - renderSlate", () => {
+        it("Test 1.49.1- if case- isPopupReadOnly", () => {
+            config.slateManifestURN ="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            config.tempSlateManifestURN = "s-12345";
+            const newProps = {
+            ...props,
+            };
+            newProps.slateData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"] = {status: "approved", type:"popup"};
+            const compInstance = slateWrapInstance(newProps);
+            const spy = jest.spyOn(compInstance, 'renderSlate');
+            compInstance.renderSlate(slateData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear();
+        });
+    })
     describe('subscriber Content',()=>{
-
-        
         it('Subscriber Content', () => {
             jest.mock('../../../src/constants/utility', () => {
                 return {
@@ -1049,7 +1082,8 @@ describe("SlateWrapper Component", () => {
                     },
                     isSubscriberRole: () => {
                         return true
-                    }
+                    },
+                    isApproved: jest.fn()
                 }
             });
 
@@ -1107,5 +1141,75 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
+    })
+})
+describe("SlateWrapper Component", () => {
+    config.ssoToken = "1214";
+    let props = {
+        slateData: slateData,
+        permissions : [],
+        toggleTocDelete: true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn(),
+        releaseSlateLock: jest.fn(),
+        commentSearchScrollTop: "123",
+        accesDeniedPopup: true,
+        getCommentElements: jest.fn(),
+        updateTimer: jest.fn(),
+        commentSearchScrollTop : {},
+        slateVersioning: jest.fn(),
+        ...actionProps
+    };
+    it('2.1 Not a OWNER or SUBSCRIBER > owner(false) subscriber(false)', () => {
+        jest.spyOn(utils, 'isOwnerRole').mockReturnValueOnce(false);
+        jest.spyOn(utils, 'isSubscriberRole').mockReturnValueOnce(false);
+        config.slateType = "assessment";
+        config.isDefaultElementInProgress = false;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'renderElement')
+        compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.2 OWNER > owner(true) subscriber(false)', () => {
+        jest.spyOn(utils, 'isOwnerRole').mockReturnValueOnce(true);
+        jest.spyOn(utils, 'isSubscriberRole').mockReturnValueOnce(false);
+        config.slateType = "assessment";
+        config.isDefaultElementInProgress = false;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'renderElement')
+        compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.3 SUBSCRIBER > owner(false) subscriber(true)', () => {
+        jest.spyOn(utils, 'isOwnerRole').mockReturnValueOnce(false);
+        jest.spyOn(utils, 'isSubscriberRole').mockReturnValueOnce(true);
+        config.slateType = "assessment";
+        config.isDefaultElementInProgress = false;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'renderElement')
+        compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.4  Test - showUnlockSlatePopup ', () => {
+        const newInitialState = {...initialState, toolbarReducer: {unlockSlateToggle: true}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        const spy = jest.spyOn(compInstance, 'showUnlockSlatePopup')
+        compInstance.showUnlockSlatePopup();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.5  Test - handleUnlockSlateWarning ', () => {
+        const newInitialState = {...initialState, appStore: {userRole: 'admin'}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        const spy = jest.spyOn(compInstance, 'handleUnlockSlateWarning')
+        const status = 'ok'
+        compInstance.handleUnlockSlateWarning(status);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
     })
 })

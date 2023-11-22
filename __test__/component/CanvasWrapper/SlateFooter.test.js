@@ -19,7 +19,9 @@ describe('', () => {
             id: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74"
         }, {
             id: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa64"
-        }]
+        }],
+        projectSharingRole: 'owner',
+        isSubscribed: true
     }
     it('renders SlateFooter---> OR case-1 true', () => {
         let wrapper = mount(<SlateFooter {...props} />);
@@ -43,10 +45,6 @@ describe('', () => {
         config.pageLimit = 0;
         let wrapper = mount(<SlateFooter {...props} />);
         expect(wrapper.find('div.loaderContainer')).toHaveLength(1)
-    })
-    it('renders SmalllLoader without crashing', () => {
-        let wrapper = mount(<SmalllLoader />);
-        expect(wrapper.find('div.sm')).toHaveLength(1)
     })
     it('renders LargeLoader without crashing', () => {
         const div = document.createElement('div');

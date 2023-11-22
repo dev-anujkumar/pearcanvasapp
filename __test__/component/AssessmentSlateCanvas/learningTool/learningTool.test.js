@@ -17,7 +17,8 @@ const store = mockStore({
         apiResponseForDis: disciplines.options,
         showDisFilterValues: true,
         selectedResultFormApi: selectedResult
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 
 describe('Testing LearningTool component', () => {
@@ -74,5 +75,39 @@ describe('Testing LearningTool component', () => {
         instance.linkLearningApp();
         expect(instance.linkLearningApp).toHaveBeenCalled();
         expect(typeof instance.props.linkLearningApp).toBe("function");
+    })
+})
+
+describe("Branch coverage for LearningTool file",()=> {
+    const newStore = mockStore({
+        learningToolReducer: {
+            apiResponse: tempFiguresForResults,
+            showLTBody: true,
+            learningSystems: apiList,
+            linkButtonDisable: false,
+            apiResponseForDis: disciplines.options,
+            showDisFilterValues: true,
+            selectedResultFormApi: selectedResult
+        },
+        projectInfo: {isBannerVisible: true}
+    });
+    let props2 = {
+        closePopUp: jest.fn(),
+        linkLearningApp: jest.fn(),
+        closelearningPopup: jest.fn(),
+        toolTypeFilterSelectedAction: jest.fn(),
+        closeLtAction: jest.fn(),
+        selectedFigureAction: jest.fn(),
+        learningToolDisFilterAction: jest.fn(),
+        learningToolSearchAction: jest.fn(),
+        paginationFunctionAction: jest.fn(),
+        removeSelectedData: jest.fn()
+    }
+    let wrapper = mount(<Provider store={newStore}>< LearningTool  {...props2} /></Provider>)
+    const instance = wrapper.find('LearningTool').instance();
+    it('Render LearningTool', () => {
+        expect(wrapper).toHaveLength(1);
+        expect(instance).toBeDefined();
+        expect(wrapper.find(".learningToolContainer")).toHaveLength(1)
     })
 })

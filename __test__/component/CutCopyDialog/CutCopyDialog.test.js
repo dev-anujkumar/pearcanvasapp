@@ -32,6 +32,12 @@ let initialState = {
 let store = mockStore(() => initialState);
 config.isPopupSlate = true
 
+
+jest.mock('../../../src/component//TcmSnapshots/TcmSnapshot_Actions', () => {
+    return {
+        getLatestVersion: jest.fn(() => { return "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e22" })
+    }
+})
 describe("CutCopyDialog - Component testing", () => {
     const props = {
         userRole: "admin",
@@ -177,6 +183,22 @@ describe("CutCopyDialog - Component testing", () => {
             const spycopyToClipBoard = jest.spyOn(cutCopyComp, "copyToClipBoard")
             cutCopyComp.copyToClipBoard(eventObj, props1)
             expect(spycopyToClipBoard).toHaveBeenCalledWith(eventObj, props1)
+            expect(spycopyToClipBoard).not.toHaveReturnedWith(null)
+        })
+        it("copyToClipBoard method: fetching latest manifest urn", () => {
+            const eventObj = {
+                stopPropagation: jest.fn()
+            }
+            const props2 = {
+                ...props1,
+                element: {
+                    ...props1.element,
+                    "id": "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                }
+            }
+            const spycopyToClipBoard = jest.spyOn(cutCopyComp, "copyToClipBoard")
+            cutCopyComp.copyToClipBoard(eventObj, props2)
+            expect(spycopyToClipBoard).toHaveBeenCalledWith(eventObj, props2)
             expect(spycopyToClipBoard).not.toHaveReturnedWith(null)
         })
         it("hideAPOOnOuterClick method", () => {

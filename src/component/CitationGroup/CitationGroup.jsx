@@ -7,12 +7,13 @@ import CGTinyMCE from './CGTinyMCE.jsx'
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import './../../styles/CitationGroup/CitationGroup.css';
-import { guid, sendDataToIframe } from '../../constants/utility.js';
+import { guid, hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { CITATION_SOURCE } from '../../constants/Element_Constants.js';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 let random = guid();
 export class CitationGroup extends Component {
@@ -42,10 +43,10 @@ export class CitationGroup extends Component {
                     pasteElement={this.props.pasteElement}
                     source={CITATION_SOURCE}
                 />
-            </> 
+            </>
         )
     }
-    
+
     /**
      * Renders Citation elements
      * @param {object} _slateBodyMatter - Bodymatter containing an array of citation elements
@@ -70,6 +71,10 @@ export class CitationGroup extends Component {
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
+                                <LazyLoad
+                                    once={true}
+                                    placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                                >
                                { index==0 && <ElementSaprator
                                         index={index}
                                         firstOne={index === 0}
@@ -116,9 +121,9 @@ export class CitationGroup extends Component {
                                         dataId = {element.id}
                                     />
                                 }
-                              
+                              </LazyLoad>
                             </React.Fragment>
-                          
+
                         )
                    // }
 
@@ -155,7 +160,7 @@ export class CitationGroup extends Component {
         }
         return dataObj
     }
-    
+
     /**
      * Renders a container containing Citation elements
      * @param {object} context - component's context object (destructured)
@@ -179,6 +184,7 @@ export class CitationGroup extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
@@ -191,7 +197,7 @@ export class CitationGroup extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/evt) {
                                         // same properties as onEnd
@@ -209,7 +215,7 @@ export class CitationGroup extends Component {
                                         cgThis.props.swapElement(dataObj, () => { })
                                         cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                         config.citationFlag= false;
-                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                     },
                                 }}
                                 ref={(c) => {
@@ -248,15 +254,12 @@ export class CitationGroup extends Component {
         )
     }
     handleFocus = (event) => {
-        if(checkSlateLock(this.context.slateLockInfo)){
-            return false
-        }
         if(event && event.target && !(event.target.classList.contains('citationTitle'))){
             return false
         }
         this.context.handleFocus("", "", event)
     }
-    
+
     render() {
         const { context } = this
         return (
@@ -268,7 +271,7 @@ export class CitationGroup extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    
+
 })
 
 const mapDispatchToProps = {

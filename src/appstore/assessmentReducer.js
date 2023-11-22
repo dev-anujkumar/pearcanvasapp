@@ -5,19 +5,26 @@ import {
     ELM_ASSESSMENT_EDIT_ID,
     SET_ASSESSMENT_METADATA,
     RESET_ASSESSMENT_STORE,
-    ASSESSMENT_CONFIRMATION_POPUP,
     UPDATE_ELM_ITEM_ID,
     SAVE_AUTO_UPDATE_ID,
     ELM_NEW_ITEM_DATA,
     SET_INTERACTIVE_METADATA,
-    SET_ELM_PICKER_MSG
+    SET_ELM_PICKER_MSG,
+    UPDATE_ASSESSMENT_ID,
+    ASSESSMENT_RELOAD_CONFIRMATION,
+    ASESSMENT_UPDATE_DATA_ARRAY,
+    UPDATED_ASSESSMENTS_ARRAY
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     usageTypeListData: {},
     currentEditAssessment:{},
     itemUpdateEvent: false,
-    dataFromElm: {}
+    dataFromElm: {},
+    assessmenId: '',
+    reloadAfterAssessmentUpdate: false,
+    assessmentItemAutoUpdateData: [],
+    updatedAssessmentArray: []
 }
 
 const INITIAL_ACTION = {
@@ -41,12 +48,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                     ...action.payload.dataForUpdate
                 }
             }
-        case ASSESSMENT_CONFIRMATION_POPUP: {
-            return {
-                ...state,
-                showConfirmationPopup: action.payload
-            }
-        }
         case UPDATE_ELM_ITEM_ID:
             let itemsArray = state[action.payload.currentWorkUrn] && state[action.payload.currentWorkUrn].items ? state[action.payload.currentWorkUrn].items : []
             const itemIndex = itemsArray ? itemsArray.findIndex(item => item.oldItemId == action.payload.updatedItem.oldItemId) : -1;
@@ -55,7 +56,9 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             }
             else {
                 itemsArray.push(action.payload.updatedItem)
-                state[action.payload.currentWorkUrn].items = itemsArray;
+                // if(state[action.payload.currentWorkUrn]) { >> commented to fix PCAT-20629
+                    state[action.payload.currentWorkUrn].items = itemsArray;
+                // }
             }
             return {
                 ...state,
@@ -99,6 +102,28 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 dataFromElm : action.payload
+            }
+        case UPDATE_ASSESSMENT_ID:
+            return {
+                ...state,
+                assessmenId: action.payload
+            }
+        case ASSESSMENT_RELOAD_CONFIRMATION:
+            return {
+                ...state,
+                reloadAfterAssessmentUpdate: action.payload
+            }
+        case ASESSMENT_UPDATE_DATA_ARRAY:
+            const assesssmentArray = state.assessmentItemAutoUpdateData ? state.assessmentItemAutoUpdateData : []
+            return {
+                ...state,
+                assessmentItemAutoUpdateData: [...assesssmentArray, action.payload]
+            }
+        case UPDATED_ASSESSMENTS_ARRAY:
+            const updatedAssessmentArray = state.updatedAssessmentArray ? state.updatedAssessmentArray : []
+            return {
+                ...state,
+                updatedAssessmentArray: [...updatedAssessmentArray, action.payload]
             }
         default:
             return state

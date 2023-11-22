@@ -8,17 +8,18 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole, showNotificationOnCanvas} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT  } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION, CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
-import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES } from '../../../constants/Element_Constants.js';
+import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
+import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -42,7 +43,7 @@ function CommunicationChannel(WrappedComponent) {
          */
         initTocCommunictionChannel = () => {
             if (window.addEventListener) {
-                // For standards-compliant web browsers       
+                // For standards-compliant web browsers
                 window.addEventListener("message", this.handleIncommingMessages, false);
             }
             else {
@@ -59,7 +60,7 @@ function CommunicationChannel(WrappedComponent) {
             let message = e.data.message;
             switch (messageType) {
                 case 'tocContainersLabelUpdate':
-                    this.showNotificationOnCanvas(message);
+                    showNotificationOnCanvas(message);
                     break;
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -70,7 +71,12 @@ function CommunicationChannel(WrappedComponent) {
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
+                case 'deleteTocMultipleItem':
+                case 'deleteTocMultipleItemWithPendingTrack':
                     this.onDeleteTocItem(message);
+                    break;
+                case 'unlinkTocContainer':
+                    this.UnlinkSubscribers(message);
                     break;
                 case 'deleteTocItemWithPendingTrack':
                     this.onDeleteTocItem(message, 'withPendingTrack');
@@ -80,6 +86,8 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'newSplitedSlate':
                     setTimeout(() => { this.hanndleSplitSlate(message) }, 1000)
+                    // Making condition true for triggering slate level save api
+                    localStorage.setItem('isChangeInSlate', 'true');
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
@@ -144,11 +152,8 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
-                    this.props.fetchFigureDropdownOptions();
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
-                    this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
-                    this.props.fetchUserLocation() 
                     this.props.fetchDefaultLF(message.defaultLearningFramework)
                     break;
                 case 'permissionsDetails':
@@ -160,7 +165,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'getSlateLOResponse':
                     if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        message.LOList.map(loData => {                            
+                        message.LOList.map(loData => {
                             loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>");
                         });
                         this.props.currentSlateLOMath(message.LOList);
@@ -183,12 +188,15 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
-                    this.props.currentSlateLOType(CYPRESS_LF);
+                    break;
+                case 'elementLabelCombineData':
+                    this.props.updateFigureDropdownValues(message)
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();
+                    triggerSlateLevelSave(config.slateEntityURN, SLATE_REFRESH_ACTION);
                     break;
-                case 'closeUndoTimer' : 
+                case 'closeUndoTimer' :
                     this.setState({
                         closeUndoTimer: message.status
                     })
@@ -220,6 +228,9 @@ function CommunicationChannel(WrappedComponent) {
                         let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
                         let isFromRC = message.assessmentSlateData ? true : false;
                         this.props.isLOExist(messageData);
+                        const { assessmenId } = this.props.assessmentReducer
+                        const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN]?.status
+                        const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
                             let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
                             sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn : config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
@@ -231,15 +242,26 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
                                 dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                if(approvedAssessmentCheck && assessmenId){    // this is to update id and versionUrn if assessment slate status is approved
+                                    dataToSend.id = assessmenId
+                                    dataToSend.versionUrn = assessmenId
+                                }
+                                // fromTOCWrapper is used for aligning slate tag and LO indicator in TOC
+                                if(assessmenId || message?.fromCE || message?.fromTOCWrapper){
+                                    this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                }
                                 if(message.assessmentSlateData)
                                     this.handleRefreshSlate();
                             }
                         }
                 }
                     break;
+                case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
+                    if (messageType === 'projectPreview') {
+                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION)
+                    }
                     if (!config.savingInProgress) {
                         this.props.publishContent(messageType);
                     }
@@ -267,6 +289,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'fetchAllSlateDataFromWrapper':
                     {
                         this.props.getAllSlatesData(message)
+                        this.props.approvedSlatePopupStatus(false)
                         break;
                     }
                 case 'customDimensions':
@@ -289,7 +312,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchSlateAncestorData(message || {});
                     break;
                 case 'elementBorder':
-                    this.props.toggleElemBordersAction()
+                    this.props.toggleElemBordersAction(message)
                     break;
                 case 'pageNumber':
                     this.props.togglePageNumberAction()
@@ -350,6 +373,8 @@ function CommunicationChannel(WrappedComponent) {
                     if (message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote) {
                         this.handleImageData(message)
                     }
+                    // Making condition true for triggering slate level save api
+                    localStorage.setItem('isChangeInSlate', 'true');
                     this.props.saveSelectedAssetData(message)
                     break;
                 case 'saveAlfrescoDataToConfig':
@@ -393,7 +418,7 @@ function CommunicationChannel(WrappedComponent) {
                         currentProjectId: config.projectUrn,
                         slateEntityUrn: config.slateEntityURN
                     }
-                    this.props.fetchAudioNarrationForContainer(slateData)   
+                    this.props.fetchAudioNarrationForContainer(slateData)
                     break;
                 case 'ResetAutoNumberSequence':
                     this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
@@ -426,11 +451,31 @@ function CommunicationChannel(WrappedComponent) {
                 case "getAssessmentData":
                     this.getAssessmentForWillowAlignment(message);
                     break;
-                case "preflightElementFocus": 
+                case "preflightElementFocus":
                     config.currentElementUrn = message
                     break;
                 case "pendingTcmStatus":
                     config.pendingTcmStatus = message.status
+                    break;
+                case 'bannerIsVisible':
+                    if (message && message.hasOwnProperty('status')) {
+                        this.props.setCautionBannerStatus(message.status)
+                    }
+                    break;
+                case 'refreshSlateOnAssessmentUpdate':
+                    const assessmentSlateData = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                    const assessmentSlateCheck = assessmentSlateData?.type === 'element-assessment' && assessmentSlateData?.elementdata?.assessmentid === message?.assessmentUrn
+                    if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment" && assessmentSlateCheck) {
+                        this.handleRefreshSlate();
+                    }
+                    break;
+                case 'sendSlatesLabel':
+                    if(message?.labels)
+                    this.props.setTocSlateLabel(message.labels)
+                    break;
+                case 'lockUserDetailsFromCount' :
+                    this.props.saveLockDetails(message.lockInfo)
+                    break;
             }
         }
 
@@ -447,7 +492,9 @@ function CommunicationChannel(WrappedComponent) {
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                'myCloudProxySession': config.myCloudProxySession
+                'myCloudProxySession': config.myCloudProxySession,
+                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
+                'structureApiEndpoint':config.AUDIO_NARRATION_URL
             };
             let externalLFUrn = [];
             if (projectLearningFrameworks?.externalLF?.length) {
@@ -498,7 +545,10 @@ function CommunicationChannel(WrappedComponent) {
                     'previewData': previewData,
                     'defaultLF': defaultLF,
                     'loSpa_Source': message.loSpa_Source,
-                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false
+                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false,
+                    'isApprovedSlate':message.isApprovedSlate,
+                    'entityURN':message.entityURN,
+                    'isSlateLocked':message?.isSlateLocked
                 }
             })
         }
@@ -528,27 +578,15 @@ function CommunicationChannel(WrappedComponent) {
             hideBlocker();
         }
 
-        showNotificationOnCanvas = (message) => {
-            let linkNotification = document.getElementById('link-notification');
-            if (linkNotification) {
-                linkNotification.innerText = message;
-                linkNotification.style.display = "block";
-                setTimeout(() => {
-                    linkNotification.style.display = "none";
-                    linkNotification.innerText = "";
-                }, 3000);
-            }
-        }
-
         /**
          * Updates the element count and refreshes slate
-         * @param {String} message element count in a slate 
+         * @param {String} message element count in a slate
          */
         changeSlateLength = (message) => {
             this.props.setSlateLength(message)
             this.handleRefreshSlate()
         }
-        
+
         /**
          * Handle the element update action on linking a page
          */
@@ -568,7 +606,7 @@ function CommunicationChannel(WrappedComponent) {
                 var div = document.createElement("div");
                 div.innerHTML = html;
                 const pageLinkText = div.innerText
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
@@ -602,7 +640,7 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
-                           
+
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
@@ -637,7 +675,7 @@ function CommunicationChannel(WrappedComponent) {
                 asset: message.asset,
                 launchAlfrescoPopup: false,
                 isInlineEditor: message.isEditor,
-                imageArgs: this.props.imageArgs                
+                imageArgs: this.props.imageArgs
             }
             this.props.saveInlineImageData(params);
             hideBlocker();
@@ -710,14 +748,10 @@ function CommunicationChannel(WrappedComponent) {
                 /** Save button Click - Add new Ext LOs*/
                 if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
                     this.handleExtLOData(message);
-                } 
-                /** Save button Click - Add new Cypress LOs */
-                else if (message.currentSlateLF == CYPRESS_LF && message?.statusForSave === true) {
-                    this.handleUnlinkedLODataCypress(message); 
                 }
-                /** Cancel button Click Unlink All LOs from MA Elements */ 
-                else { 
-                    this.handleUnlinkedLOData(message); 
+                /** Cancel button Click Unlink All LOs from MA Elements */
+                else {
+                    this.handleUnlinkedLOData(message);
                 }
             }
         }
@@ -745,13 +779,12 @@ function CommunicationChannel(WrappedComponent) {
                 }
                 this.props.updateElement(requestPayload);
                 this.props.isLOExist(message);
-                this.props.currentSlateLOType(CYPRESS_LF);
                 this.props.currentSlateLO([message.loObj ?? {}]);
                 this.props.currentSlateLOMath([message.loObj ?? {}]);
             }
         }
         /**
-         * This function is responsible for handling the unlinked LOs w.r.t. Slate 
+         * This function is responsible for handling the unlinked LOs w.r.t. Slate
          * and updating the Metadata Anchor Elements on Slate after warning Popup Action
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
@@ -794,7 +827,7 @@ function CommunicationChannel(WrappedComponent) {
             });
         }
         /**
-         * This function is responsible for handling the updated LOs w.r.t. Slate 
+         * This function is responsible for handling the updated LOs w.r.t. Slate
          * and updating the Metadata Anchor Elements on Slate
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
@@ -907,8 +940,11 @@ function CommunicationChannel(WrappedComponent) {
         resetOwnerSlatePopupFlag = () => {
             const { projectSubscriptionDetails } = this.props;
             const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            const isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
             if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
                 this.props.isOwnersSubscribedSlate(true);
+            }else if(isSubscriberRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isSubscribersKeyExist){
+                this.props.isSubscribersSubscribedSlate(true);
             }
         }
 
@@ -960,9 +996,10 @@ function CommunicationChannel(WrappedComponent) {
                     let tocDelete = this.props.permissions.includes('toc_delete_entry') ? 'toc_delete_entry' : ""
                     let tocRearrage = this.props.permissions.includes('toc_rearrange_entry') ? 'toc_rearrange_entry' : ""
                     let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
-                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd]
+                    let unlinkContent = this.props.permissions.includes('unlink_content_from_TOC') ? 'unlink_content_from_TOC' : ""
+                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd, unlinkContent]
                 }
-                permissionObj.roleId = 'admin';
+                permissionObj.roleId = this.props.roleId;
             }
 
 
@@ -993,8 +1030,20 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
+                // To prevent the change slate focus action on browser refresh
+                let isRefreshBrowser = localStorage.getItem('browser_refresh');
+                if (isRefreshBrowser == '1') {
+                    localStorage.setItem('browser_refresh', '0');
+                    // At the time slate versioning prevent trigger slate level save
+                } else if (localStorage.getItem('slateNewVersion') === 'true') {
+                    localStorage.removeItem('slateNewVersion');
+                } else {
+                    triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
+                }
+                const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
-                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                    this.props.releaseSlateLock(config.projectUrn, slateManifest)
+                    triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
                 }
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -1069,15 +1118,16 @@ function CommunicationChannel(WrappedComponent) {
                     'strApiKey': config.STRUCTURE_APIKEY,
                     'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                     'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                    'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+                    'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
+                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+                    'structureApiEndpoint':config.AUDIO_NARRATION_URL
                 }
-                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (config.slateType == "section" || config.slateType == SLATE_TYPE_PDF)) {
+                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                     }
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn } })
+                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
                 }
                 else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
                     sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
@@ -1160,7 +1210,13 @@ function CommunicationChannel(WrappedComponent) {
                 }
             });
         }
+        UnlinkSubscribers = (message) => {
+            hideBlocker();
+            showTocBlocker();
+            disableHeader(true);
 
+            sendDataToIframe({type : 'showTOCUnlinkPopup', message : message})
+        }
         onDeleteTocItem = (message, type) => {
             this.checkSlateLockAndDeleteSlate(message, type)
         }

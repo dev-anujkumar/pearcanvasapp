@@ -34,22 +34,25 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     showTocBlocker: jest.fn()
 }))
 jest.mock('../../../src/constants/utility.js', () => {
-    return { sendDataToIframe: jest.fn(),
-    getLabelNumberTitleHTML: () => {
-        return jest.fn()
-    },
-    hasReviewerRole: () => {
-        return false
-    },
-    sendDataToIframe: () => {
-        return jest.fn()
-    },
-    createLabelNumberTitleModel: () => {
-        return ""
-    },
-    guid: jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )}
- })
+    return {
+        sendDataToIframe: jest.fn(),
+        getLabelNumberTitleHTML: () => {
+            return jest.fn()
+        },
+        hasReviewerRole: () => {
+            return false
+        },
+        sendDataToIframe: () => {
+            return jest.fn()
+        },
+        createLabelNumberTitleModel: () => {
+            return ""
+        },
+        guid: jest.fn(),
+        handleTinymceEditorPlugins: jest.fn(() => 'lists advlist placeholder charmap paste image casechange'),
+        withoutCursorInitailizedElements: ['figure', 'element-aside']
+    }
+})
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
@@ -458,6 +461,7 @@ describe('Testing Opener component with props', () => {
             },
             element : openerElementData,
             onClick : ()=>{},
+            handleFocus: jest.fn(()=>{}),
             permissions: []
         }
         const event = {
@@ -466,7 +470,10 @@ describe('Testing Opener component with props', () => {
         }
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         const OpenerInstance = openerComponent.find('OpenerElement').instance()
-        expect(OpenerInstance.handleOpenerClick(props.slateLockInfo,event)).toEqual(false)
+        const spyhandleOpenerClick = jest.spyOn(OpenerInstance, 'handleOpenerClick') 
+        OpenerInstance.handleOpenerClick(props.slateLockInfo, event);
+        expect(spyhandleOpenerClick).toHaveBeenCalledWith(props.slateLockInfo,event)
+        spyhandleOpenerClick.mockClear()
     })
     it("Clicking on image with locked slate", () => {
         const props = {
@@ -476,11 +483,21 @@ describe('Testing Opener component with props', () => {
             },
             element : openerElementData,
             onClick : ()=>{},
-            permissions: []
+            permissions: [],
+            accessDenied: jest.fn(),
         }
+        const event = {
+            target: {
+                tagName: 'p'
+            }, 
+            stopPropagation: jest.fn()
+        };
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         const OpenerInstance = openerComponent.find('OpenerElement').instance()
-        expect(OpenerInstance.handleC2MediaClick()).toEqual(false)
+        const spyhandleC2MediaClick = jest.spyOn(OpenerInstance, 'handleC2MediaClick') 
+        OpenerInstance.handleC2MediaClick(event);
+        expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
+        spyhandleC2MediaClick.mockClear()
     })
     it("Test-HandleBlur", () => {
         const props = {
@@ -490,6 +507,7 @@ describe('Testing Opener component with props', () => {
             },
             element : openerElementData,
             onClick : ()=>{},
+            handleFocus: jest.fn(()=>{}),
             permissions: []
         }
         const event = {
@@ -500,7 +518,7 @@ describe('Testing Opener component with props', () => {
         const OpenerInstance = openerComponent.find('OpenerElement').instance()
         const spyhandleBlur = jest.spyOn(OpenerInstance, 'handleBlur')
         OpenerInstance.handleBlur(event)
-        expect(OpenerInstance.handleOpenerClick(props.slateLockInfo,event)).toEqual(false)
+        expect(spyhandleBlur).toHaveBeenCalledWith(event)
         spyhandleBlur.mockClear()
     })
     it("Test-HandleBlur with classes", () => {

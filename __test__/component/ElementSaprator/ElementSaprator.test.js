@@ -6,6 +6,7 @@ import config from '../../../src/config/config.js';
 import { mount} from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import * as utils from '../../../src/constants/utility';
 
 const mockStore = configureMockStore();
 
@@ -386,6 +387,7 @@ describe('Testing ElementSaprator rendering', () => {
             onClickCapture: jest.fn(),
             source: ''
         }
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
         let Es = mount(<Provider store={store}><ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>);
     })
 
@@ -615,6 +617,16 @@ describe('Testing functions', () => {
         esProps.buttonType = 'interactive-elem-button'
         config.isPopupSlate = true
         separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+    })
+
+    it('Testing renderConditionalButtons function -  element type = group, subtype = tab', () => {
+        let sectionBreak = ''
+        let closeDropDown = ''
+        config.slateType = 'adsdfsdf'
+        config.parentEntityUrn = 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527'
+        esProps.buttonType = 'interactive-elem-button'
+        config.isPopupSlate = true
+        separatorFunctions.renderDropdownButtons(esProps, "group", sectionBreak, closeDropDown, propsData, "tab")
     })
 
     it('Testing pasteElement function - cut', () => {
@@ -1198,6 +1210,21 @@ describe('Testing functions', () => {
         expect(spyTypeOfContainerElements).toHaveBeenCalled()
     })
 
+    it('Testing renderDropdownButtons function - asideData - groupedcontent', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: 'container-elem-button'
+        }
+        const props = {
+            asideData: {
+                type: "groupedcontent",
+                subtype: "tab"
+            }
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    })
+
     it('Testing renderDropdownButtons function - asideData - showhide', () => {
         const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
         const element = {
@@ -1270,4 +1297,18 @@ describe('Testing functions', () => {
         separatorFunctions.typeOfContainerElements(element, props);
         expect(spyTypeOfContainerElements).toHaveBeenCalled()
     });
+
+    it('Testing typeOfContainerElements - elem?.buttonType === "multi-column-group" && config.isPopupSlate', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: 'multi-column-group'
+        }
+        const props = {
+            asideData: {
+                type: "groupedcontent"
+            }
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    })
 });

@@ -10,9 +10,9 @@ import {
     AUTHORING_ELEMENT_UPDATE,
     OPEN_GLOSSARY_FOOTNOTE,
     GET_TCM_RESOURCES,
-    OPEN_MARKED_INDEX 
+    OPEN_MARKED_INDEX
 } from "../../constants/Action_Constants";
-import ElementConstants, { 
+import ElementConstants, {
     elementTypeTCM,
     allowedFigureTypesForTCM,
     allowedParentType
@@ -25,12 +25,12 @@ import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
 import elementTypeConstant from './ElementConstants';
 
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST, ELEMENT_ASIDE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
-    let { 
-        updatedData, 
-        asideData, 
+    let {
+        updatedData,
+        asideData,
         dispatch,
         versionedData,
         elementIndex,
@@ -55,7 +55,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && (isBlockListElement || asideData?.type == "citations")) {
         asideData.indexes = indexes;
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
-         /* Condition for update title of Approved CG inside S/H */ 
+         /* Condition for update title of Approved CG inside S/H */
     } else if(isBlockListElement) {
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
@@ -78,10 +78,12 @@ export const updateNewVersionElementInStore = (paramObj) => {
     }
     else if (asideData?.type == "poetry" && asideData?.grandParent?.asideData?.type === 'showhide') {
         dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
-        /* Condition for update Approved poetry inside S/H */ 
+        /* Condition for update Approved poetry inside S/H */
+    } else if (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false))
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
-        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
+        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
             dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }  else if (asideData && asideData.type == 'groupedcontent') {
             asideData.indexes = indexes;
@@ -92,10 +94,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
         parentElement.index = elementIndex;
         parentElement.indexes = elementIndex;
         dispatch(fetchSlateData(parentVersionUrn, parentElement.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
-    } 
+    }
     }
     else if (parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ) {
-        dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, CONTAINER_VERSIONING, true)); 
+        dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, CONTAINER_VERSIONING, true));
     }
     else {
         elementIndex = indexes.length == 2 ? indexes[0] : elementIndex
@@ -139,10 +141,9 @@ export const updateElementInStore = (paramsObj) => {
 
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
-        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList, updatedData.type );
+        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList, updatedData.type, asideData);
         updateShowhideElements(sh_Object, updatedData, iList, { isAutoNumberingEnabled, autoNumberSettingsOption });
-    } else
-    if (parentElement && parentElement.type === "citations") {
+    } else if (parentElement && parentElement.type === "citations") {
         const indexes = typeof elementIndex === 'string' ? elementIndex?.split("-"): elementIndex;
         // Update CG inside S/H
         if (asideData?.parent?.type === SHOW_HIDE) {
@@ -170,6 +171,27 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         }
+        /* Update data of element inside tab inside TB */
+    } else if (parentElement?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
+        const indexes = elementIndex.split("-")
+        let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+        /** Updation of AutoNumbered Elements */
+        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+            element = { ...element, ...updatedData }
+            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+            element = { ...dataToReturn }
+        }
+        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]] = {
+            ...element,
+            ...updatedData,
+            elementdata: {
+                ...element.elementdata,
+                startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                text: updatedData.elementdata ? updatedData.elementdata.text : null
+            },
+            tcm: _slateObject.tcm ? true : false
+        }
     } else if (parentElement && parentElement.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
@@ -190,7 +212,7 @@ export const updateElementInStore = (paramsObj) => {
             },
             tcm: _slateObject.tcm ? true : false
         }
-    } 
+    }
     else if (updatedData?.loData?.length) {
         updatedData.loData.forEach((updatedLO) => {
             if (updatedLO.elementVersionType === ElementConstants.METADATA_ANCHOR) {
@@ -198,7 +220,103 @@ export const updateElementInStore = (paramsObj) => {
                     _slateBodyMatter = updateLOInCanvasStore({ updatedLO, _slateBodyMatter, activeIndex: i });
                 }
             }
-        })
+        }) /** updation of elements inside aside and WE elements inside Tab element */
+    } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && asideData?.type !== BLOCK_LIST) {
+        const indexes = elementIndex?.split("-");
+        if (asideData?.type === ELEMENT_ASIDE && parentElement?.type === POOPUP_ELEMENT) {
+            let element;
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Pop up Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata;
+                    if (updatedData?.sectionType === "postertextobject") {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                            ...element.postertextobject[0],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element.postertextobject[0].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    } else {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                            ...element["formatted-title"],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element["formatted-title"].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    }
+                    break;
+                case 6: // WE->BODY->Pop up Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata;
+                    if (updatedData?.sectionType === "postertextobject") {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata.postertextobject[0] = {
+                            ...element.postertextobject[0],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element.postertextobject[0].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    } else {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata["formatted-title"] = {
+                            ...element["formatted-title"],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element["formatted-title"].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    }
+                    break;
+            }
+        } else if (asideData?.type === ELEMENT_ASIDE) {
+            /** updation of text and figure elements inside aside/WE of multicolumn */
+            let element;
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    break;
+                case 6: // WE->BODY->Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    break;
+            }
+            /** Updation of AutoNumbered Elements */
+            if (isAutoNumberingEnabled && element?.type == FIGURE && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                element = { ...element, ...updatedData }
+                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                element = { ...dataToReturn }
+            }
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Element
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = {
+                        ...element,
+                        ...updatedData,
+                        elementdata: {
+                            ...element.elementdata,
+                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                            text: updatedData.elementdata ? updatedData.elementdata.text : null
+                        },
+                        tcm: _slateObject.tcm ? true : false
+                    }
+                    break;
+                case 6: // WE->BODY->Element
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = {
+                        ...element,
+                        ...updatedData,
+                        elementdata: {
+                            ...element.elementdata,
+                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                            text: updatedData.elementdata ? updatedData.elementdata.text : null
+                        },
+                        tcm: _slateObject.tcm ? true : false
+                    }
+                    break;
+            }
+        }
     } else if(asideData?.parent?.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         /** updation of aside and WE elements inside multicolumn */
         /* 2C:AS/WE:PS */
@@ -304,7 +422,7 @@ export const updateElementInStore = (paramsObj) => {
                     },
                     tcm: _slateObject.tcm ? true : false
                 }
-            }  
+            }
         }
     } else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
@@ -317,7 +435,7 @@ export const updateElementInStore = (paramsObj) => {
                         ...element,
                         ...updatedData,
                     }
-                } 
+                }
                 else if (element.type !== "openerelement") {
                     /** updation of simple text elements and figure elements */
                     element = {
@@ -350,7 +468,6 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 }
             } else if (asideData && asideData.type == 'element-aside') {
-                
 
                 // xxxxxxxxxxxxxxxxxxxx  START update elements inside AS/WE inside S/H  xxxxxxxxxxxxxxxxxx //
                 if (asideData?.parent?.type === "showhide" && element.id == asideData?.parent?.id) {
@@ -420,7 +537,7 @@ export const updateElementInStore = (paramsObj) => {
                                 ...nestedEle,
                                 ...updatedData,
                                 elementdata: {
-                                    ...nestedEle.elementdata, 
+                                    ...nestedEle.elementdata,
                                     startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
                                     numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
                                     text: updatedData.elementdata ? updatedData.elementdata.text : null
@@ -641,6 +758,21 @@ export const updateElementInStore = (paramsObj) => {
                     }
                     else{
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                    } // check the update of BL in Tab element of TB
+                } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && asideData?.type === BLOCK_LIST) {
+                    switch (indexes.length) {
+                        case 6: // TB:Tab:c1:BL Level 1 nesting
+                            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData;
+                            break;
+                        case 8: // TB:Tab:c1:BL Level 2 nesting
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = updatedData;
+                            break;
+                        case 10: // TB:Tab:c1:BL Level 3 nesting
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData;
+                            break;
+                        case 12: // TB:Tab:c1:BL Level 4 nesting
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter[indexes[11]] = updatedData;
+                            break;
                     }
                 }else if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
                     if(indexes.length===5){
@@ -718,7 +850,7 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 });
             }
-            //else if (element.type === SHOW_HIDE) { 
+            //else if (element.type === SHOW_HIDE) {
             //    /* When showhide Element is placed on slate not inside other container */
             //    const indexs = elementIndex?.toString()?.split("-") || [];
             //    if (indexs?.length == 3) {
@@ -739,9 +871,9 @@ export const updateElementInStore = (paramsObj) => {
     })
 }
 /**
-*  @description {Function} updateShowhideElements -  To update the store on update of showhide inner elemetns 
-*  @param {Object} element - showhide object data 
-*  @param {Object} updatedData - updated data of inner elements 
+*  @description {Function} updateShowhideElements -  To update the store on update of showhide inner elemetns
+*  @param {Object} element - showhide object data
+*  @param {Object} updatedData - updated data of inner elements
 *  @param {Array}  indexs - indexs of element heirarchy */
 export function updateShowhideElements(element, updatedData, indexs, {isAutoNumberingEnabled,autoNumberSettingsOption, updatedSH_Object}) {
     if(element?.type === SHOW_HIDE) {
@@ -826,40 +958,43 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+    const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) &&
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
-    if (asideData?.type !== "manifestlist") {
-    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
-        const containerElement = {
-            asideData,
-            parentUrn,
-            poetryData,
-            showHideObj,
-            parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
-            metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
-            CurrentSlateStatus: currentSlateData?.status
-        },
-        elementUpdateData = {
-            currentParentData,
-            updateBodymatter,
-            response: responseData,
-            updatedId: updatedData.id,
-            slateManifestUrn: config.slateManifestURN,
-            CurrentSlateStatus: currentSlateData?.status,
-            figureData: oldFigureData,
-            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
-            
-        }
+    // Check modified to prevent snapshots for TB element. This will be removed when TB supports TCM
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
+    if (asideData?.type !== "manifestlist" && !isTbElement) {
+        if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
+            const containerElement = {
+                asideData,
+                parentUrn,
+                poetryData,
+                showHideObj,
+                parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
+                metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
+                sectionType: allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
+                CurrentSlateStatus: currentSlateData?.status
+            },
+                elementUpdateData = {
+                    currentParentData,
+                    updateBodymatter,
+                    response: responseData,
+                    updatedId: updatedData.id,
+                    slateManifestUrn: config.slateManifestURN,
+                    CurrentSlateStatus: currentSlateData?.status,
+                    figureData: oldFigureData,
+                    cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
 
-        if (!config.isCreateGlossary) {
-            await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+                }
+
+            if (!config.isCreateGlossary) {
+                await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+            }
+            config.isCreateGlossary = false
         }
-        config.isCreateGlossary = false
-    }}
+    }
     return false
 }
 
@@ -886,13 +1021,18 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
-    const { saveAutoUpdateData } = getState().assessmentReducer;
+    const { assessmentItemAutoUpdateData, updatedAssessmentArray } = getState().assessmentReducer;
     // update Element in store based on AutoNumber Settings
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
-    if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
-        dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
+    // sending the VCS API call for the assessment items
+    if(assessmentItemAutoUpdateData?.length) {
+        assessmentItemAutoUpdateData.forEach(item => {
+            if(item && item.oldAssessmentId && item.newAssessmentId && !updatedAssessmentArray?.includes(item.newAssessmentId)) {
+                dispatch(updateAssessmentVersion(item.oldAssessmentId, item.newAssessmentId));
+            }
+        })
     }
     if(responseData.id !== updatedData.id){
         glossaryFootnoteValue.elementWorkId = responseData.id;
@@ -950,11 +1090,11 @@ export const processAndStoreUpdatedResponse = async (params) => {
             poolFunc(updatedData?.id);
         }
     }
-    
+
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
-    customEvent.trigger('glossaryFootnoteSave', responseData.id); 
-    customEvent.trigger('markedIndexSave', responseData.id); 
+    customEvent.trigger('glossaryFootnoteSave', responseData.id);
+    customEvent.trigger('markedIndexSave', responseData.id);
     config.popupCreationCallInProgress = false;
     showLinkToast(document.getElementById('link-notification'))
 }
@@ -987,6 +1127,7 @@ export const updateStore = (paramObj) => {
     const commonArgs = {
         updatedData, responseData, getState, dispatch
     }
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     if ((updatedData?.loData) || updatedData.elementVersionType === "element-generateLOlist") {
         if (updatedData?.loData?.length && responseData?.loData?.length) {
             updateMetadataAnchorLOsinStore({...commonArgs,currentSlateData})
@@ -1006,7 +1147,7 @@ export const updateStore = (paramObj) => {
         } else if (currentSlateData.status === 'approved') {
             if (currentSlateData.type === "popup") {
                 if (config.tcmStatus) {
-                    if (elementTypeTCM.indexOf(updatedData.type) !== -1) {
+                    if (elementTypeTCM.indexOf(updatedData.type) !== -1 && !isTbElement) {
                         const tcmDataArgs = {
                             updatedDataID: updatedData.id, getState, dispatch, versionedData: responseData, updatedData
                         }
@@ -1017,13 +1158,13 @@ export const updateStore = (paramObj) => {
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                     dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
             } else {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             }
         }
     }
     else if (showHideType && showHideType === "postertextobject") {
-        const argsForPostertext = { 
-            getState, 
+        const argsForPostertext = {
+            getState,
             dispatch,
             updatedData: { ...updatedData, ...responseData },
             asideData,
@@ -1063,6 +1204,7 @@ export const updateStoreInCanvas = (params) => {
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false;
@@ -1071,7 +1213,7 @@ export const updateStoreInCanvas = (params) => {
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
         if(asideData?.type !== "manifestlist") {
         if(!isBlockListElement) {
-            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isTbElement) {
                 const tcmDataArgs = {
                     updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
                 }
@@ -1133,12 +1275,12 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
                 tcmData[indexItem]["elemURN"] = updatedDataID
                 tcmData[indexItem]["txCnt"] = 1
                 tcmData[indexItem]["feedback"] = tcmData[indexItem]["feedback"] !== null ? tcmData[indexItem]["feedback"] : null
-                tcmData[indexItem]["isPrevAcceptedTxAvailable"] = tcmData[indexItem]["isPrevAcceptedTxAvailable"] ? tcmData[indexItem]["isPrevAcceptedTxAvailable"] : false    
+                tcmData[indexItem]["isPrevAcceptedTxAvailable"] = tcmData[indexItem]["isPrevAcceptedTxAvailable"] ? tcmData[indexItem]["isPrevAcceptedTxAvailable"] : false
                 }
             })
     }
 }
-  
+
     if (tcmData.length >0) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
     }
@@ -1245,7 +1387,7 @@ const getShowhideParent = async (shParentData) => {
         } else if (asideData?.grandParent?.asideData?.type == 'element-aside') {
             if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
                 parentToCascade = asideData?.grandParent?.asideData?.parent
-                parentToCascade.contentUrn = parentToCascade.parentContentUrn
+                parentToCascade.contentUrn = parentToCascade.parentContentUrn ?  parentToCascade.parentContentUrn :  parentToCascade.contentUrn
             }
             else {
                 parentToCascade = asideData?.grandParent?.asideData
@@ -1262,5 +1404,25 @@ const getShowhideParent = async (shParentData) => {
 const cascadeElement = async (parentElement, dispatch, parentElementIndex, fetchSlateData, calledFrom) => {
     parentElement.indexes = parentElementIndex;
     parentElement.callFrom = calledFrom
-    await dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
+    await dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,""));
 }
+
+/**
+ * @description - This function checks whether the asset's current metadata is identical to the fetched metadata or not
+ * @param currentAltText -  Asset's current alt-text
+ * @param currentLongDesc -  Asset's current long-desc
+ * @param fetchedAltText -  Asset's fetched alt-text
+ * @param fetchedLongDesc - Asset's fetched long-desc
+ */
+export const checkMetadataIdentical = (currentAltText, currentLongDesc, fetchedAltText, fetchedLongDesc) => {
+    if(!currentAltText && !fetchedAltText && !currentLongDesc && !fetchedLongDesc)
+        return true
+    else if(!currentAltText && !fetchedAltText && currentLongDesc===fetchedLongDesc)
+        return true
+    else if(currentAltText===fetchedAltText && !currentLongDesc && !fetchedLongDesc)
+        return true
+    else if(currentAltText===fetchedAltText && currentLongDesc===fetchedLongDesc)
+        return true
+    else 
+        return false
+    }

@@ -5,8 +5,8 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { communicationAssessmentSlateData, slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS } from '../../../src/constants/Action_Constants';
+import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData, popupSlateLevelDataWithApproved, newSlateDataFigure } from "../../../fixtures/containerActionsTestingData"
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -79,7 +79,6 @@ jest.mock('../../../src/component/ElementContainer/ElementContainerUpdate_helper
 jest.mock('../../../src/js/TinyMceUtility.js', () => ({
     checkBlockListElement: jest.fn(() => { return { parentData: {} } })
 }));
-
 let cb = new stub();
 jest.setTimeout(10000);
 
@@ -595,6 +594,144 @@ describe('Tests ElementContainer Actions', () => {
                 expect(spyupdateElement).toHaveBeenCalled()
             });
         })
+
+        it('testing------- Update Element -----action---element-list- covering removeBRForMathmlAndFootnote to remove <br> for footnote and image ', () => {
+            
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-list",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><br><li class=\"reset listItemNumeroUnoNumber\"><img align=\"middle\" class=\"Wirisformula\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/07/42/07429e847629dc1ed04426bd1e236071.png?1686117411770\" height=\"22\" width=\"34\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»22«/mn»«/msqrt»«/math»\" alt=\"square root of 22\" role=\"math\" style=\"max-width: none;\"></li><li class=\"reset listItemNumeroUnoNumber\"><img align=\"middle\" class=\"Wirisformula\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/07/42/07429e847629dc1ed04426bd1e236071.png?1686117411770\" height=\"22\" width=\"34\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»22«/mn»«/msqrt»«/math»\" alt=\"square root of 22\" role=\"math\" style=\"max-width: none;\"><br></li><li class=\"listItemNumeroUnoNumber\"><sup><a href=\"#\" id=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-uri=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-footnoteelementid=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup><br></li><li class=\"listItemNumeroUnoNumber\"><br><sup><a href=\"#\" id=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-uri=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-footnoteelementid=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup></li></ol>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData, null, null, null, true, communicationAssessmentSlateData.getRequiredSlateData )).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
+            });
+        })
+        it('testing------- Update Element -----action---element-list- removeBRForMathmlAndFootnote else conditions', () => {
+            
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-list",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><li class=\"reset listItemNumeroUnoNumber\"><img align=\"middle\" class=\"Wirisformula\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/07/42/07429e847629dc1ed04426bd1e236071.png?1686117411770\" height=\"22\" width=\"34\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»22«/mn»«/msqrt»«/math»\" alt=\"square root of 22\" role=\"math\" style=\"max-width: none;\"></li><li class=\"reset listItemNumeroUnoNumber\"><img align=\"middle\" class=\"Wirisformula\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/07/42/07429e847629dc1ed04426bd1e236071.png?1686117411770\" height=\"22\" width=\"34\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»22«/mn»«/msqrt»«/math»\" alt=\"square root of 22\" role=\"math\" style=\"max-width: none;\"></li><li class=\"listItemNumeroUnoNumber\"><sup><a href=\"#\" id=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-uri=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-footnoteelementid=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup></li><li class=\"listItemNumeroUnoNumber\"><sup><a href=\"#\" id=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-uri=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" data-footnoteelementid=\"urn:pearson:work:86014c8f-fdc5-4d46-a24d-3282dc653e44\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup></li></ol>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData, null, null, null, true, communicationAssessmentSlateData.getRequiredSlateData )).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
+            });
+        })
+
+        it('testing------- Update Element -----action---element-list- removeBRForMathmlAndFootnote when no footnote or img added in list', () => {
+            
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-list",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><li class=\"reset listItemNumeroUnoNumber\"></li></ol>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData, null, null, null, true, communicationAssessmentSlateData.getRequiredSlateData )).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
+            });
+        })
+
     })
 
     describe('testing------- Create Show/Hide Element------action', () => {
@@ -1851,6 +1988,62 @@ describe('Tests ElementContainer Actions', () => {
             //expect(store.getActions()).toEqual(expectedActions);
       
         })
+
+        it('testing------- UpdateFigure Data Showhide >3 index------action if condition coverage', () => {
+            let initialStateWithFigure = {
+                slateLevelData: newSlateDataFigure,
+                appStore: newSlateDataFigure,
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25,
+                },
+                glossaryFootnoteReducer: {
+                    glossaryFootnoteValue: { elementWorkId: "4343653" },
+                    glossaryFootNoteCurrentValue: "",
+                    elementIndex: ""
+                }
+            };
+            config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
+            let store = mockStore(() => initialStateWithFigure);
+            let elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231";
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: defaultSlateDataFigure,
+            }];
+
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+            const updateddata = {
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                "height": "1225",
+                "width": "1440",
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            store.dispatch(actions.updateFigureData(updateddata, "4-1-0", elementId, cb));
+            //expect(store.getActions()).toEqual(expectedActions);
+      
+        })
+
     })
     xdescribe('catch cases', () => {
     it('testing------- ADD COMMENT ------action- catch case', () => {
@@ -1902,6 +2095,7 @@ describe('Tests ElementContainer Actions', () => {
             // expect(store.getActions()).toEqual(expectedActions);
         });
     })
+    
     })
     describe('testing----------- Other methods -------------',() => {
 
@@ -2096,6 +2290,45 @@ describe('Tests ElementContainer Actions', () => {
                         spyupdateFigureData.mockClear()
                     })
                 })
+                describe('Testing updateFigureData for figures inside TB element',() => {
+                    const initialSt = { 
+                        appStore: {
+                            slateLevelData : defaultSlateDataFigure.slateLevelData
+                        }
+                    }
+                    let store = mockStore(() => initialSt);
+    
+                    const figureData = {},
+                        dispatch = jest.fn(),
+                        getState = store.getState;
+    
+                    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+    
+                    it("1- updateFigureData tab index length - 4", () => {
+                        config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+                        const elementId = "urn:pearson:work:c09a47c6-3bfb-4e6c-a004-87c7e76e2cfd";
+                        const elementIndex = "7-0-0-1";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it("1- updateFigureData tab index length - 5", () => {
+                        config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+                        const elementIndex = "7-0-0-2-1";
+                        const elementId = "urn:pearson:work:8f9ad3d2-ee6e-43da-a8d6-ae6cfbe6d133";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it("1- updateFigureData tab index length - 6", () => {
+                        config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+                        const elementIndex = "7-0-0-2-3-2";
+                        const elementId = "urn:pearson:work:8f9ad3d2-ee6e-43da-a8d6-ae6cfbe6d133";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                })
             })
         })
         it('testing------- updateMultipleColumnData------method', () => {
@@ -2158,6 +2391,93 @@ describe('Tests ElementContainer Actions', () => {
             store.dispatch(actions.updateAudioVideoDataForCompare({}));
             expect(store.getActions().type).toEqual(expectedActions.type);
             spyUpdateAudioVideoDataForCompare.mockClear();
+        })
+    })
+    describe("Testing for updateTabTitle function", () => {
+        it("testing updateTabTitle", () => {
+            const initialState = {
+                appStore: {
+                    slateLevelData: defaultSlateDataFigure.slateLevelData
+                }
+            }
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+            let index = "7-0";
+            let previousData = {
+                contentUrn: "test",
+                type: "group",
+                subtype: "subtype"
+            };
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    res: 200
+                });
+            });
+            const spyupdateTabTitle = jest.spyOn(actions, 'updateTabTitle');
+            return store.dispatch(actions.updateTabTitle(previousData, index, {})).then(() => {
+                expect(spyupdateTabTitle).toHaveBeenCalled();
+                spyupdateTabTitle.mockClear();
+            });
+        })
+        it("testing updateTabTitle if slate is approved", () => {
+            const initialState = {
+                appStore: {
+                    slateLevelData: slateLevelDataWithApproved.slateLevelData
+                }
+            }
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let index = "7-0";
+            let previousData = {
+                contentUrn: "test",
+                type: "group",
+                subtype: "subtype"
+            };
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 201,
+                    res: {
+                        versionUrn: 'versionUrn'
+                    }
+                });
+            });
+            const spyupdateTabTitle = jest.spyOn(actions, 'updateTabTitle');
+            return store.dispatch(actions.updateTabTitle(previousData, index, {})).then(() => {
+                expect(spyupdateTabTitle).toHaveBeenCalled();
+                spyupdateTabTitle.mockClear();
+            });
+        })
+        it("testing updateTabTitle if slate is approved and is popup slate", () => {
+            const initialState = {
+                appStore: {
+                    slateLevelData: popupSlateLevelDataWithApproved.slateLevelData
+                }
+            }
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let index = "7-0";
+            let previousData = {
+                contentUrn: "test",
+                type: "group",
+                subtype: "subtype"
+            };
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 201,
+                    res: {
+                        versionUrn: 'versionUrn'
+                    }
+                });
+            });
+            const spyupdateTabTitle = jest.spyOn(actions, 'updateTabTitle');
+            return store.dispatch(actions.updateTabTitle(previousData, index, {})).then(() => {
+                expect(spyupdateTabTitle).toHaveBeenCalled();
+                spyupdateTabTitle.mockClear();
+            });
         })
     })
 })
@@ -2468,5 +2788,107 @@ describe("Test case for saveTEMetadata ",()=>{
                 expect(spyGetSaveTEMetadata).toHaveBeenCalled()
                 spyGetSaveTEMetadata.mockClear()
             });
+    })
+})
+
+describe("approvedSlatePopupStatus Testing", ()=>{
+    it('testing------- approvedSlatePopupStatus ------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            { 
+                type: APPROVED_SLATE_POPUP_STATUS,
+                payload: {}
+            }
+          ]
+       const spyUpdateMultipleColumnData  = jest.spyOn(actions, 'approvedSlatePopupStatus') 
+       actions.approvedSlatePopupStatus({}, "testing", store.dispatch);
+       expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
+       store.dispatch(actions.approvedSlatePopupStatus({}, 'testing'));
+       expect(store.getActions().type).toEqual(expectedActions.type);
+       spyUpdateMultipleColumnData.mockClear();
+    })
+})
+
+describe("Decorative image conversion Testing", () => {
+    it('testing------- decoToOtherTypeConversion ------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            {
+                type: DECO_TO_OTHER_IMG_TYPES,
+                payload: {}
+            }
+        ]
+        const spyUpdateMultipleColumnData = jest.spyOn(actions, 'decoToOtherTypeConversion')
+        actions.decoToOtherTypeConversion({}, "testing", store.dispatch);
+        expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
+        store.dispatch(actions.decoToOtherTypeConversion({}, 'testing'));
+        expect(store.getActions().type).toEqual(expectedActions.type);
+        spyUpdateMultipleColumnData.mockClear();
+    })
+    it('testing------- fetchOldDataAfterConversion ------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            {
+                type: FETCH_CONVERSION_DATA,
+                payload: {}
+            }
+        ]
+        const spyUpdateMultipleColumnData = jest.spyOn(actions, 'fetchOldDataAfterConversion')
+        actions.fetchOldDataAfterConversion({}, "testing", store.dispatch);
+        expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
+        store.dispatch(actions.fetchOldDataAfterConversion({}, 'testing'));
+        expect(store.getActions().type).toEqual(expectedActions.type);
+        spyUpdateMultipleColumnData.mockClear();
+    })
+    it('testing------- getalfrescometadata ------method', async () => {
+        let mock = new MockAdapter(axios);
+        const data = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+        }
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(200, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','image')
+        expect(spyupdateElement).toHaveBeenCalled()
+    })
+    it('testing------- getalfrescometadata ------method interactive', async () => {
+        let mock = new MockAdapter(axios);
+        const data = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+            entry: {
+                properties: {
+                    "avs:jsonString": "{\n\"smartLinkThirdPartyVendorVal\":\"Metrodigi\",\n\"smartLinkOptimizedMobileVal\":\"Yes\",\n\"height\":\"455\",\n\"width\":\"515\",\n\"linkLongDesc\":\"\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}"
+                }
+            }
+        }
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(200, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','interactive')
+        expect(spyupdateElement).toHaveBeenCalled()
+    })
+    it('testing------- getalfrescometadata ------method interactive else', async () => {
+        let mock = new MockAdapter(axios);
+        const data = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+            entry: {
+                properties: {
+                    "avs:jsonString": 34
+                }
+            }
+        }
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(200, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','interactive')
+        expect(spyupdateElement).toHaveBeenCalled()
+    })
+    xit('testing------- getalfrescometadata ------method else', async () => {
+        let mock = new MockAdapter(axios);
+        const data = undefined
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(500, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','image')
+        expect(spyupdateElement).toBeDefined()
     })
 })

@@ -12,6 +12,11 @@ let initialState = {
         currentAssessmentSelected:{
          }
  },
+ projectInfo: {isBannerVisible: false}
+};
+let initialState2 = {
+    citeTdxReducer:{},
+    projectInfo: {isBannerVisible: true}
 };
 
 describe('Cite/TDX single root component test', () => {
@@ -22,7 +27,15 @@ describe('Cite/TDX single root component test', () => {
         }
         const component = mount(<Provider store={store}><RootSingleAssessmentComponent {...props}/></Provider>)
         expect(component).toHaveLength(1);
+    })
 
+    it('Branch coverage when renders without crashing', () => {
+        let store = mockStore(initialState2);
+        let props={
+            getSingleAssessmentData:jest.fn()
+        }
+        const component = mount(<Provider store={store}><RootSingleAssessmentComponent {...props}/></Provider>)
+        expect(component).toHaveLength(1);
     })
 
 });

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Button from './../ElementButtons';
 import Tooltip from '../Tooltip';
 import { connect } from 'react-redux';
+import { hasReviewerRole } from '../../constants/utility';
 
 
 const defaultSDElement = {
@@ -21,9 +22,10 @@ const DialogueSeprator = (props) => {
     const [showDetails, setDetails] = useState(false);
     const { index, elementIndex, firstOne, element: psElement, sepratorID} = props;
     const updatedIndex = firstOne ?  index : index+1;
+    const hideElementSeperator = hasReviewerRole() ? 'hideToolbar' : ''
     return (
         <div
-            className={`elementSapratorContainer ${props.hideElementSeperator}`}
+            className={`elementSapratorContainer ${hideElementSeperator}`}
             sepratorID={sepratorID}
             style={{ display: 'flex', flexDirection: 'row' }}>
             <div className='elemDiv-hr'>
@@ -57,7 +59,7 @@ const DialogueSeprator = (props) => {
                             <Button
                                 onClick={(event) => {
                                     // add stage direction
-                                   
+
                                     props.addElement(elementIndex, updatedIndex, defaultSDElement, psElement);
                                     setDetails(false);
                                 }}

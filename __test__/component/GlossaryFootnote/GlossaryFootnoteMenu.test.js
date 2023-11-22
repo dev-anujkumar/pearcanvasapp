@@ -6,6 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+import config from '../../../src/config/config';
 
 const mockStore = configureMockStore(middlewares);
 let store = mockStore({});
@@ -142,5 +143,162 @@ describe('Testing Save content function',() => {
         }
         instance2.saveContent()
      });
+});
 
-})
+describe("Increase coverage", () => {
+    const mockQuerySelector1 = (id) => {
+        if (id === '#glossary-editor > div > p') {
+            return {
+                getElementsByClassName: (className) => {
+                    if (className === 'Wirisformula') {
+                        return [
+                            {
+                                getAttribute: () => {
+                                    return {
+                                        substr: jest.fn()
+                                    }
+                                },
+                                setAttribute: jest.fn(),
+                                removeAttribute: jest.fn()
+                            }
+                        ]
+                    }
+                    return true
+                },
+                innerHTML: {
+                    replace: jest.fn(),
+                    match: jest.fn()
+                }
+            }
+        } else if (id === '#glossary-editor-attacher > div > p') {
+            return {
+                innerHTML: '<p></p>'
+            }
+        }
+    }
+    const mockQuerySelector2 = (id) => {
+        if (id === '#glossary-editor > div > p') {
+            return {
+                getElementsByClassName: (className) => {
+                    if (className === 'Wirisformula') {
+                        return [
+                            {
+                                getAttribute: () => {
+                                    return {
+                                        substr: jest.fn()
+                                    }
+                                },
+                                setAttribute: jest.fn(),
+                                removeAttribute: jest.fn()
+                            }
+                        ]
+                    }
+                    return true
+                },
+                innerHTML: {
+                    replace: jest.fn(),
+                    match: jest.fn().mockReturnValue(false)
+                }
+            }
+        } else if (id === '#glossary-editor-attacher > div > p') {
+            return {
+                innerHTML: '<p></p>'
+            }
+        }
+    }
+    const mockQuerySelector3 = (id) => {
+        if (id === '#glossary-editor-attacher > div > p') {
+            return {
+                getElementsByClassName: (className) => {
+                    if (className === 'Wirisformula') {
+                        return [
+                            {
+                                getAttribute: () => {
+                                    return {
+                                        substr: jest.fn()
+                                    }
+                                },
+                                setAttribute: jest.fn(),
+                                removeAttribute: jest.fn()
+                            }
+                        ]
+                    }
+                    return true
+                },
+                innerHTML: {
+                    replace: jest.fn(),
+                    match: jest.fn()
+                }
+            }
+        } else if (id === '#glossary-editor > div > p') {
+            return {
+                innerHTML: '<p></p>'
+            }
+        }
+    }
+    tinymce = {
+        $: () => {
+            return {
+                find: () => {
+                    return {
+                        each: (cb) => {
+                            cb.call({
+                                innerHTML: '<p></p>'
+                            })
+                        }
+                    }
+                }
+            }
+        },
+        editors: [{ id: 'cypress-0-0' }],
+        remove:jest.fn()
+    }
+    it('renders saveContent function correctly GloassaryData conditional coverage - 1', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = mockQuerySelector1;
+        config.S3MathImagePath = true;
+        instance2.saveContent();
+    });
+    it('renders saveContent function correctly GloassaryData conditional coverage - 2', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = mockQuerySelector1;
+        config.S3MathImagePath = false;
+        instance2.saveContent();
+    });
+    it('renders saveContent function correctly GloassaryData conditional coverage - 3', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        props2.markedIndexGlossaryData = {
+            markedIndexEntryURN: ""
+        }
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = mockQuerySelector2;
+        config.S3MathImagePath = false;
+        instance2.saveContent();
+    });
+    it('renders saveContent function correctly GloassaryData conditional coverage - 4', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = mockQuerySelector3;
+        config.S3MathImagePath = true;
+        instance2.saveContent();
+    });
+    it('renders saveContent function correctly GloassaryData conditional coverage - 5', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = mockQuerySelector3;
+        config.S3MathImagePath = false;
+        instance2.saveContent();
+    });
+});

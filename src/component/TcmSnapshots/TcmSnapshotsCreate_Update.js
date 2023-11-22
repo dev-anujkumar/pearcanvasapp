@@ -53,11 +53,11 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         fromWhere:"update"
     }
     let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
-    let currentSlateData = currentParentData[config.slateManifestURN] 
+    let currentSlateData = currentParentData[config.slateManifestURN]
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
-    const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
+    const { metaDataField, sectionType, parentElement } = containerElement;
     /* Get the element type */
     const typeOfElement = containerElement?.asideData?.type;
     let tempIndex = elementIndex && typeof (elementIndex) !== 'number' && elementIndex.split('-');
@@ -65,14 +65,14 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
     } else
-    /** 
+    /**
     * @description For SHOWHIDE Element - prepare parent element data
-    * Update - 2C/Aside/POP:SH:New 
+    * Update - 2C/Aside/POP:SH:New
     */
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
         wipData =  containerElement?.showHideObj?.element?.interactivedata?.[containerElement?.sectionType][tempIndex[2]]  || {};
-    } 
+    }
     else if(typeOfElement === POETRY_ELEMENT) {
         containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
         // for versioning case, we get the last data from wip
@@ -83,7 +83,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action, containerElement)
     }
-    
+
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
@@ -106,7 +106,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     dispatch(storeOldAssetForTCM({}))
                 }
             }
-           
+
             else {
                 if(oldData.type === ELEMENT_ASSESSMENT) {
                     oldData.elementdata = elementUpdateData?.figureData
@@ -114,7 +114,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                 } else {
                     oldData.elementdata = wipData?.elementdata;
                 }
-                
+
             }
         }
         oldData.html = wipData?.html;
@@ -150,7 +150,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         fromWhere:"create"
     }
     operType= operationType;
-    let currentSlateData = elementCreateData.currentParentData[config.slateManifestURN] 
+    let currentSlateData = elementCreateData.currentParentData[config.slateManifestURN]
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementCreateData.currentParentData[config.tempSlateManifestURN]
     }
@@ -165,8 +165,8 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
 
 /**
 * @function prepareSnapshots_ShowHide
-* @description This function will prepare the data of containerElement to get snapshots 
-*  of parent elements - 2C/Aside/POP:SH:New 
+* @description This function will prepare the data of containerElement to get snapshots
+*  of parent elements - 2C/Aside/POP:SH:New
 */
 export function prepareSnapshots_ShowHide(containerElement, wipData, index, updateBodymatter) {
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
@@ -188,13 +188,13 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
             showHideType: sectionType
         },
         sectionType: sectionType
-    };  
+    };
 }
 
 export const prepareSnaphotPoetry = (containerElement, wipData, index, updateBodymatter) => {
-    
+
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
-    
+
     let poetryElement = { ...containerElement?.asideData };
     /* Delete the grandparent data form asideData */
     return {
@@ -215,11 +215,11 @@ export const prepareSnaphotPoetry = (containerElement, wipData, index, updateBod
 /**
  * @function fetchElementWipData
  * @description-This function is to set the lael text of element
- * @param {Object} bodymatter - bodymatter before delete  
+ * @param {Object} bodymatter - bodymatter before delete
  * @param {String/Number} index - index of element deleted
  * @param {String} type - type of element deleted
  * @param {String} entityUrn - entityUrn
- * @returns {Object} WipData for element 
+ * @returns {Object} WipData for element
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn, operationType, containerElement) => {
     let eleIndex, wipData = {};
@@ -292,7 +292,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     wipData = bodymatter[eleIndex[0]]
                 }
                 break;
-            case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
+            case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
                 break;
             case FIGURE:
@@ -339,7 +339,7 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
 /**
  * @function fetchManifestStatus
  * @description This function is to get the status for Parent elements
- * @param {Object} bodymatter bodymatter for current slate  
+ * @param {Object} bodymatter bodymatter for current slate
  * @param {Object} parentElement Object containing all the parent data for elements
  * @param {String} type type of element
  * @returns {Object} Parent Elements' status
@@ -352,7 +352,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
         if (asideData?.parent?.type === SHOWHIDE && (asideData?.element?.type === CITATION_GROUP || asideData?.element?.type === ELEMENT_ASIDE)) {
             parentElem = asideData?.parent;
         }
-        
+
         let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
         let element = bodymatter.find(item => item.id == parentId);
         let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn && parentUrn.elementType ?parentUrn.elementType: "";
@@ -426,10 +426,10 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
 }
 
 /**
- * 
- * @param {Object} asideData 
- * @param {Object} parentUrn 
- * @returns {Object} asideData with parent data 
+ *
+ * @param {Object} asideData
+ * @param {Object} parentUrn
+ * @returns {Object} asideData with parent data
  */
  export function prepareParentData(asideData, parentUrn) {
     if(!asideData?.parent) {
@@ -446,11 +446,11 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
 
 /**
  * @function checkContainerElementVersion
- * @description This function is to check versioning status for slate and container elements and 
+ * @description This function is to check versioning status for slate and container elements and
  *              fetch new ManifestUrn based on the status
- * @param {Object} containerElement Object containing all the parent data for elements  
+ * @param {Object} containerElement Object containing all the parent data for elements
  * @param {Object} versionStatus parent element status for versioning
- * @param {Object} currentSlateData current Slate data 
+ * @param {Object} currentSlateData current Slate data
  * @returns {Object} Updated Container Element with latest Manifest Urns
 */
 export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData, actionType, deleteElementType) => {
@@ -553,9 +553,9 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     // also check if status is approved
     // only then go inside this
     if(
-    currentSlateData && currentSlateData.status && currentSlateData.status === 'approved' && 
+    currentSlateData && currentSlateData.status && currentSlateData.status === 'approved' &&
     containerElement?.poetryData?.element?.type === "poetry") {
-       
+
 
         const poetryElement = containerElement?.poetryData?.element;
         const newPoetryUrn =  await getLatestVersion(poetryElement.contentUrn);
@@ -567,8 +567,8 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             if(grandParentType === 'element-aside') {
                 const asideNewUrn = await getLatestVersion(grandParent.contentUrn);
                 containerElement.poetryData.element.grandParent.asideData.id = asideNewUrn;
-                // in case of WE also update manifest urn, 
-                // which is used to get if details are added 
+                // in case of WE also update manifest urn,
+                // which is used to get if details are added
                 // in head or body
                 if (grandParent.subtype) {
                     const newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
@@ -583,7 +583,6 @@ export const checkContainerElementVersion = async (containerElement, versionStat
                     const multiColumnProperties = containerElement?.poetryData?.element?.grandParent
                     const manifestUrn =  await getLatestVersion(multiColumnProperties.columnContentUrn);
                     containerElement.parentUrn.manifestUrn =manifestUrn;
-                    const mcId = containerElement?.parentUrn?.mcId;
 
                     const cid =  await getLatestVersion(multiColumnProperties.parentContentUrn);
                     containerElement.parentUrn.mcId = cid;
@@ -596,10 +595,10 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
-        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN  
+        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN
         if (!currentSlateData?.popupSlateData && currentSlateData?.type !== 'popup') {
             config.tcmslatemanifest = newSlateManifest;
-        }  
+        }
     }
     if (currentSlateData && currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
         let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);

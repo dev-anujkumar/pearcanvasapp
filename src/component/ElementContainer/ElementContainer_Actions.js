@@ -1,12 +1,13 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel, hasReviewerSubscriberRole } from '../../constants/utility.js';
+import { triggerCustomEventsGTM } from '../../js/ga';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
-         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, 
+         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
@@ -20,9 +21,12 @@ import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
-const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
+import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import store from '../../appstore/store';
+import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
@@ -60,7 +64,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             Comment.commentUrn = response.data.commentUrn
-           
+
             dispatch({
                 type: ADD_NEW_COMMENT,
                 payload: Comment
@@ -84,6 +88,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "groupedcontent":
             case "manifestlist":
             case "manifestlistitem":
+            case "group":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -97,14 +102,14 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     }
     if(type === 'popup'){
-        dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
+        dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index))
     }
     const { showHideObj } = getState().appStore
     let elementParentEntityUrn = cutCopyParentUrn ? cutCopyParentUrn.contentUrn : parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
-
+    triggerCustomEventsGTM('delete-element-type',_requestData );
     const deleteElemData = await axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
@@ -115,6 +120,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     )
     if (deleteElemData.status === 200) {
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         const deleteArgs = {
             deleteElemData: deleteElemData.data,
             dispatch,
@@ -132,7 +139,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             element
         }
         onDeleteSuccess(deleteArgs)
-    } 
+    }
     else {
         showError(deleteElemData.status, dispatch, "delete Api failed")
     }
@@ -143,7 +150,7 @@ export const contentEditableFalse = (updatedData) => {
         if(updatedData.html && updatedData.html.text){
             let data = updatedData.html.text;
             updatedData.html.text = data.replace('contenteditable="true"','contenteditable="false"');
-            return updatedData ; 
+            return updatedData ;
         }
     }
 }
@@ -154,10 +161,18 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
-        if(hasReviewerRole()){
+    if (hasReviewerRole()) {
+        // condition to work on approved slate for Auto update on Assessment slate and items
+        if (((updatedData?.type !== 'element-assessment' ? updatedData?.figuredata?.type !== 'element-assessment' : false) && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-            return ;
+            return;
         }
+    }
+    // As part of PCAT-18995, whenever user adding img and footnote in list element
+    // we are removing <br> tag just next to img tag an footnote and before </li>
+    if(updatedData.type === "element-list") {
+        removeBRForMathmlAndFootnote(updatedData)
+    }
         const { showHideObj,slateLevelData } = getState().appStore
         updatedData.projectUrn = config.projectUrn;
         if (updatedData.loData) {
@@ -170,7 +185,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
          * @updatedData - is the updated element details that has been fetch from a RC slate
          */
         let updateBodymatter = isFromRC ? [updatedData] : getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
-        const helperArgs = { 
+        const helperArgs = {
             updatedData,
             asideData,
             parentUrn,
@@ -224,7 +239,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             }
         )
-    
+
         const updateArgs = {
             updatedData,
             elementIndex,
@@ -240,11 +255,17 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             responseData : response.data,
             showHideObj
         }
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
         if (updatedData.type == "element-assessment") {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
-        }    
+            store.dispatch(updateAssessmentId(response?.data?.id));
+        }
+        if (updateArgs?.responseData?.figuredata?.decorative) { // updating figure data after sending saving call for decorative images
+            store.dispatch(updateFigureImageDataForCompare(updateArgs?.responseData?.figuredata));
+        }
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -272,7 +293,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
         /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
         if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
             /* Get the showhide element object from slate data using indexes */
-            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, asideData);
             const section = indexOfSectionType(indexes); /* Get the section type */
             /* After getting showhide Object, add the new element */
             if(shObject?.type === SHOW_HIDE) {
@@ -285,7 +306,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 }
             }
             /* Update figure inside Aside/WE in S/H */
-        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) {
             let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
             let figure;
             if (sectionType) {
@@ -355,12 +376,28 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
                             //element = condition
                         }
-                    
+
                     }
+                } /* TB:Tab:Fig && TB:Tab:AS/WE:Fig */
+            } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) {
+                switch (indexesLen) {
+                    case 4: // TB->Tab->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                        break;
+                    case 5: // TB->Tab->AS/WE->HEAD->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                        break;
+                    case 6: // TB->Tab->AS/WE->BODY->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                        break;
+                }
+                if (condition.versionUrn === elementId) {
+                    dataToSend = condition?.figuredata
+                    condition.figuredata = figureData
                 }
             } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
                 if (indexesLen == 4) {
-                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 } else if (indexesLen == 5) {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 }
@@ -432,7 +469,7 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionTyp
         } else /* "Table in Showhide" - Update the store on adding data in table */
         if (sectionType && elm?.interactivedata?.[sectionType]) {
             elm.interactivedata[sectionType] = updateTableEditorData(elementId, tableData, elm.interactivedata[sectionType], sectionType)
-        } 
+        }
         else if (elm.elementdata && elm.elementdata.bodymatter) {
             elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter, sectionType)
         }
@@ -451,14 +488,14 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionTyp
 /**
 * @function createShowHideElement
 * @description-This function is to create elements inside showhide
-* @param {String} elementId - id of parent element (ShowHide)   
+* @param {String} elementId - id of parent element (ShowHide)
 * @param {String} type - type of section in showhide element - show|hide|revealAnswer
 * @param {Object} index - Array of indexs
 * @param {String} parentContentUrn - contentUrn of parent element(showhide)
 * @param {Function} cb - )
 * @param {Object} parentElement - parent element(showhide)
 * @param {String} parentElementIndex - index of parent element(showhide) on slate
-* @param {String} type2BAdded - type of new element to be addedd - text|image 
+* @param {String} type2BAdded - type of new element to be addedd - text|image
 */
 export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
@@ -500,8 +537,10 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             response: createdElemData.data,
             cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         };
-        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
-        if(type2BAdded !== "MANIFEST_LIST") {
+        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed
+        // check modified to prevent snapshots for TB element
+        const isTbElement = parentElement?.grandParent?.asideData?.subtype === TAB || parentElement?.grandParent?.asideData?.parent?.subtype === TAB;
+        if (type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
@@ -518,7 +557,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         /* Create inner elements in ShowHide */
         const indexes = index?.toString().split('-') || [];
         /* Get the showhide element object from slate data using indexes */
-        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, parentElement);
         /* After getting showhide Object, add the new element */
         if(shObject?.id === elementId) {
             if(shObject?.interactivedata?.hasOwnProperty(type)) {
@@ -527,16 +566,17 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 let sectionOfSH = [];
                 sectionOfSH.push(createdElemData.data);
                 shObject.interactivedata[type] = sectionOfSH;
-            }   
+            }
         }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
             //This check will be removed once BL will support TCM
-            if(type2BAdded !== "MANIFEST_LIST") {
+            // isTbElement condition restrict tcm operations for tb and its nested elements
+            if(type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
             if (containersInSH.includes(type2BAdded)) {
-                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
+                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);
             } else {
                 prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
             }}
@@ -589,7 +629,7 @@ export const showError = (error, dispatch, errorMessage) => {
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
-    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
+    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,""));
 }
 
 /**
@@ -598,7 +638,7 @@ const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
  * @param {*} index index of element
  */
 export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
-    let apiUrl = `${config.NARRATIVE_API_ENDPOINT}v2/${elementWorkId}`
+    let apiUrl = `${config.NARRATIVE_READONLY_ENDPOINT}v2/${elementWorkId}`
     const resp = await fetch(apiUrl, {
         method: 'GET',
         headers: {
@@ -776,8 +816,12 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel: displayedlabel,
             manualoverride: manualoverride
         }
-        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
-        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+        if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
+            delete updatedElement['manualoverride']
+        }
+        if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+            delete updatedElement['displayedlabel']
+        }
         const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
         updatedElement = { ...dataToReturn }
     }
@@ -815,7 +859,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         status: updatedSlateLevelData.status
     }
     if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
-        
+
         dataToSend = {
             ...dataToSend,
             html : {
@@ -826,8 +870,12 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel : displayedlabel,
             manualoverride : manualoverride
         }
-        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
-        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
+        if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
+            delete dataToSend['manualoverride']
+        }
+        if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+            delete dataToSend['displayedlabel']
+        }
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
@@ -836,6 +884,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         if (currentSlateData?.status === 'approved') {
             if (currentSlateData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
@@ -893,6 +943,89 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     })
 }
 
+export const updateTabTitle = (previousData, index, parentElement) => (dispatch, getState) => {
+    const parentData = getState().appStore.slateLevelData;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    let titleDOM = document.getElementById(`cypress-${index}-0`)
+    let titleHTML = titleDOM ? titleDOM.innerHTML : ""
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    config.savingInProgress = true;
+    config.isSavingElement = true;
+    let dataToSend = {
+        projectUrn: config.projectUrn,
+        subtype: previousData.subtype,
+        type: previousData.type,
+        html: {
+            title: `<p>${titleHTML}</p`
+        },
+        contentUrn: previousData.contentUrn,
+        status: parentElement.hasOwnProperty('status') ? parentElement.status : 'wip'
+    }
+
+    let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
+    }).then(res => {
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
+        if (currentSlateData?.status === 'approved') {
+            if (currentSlateData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            // config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+        }
+        else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : "";
+            if (newVersionURN && newVersionURN !== '') { // Trigger Api for parent versioning
+                const CONTAINER_VERSIONING = "containerVersioning";
+                parentElement = {...parentElement, index: index}
+                dispatch(fetchSlateData(parentElement?.id, parentElement?.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
+            } else {
+                let indexes = typeof index === 'number' ? index : index.split("-");
+                let elementToUpdate = currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]];
+                elementToUpdate = {
+                    ...elementToUpdate,
+                    html: {
+                        title: `<p>${titleHTML}</p`
+                    }
+                }
+                currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]] = elementToUpdate;
+                currentParentData[config.slateManifestURN] = currentSlateData;
+                dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: currentParentData
+                    }
+                })
+            }
+        }
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        // config.conversionInProcess = false
+        config.savingInProgress = false;
+        config.isSavingElement = false;
+    }).catch(err => {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
+        // config.conversionInProcess = false
+        config.savingInProgress = false;
+        config.isSavingElement = false;
+        console.error(" Error >> ", err)
+    })
+}
+
 /**
  * This function will make an API call to fetch the metadata for an image
  * @param {*} id Image ID
@@ -901,7 +1034,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
  const getAltTextLongDesc = async (id) => {
     let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
     try{
-        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
+        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
         let response = await axios.get(url,
             {
                 headers: {
@@ -912,12 +1045,12 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
                 }
             });
         const {properties} = response.data.entry;
-        return { 
+        return {
             altText : properties["cplg:altText"] ?? "",
             longdescription: properties["cplg:longDescription"] ?? ""
         }
     } catch(error){
-        return { 
+        return {
             altText : "",
             longdescription: ""
         }
@@ -926,11 +1059,11 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
 
 /**
  * This is a recursive function will collect image data from HTML element within a cell, such as, OL, UL & P
- * @param {*} node 
- * @param {*} imagesArrayOfObj 
+ * @param {*} node
+ * @param {*} imagesArrayOfObj
  */
 const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
-    if(node?.nodeName === 'IMG' && node?.className === "imageAssetContent"){
+    if(node?.nodeName === 'IMG' && (node?.className === "imageAssetContent")){
         const attributes = node.attributes;
         const id = attributes['data-id'].nodeValue;
         const src = attributes['data-mce-src'].nodeValue;
@@ -949,12 +1082,12 @@ const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
 
 /**
  * This function will prepare data for "Expand in alfresco POP-UP" and update the redux store
- * Format: 
+ * Format:
  * {
  *   imgSrc: "",
  *   imgId : "",
  *   alttext : "",
- *    longdescription : ""   
+ *    longdescription : ""
  * }
  * @param {*} element Table element Object
  */
@@ -993,8 +1126,8 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
 
 /**
  * This is an action, which will update the edited data in store
- * @param {*} imageObject 
- * @returns 
+ * @param {*} imageObject
+ * @returns
  */
 export const updateEditedData = (imageObject) => (dispatch) => {
     dispatch({
@@ -1005,7 +1138,7 @@ export const updateEditedData = (imageObject) => (dispatch) => {
 
 /**
  * This function will make an saving API call to update the altText & longDescription
- * @param {*} editedImageList 
+ * @param {*} editedImageList
  */
 export const saveTEMetadata = async (editedImageList) => {
     try{
@@ -1016,9 +1149,9 @@ export const saveTEMetadata = async (editedImageList) => {
             for(let i=0; i< editedImagesArray.length; i++){
                 let { altText, imgId, longdescription} = editedImagesArray[i];
                 let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
-                url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${id}`;
+                url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/${id}`;
                 const body = {
-                    properties: { 
+                    properties: {
                         "cplg:altText": altText,
                         "cplg:longDescription": longdescription
                     }
@@ -1033,7 +1166,7 @@ export const saveTEMetadata = async (editedImageList) => {
                 promiseArray.push(response);
             }
             await Promise.all(promiseArray);
-    
+
         }
     } catch(error){
     }
@@ -1061,4 +1194,111 @@ export const prepareImagesDataObject = (imagesArrayOfObj) => {
         return imagesLatestData;
     }
     return imagesLatestData;
+}
+
+export const approvedSlatePopupStatus = (popupStatus) => (dispatch) => {
+    dispatch({
+        type: APPROVED_SLATE_POPUP_STATUS,
+        payload: popupStatus
+    })
+}
+/**
+ * This function removes the <br> tag from element-list content,
+ * if list item only contains footnote or any image if regex condition matches
+ * @param {Object} updatedData
+ */
+export const removeBRForMathmlAndFootnote = (updatedData) => {
+    //find image in element html
+    const isContainImageContent = updatedData?.html?.text?.match(/<img ([\w\W]+?)>/g)
+    // find footnore in element html
+    const isContainFootnoteContent = updatedData?.html?.text?.match(/<sup>([\w\W]+?)<\/sup>/g)
+
+    //when image content found
+    if(isContainImageContent) {
+         //finds <br> tag just after img tag and just before </li> to handle new data
+        const suffixBRForImg = /<img\b[^>]*><br\b[^>]*>(<\/li>)/g
+        findAndReplaceBR(updatedData,suffixBRForImg)
+    }
+    //when footnote content found
+    if(isContainFootnoteContent) {
+        //finds <br> tag just after footnote and just before </li> to handle new data
+        const suffixBRForFootnote = /<\/sup><br\b[^>]*>(<\/li>)/g
+        findAndReplaceBR(updatedData,suffixBRForFootnote)
+    }
+}
+
+/**
+ * This fuction finds the exact condition where we need to remove <br> tag
+ * @param {Object} updatedData
+ * @param {RegExp} prefixRegex
+ * @param {RegExp} suffixRegex
+ */
+const findAndReplaceBR = (updatedData,suffixRegex) => {
+    const matchedContent = updatedData?.html?.text?.match(suffixRegex)
+    if(matchedContent) {
+        updatedData.html.text = updatedData?.html?.text.replace(matchedContent[0], matchedContent[0]?.replace(/<br([\w\W]*?)>/, ''))
+    }
+}
+
+/**
+ * This fuction determines whether the image conversion has happened from decorative to any other figure types
+ * @param {Boolean} value
+ */
+
+export const decoToOtherTypeConversion = (value) => (dispatch) => {
+    dispatch({
+        type: DECO_TO_OTHER_IMG_TYPES,
+        payload: value
+    })
+}
+
+/**
+ * This fuction fetches the old data after conversion
+ * @param {Object} conversionData
+ */
+
+export const fetchOldDataAfterConversion = (conversionData) => (dispatch) => {
+    dispatch({
+        type: FETCH_CONVERSION_DATA,
+        payload: conversionData
+    })
+}
+
+/**
+ * @description - This function fetches the asset's metadata from alfresco
+ * @param assetId - Asset's ID
+ * @param figuretype - Figuretype of the element
+ * @returns - alt-text and long-description for the asset
+ */
+
+export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
+    let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/`+ assetId;
+    try{
+        const response = await axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": config.CMDS_APIKEY,
+                'myCloudProxySession': config.myCloudProxySession
+            }
+        })
+        if(response && response?.status === 200){
+            const { properties } = response?.data?.entry || {};
+            if(figuretype === FIGURE_INTERACTIVE){
+                const avsJsonStringData = properties["avs:jsonString"]
+                let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+                return {
+                    altText: avsStringData?.imageAltText,
+                    longDescription: avsStringData?.linkLongDesc,
+            }}
+            else{
+                return {
+                    altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
+                    longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+                }
+            }
+        }
+    }
+    catch(error) {
+        console.error("Error in fetching metadata", error);
+    }
 }

@@ -5,10 +5,12 @@ import buttonTypes from '../../../src/component/ElementButtons/ButtonTypes';
 describe('Testing Button component with props', () => {
 
     const props1 = {
-        isSubscribersSlate: true
+        isSubscribersSlate: true,
+        isgreyBorder: true
     }
     const props2 = {
-        isSubscribersSlate: false
+        isSubscribersSlate: false,
+        isgreyBorder: false
     }
 
     it('render split Button component ', () => {
@@ -200,6 +202,11 @@ describe('Testing Button component with props', () => {
         const component = mount(<Button type={buttonTypes.MULTI_COLUMN_CONTAINER} />);
         expect(component.find('span.btn-element').hasClass('multi-column-group')).toBe(true);
         expect(component.find('rect').exists()).toBe(true);
+    })
+    it('render TABBED_TAB Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.TABBED_TAB} />);
+        expect(component.find('span.btn-element').hasClass('multi-column-group-tabbed-tab')).toBe(true);
+        expect(component.find('rect').exists()).toBe(false);
     })
     it('render PASTE Button component  ', () => {
         const component = mount(<Button type={buttonTypes.PASTE} />);

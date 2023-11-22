@@ -23,6 +23,15 @@
 .index-body{
    padding: 5px 12px;
 }
+
+.index-body.pointer-events-none{
+    pointer-events: none !important;
+}
+
+.blurButton{
+    opacity: 0.5;
+    pointer-events: none;
+}
 .index-text{
     display: flex;
     padding: 3px 0 8px 0;
@@ -33,7 +42,7 @@
 
 .printIndx-cancel-button{
     border-radius: 4px;
-    padding: 8px 22px;
+    padding: 8px 16px;
     background: #fff;
     color: "#005a70";
     margin-right: 10px;
@@ -41,6 +50,7 @@
     font-size: 13px;
     font-family: 'Open Sans', sans-serif;
     border: 1px solid #dcdcdc;
+    pointer-events: all;
   }
 
   .printIndx-cancel-button:hover {
@@ -49,7 +59,7 @@
   }
   .printIndex-save-button{
     border-radius: 4px;
-    padding: 8px 22px;
+    padding: 8px 16px;
     border: 1px solid #005a70;
     font-size: 13px;
     color: #fff;
@@ -70,9 +80,27 @@
 .printIndex-save-button:hover{
     background: #07313b;
 }
+.deleteMarkedIndexbutton {
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 5px 6px 3px 6px;
+    height: 36px;
+    display: flex;
+    width: 36px;
+    margin-right: 16px;
+}
+.deleteMarkedIndexbutton:hover {
+    background: #def8ff;
+    border: 1px solid #005a70;
+}
 .button-group {
     margin-top: 40px;
     float: right;
+    display: flex;
 }
 
 .markedindex-word-header{
@@ -209,6 +237,13 @@
     min-width: 180px;
 }
 
+.markedindex-editor.crossReferenceReadOnly{
+    min-height: 24px;
+    max-height: 50px;
+    word-break: break-word;
+    pointer-events: none;
+}
+
 .markedindex-secondlevel-header .tooltip .tooltiptext.tooltip-bottom {
     width: auto;
     top: 100%;
@@ -243,4 +278,18 @@
 .marked-index-outer-div{
     height: 450px;
     background-color: #fff;
+}
+.markedindex-delete-icon {
+    width:24px;
+    height: 24px;
+}
+.disable-tooltip {
+    display: none;
+}
+.cross-ref-dropdown-without-result {
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    background-color: #ffffff;
+    padding: 15px 12px;
+    z-index: 99;
+    position: relative;
 }

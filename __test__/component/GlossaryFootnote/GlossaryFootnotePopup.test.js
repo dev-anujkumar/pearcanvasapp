@@ -49,6 +49,21 @@ const initialState ={
 }
 let store = mockStore(initialState);
 
+const editor = {
+    id: "cypress-3"
+}
+const wirisInstance = {
+    instances: {
+        [editor.id]: {
+            openNewFormulaEditor: () => { },
+            core: {
+                getCustomEditors: () => { return { disable: () => { return false } } },
+                modalDialog: {}
+            },
+            getCore: () => { return { getCustomEditors: () => { return { enable: () => { } } } } }
+        }
+    }
+}
 describe('Testing GlossaryFootnote component with props', () => {
     let props={
         permissions:[],
@@ -64,6 +79,19 @@ describe('Testing GlossaryFootnote component with props', () => {
     let wrapper = mount(<Provider store={store}>< GlossaryFootnotePopup {...props} /></Provider>);
     let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
 
+    let props2={
+        permissions:['access_formatting_bar','amdin'],
+        setWrapperRef: jest.fn(),
+        showGlossaaryFootnote: jest.fn(),
+        glossaryFootnoteValue:{"type":"","popUpStatus":false} ,
+        closePopup:jest.fn(),
+        saveContent:jest.fn(),
+        glossaryFootNoteCurrentValue:{footnoteContentText:['imageAssetContent']},
+        audioGlossaryPopup:jest.fn()
+
+    }
+    let wrapper2 = mount(<Provider store={store}>< GlossaryFootnotePopup {...props2} /></Provider>);
+    let GlossaryFootnotePopupInstance2 = wrapper2.find('GlossaryFootnotePopup').instance();
 
     it('render Glossary Footnote component -Footnote', () => {
         expect(wrapper).toHaveLength(1);
@@ -119,15 +147,61 @@ describe('Testing GlossaryFootnote component with props', () => {
     })
     })
     it('Test-componentWillUnmount', () => {
+        tinymce["editors"] = [{ id: 'cypress-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id:"cypress-3"
+        }
+        window['WirisPlugin'] = wirisInstance
         const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
         GlossaryFootnotePopupInstance.componentWillUnmount()
         expect(spycomponentWillUnmount).toHaveBeenCalled() 
+        spycomponentWillUnmount.mockClear()
+    })
+    it('Test-componentWillUnmount', () => {
+        tinymce["editors"] = [{ id: 'cypres-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id: "cypress-3"
+        }
+        window['WirisPlugin'] = wirisInstance
+        const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
+        GlossaryFootnotePopupInstance.componentWillUnmount()
+        expect(spycomponentWillUnmount).toHaveBeenCalled()
+        spycomponentWillUnmount.mockClear()
+    })
+    it('Test-componentWillUnmount', () => {
+        const editor = {
+            id: "cypress-3"
+        }
+        tinymce["editors"] = [{ id: 'cypress-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id: undefined
+        }
+        window['WirisPlugin'] = {
+            instances: {
+                [editor.id]: {
+                    openNewFormulaEditor: () => { },
+                    core: {
+                        getCustomEditors: () => { return { disable: () => { return false } } },
+                        modalDialog: null
+                    },
+                    getCore: () => { return { getCustomEditors: () => { return { enable: () => { } } } } }
+                }
+            }
+        }
+        const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
+        GlossaryFootnotePopupInstance.componentWillUnmount()
+        expect(spycomponentWillUnmount).toHaveBeenCalled()
         spycomponentWillUnmount.mockClear()
     })
 
     it('testcase for handleAudioToggle',()=>{
         GlossaryFootnotePopupInstance.handleAudioToggle();
         expect(GlossaryFootnotePopupInstance.state.audioToggle).toBe(true)
+    })
+
+    it('Branch Coverage for accessToolbar -> testcase for handleAudioToggle',()=>{
+        GlossaryFootnotePopupInstance2.handleAudioToggle();
+        expect(GlossaryFootnotePopupInstance2.state.audioToggle).toBe(true)
     })
 
     it('testcase for closeAddAudioBook',()=>{

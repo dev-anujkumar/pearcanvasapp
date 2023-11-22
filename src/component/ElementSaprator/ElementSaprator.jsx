@@ -7,35 +7,35 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, hasProjectPermission } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
-import { getPasteValidated } from '../../constants/Element_Constants.js';
+import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
-const { TEXT, 
-    IMAGE, 
-    AUDIO, 
-    INTERACTIVE, 
-    ASSESSMENT, 
-    CONTAINER, 
-    WORKED_EXP, 
-    OPENER, 
-    SECTION_BREAK, 
-    METADATA_ANCHOR, 
-    INTERACTIVE_BUTTON, 
-    ELEMENT_ASIDE, 
-    POETRY_ELEMENT, 
-    CITATION, 
-    CITATION_GROUP_ELEMENT, 
-    POETRY, 
-    STANZA_ELEMENT, 
-    CONTAINER_BUTTON, 
-    BACK_MATTER, 
-    FRONT_MATTER, 
+const { TEXT,
+    IMAGE,
+    AUDIO,
+    INTERACTIVE,
+    ASSESSMENT,
+    CONTAINER,
+    WORKED_EXP,
+    OPENER,
+    SECTION_BREAK,
+    METADATA_ANCHOR,
+    INTERACTIVE_BUTTON,
+    ELEMENT_ASIDE,
+    POETRY_ELEMENT,
+    CITATION,
+    CITATION_GROUP_ELEMENT,
+    POETRY,
+    STANZA_ELEMENT,
+    CONTAINER_BUTTON,
+    BACK_MATTER,
+    FRONT_MATTER,
     CONTAINER_INTRO,
     MULTI_COLUMN_CONTAINER,
     MULTI_COLUMN,
@@ -46,7 +46,9 @@ const { TEXT,
     SHOW_HIDE,
     POPUP,
     ELEMENT_DISCUSSION,
-    HIDE_SPLIT_SLATE_CONTAINER
+    HIDE_SPLIT_SLATE_CONTAINER,
+    TABBED_TAB,
+    TAB
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -55,11 +57,11 @@ export function ElementSaprator(props) {
     const [pasteIcon, togglePaste] = useState(true);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
-    const { esProps, elementType, sectionBreak, permissions } = props
+    const { esProps, elementType, sectionBreak, permissions, subtype } = props
     let buttonRef = useRef(null)
 
     /**
-     * @description: This hook is used for handling the outer click, 
+     * @description: This hook is used for handling the outer click,
      * after mounting the component or update the component state this hook will called
      */
     useEffect(() => {
@@ -78,7 +80,7 @@ export function ElementSaprator(props) {
     });
 
     /**
-     * @description: This function is responsable for toggle 
+     * @description: This function is responsable for toggle
      * state to render the dropdown. First close all open dropdowns
      * then open new one
      */
@@ -102,7 +104,7 @@ export function ElementSaprator(props) {
 
     /**
      * Get parent nodes of a dom node
-     * @param {Element node} elem 
+     * @param {Element node} elem
      */
     function getParents(elem) {
         var parents = [];
@@ -145,7 +147,7 @@ export function ElementSaprator(props) {
             isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
         }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
-        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup) {
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup && separatorProps?.asideData?.parent?.subtype !== TAB && separatorProps?.asideData?.grandParent?.asideData?.parent?.subtype !== TAB) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
@@ -154,7 +156,7 @@ export function ElementSaprator(props) {
                 </div>
             )
         }
-        return null  
+        return null
     }
 
     const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
@@ -163,9 +165,9 @@ export function ElementSaprator(props) {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         const parentContainer = ["groupedcontent", "showhide"]
         const parentContainerForShowHide = ["groupedcontent", "element-aside"]
-        const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
+        const hasPasteFromWordPermission = hasProjectPermission("paste_from_word") ;
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type))) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
             return null;
         }
         let insertionIndex = firstOne ? index : index + 1
@@ -183,23 +185,23 @@ export function ElementSaprator(props) {
             </div>
         )
     }
-    
+
     let pasteRender = false;
     let operationType = '';
     if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
         pasteRender = true;
         operationType = props.elementSelection.operationType || '';
     }
-    /** 
+    /**
      Hide Paste Button for Container Elements when there is BL inside ShowHide
-     Note:- This will removed once BL will be supported in AS,WE,2C & 3C 
+     Note:- This will removed once BL will be supported in AS,WE,2C & 3C
     */
     if(['element-aside','groupedcontent'].indexOf(props?.asideData?.type) > -1 && props?.elementSelection?.containsBlockList) {
         pasteRender = false;
     }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
-    let hideElementSeperator = isSubscriberRole(props?.projectSubscriptionDetails?.projectSharingRole,props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? 'hideToolbar' : ''
+    let hideElementSeperator = hasReviewerRole() ? 'hideToolbar' : '';
     return (
         <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
@@ -218,7 +220,7 @@ export function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData, subtype)}
                         </ul>
                     </div>
                 </div>
@@ -239,26 +241,29 @@ ElementSaprator.propTypes = {
  * @description: Rendering the element picker dropdown based on type of Container Element
  */
 
-function renderConditionalButtons(esProps,sectionBreak,elementType){
-    let updatedEsProps = esProps.filter((btnObj) => {        
+function renderConditionalButtons(esProps,sectionBreak,elementType,subtype){
+    let updatedEsProps = esProps.filter((btnObj) => {
       let  buttonType = btnObj.buttonType;
         if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) { /** Container : Citation Group |Render Citation Element*/
             return buttonType == CITATION;
         } else if (elementType == POETRY){                           /** Container : Poetry Element |Render Stanza Element*/
             return buttonType === STANZA_ELEMENT;
         }
+        else if (elementType === SINGLE_COLUMN && subtype === TAB) { /** Container : Tabbed 2-Column Element*/
+            return buttonType === TABBED_TAB;
+        }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];                  
+            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];
             if(config.isPopupSlate){
                 MultiColumnPicker.length = MultiColumnPicker.length -2;
             }
             return MultiColumnPicker.includes(buttonType);
-        } 
+        }
         else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
         } else {                                                     /** Container : Aside| Section in WE*/
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
         }
     }
     })
@@ -268,21 +273,21 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData,subtype) {
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER || TOC_PARENT_TYPES.includes(config.parentOfParentItem)) {
         if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
-            esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
+            esProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== METADATA_ANCHOR;
                 })
-            
-        }else {            
+
+        }else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== TABBED_TAB;
             })
         }
 
@@ -297,43 +302,43 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     if (item.classList && item.classList.contains("disabled")) { item.classList.remove("disabled") }
                 })
             }
-            
+
             if (config.isLOL) {
                 let elements = document.getElementsByClassName(METADATA_ANCHOR);
                 for (let key in elements) {
                     if (elements[key].className && !elements[key].classList.contains("disabled")) { elements[key].className += " disabled"; }
                 }
             }
-            
+
             if(config.isPopupSlate || config.isCO){
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== SECTION_BREAK && buttonType !== OPENER 
-                    && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
+                    return buttonType !== SECTION_BREAK && buttonType !== OPENER
+                    && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT && btnObj.buttonType !== TABBED_TAB;
                 })
             }else{
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
-                    && btnObj.buttonType !== STANZA_ELEMENT;
+                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION
+                    && btnObj.buttonType !== STANZA_ELEMENT && btnObj.buttonType !== TABBED_TAB;
                 })
             }
             if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
-                esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
+                esProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
                     updatedEsProps = esProps.filter((btnObj) => {
                         buttonType = btnObj.buttonType;
                         return buttonType !== METADATA_ANCHOR;
                     })
-                
+
             }
 
         }
         else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY || elementType == SINGLE_COLUMN) {
-                updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType);
-        }          
+                updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
+        }
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== STANZA_ELEMENT;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== TABBED_TAB;
             })
         }
     }
@@ -360,7 +365,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
         return (
             <>{data && data.length >0 && showInteractiveOption && showInteractiveOption.status && showInteractiveOption.type == elem.buttonType &&
-                <ElementContainerType 
+                <ElementContainerType
                     text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
@@ -379,16 +384,20 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     </li>
 
                 </Tooltip>
-            </>                          
+            </>
         )
     })
 }
-  
+
 export function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction, sectionType } = props
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
+    /* Do not show Tabbed 2 column option inside Popup slate  */
+
+    newData = (elem?.buttonType === "multi-column-group" && (config.isPopupSlate || !config.ENABLE_TAB_ELEMENT)) ? {["2-column"]: newData["2-column"], ["3-column"]: newData["3-column"]} : newData;
+    /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
     /* Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn */
     if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData && Object.keys(asideData.grandParent.asideData).length)) {
@@ -427,7 +436,7 @@ export function typeOfContainerElements(elem, props) {
     else{
         return;
     }
-    
+
 }
 
 export const pasteElement = (separatorProps, togglePaste, type) => {
@@ -448,7 +457,7 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         index2ShowHide = index;
     }
     const selectedElement = separatorProps.elementSelection.element
-    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
+    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP,MANIFEST_LIST]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
         const parentUrn = separatorProps.parentUrn ?? null
         const asideData = separatorProps.asideData ?? null

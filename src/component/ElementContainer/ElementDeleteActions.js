@@ -5,7 +5,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { hideBlocker } from '../../js/toggleLoader';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { deleteBlockListElement } from '../ElementContainer/ElementContainerDelete_helpers';
@@ -13,6 +13,7 @@ import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_
 import tinymce from 'tinymce';
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
+import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
@@ -54,8 +55,12 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             isSectionBreak,
             cutCopyParentUrn
         }
-        const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
-        prepareTCMSnapshotsForDelete(deleteData);
+        // This check will remove when TB supports tcm
+        let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        if (!isTbElement) {
+            const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
+            prepareTCMSnapshotsForDelete(deleteData);
+        }
 
         /** --------- When slate is Approved: Refresh TOC ------------------------------*/
         const { onSlateApproved } = (await import("./ElementContainerDelete_helpers.js"))
@@ -124,7 +129,35 @@ export const updateStorePostDelete = (deleteParams) => {
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
 
-    if (asideData?.parent?.type !== 'showhide' && asideData?.type !== "manifestlist") {
+    if (asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
+        switch (newIndex.length) {
+            case 6: // TB:Tab:c1:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate?.interactivedata[showHideType[newIndex[4]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]] = elementToUpdate;
+                break;
+            case 7: // TB:Tab:c1:AS/WE:HEAD:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]] = elementToUpdate;
+                break;
+            case 8: // TB:Tab:c1:WE:BODY:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]].contents.bodymatter[newIndex[5]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate.interactivedata[showHideType[newIndex[6]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]].contents.bodymatter[newIndex[5]] = elementToUpdate;
+                break;
+            case 1:/** Element on slate level */
+            default:
+                newBodymatter.splice(index, 1)
+                break;
+        }
+    } else if (asideData?.parent?.type !== 'showhide' && asideData?.type !== "manifestlist") {
         switch (newIndex.length) {
             case 2:
                 elementToUpdate = newBodymatter[newIndex[0]]
@@ -173,7 +206,7 @@ export const updateStorePostDelete = (deleteParams) => {
                 }
                 newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
                 break;
-    
+
             case 1:/** Element on slate level */
             default:
                 newBodymatter.splice(index, 1)
@@ -187,8 +220,7 @@ export const updateStorePostDelete = (deleteParams) => {
             deleteBlockListElement(elementId, blElemInSh);
         }
     }
-    
-    console.log('newBodymatter', newBodymatter)
+
     // return newBodymatter
     newParentData[config.slateManifestURN].contents.bodymatter = newBodymatter
     dispatch({
@@ -220,7 +252,7 @@ export const prepareDeleteRequestData = (elementType, payloadParams) => {
     const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent", "manifestlist"];
     let requestPayload = {
         "index": elementIndex[elementIndex.length - 1]?.toString() || "0",
-        "projectUrn": config.projectUrn        
+        "projectUrn": config.projectUrn
     }
     if (containerElements.indexOf(elementType) > -1) {
         requestPayload.entityUrn = isSectionBreak?.type === 'manifest' ? isSectionBreak.contentUrn : activeElement.contentUrn

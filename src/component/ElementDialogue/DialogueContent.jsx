@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { prepareDialogueDom } from '../../constants/utility';
+import { prepareDialogueDom, getDEClassType, getDEClassName, prepareStageDirectionDom } from '../../constants/utility';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import TinyMceEditor from "../tinyMceEditor";
 
@@ -22,10 +22,12 @@ function DialogueContent(props) {
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
                     let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
                     let currentNode = document.getElementById(activeEditorId);
+                    const DEClassName = getDEClassType(currentNode?.classList)
                     let innerHTML, innerText;
-                    innerHTML = `<p>${currentNode.innerHTML}</p>`;
+                    innerHTML = `<p>${currentNode.innerHTML}</p>`
+                    if(DEClassName) innerHTML = `<p ${DEClassName}>${currentNode.innerHTML}</p>`;
                     innerText = currentNode.innerText
-                    const obj = { 
+                    const obj = {
                          ...props.model[props.index],
                          characterName: innerHTML,
                     }
@@ -33,14 +35,14 @@ function DialogueContent(props) {
                 }}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
-                className={`${props.className} characterPS`}
+                className={`${props.className} ${getDEClassName(props.model[props.index]?.characterName)}`}
                 model={props.model[props.index]?.characterName}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
                 handleAudioPopupLocation = {props.handleAudioPopupLocation}
                 handleAssetsPopupLocation={props.handleAssetsPopupLocation}
-                
+
             />
             </KeyboardWrapper>
             <KeyboardWrapper index={`${props.elementIndex}-${props.index}-1-DE`}  enable>
@@ -57,7 +59,7 @@ function DialogueContent(props) {
                     let innerHTML, innerText;
                     innerHTML = `<p>${currentNode.innerHTML}</p>`;
                     innerText = currentNode.innerText
-                    const obj = { 
+                    const obj = {
                          ...props.model[props.index],
                         text: innerHTML,
                     }
@@ -76,7 +78,8 @@ function DialogueContent(props) {
             </KeyboardWrapper>
         </Fragment>
     } else {
-        editor = 
+        const stageDirectionModel = prepareStageDirectionDom(props.model[props?.index]?.text)
+        editor =
          <KeyboardWrapper index={`${props.elementIndex}-${props.index}-SD`}  enable>
         <TinyMceEditor
             index={`${props.elementIndex}-${props.index}`}
@@ -91,7 +94,7 @@ function DialogueContent(props) {
                 let innerHTML, innerText;
                 innerHTML = currentNode.innerHTML
                 innerText = currentNode.innerText
-                    const obj = { 
+                    const obj = {
                          ...props.model[props.index],
                         text: innerHTML,
                     }
@@ -100,7 +103,7 @@ function DialogueContent(props) {
             placeholder={placeholder}
             tagName={'div'}
             className={`stageDirectionItalicFont ${props.className}`}
-            model={props.model[props.index]?.text}
+            model={stageDirectionModel}
             slateLockInfo={props.slateLockInfo}
             glossaryFootnoteValue={props.glossaryFootnoteValue}
             glossaaryFootnotePopup={props.glossaaryFootnotePopup}

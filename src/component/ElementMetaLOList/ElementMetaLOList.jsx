@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { connect } from 'react-redux';
 import config from '../../config/config';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
 import { setCurrentModule, reRenderLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { showTocBlocker } from '../../js/toggleLoader'
 
 export class ElementMetaLOList extends Component {
   //To show module name if groupby module is present in wip
@@ -107,7 +108,7 @@ export class ElementMetaLOList extends Component {
 
   /**
      * @description - prepare MA HTML data
-     * @param {object} loldata | object of data and lourn 
+     * @param {object} loldata | object of data and lourn
   */
   prepareLOLData = (lolData) => {
     if (document.getElementsByClassName('learningObjectiveinnerText').length) {
@@ -131,7 +132,7 @@ export class ElementMetaLOList extends Component {
   }
 
   /**
-     * @description - show popup on click on element that no data is present 
+     * @description - show popup on click on element that no data is present
      * @param {object} loldata
   */
   onLOLClickHandle(lolData, e) {
@@ -140,12 +141,16 @@ export class ElementMetaLOList extends Component {
     */
    e.stopPropagation();
     this.props.handleFocus();
+    if(hasReviewerRole()){
+      return false;
+    }
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }
     if (lolData == "" || (lolData && lolData.length === 0)) {
       this.props.showBlocker(true);
+      showTocBlocker();
       let that = this;
       setTimeout(function () {
         sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': NoSlateTagIS, 'data': '', 'chapterContainerUrn': '', 'isLOExist': false, 'editAction': '' } }, config.WRAPPER_URL)

@@ -1380,69 +1380,6 @@ export const createstoreWithFigure = {
                     },
                     { "type": "figure", "figuretype": "image", "subtype": "image50Text", "schema": "http://schemas.pearson.com/wip-authoring/figure/1", "alignment": "half-text", "title": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [] }, "subtitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] }, "captions": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] }, "credits": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] }, "figuredata": { "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png", "height": "1225", "width": "1440", "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image", "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c" }, "html": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "title": "", "subtitle": "", "caption": "", "credit": "", "postertext": "", "tableasHTML": "" }, "comments": false, "tcm": false, "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89", "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23", "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23" },
                     {
-                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
-                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
-                        "type": "citations",
-                        "contents": {
-                            "formatted-title": {
-                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
-                            },
-                            "bodymatter": [
-                            {
-                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
-                                "type": "element-citation",
-                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                "elementdata": {
-                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
-                                    "textsemantics":
-                                    [
-                                        {
-                                            "type": "strong",
-                                            "charStart": 81,
-                                            "charEnd": 105
-                                        }
-                                    ]
-                                },
-                                "html" : {
-                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
-                                },
-                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
-                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
-                            },
-                            {
-                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
-                                "type": "element-citation",
-                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                "elementdata": {
-                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-                                },
-                                "html" : {
-                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
-                                },
-                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
-                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
-                            },
-                            {
-                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
-                                "type": "element-citation",
-                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                "elementdata": {
-                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-                                },
-                                "html" : {
-                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
-                                },
-                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
-                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
-                            }
-                        ]
-                        },
-                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
-                    },{
                         "id": "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
                         "type": "showhide",
                         "subtype": "",
@@ -1538,7 +1475,571 @@ export const createstoreWithFigure = {
                                 }
                             ]
                         }
-                    }
+                    },
+                    // "type": "citations",
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                        "type": "citations",
+                        "contents": {
+                            "formatted-title": {
+                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                            },
+                            "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                    "textsemantics":
+                                    [
+                                        {
+                                            "type": "strong",
+                                            "charStart": 81,
+                                            "charEnd": 105
+                                        }
+                                    ]
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                            }
+                        ]
+                        },
+                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "elementdata": {
+                            "bodymatter": [
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                            ],
+                        "backmatter": [ ]
+                        },
+                        "interactivedata": {
+                            "postertextobject": [
+                                {
+                                    "type": "element-authoredtext",
+                                    "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                    "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                                }
+                            ],
+                            "show": [
+                                {
+                                    "id": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                                    "type": "citations",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                                    "versionUrn": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                                    "contentUrn": "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2b6",
+                                    "contents": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "type": "element-citation",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                            "elementdata": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            },
+                                            "html": {
+                                                "text": "<p class=\"paragraphNumeroUnoCitation\"><br></p>"
+                                            },
+                                            "versionUrn": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "contentUrn": "urn:pearson:entity:7ab462bf-f9ad-42db-a0d4-c2f35e509cdd",
+                                            "status": "wip"
+                                        }]
+                                    },
+                                    "elementdata": {
+                                        "bodymatter": [
+                                            {
+                                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                                "type": "element-authoredtext",
+                                                "subtype": "",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                "contents": {
+                                                    "formatted-title": {
+                                                        "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                                                    },
+                                                    "bodymatter": [
+                                                    {
+                                                        "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                                        "type": "element-citation",
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                        "elementdata": {
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                            "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                                            "textsemantics":
+                                                            [
+                                                                {
+                                                                    "type": "strong",
+                                                                    "charStart": 81,
+                                                                    "charEnd": 105
+                                                                }
+                                                            ]
+                                                        },
+                                                        "html" : {
+                                                            "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                                        },
+                                                        "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                                        "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                                                    }
+                                                ]
+                                                },
+                                                "elementdata": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    "text": ""
+                                                },
+                                                "html": {
+                                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                                },
+                                                "comments": false,
+                                                "tcm": true,
+                                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                            },
+                                        ],
+                                    "backmatter": [ ]
+                                    },
+                                },{
+                                    "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                                    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157bs4aw",
+                                    "type": "element-aside",
+                                    "subtype": "sidebar",
+                                    "designtype": "sidebar",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "bodymatter": [
+                                            {
+                                                "type": "figure",
+                                                "figuretype": "image",
+                                                "subtype": "image50Text",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                                "alignment": "half-text",
+                                                "title": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    "text": "", "textsemantics": [], "mathml": []
+                                                },
+                                                "subtitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] },
+                                                "captions": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] },
+                                                "credits": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] },
+                                                "figuredata": { "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png", "height": "1225", "width": "1440", "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image", "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c" },
+                                                "html": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "title": "", "subtitle": "", "caption": "", "credit": "", "postertext": "", "tableasHTML": "" },
+                                                "comments": false,
+                                                "tcm": false,
+                                                "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+                                                "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23",
+                                                "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231"
+                                            },
+                                            {
+                                                "figuretype": "assessment",
+                                                "figuredata": { 'elementdata':{} },
+                                                "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d20",
+                                                "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230"
+                                            }
+                                        ]
+                                    }
+                                }, {
+                                    "id": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a1",
+                                    "type": "poetry",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                                    "versionUrn": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                                    "contentUrn": "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2b6",
+                                    "contents": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "type": "element-citation",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                            "elementdata": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            },
+                                            "html": {
+                                                "text": "<p class=\"paragraphNumeroUnoCitation\"><br></p>"
+                                            },
+                                            "versionUrn": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "contentUrn": "urn:pearson:entity:7ab462bf-f9ad-42db-a0d4-c2f35e509cdd",
+                                            "status": "wip"
+                                        }]
+                                    }
+                                }
+                            ],
+                            "hide": [
+                                {
+                                    "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                                    "type": "element-aside",
+                                    "subtype": "workedexample",
+                                    "designtype": "sidebar",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "bodymatter": [
+                                            {
+                                                "id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                                                "type": "manifest",
+                                                "contents": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                                                    "frontmatter": [],
+                                                    "bodymatter": [
+                                                        {
+                                                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                                            "type": "element-authoredtext",
+                                                            "subtype": "",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                            "elementdata": {
+                                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                "text": "asdfasdfasdf"
+                                                            },
+                                                            "headers": [
+                                                                {
+                                                                    "charStart": 0,
+                                                                    "charEnd": -1,
+                                                                    "level": 4
+                                                                }
+                                                            ],
+                                                            "html": {
+                                                                "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                                                            },
+                                                            "comments": true,
+                                                            "tcm": true,
+                                                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                                        },
+                                                        {
+                                                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0v",
+                                                            "type": "element-authoredtext",
+                                                            "subtype": "",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                            "elementdata": {
+                                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                "text": "asdfasdfasdf"
+                                                            },
+                                                            "html": {
+                                                                "text": "<p class=\"heading1NummerEins\">Heading 1</p>"
+                                                            },
+                                                            "comments": true,
+                                                            "tcm": true,
+                                                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                                        }
+                                                    ],
+                                                    "backmatter": []
+                                                },
+                                                "contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
+                                                "versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+                                            },{
+                                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                                "type": "element-authoredtext",
+                                                "subtype": "",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                "elementdata": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    "text": "asdfasdfasdf"
+                                                },
+                                                "headers": [
+                                                    {
+                                                        "charStart": 0,
+                                                        "charEnd": -1,
+                                                        "level": 4
+                                                    }
+                                                ],
+                                                "html": {
+                                                    "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                                                },
+                                                "comments": true,
+                                                "tcm": true,
+                                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                            },{
+                                                "figuretype": "assessment",
+                                                "figuredata": { 'elementdata':{} },
+                                                "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d20",
+                                                "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                    },
+                    // "type": "element-aside"
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5f",
+                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                        "type": "element-aside",
+                        "contents": {
+                            "formatted-title": {
+                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                            },
+                            "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                    "textsemantics":
+                                    [
+                                        {
+                                            "type": "strong",
+                                            "charStart": 81,
+                                            "charEnd": 105
+                                        }
+                                    ]
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                            }
+                        ]
+                        },
+                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "elementdata": {
+                            "bodymatter": [
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "contents": {
+                                        "formatted-title": {
+                                            "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                                        },
+                                        "bodymatter": [
+                                        {
+                                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                            "type": "element-citation",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                            "elementdata": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                                "textsemantics":
+                                                [
+                                                    {
+                                                        "type": "strong",
+                                                        "charStart": 81,
+                                                        "charEnd": 105
+                                                    }
+                                                ]
+                                            },
+                                            "html" : {
+                                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                            },
+                                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                                        }
+                                    ]
+                                    },
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                            ],
+                        "backmatter": [ ]
+                        },
+            
+                    },
+                //  "type": "poetry",
+                {
+                    "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5k",
+                    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                    "type": "poetry",
+                    "contents": {
+                        "formatted-title": {
+                            "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                        },
+                        "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                            "type": "element-citation",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                "textsemantics":
+                                [
+                                    {
+                                        "type": "strong",
+                                        "charStart": 81,
+                                        "charEnd": 105
+                                    }
+                                ]
+                            },
+                            "html" : {
+                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                            },
+                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                        },
+                        {
+                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                            "type": "element-citation",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                            },
+                            "html" : {
+                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                            },
+                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                        },
+                        {
+                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                            "type": "element-citation",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                            },
+                            "html" : {
+                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                            },
+                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                        }
+                    ]
+                    },
+                    "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                    "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                    "elementdata": {
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "contents": {
+                                    "formatted-title": {
+                                        "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                                    },
+                                    "bodymatter": [
+                                    {
+                                        "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                        "type": "element-citation",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                        "elementdata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                            "textsemantics":
+                                            [
+                                                {
+                                                    "type": "strong",
+                                                    "charStart": 81,
+                                                    "charEnd": 105
+                                                }
+                                            ]
+                                        },
+                                        "html" : {
+                                            "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                        },
+                                        "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                        "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                                    }
+                                ]
+                                },
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            },
+                        ],
+                    "backmatter": [ ]
+                    },
+        
+                },
                 ]
             },
         }
@@ -2491,6 +2992,480 @@ export const sectionBreakMockSlateData = {
     }
 }
 
+export const sectionBreakMockSlateData1 = {
+    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+        contents: {
+            bodymatter: [{
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                groupeddata: {
+                    bodymatter: [{
+                        groupdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                                    subtype: "workedexample",
+                                    elementdata: {
+                                        bodymatter: [
+                                            {
+                                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                                contents: {
+                                                    bodymatter: [{
+                                                        "type": "element-authoredtext",
+                                                        "subtype": "",
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                        "elementdata": {
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                            "text": ""
+                                                        },
+                                                        "html": {
+                                                            "text": "<p class=\"paragraphNumeroUno\">React previously shipped with an experimental context API. The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.</p>"
+                                                        },
+                                                        "comments": false,
+                                                        "tcm": true,
+                                                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d534dr5td5354sd",
+                                                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-ert4er45643tfg4"
+                                                    }]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }]
+                }
+            },
+            {
+                "id": "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                "type": "groupedcontent",
+                "subtype": "tab",
+                "designtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                "contentUrn": "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714",
+                "versionUrn": "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                "groupeddata":{
+                    "bodymatter":[
+                       {
+                          "id":"urn:pearson:manifest:8ff3bd23-caa3-4750-9bc2-4556b5a4184f",
+                          "type":"group",
+                          "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                          "versionUrn":"urn:pearson:manifest:8ff3bd23-caa3-4750-9bc2-4556b5a4184f",
+                          "contentUrn":"urn:pearson:entity:9208979d-83f7-465c-a82c-1ec03db492c0",
+                          "groupdata":{
+                             "bodymatter":[
+                                {
+                                   "id":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                   "type":"groupedcontent",
+                                   "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                   "width":"wider",
+                                   "groupproportions":"60-40",
+                                   "versionUrn":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                   "contentUrn":"urn:pearson:entity:c82fefe8-ee4c-4d20-92c9-ba182e14d9e3",
+                                   "groupeddata":{
+                                      "bodymatter":[
+                                         {
+                                            "id":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                            "type":"group",
+                                            "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                            "contentUrn":"urn:pearson:entity:831a3326-769b-490f-b80b-e4f230a3cc38",
+                                            "groupdata":{
+                                               "bodymatter":[
+                                                  {
+                                                     "id":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                     "type":"poetry",
+                                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                     "elementdata":{
+                                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text":""
+                                                     },
+                                                     "html":{
+                                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes":{
+                                                           
+                                                        },
+                                                        "assetsPopover":{
+                                                           
+                                                        },
+                                                        "glossaryentries":{
+                                                           
+                                                        },
+                                                        "indexEntries":{
+                                                           
+                                                        }
+                                                     },
+                                                     "versionUrn":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                     "contentUrn":"urn:pearson:entity:031f290c-ec1b-40d6-8412-f65f4b6b7d92"
+                                                  }
+                                               ]
+                                            },
+                                            "status":"wip"
+                                         },
+                                         {
+                                            "id":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                            "type":"group",
+                                            "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                            "contentUrn":"urn:pearson:entity:95a99bcd-9d56-4ebc-a14e-839eefc56a75",
+                                            "groupdata":{
+                                               "bodymatter":[
+                                                  {
+                                                     "id":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                     "type":"element-authoredtext",
+                                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                     "elementdata":{
+                                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text":""
+                                                     },
+                                                     "html":{
+                                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes":{
+                                                           
+                                                        },
+                                                        "assetsPopover":{
+                                                           
+                                                        },
+                                                        "glossaryentries":{
+                                                           
+                                                        },
+                                                        "indexEntries":{
+                                                           
+                                                        }
+                                                     },
+                                                     "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                     "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                  }
+                                               ]
+                                            },
+                                            "status":"wip"
+                                         }
+                                      ]
+                                   },
+                                   "status":"wip"
+                                }
+                             ],
+                             "formatted-title":{
+                                "id":"urn:pearson:work:36db81f2-97e7-4127-a6ab-6dfd4e765e35",
+                                "type":"element-authoredtext"
+                             }
+                          },
+                          "status":"wip"
+                       }
+                    ]
+                 },
+            }]
+        }
+    }
+}
+
+export const tabbedData = {
+    "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f": {
+        "id":"urn:pearson:manifest:e0e5e89e-55d8-4898-a9ec-872cc8deb670",
+      "type":"manifest",
+      "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+      "versionUrn":"urn:pearson:manifest:e0e5e89e-55d8-4898-a9ec-872cc8deb670",
+      "contentUrn":"urn:pearson:entity:ffa6a997-1b70-4854-96ec-601551018d7b",
+      "contents":{
+         "bodymatter":[
+            {
+                "id": "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                "type":"groupedcontent",
+               "subtype":"tab",
+               "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+               "versionUrn":"urn:pearson:manifest:8f825efb-9582-41df-995c-383dcdefc06b",
+               "contentUrn":"urn:pearson:entity:87381502-0728-4018-93bd-e52bc5495be5",
+               "groupeddata":{
+                  "bodymatter":[
+                     {
+                        "id":"urn:pearson:manifest:8ff3bd23-caa3-4750-9bc2-4556b5a4184f",
+                        "type":"group",
+                        "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                        "versionUrn":"urn:pearson:manifest:8ff3bd23-caa3-4750-9bc2-4556b5a4184f",
+                        "contentUrn":"urn:pearson:entity:9208979d-83f7-465c-a82c-1ec03db492c0",
+                        "groupdata":{
+                           "bodymatter":[
+                              {
+                                 "id":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                 "type":"groupedcontent",
+                                 "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                 "width":"wider",
+                                 "groupproportions":"60-40",
+                                 "versionUrn":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                 "contentUrn":"urn:pearson:entity:c82fefe8-ee4c-4d20-92c9-ba182e14d9e3",
+                                 "groupeddata":{
+                                    "bodymatter":[
+                                       {
+                                          "id":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                          "type":"group",
+                                          "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                          "versionUrn":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                          "contentUrn":"urn:pearson:entity:831a3326-769b-490f-b80b-e4f230a3cc38",
+                                          "groupdata":{
+                                             "bodymatter":[
+                                                {
+                                                   "id":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                   "type":"element-authoredtext",
+                                                   "subtype": "workedexample",
+                                                   "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                   "elementdata":{
+                                                      "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                      "text":"",
+                                                      "bodymatter":[
+                                                        {
+                                                           "id":"urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                                           "type":"element-authoredtext",
+                                                           "subtype": "workedexample",
+                                                           "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                           "elementdata":{
+                                                              "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                              "text":""
+                                                           },
+                                                           "html":{
+                                                              "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                              "footnotes":{
+                                                                 
+                                                              },
+                                                              "assetsPopover":{
+                                                                 
+                                                              },
+                                                              "glossaryentries":{
+                                                                 
+                                                              },
+                                                              "indexEntries":{
+                                                                 
+                                                              }
+                                                           },
+                                                           "versionUrn":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                           "contentUrn":"urn:pearson:entity:031f290c-ec1b-40d6-8412-f65f4b6b7d92"
+                                                        }
+                                                     ]
+                                                   },
+                                                   "html":{
+                                                      "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                      "footnotes":{
+                                                         
+                                                      },
+                                                      "assetsPopover":{
+                                                         
+                                                      },
+                                                      "glossaryentries":{
+                                                         
+                                                      },
+                                                      "indexEntries":{
+                                                         
+                                                      }
+                                                   },
+                                                   "versionUrn":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                   "contentUrn":"urn:pearson:entity:031f290c-ec1b-40d6-8412-f65f4b6b7d92"
+                                                }
+                                             ]
+                                          },
+                                          "status":"wip"
+                                       },
+                                       {
+                                          "id":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                          "type":"group",
+                                          "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                          "versionUrn":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                          "contentUrn":"urn:pearson:entity:95a99bcd-9d56-4ebc-a14e-839eefc56a75",
+                                          "groupdata":{
+                                             "bodymatter":[
+                                                {
+                                                   "id":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                   "type":"element-authoredtext",
+                                                   "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                   "elementdata":{
+                                                      "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                      "text":""
+                                                   },
+                                                   "html":{
+                                                      "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                      "footnotes":{
+                                                         
+                                                      },
+                                                      "assetsPopover":{
+                                                         
+                                                      },
+                                                      "glossaryentries":{
+                                                         
+                                                      },
+                                                      "indexEntries":{
+                                                         
+                                                      }
+                                                   },
+                                                   "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                   "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                }
+                                             ]
+                                          },
+                                          "status":"wip"
+                                       }
+                                    ]
+                                 },
+                                 "status":"wip"
+                              }
+                           ],
+                           "formatted-title":{
+                              "id":"urn:pearson:work:36db81f2-97e7-4127-a6ab-6dfd4e765e35",
+                              "type":"element-authoredtext"
+                           }
+                        },
+                        "status":"wip"
+                     }
+                  ]
+               },
+               "status":"wip"
+            }
+         ],
+         "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+      },
+      "status":"wip",
+      "pageNo":0,
+      "pageCount":1,
+      "pageLimit":25,
+      "numberedandlabel":true
+   }
+}
+
+export const tabbedData2 = {
+    "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f": {
+        "id":"urn:pearson:manifest:e0e5e89e-55d8-4898-a9ec-872cc8deb670",
+      "type":"manifest",
+      "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+      "versionUrn":"urn:pearson:manifest:e0e5e89e-55d8-4898-a9ec-872cc8deb670",
+      "contentUrn":"urn:pearson:entity:ffa6a997-1b70-4854-96ec-601551018d7b",
+      "contents":{
+         "bodymatter":[
+            {
+                "id": "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                "type":"groupedcontent",
+               "subtype":"tab",
+               "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+               "versionUrn":"urn:pearson:manifest:8f825efb-9582-41df-995c-383dcdefc06b",
+               "contentUrn":"urn:pearson:entity:87381502-0728-4018-93bd-e52bc5495be5",
+               "groupeddata":{
+                  "bodymatter":[
+                     {
+                        "id":"urn:pearson:manifest:8ff3bd23-caa3-4750-9bc2-4556b5a4184f",
+                        "type":"group",
+                        "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                        "versionUrn":"urn:pearson:manifest:8ff3bd23-caa3-4750-9bc2-4556b5a4184f",
+                        "contentUrn":"urn:pearson:entity:9208979d-83f7-465c-a82c-1ec03db492c0",
+                        "groupdata":{
+                           "bodymatter":[
+                              {
+                                 "id":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                 "type":"groupedcontent",
+                                 "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                 "width":"wider",
+                                 "groupproportions":"60-40",
+                                 "versionUrn":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                 "contentUrn":"urn:pearson:entity:c82fefe8-ee4c-4d20-92c9-ba182e14d9e3",
+                                 "groupeddata":{
+                                    "bodymatter":[
+                                       {
+                                          "id":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                          "type":"group",
+                                          "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                          "versionUrn":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                          "contentUrn":"urn:pearson:entity:831a3326-769b-490f-b80b-e4f230a3cc38",
+                                          "groupdata":{
+                                             "bodymatter":[
+                                                {
+                                                   "id":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                   "type":"element-authoredtext",
+                                                   "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                   "elementdata":{
+                                                      "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                      "text":""
+                                                   },
+                                                   "html":{
+                                                      "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                      "footnotes":{
+                                                         
+                                                      },
+                                                      "assetsPopover":{
+                                                         
+                                                      },
+                                                      "glossaryentries":{
+                                                         
+                                                      },
+                                                      "indexEntries":{
+                                                         
+                                                      }
+                                                   },
+                                                   "versionUrn":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                   "contentUrn":"urn:pearson:entity:031f290c-ec1b-40d6-8412-f65f4b6b7d92"
+                                                }
+                                             ]
+                                          },
+                                          "status":"wip"
+                                       },
+                                       {
+                                          "id":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                          "type":"group",
+                                          "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                          "versionUrn":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                          "contentUrn":"urn:pearson:entity:95a99bcd-9d56-4ebc-a14e-839eefc56a75",
+                                          "groupdata":{
+                                             "bodymatter":[
+                                                {
+                                                   "id":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                   "type":"element-authoredtext",
+                                                   "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                   "elementdata":{
+                                                      "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                      "text":""
+                                                   },
+                                                   "html":{
+                                                      "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                      "footnotes":{
+                                                         
+                                                      },
+                                                      "assetsPopover":{
+                                                         
+                                                      },
+                                                      "glossaryentries":{
+                                                         
+                                                      },
+                                                      "indexEntries":{
+                                                         
+                                                      }
+                                                   },
+                                                   "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                   "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                }
+                                             ]
+                                          },
+                                          "status":"wip"
+                                       }
+                                    ]
+                                 },
+                                 "status":"wip"
+                              }
+                           ],
+                           "formatted-title":{
+                              "id":"urn:pearson:work:36db81f2-97e7-4127-a6ab-6dfd4e765e35",
+                              "type":"element-authoredtext"
+                           }
+                        },
+                        "status":"wip"
+                     }
+                  ]
+               },
+               "status":"wip"
+            }
+         ],
+         "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+      },
+      "status":"wip",
+      "pageNo":0,
+      "pageCount":1,
+      "pageLimit":25,
+      "numberedandlabel":true
+   }
+}
+
 export const NotSectionBreakMockSlateData = {
     "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
         contents: {
@@ -2658,6 +3633,279 @@ export const NotSectionBreakMockSlateData3 = {
         "pageNo":0,
         "pageCount":1,
         "pageLimit":10
+    }
+}
+
+export const NotSectionBreakMockSlateData4 = {
+    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+        contents: {
+            bodymatter: [{
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                groupeddata: {
+                    bodymatter: [{
+                        groupdata: {
+                            "bodymatter":[
+                                {
+                                   "id":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                   "type":"groupedcontent",
+                                   "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                   "width":"wider",
+                                   "groupproportions":"60-40",
+                                   "versionUrn":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                   "contentUrn":"urn:pearson:entity:c82fefe8-ee4c-4d20-92c9-ba182e14d9e3",
+                                   "groupeddata":{
+                                      "bodymatter":[
+                                         {
+                                            "id":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                            "type":"group",
+                                            "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                            "contentUrn":"urn:pearson:entity:831a3326-769b-490f-b80b-e4f230a3cc38",
+                                            "groupdata":{
+                                               "bodymatter":[
+                                                  {
+                                                     "id":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                     "type":"element-authoredtext",
+                                                     "subtype": "workedexample",
+                                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                     "elementdata":{
+                                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text":"",
+                                                        "bodymatter":[
+                                                            {
+                                                               "id":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                               "type":"element-authoredtext",
+                                                               "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                               "elementdata":{
+                                                                  "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                  "text":""
+                                                               },
+                                                               "html":{
+                                                                  "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                  "footnotes":{
+                                                                     
+                                                                  },
+                                                                  "assetsPopover":{
+                                                                     
+                                                                  },
+                                                                  "glossaryentries":{
+                                                                     
+                                                                  },
+                                                                  "indexEntries":{
+                                                                     
+                                                                  }
+                                                               },
+                                                               "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                               "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                            }
+                                                         ]
+                                                     },
+                                                     "html":{
+                                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes":{
+                                                           
+                                                        },
+                                                        "assetsPopover":{
+                                                           
+                                                        },
+                                                        "glossaryentries":{
+                                                           
+                                                        },
+                                                        "indexEntries":{
+                                                           
+                                                        }
+                                                     },
+                                                     "versionUrn":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                     "contentUrn":"urn:pearson:entity:031f290c-ec1b-40d6-8412-f65f4b6b7d92"
+                                                  }
+                                               ]
+                                            },
+                                            "status":"wip"
+                                         },
+                                         {
+                                            "id":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                            "type":"group",
+                                            "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                            "contentUrn":"urn:pearson:entity:95a99bcd-9d56-4ebc-a14e-839eefc56a75",
+                                            "groupdata":{
+                                               "bodymatter":[
+                                                  {
+                                                     "id":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                     "type":"element-authoredtext",
+                                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                     "elementdata":{
+                                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text":""
+                                                     },
+                                                     "html":{
+                                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes":{
+                                                           
+                                                        },
+                                                        "assetsPopover":{
+                                                           
+                                                        },
+                                                        "glossaryentries":{
+                                                           
+                                                        },
+                                                        "indexEntries":{
+                                                           
+                                                        }
+                                                     },
+                                                     "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                     "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                  }
+                                               ]
+                                            },
+                                            "status":"wip"
+                                         }
+                                      ]
+                                   },
+                                   "status":"wip"
+                                }
+                             ],
+                        }
+                    }]
+                }
+            }]
+        }
+    }
+}
+
+export const NotSectionBreakMockSlateData5 = {
+    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+        contents: {
+            bodymatter: [{
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                groupeddata: {
+                    bodymatter: [{
+                        groupdata: {
+                            "bodymatter":[
+                                {
+                                   "id":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                   "type":"groupedcontent",
+                                   "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                   "width":"wider",
+                                   "groupproportions":"60-40",
+                                   "versionUrn":"urn:pearson:manifest:4324dd4d-6eaf-4421-8ef2-8083bdb3fca5",
+                                   "contentUrn":"urn:pearson:entity:c82fefe8-ee4c-4d20-92c9-ba182e14d9e3",
+                                   "groupeddata":{
+                                      "bodymatter":[
+                                         {
+                                            "id":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                            "type":"group",
+                                            "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn":"urn:pearson:manifest:25a4fdb1-bf3d-4c7b-82dc-1a32e9f71f4f",
+                                            "contentUrn":"urn:pearson:entity:831a3326-769b-490f-b80b-e4f230a3cc38",
+                                            "groupdata":{
+                                               "bodymatter":[
+                                                  {
+                                                     "id":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                     "type":"element-authoredtext",
+                                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                     "elementdata":{
+                                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text":"",
+                                                        "bodymatter":[
+                                                            {
+                                                               "id":"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                                                               "type":"element-authoredtext",
+                                                               "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                               "elementdata":{
+                                                                  "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                  "text":""
+                                                               },
+                                                               "html":{
+                                                                  "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                  "footnotes":{
+                                                                     
+                                                                  },
+                                                                  "assetsPopover":{
+                                                                     
+                                                                  },
+                                                                  "glossaryentries":{
+                                                                     
+                                                                  },
+                                                                  "indexEntries":{
+                                                                     
+                                                                  }
+                                                               },
+                                                               "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                               "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                            }
+                                                         ]
+                                                     },
+                                                     "html":{
+                                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes":{
+                                                           
+                                                        },
+                                                        "assetsPopover":{
+                                                           
+                                                        },
+                                                        "glossaryentries":{
+                                                           
+                                                        },
+                                                        "indexEntries":{
+                                                           
+                                                        }
+                                                     },
+                                                     "versionUrn":"urn:pearson:work:86e2fa3e-e3ff-4887-af8d-b376a1fc08ed",
+                                                     "contentUrn":"urn:pearson:entity:031f290c-ec1b-40d6-8412-f65f4b6b7d92"
+                                                  }
+                                               ]
+                                            },
+                                            "status":"wip"
+                                         },
+                                         {
+                                            "id":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                            "type":"group",
+                                            "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn":"urn:pearson:manifest:73d11ec4-9ee4-4fc2-af97-78999e5c6547",
+                                            "contentUrn":"urn:pearson:entity:95a99bcd-9d56-4ebc-a14e-839eefc56a75",
+                                            "groupdata":{
+                                               "bodymatter":[
+                                                  {
+                                                     "id":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                     "type":"element-authoredtext",
+                                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                                     "elementdata":{
+                                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text":""
+                                                     },
+                                                     "html":{
+                                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes":{
+                                                           
+                                                        },
+                                                        "assetsPopover":{
+                                                           
+                                                        },
+                                                        "glossaryentries":{
+                                                           
+                                                        },
+                                                        "indexEntries":{
+                                                           
+                                                        }
+                                                     },
+                                                     "versionUrn":"urn:pearson:work:5a5c312d-d8d6-48b2-87b3-8eaf06e13415",
+                                                     "contentUrn":"urn:pearson:entity:a855e17b-8a0c-4837-99c9-d8d883a5aebc"
+                                                  }
+                                               ]
+                                            },
+                                            "status":"wip"
+                                         }
+                                      ]
+                                   },
+                                   "status":"wip"
+                                }
+                             ],
+                        }
+                    }]
+                }
+            }]
+        }
     }
 }
 
@@ -7154,5 +8402,929 @@ export const updateBL4 ={
            "numberedandlabel":true
         }
      }
+}
+
+export const update_BL_in_TB1 = {
+    slateLevelData : {
+        "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea": {
+            "id": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "type": "manifest",
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+            "versionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "contentUrn": "urn:pearson:entity:75a523ba-08a5-43b4-81ad-afb086f8f9c3",
+            "contents": {
+                "bodymatter": [{
+                    "id": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "type": "groupedcontent",
+                    "subtype": "tab",
+                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                    "width": "text-width",
+                    "groupproportions": "60-40",
+                    "versionUrn": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "contentUrn": "urn:pearson:entity:0daa47f0-d397-422e-bef6-d0b15ea8e2ea",
+                    "groupeddata": {
+                        "bodymatter": [{
+                            "id": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "type": "group",
+                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                            "versionUrn": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "contentUrn": "urn:pearson:entity:27350e60-8be4-4fad-b04d-660ba228eda8",
+                            "groupdata": {
+                                "bodymatter": [{
+                                    "id": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "type": "groupedcontent",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                    "width": "wider",
+                                    "groupproportions": "60-40",
+                                    "versionUrn": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "contentUrn": "urn:pearson:entity:a0703b58-be6d-4986-8a42-e789a474ab11",
+                                    "groupeddata": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "contentUrn": "urn:pearson:entity:24e5d41b-5a8c-436a-ad05-f8dde517f882",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "contentUrn": "urn:pearson:entity:ba33f77e-226b-4169-a562-b72a4aebfaef"
+                                                }, {
+                                                    "id": "urn:pearson:manifest:428a9889-182c-4d96-a3c8-1d930365acdf",
+                                                    "type": "manifestlist",
+                                                    "subtype": "decimal",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                    "versionUrn": "urn:pearson:manifest:428a9889-182c-4d96-a3c8-1d930365acdf",
+                                                    "contentUrn": "urn:pearson:entity:43cc39a1-51a3-4b69-b596-b9d7619a4311",
+                                                    "status": "wip",
+                                                    "listdata": {
+                                                        "bodymatter": [{
+                                                            "id": "urn:pearson:manifest:c5e9d404-01bf-4a2a-99fc-5bbf65e994b8",
+                                                            "type": "manifestlistitem",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                            "versionUrn": "urn:pearson:manifest:c5e9d404-01bf-4a2a-99fc-5bbf65e994b8",
+                                                            "contentUrn": "urn:pearson:entity:6a6b0d1c-d34a-4c62-b754-98e022b80ad8",
+                                                            "status": "wip",
+                                                            "listitemdata": {
+                                                                "bodymatter": [{
+                                                                    "id": "urn:pearson:work:f4f0efcb-531a-4b84-b1f5-eedec536f831",
+                                                                    "type": "element-authoredtext",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                        "footnotes": {},
+                                                                        "assetsPopover": {},
+                                                                        "glossaryentries": {},
+                                                                        "indexEntries": {}
+                                                                    },
+                                                                    "versionUrn": "urn:pearson:work:f4f0efcb-531a-4b84-b1f5-eedec536f831",
+                                                                    "contentUrn": "urn:pearson:entity:074b42cf-f468-4655-bc9f-181951dd9aac"
+                                                                }]
+                                                            }
+                                                        }, {
+                                                            "id": "urn:pearson:manifest:75442264-f862-4ea8-bfd0-f1cc727f6b53",
+                                                            "type": "manifestlistitem",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                            "versionUrn": "urn:pearson:manifest:75442264-f862-4ea8-bfd0-f1cc727f6b53",
+                                                            "contentUrn": "urn:pearson:entity:c5b3b5c2-79d3-4693-bcc6-6024148e9cd4",
+                                                            "status": "wip",
+                                                            "listitemdata": {
+                                                                "bodymatter": [{
+                                                                    "id": "urn:pearson:work:36ebee11-870d-4148-b3d2-a43ccd1a1216",
+                                                                    "type": "element-authoredtext",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                        "footnotes": {},
+                                                                        "assetsPopover": {},
+                                                                        "glossaryentries": {},
+                                                                        "indexEntries": {}
+                                                                    },
+                                                                    "versionUrn": "urn:pearson:work:36ebee11-870d-4148-b3d2-a43ccd1a1216",
+                                                                    "contentUrn": "urn:pearson:entity:a69be801-7803-4325-979d-4f6ec0494f5f"
+                                                                }]
+                                                            }
+                                                        }, {
+                                                            "id": "urn:pearson:manifest:e87cfabd-6951-4e34-9206-6c7bcdc803eb",
+                                                            "type": "manifestlistitem",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                            "versionUrn": "urn:pearson:manifest:e87cfabd-6951-4e34-9206-6c7bcdc803eb",
+                                                            "contentUrn": "urn:pearson:entity:38c4e0ab-5f3d-423d-859e-f21aec592bda",
+                                                            "status": "wip",
+                                                            "listitemdata": {
+                                                                "bodymatter": [{
+                                                                    "id": "urn:pearson:work:013398f8-d05b-4241-a53c-dcd0662bfba6",
+                                                                    "type": "element-authoredtext",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                        "footnotes": {},
+                                                                        "assetsPopover": {},
+                                                                        "glossaryentries": {},
+                                                                        "indexEntries": {}
+                                                                    },
+                                                                    "versionUrn": "urn:pearson:work:013398f8-d05b-4241-a53c-dcd0662bfba6",
+                                                                    "contentUrn": "urn:pearson:entity:36dec1f4-f245-4b79-95a3-9db7264eb5c7"
+                                                                }]
+                                                            }
+                                                        }]
+                                                    },
+                                                    "listtype": "ordered",
+                                                    "startNumber": 1,
+                                                    "columnnumber": 1,
+                                                    "iconcolor": "iconColor1",
+                                                    "fontstyle": "fontStyle1"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }, {
+                                            "id": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "contentUrn": "urn:pearson:entity:32aa5554-ed2b-4934-b28a-7dc4e48a677b",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "contentUrn": "urn:pearson:entity:c95e1118-ba8a-4fac-9664-2e6c95ac59d5"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }]
+                                    },
+                                    "status": "wip"
+                                }]
+                            },
+                            "status": "wip"
+                        }]
+                    },
+                    "status": "wip"
+                }],
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+            },
+            "status": "wip",
+            "pageNo": 0,
+            "pageCount": 1,
+            "pageLimit": 25,
+            "numberedandlabel": true
+        }
+    }
+}
+
+export const update_BL_in_TB2 = {
+    slateLevelData: {
+        "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea": {
+            "id": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "type": "manifest",
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+            "versionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "contentUrn": "urn:pearson:entity:75a523ba-08a5-43b4-81ad-afb086f8f9c3",
+            "contents": {
+                "bodymatter": [{
+                    "id": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "type": "groupedcontent",
+                    "subtype": "tab",
+                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                    "width": "text-width",
+                    "groupproportions": "60-40",
+                    "versionUrn": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "contentUrn": "urn:pearson:entity:0daa47f0-d397-422e-bef6-d0b15ea8e2ea",
+                    "groupeddata": {
+                        "bodymatter": [{
+                            "id": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "type": "group",
+                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                            "versionUrn": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "contentUrn": "urn:pearson:entity:27350e60-8be4-4fad-b04d-660ba228eda8",
+                            "groupdata": {
+                                "bodymatter": [{
+                                    "id": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "type": "groupedcontent",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                    "width": "wider",
+                                    "groupproportions": "60-40",
+                                    "versionUrn": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "contentUrn": "urn:pearson:entity:a0703b58-be6d-4986-8a42-e789a474ab11",
+                                    "groupeddata": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "contentUrn": "urn:pearson:entity:24e5d41b-5a8c-436a-ad05-f8dde517f882",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "contentUrn": "urn:pearson:entity:ba33f77e-226b-4169-a562-b72a4aebfaef"
+                                                }, {
+                                                    "id": "urn:pearson:manifest:d8b836fb-1848-4745-969e-25ad82e1321a",
+                                                    "type": "manifestlist",
+                                                    "subtype": "decimal",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                    "versionUrn": "urn:pearson:manifest:d8b836fb-1848-4745-969e-25ad82e1321a",
+                                                    "contentUrn": "urn:pearson:entity:f218b464-5f08-4efa-986d-39f2e0f192c0",
+                                                    "status": "wip",
+                                                    "listdata": {
+                                                        "bodymatter": [{
+                                                            "id": "urn:pearson:manifest:26334369-0d8d-430c-bee5-908a5ae440d8",
+                                                            "type": "manifestlistitem",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                            "versionUrn": "urn:pearson:manifest:26334369-0d8d-430c-bee5-908a5ae440d8",
+                                                            "contentUrn": "urn:pearson:entity:5dadfd95-c448-4c6e-9446-e1cbecbf746b",
+                                                            "status": "wip",
+                                                            "listitemdata": {
+                                                                "bodymatter": [{
+                                                                    "id": "urn:pearson:work:a75a329e-091f-4eb7-bb61-4d84b640706d",
+                                                                    "type": "element-authoredtext",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                        "footnotes": {},
+                                                                        "assetsPopover": {},
+                                                                        "glossaryentries": {},
+                                                                        "indexEntries": {}
+                                                                    },
+                                                                    "versionUrn": "urn:pearson:work:a75a329e-091f-4eb7-bb61-4d84b640706d",
+                                                                    "contentUrn": "urn:pearson:entity:078bb711-0856-4406-8ad7-9c5c0ff81e9f"
+                                                                }, {
+                                                                    "id": "urn:pearson:manifest:ca04a702-09fc-4763-a848-e9442ba6e2ad",
+                                                                    "type": "manifestlist",
+                                                                    "subtype": "decimal",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                    "versionUrn": "urn:pearson:manifest:ca04a702-09fc-4763-a848-e9442ba6e2ad",
+                                                                    "contentUrn": "urn:pearson:entity:a7240124-91e2-40c9-8ee7-c6605bd36a06",
+                                                                    "status": "wip",
+                                                                    "listdata": {
+                                                                        "bodymatter": [{
+                                                                            "id": "urn:pearson:manifest:15498870-6b23-4527-8fa0-e8d49dc3c91c",
+                                                                            "type": "manifestlistitem",
+                                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                            "versionUrn": "urn:pearson:manifest:15498870-6b23-4527-8fa0-e8d49dc3c91c",
+                                                                            "contentUrn": "urn:pearson:entity:e155d708-22a2-4bb9-a35a-765139778a63",
+                                                                            "status": "wip",
+                                                                            "listitemdata": {
+                                                                                "bodymatter": [{
+                                                                                    "id": "urn:pearson:work:a35bed85-2e31-4c5a-b09b-6d8c622b1526",
+                                                                                    "type": "element-authoredtext",
+                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                                    "elementdata": {
+                                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                                        "text": ""
+                                                                                    },
+                                                                                    "html": {
+                                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                                        "footnotes": {},
+                                                                                        "assetsPopover": {},
+                                                                                        "glossaryentries": {},
+                                                                                        "indexEntries": {}
+                                                                                    },
+                                                                                    "versionUrn": "urn:pearson:work:a35bed85-2e31-4c5a-b09b-6d8c622b1526",
+                                                                                    "contentUrn": "urn:pearson:entity:1811b90c-a2a1-4db6-bb46-fa7744d27ae1"
+                                                                                }]
+                                                                            }
+                                                                        }]
+                                                                    },
+                                                                    "listtype": "ordered",
+                                                                    "startNumber": 1,
+                                                                    "columnnumber": 1,
+                                                                    "iconcolor": "iconColor1",
+                                                                    "fontstyle": "fontStyle1"
+                                                                }]
+                                                            }
+                                                        }]
+                                                    },
+                                                    "listtype": "ordered",
+                                                    "startNumber": 1,
+                                                    "columnnumber": 1,
+                                                    "iconcolor": "iconColor1",
+                                                    "fontstyle": "fontStyle1"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }, {
+                                            "id": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "contentUrn": "urn:pearson:entity:32aa5554-ed2b-4934-b28a-7dc4e48a677b",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "contentUrn": "urn:pearson:entity:c95e1118-ba8a-4fac-9664-2e6c95ac59d5"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }]
+                                    },
+                                    "status": "wip"
+                                }]
+                            },
+                            "status": "wip"
+                        }]
+                    },
+                    "status": "wip"
+                }],
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+            },
+            "status": "wip",
+            "pageNo": 0,
+            "pageCount": 1,
+            "pageLimit": 25,
+            "numberedandlabel": true
+        }
+    }
+}
+
+export const update_BL_in_TB3 = {
+    slateLevelData: {
+        "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea": {
+            "id": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "type": "manifest",
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+            "versionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "contentUrn": "urn:pearson:entity:75a523ba-08a5-43b4-81ad-afb086f8f9c3",
+            "contents": {
+                "bodymatter": [{
+                    "id": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "type": "groupedcontent",
+                    "subtype": "tab",
+                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                    "width": "text-width",
+                    "groupproportions": "60-40",
+                    "versionUrn": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "contentUrn": "urn:pearson:entity:0daa47f0-d397-422e-bef6-d0b15ea8e2ea",
+                    "groupeddata": {
+                        "bodymatter": [{
+                            "id": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "type": "group",
+                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                            "versionUrn": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "contentUrn": "urn:pearson:entity:27350e60-8be4-4fad-b04d-660ba228eda8",
+                            "groupdata": {
+                                "bodymatter": [{
+                                    "id": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "type": "groupedcontent",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                    "width": "wider",
+                                    "groupproportions": "60-40",
+                                    "versionUrn": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "contentUrn": "urn:pearson:entity:a0703b58-be6d-4986-8a42-e789a474ab11",
+                                    "groupeddata": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "contentUrn": "urn:pearson:entity:24e5d41b-5a8c-436a-ad05-f8dde517f882",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "contentUrn": "urn:pearson:entity:ba33f77e-226b-4169-a562-b72a4aebfaef"
+                                                }, {
+                                                    "id": "urn:pearson:manifest:d8b836fb-1848-4745-969e-25ad82e1321a",
+                                                    "type": "manifestlist",
+                                                    "subtype": "decimal",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                    "versionUrn": "urn:pearson:manifest:d8b836fb-1848-4745-969e-25ad82e1321a",
+                                                    "contentUrn": "urn:pearson:entity:f218b464-5f08-4efa-986d-39f2e0f192c0",
+                                                    "status": "wip",
+                                                    "listdata": {
+                                                        "bodymatter": [{
+                                                            "id": "urn:pearson:manifest:26334369-0d8d-430c-bee5-908a5ae440d8",
+                                                            "type": "manifestlistitem",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                            "versionUrn": "urn:pearson:manifest:26334369-0d8d-430c-bee5-908a5ae440d8",
+                                                            "contentUrn": "urn:pearson:entity:5dadfd95-c448-4c6e-9446-e1cbecbf746b",
+                                                            "status": "wip",
+                                                            "listitemdata": {
+                                                                "bodymatter": [{
+                                                                    "id": "urn:pearson:work:a75a329e-091f-4eb7-bb61-4d84b640706d",
+                                                                    "type": "element-authoredtext",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                        "footnotes": {},
+                                                                        "assetsPopover": {},
+                                                                        "glossaryentries": {},
+                                                                        "indexEntries": {}
+                                                                    },
+                                                                    "versionUrn": "urn:pearson:work:a75a329e-091f-4eb7-bb61-4d84b640706d",
+                                                                    "contentUrn": "urn:pearson:entity:078bb711-0856-4406-8ad7-9c5c0ff81e9f"
+                                                                }, {
+                                                                    "id": "urn:pearson:manifest:ca04a702-09fc-4763-a848-e9442ba6e2ad",
+                                                                    "type": "manifestlist",
+                                                                    "subtype": "decimal",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                    "versionUrn": "urn:pearson:manifest:ca04a702-09fc-4763-a848-e9442ba6e2ad",
+                                                                    "contentUrn": "urn:pearson:entity:a7240124-91e2-40c9-8ee7-c6605bd36a06",
+                                                                    "status": "wip",
+                                                                    "listdata": {
+                                                                        "bodymatter": [{
+                                                                            "id": "urn:pearson:manifest:15498870-6b23-4527-8fa0-e8d49dc3c91c",
+                                                                            "type": "manifestlistitem",
+                                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                            "versionUrn": "urn:pearson:manifest:15498870-6b23-4527-8fa0-e8d49dc3c91c",
+                                                                            "contentUrn": "urn:pearson:entity:e155d708-22a2-4bb9-a35a-765139778a63",
+                                                                            "status": "wip",
+                                                                            "listitemdata": {
+                                                                                "bodymatter": [{
+                                                                                    "id": "urn:pearson:work:a35bed85-2e31-4c5a-b09b-6d8c622b1526",
+                                                                                    "type": "element-authoredtext",
+                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                                    "elementdata": {
+                                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                                        "text": ""
+                                                                                    },
+                                                                                    "html": {
+                                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                                        "footnotes": {},
+                                                                                        "assetsPopover": {},
+                                                                                        "glossaryentries": {},
+                                                                                        "indexEntries": {}
+                                                                                    },
+                                                                                    "versionUrn": "urn:pearson:work:a35bed85-2e31-4c5a-b09b-6d8c622b1526",
+                                                                                    "contentUrn": "urn:pearson:entity:1811b90c-a2a1-4db6-bb46-fa7744d27ae1"
+                                                                                }, {
+                                                                                    "id": "urn:pearson:manifest:72f1dd65-890a-45cd-b753-2c12f85db93d",
+                                                                                    "type": "manifestlist",
+                                                                                    "subtype": "decimal",
+                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                                    "versionUrn": "urn:pearson:manifest:72f1dd65-890a-45cd-b753-2c12f85db93d",
+                                                                                    "contentUrn": "urn:pearson:entity:9281fd7c-839d-491f-8e28-b002c9a48853",
+                                                                                    "status": "wip",
+                                                                                    "listdata": {
+                                                                                        "bodymatter": [{
+                                                                                            "id": "urn:pearson:manifest:a4f746e8-ea5f-4776-af71-47e830125d67",
+                                                                                            "type": "manifestlistitem",
+                                                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                                            "versionUrn": "urn:pearson:manifest:a4f746e8-ea5f-4776-af71-47e830125d67",
+                                                                                            "contentUrn": "urn:pearson:entity:19472423-11d2-4b69-be38-234b14180ed4",
+                                                                                            "status": "wip",
+                                                                                            "listitemdata": {
+                                                                                                "bodymatter": [{
+                                                                                                    "id": "urn:pearson:work:dd49432a-15d5-4186-9688-1a4acb6bc6af",
+                                                                                                    "type": "element-authoredtext",
+                                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                                                    "elementdata": {
+                                                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                                                        "text": ""
+                                                                                                    },
+                                                                                                    "html": {
+                                                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                                                        "footnotes": {},
+                                                                                                        "assetsPopover": {},
+                                                                                                        "glossaryentries": {},
+                                                                                                        "indexEntries": {}
+                                                                                                    },
+                                                                                                    "versionUrn": "urn:pearson:work:dd49432a-15d5-4186-9688-1a4acb6bc6af",
+                                                                                                    "contentUrn": "urn:pearson:entity:7e4eb5bb-e804-4a2e-9d2c-f45bb449c238"
+                                                                                                }]
+                                                                                            }
+                                                                                        }]
+                                                                                    },
+                                                                                    "listtype": "ordered",
+                                                                                    "startNumber": 1,
+                                                                                    "columnnumber": 1,
+                                                                                    "iconcolor": "iconColor1",
+                                                                                    "fontstyle": "fontStyle1"
+                                                                                }]
+                                                                            }
+                                                                        }]
+                                                                    },
+                                                                    "listtype": "ordered",
+                                                                    "startNumber": 1,
+                                                                    "columnnumber": 1,
+                                                                    "iconcolor": "iconColor1",
+                                                                    "fontstyle": "fontStyle1"
+                                                                }]
+                                                            }
+                                                        }]
+                                                    },
+                                                    "listtype": "ordered",
+                                                    "startNumber": 1,
+                                                    "columnnumber": 1,
+                                                    "iconcolor": "iconColor1",
+                                                    "fontstyle": "fontStyle1"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }, {
+                                            "id": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "contentUrn": "urn:pearson:entity:32aa5554-ed2b-4934-b28a-7dc4e48a677b",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "contentUrn": "urn:pearson:entity:c95e1118-ba8a-4fac-9664-2e6c95ac59d5"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }]
+                                    },
+                                    "status": "wip"
+                                }]
+                            },
+                            "status": "wip"
+                        }]
+                    },
+                    "status": "wip"
+                }],
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+            },
+            "status": "wip",
+            "pageNo": 0,
+            "pageCount": 1,
+            "pageLimit": 25,
+            "numberedandlabel": true
+        }
+    }
+}
+
+export const update_BL_in_TB4 = {
+    slateLevelData: {
+        "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea": {
+            "id": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "type": "manifest",
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+            "versionUrn": "urn:pearson:manifest:5bcd4f2a-21f5-488f-ba77-90fc4c497bea",
+            "contentUrn": "urn:pearson:entity:75a523ba-08a5-43b4-81ad-afb086f8f9c3",
+            "contents": {
+                "bodymatter": [{
+                    "id": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "type": "groupedcontent",
+                    "subtype": "tab",
+                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                    "width": "text-width",
+                    "groupproportions": "60-40",
+                    "versionUrn": "urn:pearson:manifest:58bab1d8-9525-4c9e-a760-49719efbd7e0",
+                    "contentUrn": "urn:pearson:entity:0daa47f0-d397-422e-bef6-d0b15ea8e2ea",
+                    "groupeddata": {
+                        "bodymatter": [{
+                            "id": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "type": "group",
+                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                            "versionUrn": "urn:pearson:manifest:e4508903-eebd-4c44-b8a5-42be590c6eac",
+                            "contentUrn": "urn:pearson:entity:27350e60-8be4-4fad-b04d-660ba228eda8",
+                            "groupdata": {
+                                "bodymatter": [{
+                                    "id": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "type": "groupedcontent",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                    "width": "wider",
+                                    "groupproportions": "60-40",
+                                    "versionUrn": "urn:pearson:manifest:d0c7b084-e123-4b6a-92ae-5ff8904343c2",
+                                    "contentUrn": "urn:pearson:entity:a0703b58-be6d-4986-8a42-e789a474ab11",
+                                    "groupeddata": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:1d38a82b-6d13-4e6d-9453-0cf1d4fcc944",
+                                            "contentUrn": "urn:pearson:entity:24e5d41b-5a8c-436a-ad05-f8dde517f882",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:04cc1967-ef39-47bf-af38-da3a329cbf7e",
+                                                    "contentUrn": "urn:pearson:entity:ba33f77e-226b-4169-a562-b72a4aebfaef"
+                                                }, {
+                                                    "id": "urn:pearson:manifest:d8b836fb-1848-4745-969e-25ad82e1321a",
+                                                    "type": "manifestlist",
+                                                    "subtype": "decimal",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                    "versionUrn": "urn:pearson:manifest:d8b836fb-1848-4745-969e-25ad82e1321a",
+                                                    "contentUrn": "urn:pearson:entity:f218b464-5f08-4efa-986d-39f2e0f192c0",
+                                                    "status": "wip",
+                                                    "listdata": {
+                                                        "bodymatter": [{
+                                                            "id": "urn:pearson:manifest:26334369-0d8d-430c-bee5-908a5ae440d8",
+                                                            "type": "manifestlistitem",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                            "versionUrn": "urn:pearson:manifest:26334369-0d8d-430c-bee5-908a5ae440d8",
+                                                            "contentUrn": "urn:pearson:entity:5dadfd95-c448-4c6e-9446-e1cbecbf746b",
+                                                            "status": "wip",
+                                                            "listitemdata": {
+                                                                "bodymatter": [{
+                                                                    "id": "urn:pearson:work:a75a329e-091f-4eb7-bb61-4d84b640706d",
+                                                                    "type": "element-authoredtext",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                        "footnotes": {},
+                                                                        "assetsPopover": {},
+                                                                        "glossaryentries": {},
+                                                                        "indexEntries": {}
+                                                                    },
+                                                                    "versionUrn": "urn:pearson:work:a75a329e-091f-4eb7-bb61-4d84b640706d",
+                                                                    "contentUrn": "urn:pearson:entity:078bb711-0856-4406-8ad7-9c5c0ff81e9f"
+                                                                }, {
+                                                                    "id": "urn:pearson:manifest:ca04a702-09fc-4763-a848-e9442ba6e2ad",
+                                                                    "type": "manifestlist",
+                                                                    "subtype": "decimal",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                    "versionUrn": "urn:pearson:manifest:ca04a702-09fc-4763-a848-e9442ba6e2ad",
+                                                                    "contentUrn": "urn:pearson:entity:a7240124-91e2-40c9-8ee7-c6605bd36a06",
+                                                                    "status": "wip",
+                                                                    "listdata": {
+                                                                        "bodymatter": [{
+                                                                            "id": "urn:pearson:manifest:15498870-6b23-4527-8fa0-e8d49dc3c91c",
+                                                                            "type": "manifestlistitem",
+                                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                            "versionUrn": "urn:pearson:manifest:15498870-6b23-4527-8fa0-e8d49dc3c91c",
+                                                                            "contentUrn": "urn:pearson:entity:e155d708-22a2-4bb9-a35a-765139778a63",
+                                                                            "status": "wip",
+                                                                            "listitemdata": {
+                                                                                "bodymatter": [{
+                                                                                    "id": "urn:pearson:work:a35bed85-2e31-4c5a-b09b-6d8c622b1526",
+                                                                                    "type": "element-authoredtext",
+                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                                    "elementdata": {
+                                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                                        "text": ""
+                                                                                    },
+                                                                                    "html": {
+                                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                                        "footnotes": {},
+                                                                                        "assetsPopover": {},
+                                                                                        "glossaryentries": {},
+                                                                                        "indexEntries": {}
+                                                                                    },
+                                                                                    "versionUrn": "urn:pearson:work:a35bed85-2e31-4c5a-b09b-6d8c622b1526",
+                                                                                    "contentUrn": "urn:pearson:entity:1811b90c-a2a1-4db6-bb46-fa7744d27ae1"
+                                                                                }, {
+                                                                                    "id": "urn:pearson:manifest:72f1dd65-890a-45cd-b753-2c12f85db93d",
+                                                                                    "type": "manifestlist",
+                                                                                    "subtype": "decimal",
+                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                                    "versionUrn": "urn:pearson:manifest:72f1dd65-890a-45cd-b753-2c12f85db93d",
+                                                                                    "contentUrn": "urn:pearson:entity:9281fd7c-839d-491f-8e28-b002c9a48853",
+                                                                                    "status": "wip",
+                                                                                    "listdata": {
+                                                                                        "bodymatter": [{
+                                                                                            "id": "urn:pearson:manifest:a4f746e8-ea5f-4776-af71-47e830125d67",
+                                                                                            "type": "manifestlistitem",
+                                                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                                            "versionUrn": "urn:pearson:manifest:a4f746e8-ea5f-4776-af71-47e830125d67",
+                                                                                            "contentUrn": "urn:pearson:entity:19472423-11d2-4b69-be38-234b14180ed4",
+                                                                                            "status": "wip",
+                                                                                            "listitemdata": {
+                                                                                                "bodymatter": [{
+                                                                                                    "id": "urn:pearson:work:dd49432a-15d5-4186-9688-1a4acb6bc6af",
+                                                                                                    "type": "element-authoredtext",
+                                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                                                    "elementdata": {
+                                                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                                                        "text": ""
+                                                                                                    },
+                                                                                                    "html": {
+                                                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                                                        "footnotes": {},
+                                                                                                        "assetsPopover": {},
+                                                                                                        "glossaryentries": {},
+                                                                                                        "indexEntries": {}
+                                                                                                    },
+                                                                                                    "versionUrn": "urn:pearson:work:dd49432a-15d5-4186-9688-1a4acb6bc6af",
+                                                                                                    "contentUrn": "urn:pearson:entity:7e4eb5bb-e804-4a2e-9d2c-f45bb449c238"
+                                                                                                }, {
+                                                                                                    "id": "urn:pearson:manifest:7673cfc2-7e12-40f1-a4b2-392e3347d49c",
+                                                                                                    "type": "manifestlist",
+                                                                                                    "subtype": "decimal",
+                                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                                                    "versionUrn": "urn:pearson:manifest:7673cfc2-7e12-40f1-a4b2-392e3347d49c",
+                                                                                                    "contentUrn": "urn:pearson:entity:1d8811f6-6e8f-4901-b5ae-3da57121cf65",
+                                                                                                    "status": "wip",
+                                                                                                    "listdata": {
+                                                                                                        "bodymatter": [{
+                                                                                                            "id": "urn:pearson:manifest:ef20dae6-3db6-4b1f-8094-685105fa0e14",
+                                                                                                            "type": "manifestlistitem",
+                                                                                                            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                                                                                                            "versionUrn": "urn:pearson:manifest:ef20dae6-3db6-4b1f-8094-685105fa0e14",
+                                                                                                            "contentUrn": "urn:pearson:entity:416fadcb-9cba-4466-bb36-a9322e64ed8e",
+                                                                                                            "status": "wip",
+                                                                                                            "listitemdata": {
+                                                                                                                "bodymatter": [{
+                                                                                                                    "id": "urn:pearson:work:0bd1326e-bb37-4fcf-99c9-079c035b3c78",
+                                                                                                                    "type": "element-authoredtext",
+                                                                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                                                                    "elementdata": {
+                                                                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                                                                        "text": ""
+                                                                                                                    },
+                                                                                                                    "html": {
+                                                                                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                                                                                        "footnotes": {},
+                                                                                                                        "assetsPopover": {},
+                                                                                                                        "glossaryentries": {},
+                                                                                                                        "indexEntries": {}
+                                                                                                                    },
+                                                                                                                    "versionUrn": "urn:pearson:work:0bd1326e-bb37-4fcf-99c9-079c035b3c78",
+                                                                                                                    "contentUrn": "urn:pearson:entity:eaa42d97-e12d-482b-8174-24335d08f54e"
+                                                                                                                }]
+                                                                                                            }
+                                                                                                        }]
+                                                                                                    },
+                                                                                                    "listtype": "ordered",
+                                                                                                    "startNumber": 1,
+                                                                                                    "columnnumber": 1,
+                                                                                                    "iconcolor": "iconColor1",
+                                                                                                    "fontstyle": "fontStyle1"
+                                                                                                }]
+                                                                                            }
+                                                                                        }]
+                                                                                    },
+                                                                                    "listtype": "ordered",
+                                                                                    "startNumber": 1,
+                                                                                    "columnnumber": 1,
+                                                                                    "iconcolor": "iconColor1",
+                                                                                    "fontstyle": "fontStyle1"
+                                                                                }]
+                                                                            }
+                                                                        }]
+                                                                    },
+                                                                    "listtype": "ordered",
+                                                                    "startNumber": 1,
+                                                                    "columnnumber": 1,
+                                                                    "iconcolor": "iconColor1",
+                                                                    "fontstyle": "fontStyle1"
+                                                                }]
+                                                            }
+                                                        }]
+                                                    },
+                                                    "listtype": "ordered",
+                                                    "startNumber": 1,
+                                                    "columnnumber": 1,
+                                                    "iconcolor": "iconColor1",
+                                                    "fontstyle": "fontStyle1"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }, {
+                                            "id": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "type": "group",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                            "versionUrn": "urn:pearson:manifest:99ee55e1-25f9-408e-b699-0ef6ded1fe57",
+                                            "contentUrn": "urn:pearson:entity:32aa5554-ed2b-4934-b28a-7dc4e48a677b",
+                                            "groupdata": {
+                                                "bodymatter": [{
+                                                    "id": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "type": "element-authoredtext",
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                    "elementdata": {
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                        "text": ""
+                                                    },
+                                                    "html": {
+                                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                                        "footnotes": {},
+                                                        "assetsPopover": {},
+                                                        "glossaryentries": {},
+                                                        "indexEntries": {}
+                                                    },
+                                                    "versionUrn": "urn:pearson:work:c2599eaf-4f6e-4f43-b506-efd81389495b",
+                                                    "contentUrn": "urn:pearson:entity:c95e1118-ba8a-4fac-9664-2e6c95ac59d5"
+                                                }]
+                                            },
+                                            "status": "wip"
+                                        }]
+                                    },
+                                    "status": "wip"
+                                }]
+                            },
+                            "status": "wip"
+                        }]
+                    },
+                    "status": "wip"
+                }],
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+            },
+            "status": "wip",
+            "pageNo": 0,
+            "pageCount": 1,
+            "pageLimit": 25,
+            "numberedandlabel": true
+        }
+    }
 }
 

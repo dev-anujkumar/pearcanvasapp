@@ -71,9 +71,9 @@ const getFirstTextNode = (node) => {
 
 /**
  * Check if node if first child
- * @param {*} n 
+ * @param {*} n
  * @param {*} tinymceOffset : cursor selection point
- * @returns 
+ * @returns
  */
 const isFirtstChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
@@ -90,9 +90,9 @@ const isFirtstChild = (node, tinymceOffset) => {
             //for empty line
             else return !node?.previousSibling
         }
-        if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit") 
+        if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit")
         || node?.classList?.contains("figureCaption") || node?.classList?.contains("figureMathContent")
-        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureCodeContent") 
+        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureCodeContent")
         || node?.classList?.contains('figureNumber') || node?.classList?.contains("figureLabel")
         || node?.classList?.contains("figureCredit")
         )) {
@@ -105,7 +105,7 @@ const isFirtstChild = (node, tinymceOffset) => {
             return tinymceOffset === 0;
         }
         else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR) && tinymceNode?.parentNode?.parentNode?.className !== 'blockquoteMarginalia' && !(tinymceNode.className?.includes('figureCaption') || tinymceNode.className?.includes('figureTitle'))) { //since blockquote title and caption is directly wrapped into p therefore added the condition
-            
+
             if(firstTextNode?.nodeName === 'IMG') {
                 return tinymceOffset === 0;
             }
@@ -129,8 +129,8 @@ const isFirtstChild = (node, tinymceOffset) => {
 /**
  * Get Last child of node
  * useful for multiple formatting option
- * @param {*} node 
- * @returns 
+ * @param {*} node
+ * @returns
  */
 const getLastChild = (node) => {
     if (node.lastChild) {
@@ -158,16 +158,16 @@ const footNoteCases = (node, lastTextNode) => {
             return true;
         }
     }
-    
+
     return false;
 }
 
 /**
- * Check if node is the last child of 
+ * Check if node is the last child of
  * keyboard wrapper
  * @param {*} node : node of which checking is sone
  * @param {*} tinymceOffset : selection offset
- * @returns 
+ * @returns
  */
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
@@ -206,7 +206,7 @@ const isLastChild = (node, tinymceOffset) => {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
                     // unicode inside footnote
                     return true;
-                } else if( lastTextNode?.nodeName == "#text" && lastTextNode?.previousSibling?.nodeName === "SUP" 
+                } else if( lastTextNode?.nodeName == "#text" && lastTextNode?.previousSibling?.nodeName === "SUP"
                 && tinymceOffset == 2 && lastTextNode === node){
                     return true
                 }
@@ -224,12 +224,12 @@ const isLastChild = (node, tinymceOffset) => {
             // case for only single image
             if(lastTextNode?.nodeName === 'IMG' && tinymceNode?.parentNode?.parentNode?.className !== 'blockquoteMarginalia') {
                 return tinymceOffset !==0
-            } 
+            }
             // case of empty para
             else if(node?.textContent?.length === 0) {
                 return true;
             }
-          
+
         }
         else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
             // tinymce edtiors empty values
@@ -239,7 +239,7 @@ const isLastChild = (node, tinymceOffset) => {
             // for empty fields in floating text case
             // as p and br are coming there
             return tinymceOffset === 0;
-        }        
+        }
 
         else return footNoteCases(node, lastTextNode);
 
@@ -247,12 +247,12 @@ const isLastChild = (node, tinymceOffset) => {
     else return false;
 }
 /**
- * Check if the node is child of Keyboard Wrapper, 
+ * Check if the node is child of Keyboard Wrapper,
  * if yes return the keyboiard warapper node
  * and disptance from parent
  * @param {*} node : checking which node is child of KW
  * @param {*} index : Parent Distance
- * @returns 
+ * @returns
  */
 const isKWChild = (node, index = 0) => {
     if (index === 10) {
@@ -292,7 +292,7 @@ const KeyboardWrapper = (props) => {
         return <div onFocus={() => {
             // element is directly clicked via mouse
             dispatch(selectElement(id));
-        }} id={id}> {props.children} </div>
+        }} id={id} > {props.children} </div>
     else return <>{props.children}</>
 }
 export default KeyboardWrapper;

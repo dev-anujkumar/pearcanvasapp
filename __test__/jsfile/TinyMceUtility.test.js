@@ -452,6 +452,51 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
+
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            parent: {
+            }
+        }
+        let parentElement = {
+            type: "element-aside"
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData,parentElement);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            parent: {
+                type: "groupedcontent",
+                subtype: "tab"
+            }
+        }
+        let parentElement = {
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData,parentElement);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+
+        }
+        let parentElement = {
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData,parentElement);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
     
     it('Test - checkBlockListElement - data as {}', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
@@ -746,5 +791,48 @@ describe('Testing TinyMceUtility', () => {
         tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, {});
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
+    })
+
+    describe('Test - restoreSelectionNode', () => {
+        const editor = {
+            dom: {
+                createRng: () => {
+                    return {
+                        selectNodeContents: jest.fn()
+                    }
+                }
+            },
+            selection: {
+                getRng: jest.fn(),
+                setRng: jest.fn()
+            }
+        }
+
+        const mockNode = document.createElement('span');
+        mockNode.textContent = 'Mock Node';
+        mockNode.setAttribute('id', 'mockId');
+        mockNode.classList.add('mockClass');
+
+        it('Test - restoreSelectionAtNode - selection empty', () => {
+            const spyFunc = jest.spyOn(tinyMceFn, 'restoreSelectionAtNode');
+            const { getRng } = editor.selection;
+            getRng.mockReturnValue({
+                collapsed: true
+            });
+            tinyMceFn.restoreSelectionAtNode(editor, mockNode);
+            expect(spyFunc).toHaveBeenCalled();
+            spyFunc.mockClear();
+        })
+
+        it('Test - restoreSelectionAtNode - selection not empty', () => {
+            const spyFunc = jest.spyOn(tinyMceFn, 'restoreSelectionAtNode');
+            const { getRng } = editor.selection;
+            getRng.mockReturnValue({
+                collapsed: false
+            });
+            tinyMceFn.restoreSelectionAtNode(editor, mockNode);
+            expect(spyFunc).toHaveBeenCalled();
+            spyFunc.mockClear();
+        })
     })
 })

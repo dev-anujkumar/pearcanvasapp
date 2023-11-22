@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 
 /** Contants and utitlity functions */
 import constants from "./constants.js";
-import { guid, sendDataToIframe } from '../../constants/utility.js';
+import { guid, sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext';
 import { MULTICOLUMN_SOURCE } from '../../constants/Element_Constants.js';
-import { checkSlateLock } from '../../js/slateLockUtility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import config from "../../config/config.js";
 
@@ -18,6 +17,8 @@ import ElementContainer from '../ElementContainer';
 
 /** Action Creators */
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 let random = guid();
 
@@ -85,8 +86,11 @@ class MultipleColumnContainer extends PureComponent {
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
-                            {
-                            index == 0 && <ElementSaprator
+                            <LazyLoad
+                                once={true}
+                                placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                            >
+                            { index == 0 && <ElementSaprator
                                     index={index}
                                     firstOne={index === 0}
                                     esProps={this.context.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
@@ -139,7 +143,8 @@ class MultipleColumnContainer extends PureComponent {
                                 source={MULTICOLUMN_SOURCE}
                                 handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 dataId = {element.id}
-                            />  
+                            />
+                            </LazyLoad>
                         </React.Fragment>
                     )
                 })
@@ -197,6 +202,7 @@ class MultipleColumnContainer extends PureComponent {
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 this.context.onClickCapture(evt)
                             },
@@ -211,9 +217,9 @@ class MultipleColumnContainer extends PureComponent {
                                 let dataObj = this.prepareSwapData(evt, parentUrn)
                                 this.props.swapElement(dataObj, () => { })
                                 this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             },
-                        }}  
+                        }}
                         tag="div"
                         ref={(c) => {
                             if (c) {
@@ -245,17 +251,14 @@ class MultipleColumnContainer extends PureComponent {
                 </React.Fragment>
             )
         })
-        
+
     }
 
      /**
      * Handles focus
-     * @param {Object} event 
+     * @param {Object} event
      */
       handleFocus = (event) => {
-        if(checkSlateLock(this.context.slateLockInfo)){
-            return false
-        }
         if(event && event.target && !(event.target.classList.contains('container-multi-column-group-3c'))){
             return false
         }

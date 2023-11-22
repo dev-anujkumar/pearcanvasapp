@@ -3,7 +3,7 @@
 */
 import React, { useRef, useEffect, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -13,7 +13,7 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -26,7 +26,7 @@ const {
  */
 function useOutsideAlerter(ref, setState) {
     useEffect(() => {
-        
+
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
                 const div = ref.current;
@@ -45,7 +45,7 @@ function useOutsideAlerter(ref, setState) {
         };
     }, [ref]);
 }
-  
+
 
 export const ContainerHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
@@ -125,7 +125,7 @@ export const ContainerHeader = (props) => {
     useEffect(() => {
         updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
     }, [props.figureDropdownData?.asideCustom, props.figureDropdownData?.workedexampleCustom]);
-    
+
     const handleCloseDropDrown = () => {
         setState({ labelDropDown: false, labelNumberSettingDropDown: false });
     }
@@ -198,7 +198,7 @@ export const ContainerHeader = (props) => {
                 labelElement?.nextElementSibling?.classList?.add('floating-label');
             } else if (lastIndex[lastIndex.length - 1] == 't2') {
                 labelElement?.nextElementSibling?.classList?.add('floating-number');
-            } 
+            }
         }
     }
 
@@ -235,7 +235,7 @@ export const ContainerHeader = (props) => {
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
     return (
         <>
-        <div className="asideHeader">
+        <div className={`asideHeader ${hasReviewerRole() ? "pointer-events-none" : ""}`}>
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
                     <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>

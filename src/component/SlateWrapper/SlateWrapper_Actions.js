@@ -22,7 +22,6 @@ import {
     SET_SLATE_MATTER_TYPE,
     UPDATE_CARET_OFFSET
 } from '../../constants/Action_Constants';
-
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -34,9 +33,9 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
-const { SHOW_HIDE } = ElementConstants;
+const { SHOW_HIDE, TAB, MULTI_COLUMN, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
@@ -44,6 +43,7 @@ import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaM
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
+import { triggerCustomEventsGTM } from '../../js/ga';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -71,7 +71,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     };
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
-    } 
+    }
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
     }
@@ -85,7 +85,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
         _requestData["isAutoNumberingEnabled"] = true;
     }
-
+    triggerCustomEventsGTM('create-element-type',_requestData );
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -100,12 +100,17 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
         const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
+        /**This check modified to prevent snapshots for TB. This will be removed when TB supports TCM */
+        let isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
         //This check is for the TEXT element which gets created inside BL on Shift+Enter
         if(!blockListDetails) {
-        if (tempSlateWrapperConstants.indexOf(type) !== -1) {
+        // if (tempSlateWrapperConstants.indexOf(type) !== -1) {
+        if (tempSlateWrapperConstants.indexOf(type) !== -1 && !isTbElement) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -144,6 +149,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                    /* To update redux store while creating new element inside TB->Tab->WE->New */
+                } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && item.id === asideData?.parent?.id && asideData.index) {
+                    let indexes = asideData.index?.split("-");
+                    item = item.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                    if (item?.id === parentUrn.manifestUrn) {
+                        item?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                    } else if (item?.subtype === ELEMENT_WORKEDEXAMPLE) {
+                        item?.elementdata?.bodymatter?.map(j => {
+                            if (j?.id === parentUrn.manifestUrn) {
+                                j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    }
                 } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
                     /* Add element inside 2c->WE->new */
                     item?.groupeddata?.bodymatter?.map((ele) => {
@@ -195,13 +213,26 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             appendElementInsideShowhide(item, sectionType, asideData, 'elementdata', index, createdElementData);
                         }
                     }
+                    /* To update redux store while creating new element inside TB->Tab->Aside->New */
+                } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && item.id === asideData?.parent?.id && asideData.index) {
+                    let indexes = asideData.index?.split("-");
+                    item = item.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                    if (item?.id === parentUrn.manifestUrn) {
+                        item?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                    } else if (item?.subtype === ELEMENT_WORKEDEXAMPLE) {
+                        item?.elementdata?.bodymatter?.map(j => {
+                            if (j?.id === parentUrn.manifestUrn) {
+                                j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    }
                 /* To update redux store while creating new element inside 2C->Aside->New */
-                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                } else if(asideData?.parent?.type === MULTI_COLUMN && item.id === asideData?.parent?.id){
                     item?.groupeddata?.bodymatter?.map((ele) => {
                         ele?.groupdata?.bodymatter?.map(i => {
                             if (i?.id === parentUrn.manifestUrn) {
                                 i?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
-                            } else if(i?.subtype === "workedexample"){
+                            } else if(i?.subtype === ELEMENT_WORKEDEXAMPLE){
                                 i?.elementdata?.bodymatter?.map(j => {
                                     if (j?.id === parentUrn.manifestUrn) {
                                         j?.contents?.bodymatter?.splice(index, 0, createdElementData);
@@ -235,7 +266,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == poetryData.parentUrn) {
                     item.contents.bodymatter.splice(index, 0, createdElementData)
-                } 
+                }
                 else if (item.type == "poetry" && item.id == poetryData.id) {
                     item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
                         if (ele.id === poetryData.parentUrn) {
@@ -255,7 +286,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                                     }
                                 })
                             }
-                    })
+                    }) /* To update redux store while creating new element inside TB->Tab->Block Poetry->Stanza */
+                } else if (poetryData?.parent?.type === MULTI_COLUMN && poetryData?.parent?.subtype === TAB && item.id === poetryData?.parent?.id && poetryData.index) {
+                    const poetryIndex = poetryData.index?.split("-");
+                    item = item.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+                    item.contents?.bodymatter?.splice(index, 0, createdElementData);
                 }
                 /* To update redux store while creating new element inside 2C->Block Poetry->Stanza */
                 else if(poetryData?.parent?.type === "groupedcontent" && item.id === poetryData?.parent?.id){
@@ -275,7 +310,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         }
                     });
                 }
-            })  
+            })
+        /* To update redux store while creating new element inside TB->Tab->Column */
+        } else if (asideData && asideData.type === MULTI_COLUMN && asideData.subtype === TAB) {
+            const parentIndexes = asideData.index && asideData.index.split("-")
+            let item = newParentData[config.slateManifestURN].contents.bodymatter[parentIndexes[0]];
+            item.groupeddata.bodymatter[parentIndexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[parentIndexes[2]].groupdata.bodymatter.splice(index, 0, createdElementData);
         }
         else if (asideData && asideData.type === 'groupedcontent') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
@@ -291,7 +331,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
                 }
             })
-        } 
+        }
         /*  Local store update for block list and Text inside block list for multiple levels. */
         else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
             const indexes = blockListDetails.indexOrder.split('-');
@@ -309,7 +349,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 9) { // Block list on 3 level nesting
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }// update store for AS/WE(header) if it has Bl inside it and its nesting level
@@ -324,8 +364,25 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 8) { // Block list on 3 level nesting
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                } // Manifest List/Text element handelling for Tab element inside TB
+            } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter;
+                switch (indexes.length) {
+                    case 6: // TB:Tab:c1:BL Level 1 nesting
+                        initialdata.splice(index, 0, createdElementData);
+                        break;
+                    case 8: // TB:Tab:c1:BL Level 2 nesting
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 10: // TB:Tab:c1:BL Level 3 nesting
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+
+                        break;
+                    case 12: // TB:Tab:c1:BL Level 4 nesting
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
                 }
             }
             else if(asideData.parent && asideData.parent.type === "groupedcontent"){
@@ -339,7 +396,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                else if (indexes.length === 9) { // Block list on 3 level nesting
                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
-               else { // level 4 
+               else { // level 4
                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
             }
@@ -354,11 +411,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 7) { // Block list on 3 level nesting
                     initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
-         } 
+         }
          /*  Local store update for manifest list item inside block list for multiple levels. */
          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
              const indexes = blockListDetails.indexOrder.split('-');
@@ -387,8 +444,25 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }else if (indexes.length === 8) { // Block list on 3 level nesting
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                // Manifest List Item handelling for Tab element inside TB
+             } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
+                switch (indexes.length) {
+                    case 6: // TB:Tab:c1:BL Level 1 nesting
+                        initialdata.splice(index, 0, createdElementData);
+                        break;
+                    case 8: // TB:Tab:c1:BL Level 2 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 10: // TB:Tab:c1:BL Level 3 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 12: // TB:Tab:c1:BL Level 4 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
                 }
              }
              else if(asideData.parent && asideData.parent.type === "groupedcontent"){
@@ -421,8 +495,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
             }
-            
-          } 
+
+          }
          /*  Local store update for manifest list item inside block list for multiple levels. */
           else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
              const indexes = blockListDetails.indexOrder.split('-');
@@ -448,8 +522,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 8) { // Block list on 3 level nesting
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
+                switch (indexes.length) {
+                    case 8: // TB:Tab:c1:BL Level 2 nesting
+                        initialdata.splice(index, 0, createdElementData);
+                        break;
+                    case 10: // TB:Tab:c1:BL Level 3 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 12: // TB:Tab:c1:BL Level 4 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
                 }
             }
             else if(asideData.parent && asideData.parent.type === 'groupedcontent'){
@@ -476,7 +563,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
             }
-          } 
+            /* add a new tab element inside TB */
+        } else if (type === slateWrapperConstants.TABBED_COLUMN_TAB) {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == asideData?.parentManifestUrn) {
+                    item?.groupeddata?.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
+        }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
@@ -484,7 +578,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             //This check is for the TEXT element which gets created inside BL on Shift+Enter
             if(!blockListDetails && !(cypressPlusProjectStatus && createdElementData?.type === 'element-pdf')) {
                 //This check will be removed once BlockList will support TCM
-                if(type !== "MANIFEST_LIST") {
+                if(type !== "MANIFEST_LIST" && !isTbElement) {
                 if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
                     prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
                 }}
@@ -514,7 +608,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
-        }   
+        }
     }).catch(error => {
         // Opener Element mock creation
 
@@ -652,7 +746,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data);
         }
-        
+
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
@@ -664,7 +758,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         console.error("Error in Powerpaste", error)
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     }
-    
+
 }
 
 
@@ -685,7 +779,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     }
     /* If swapping for inner elements of showhide then add section type also, show|hide */
     if(containerTypeElem === SHOW_HIDE){
-        _requestData.sectionType = sectionType   
+        _requestData.sectionType = sectionType
     }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -703,6 +797,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         })
         .then((responseData) => {
             if (responseData && responseData.status == '200') {
+                // Making condition true for triggering slate level save api
+                localStorage.setItem('isChangeInSlate', 'true');
 
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -722,7 +818,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
                     const indexes = elementIndex?.toString().split('-') || [];
                     /* Get the showhide element object from slate data using indexes */
-                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes);
+                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes, null, parentElement?.asideData);
                     /* After getting showhide Object, swap the elements */
                     if(!isEmpty(shObject) && shObject?.contentUrn === currentSlateEntityUrn) {
                         shObject?.interactivedata[sectionType]?.move(oldIndex, newIndex);
@@ -732,7 +828,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     //swap WE element
                     const indexs = elementIndex?.toString().split('-') || [];
                     let sectionType = parentElement?.showHideType;
-                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
+                    /* TB->Tab->AS/WE->HEAD: Swap Elements */
+                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) {
+                        let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
+                        if (asid.contentUrn == currentSlateEntityUrn) {
+                            asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
                             asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
@@ -752,7 +854,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 } else if (containerTypeElem && containerTypeElem == 'section') {
                     const indexs = elementIndex?.toString().split('-') || [];
                     let sectionType = parentElement?.showHideType;
-                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
+                    /* TB->Tab->AS/WE->HEAD: Swap Elements */
+                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) {
+                        newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]]?.elementdata?.bodymatter?.map(item => {
+                            if (item.contentUrn == currentSlateEntityUrn) {
+                                item?.contents?.bodymatter?.move(oldIndex, newIndex);
+                            }
+                        })
+                    } else if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
                                 item?.contents?.bodymatter?.move(oldIndex, newIndex);
@@ -775,7 +884,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             }
                         });
                     }
-                } 
+                }
                 /** ----------Swapping elements inside Citations Group Element----------------- */
                 else if (containerTypeElem && containerTypeElem == 'cg') {
                     const indexs = elementIndex?.split('-') || [];
@@ -809,6 +918,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                     })
                                 }
                             })
+                            /** ----------Swapping block poetry elements inside Tab Element----------------- */
+                        } else if (element?.type === ElementConstants.MULTI_COLUMN && element?.subtype === ElementConstants.TAB) {
+                            const indexs = elementIndex?.split('-') || [];
+                            let poetryElement = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
+                            if (poetryElement?.type === "poetry" && poetryElement?.id === poetryId) {
+                                poetryElement.contents.bodymatter.move(oldIndex, newIndex);
+                            }
                         } else if(element?.type === "groupedcontent"){  /** ----------Swapping block poetry elements inside Multicolumn Element----------------- */
                             element.groupeddata?.bodymatter.forEach((groupElem)=> {
                                 groupElem.groupdata?.bodymatter.forEach((groupElem1)=>{
@@ -818,7 +934,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
-                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        // handling local redux state for swapping of stanzas inside SH->Poetry
                         } else if (element?.type === "showhide" && sectionType) {
                             element?.interactivedata[sectionType].forEach((eachElement)=>{
                                 if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
@@ -838,8 +954,12 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 }
                 else if (containerTypeElem && containerTypeElem == '3C') {
                     newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
-                }
-                else {
+                } else if (containerTypeElem && containerTypeElem == 'TB') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter.move(oldIndex, newIndex);
+                } else if (containerTypeElem && containerTypeElem == 'Tab') {
+                    const indexes = dataObj?.containerIndex?.split('-') || [];
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[[indexes[1]]].groupdata.bodymatter[0].groupeddata.bodymatter[[dataObj.columnIndex]].groupdata.bodymatter.move(oldIndex, newIndex);
+                } else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
@@ -1093,7 +1213,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
         if(allElemPageData && allElemPageData.length >0){
             allElemPageData = allElemPageData.filter(ele => { return ele != elementId;});
         }
-       
+
         dispatch({
             type: GET_PAGE_NUMBER,
             payload: {pageNumberData: pageNumberData,
@@ -1133,7 +1253,7 @@ export const setSlateType = (slateType) => (dispatch, getState) => {
         payload: slateType
     })
 }
-// calling this function in communicationChannel 
+// calling this function in communicationChannel
 export const cypressPlusEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: CYPRESS_PLUS_ENABLED,
@@ -1239,7 +1359,7 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
 }
 
 const fetchContainerData = (entityURN, manifestURN, isPopup) => {
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content`;
     if (isPopup) {
         apiUrl = `${apiUrl}?metadata=true`
     }
@@ -1267,7 +1387,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
 
         let slateEntityUrn = config.slateEntityURN;
-        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
+        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType &&
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
             slateEntityUrn = poetryData.contentUrn;
@@ -1290,11 +1410,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 cutIndex -= elmExist ? 1 : 0;
             }
         }
-        
+
         let elmHtml = ('html' in selection.element) ? selection.element.html : {};
         let elmType = ['figure'];
         let elmSubtype = ['assessment'];
-        if(elmType.indexOf(selection.element.type) >= 0 && 
+        if(elmType.indexOf(selection.element.type) >= 0 &&
             'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
             if(!('html' in selection.element)) {
                 elmHtml = { "title": selection.element.title.text || "" }
@@ -1304,13 +1424,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if(!('html' in selection.element)) {
                 elmHtml = { "title": selection.element.title.text || "" }
             } else if (!('title' in selection.element.html)) {
-                elmHtml = { 
+                elmHtml = {
                     ...elmHtml,
-                    "title": "" 
+                    "title": ""
                 }
             }
         }
-        
+
         if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
             let htmlText = (selection.element.html.text);
             htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
@@ -1401,8 +1521,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
-        
-        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup']
+
+        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup','manifestlist']
         if(acceptedTypes.includes(selection.element.type)) {
             const payloadParams = {
                 ...params,
@@ -1451,6 +1571,24 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+
+        // Handling the cut/copy/paste of decorative images
+        if(selection?.element?.figuredata?.decorative) {
+            if (_requestData.content[0]?.html.hasOwnProperty('captions')) {
+                delete _requestData.content[0].html.captions;
+            }
+            if (_requestData.content[0]?.html.hasOwnProperty('text')) {
+                delete _requestData.content[0].html.text;
+            }
+            if (_requestData.content[0]?.html.hasOwnProperty('title')) {
+                delete _requestData.content[0].html.title;
+            }
+            _requestData.content[0].numberedandlabel = false
+            _requestData.content[0].figuretype = selection?.element?.figuretype
+            _requestData.content[0].subtype = selection?.element?.subtype
+            _requestData.content[0].figuredata.type = selection?.element?.figuredata?.type
+            _requestData.content[0].alignment = selection?.element?.alignment
+        }
         /** Cut-Copy TCM snapshots API Payload Params*/
         let tcmSnapshotParams = {
             selection,
@@ -1477,6 +1615,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 let responseData = Object.values(createdElemData.data)
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
                 const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
+                // Making condition true for triggering slate level save api
+                localStorage.setItem('isChangeInSlate', 'true');
 
                 // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
                 if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
@@ -1490,7 +1630,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
                 if((responseData[0]?.type === "figure") && (figureTypes.includes(responseData[0]?.figuretype))  || interactiveType.includes(responseData[0]?.figuredata?.interactivetype)){
                     const elementId = responseData[0].id
-                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
+                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)
                 }
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
@@ -1542,7 +1682,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     }
                 }
                 /******************************/
-                if (responseData[0].elementdata?.type === "blockquote") {  
+                if (responseData[0].elementdata?.type === "blockquote") {
                     setTimeout(() => {
                         const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
                         const node2 = node1?.querySelector(`.paragraphNummerEins`)
@@ -1557,7 +1697,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            console.error("Exceptional Error on pasting the element:::", error);   
+            console.error("Exceptional Error on pasting the element:::", error);
         }
     }
 }
@@ -1600,7 +1740,7 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
             parentUrn,
             asideData
         }
-        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
+        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)
     }
     catch(error) {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -1613,4 +1753,29 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
         type: UPDATE_CARET_OFFSET,
         payload: caretPosition
     });
+}
+
+export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
+    // Api to change container status from approved to WIP
+    const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?isRCEnabled=${updateRCSlate}`;
+    return axios.post(versioningStatus, null, {
+        headers: {
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
+    }).then(response => {
+        if(response?.data?.status === "success"){
+            // Making condition true for triggering slate level save api
+            localStorage.setItem('isChangeInSlate', 'true');
+            localStorage.setItem('slateNewVersion', 'true');
+
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
+            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
+            return true
+        }
+    }).catch(error => {
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
+        console.log("error", error)
+        return false
+    })
 }

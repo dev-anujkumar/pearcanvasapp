@@ -264,6 +264,29 @@ span.answerLineContent {
   bottom: 5px;
   color: transparent;
 }
+span.non-breaking-space {
+  margin: 0px 1px;
+  position: relative;
+  bottom: -0.5px;
+  color: transparent;
+  text-decoration-color: #FF0000;
+  text-decoration-line: underline;
+  pointer-events: none;
+}
+.disable-non-breaking {
+  pointer-events: none !important;
+  opacity: 0.5;
+  color: gray !important;
+}
+.tox .tox-collection--list .tox-collection__item.add-padding {
+  padding-left: 34px !important;
+}
+.disable-non-breaking img {
+  margin-left: 0 !important;
+}
+.enable-image img {
+  margin-left: 0 !important;
+}
 .tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
   opacity: 0.34!important;
   cursor:not-allowed!important
@@ -387,8 +410,7 @@ button[aria-label="insertMedia"].tox-tbtn--select{
 }
 
 .header.hideToolbar{
-  pointer-events: none;
-  opacity: 0.5;
+  display: none !important;
 }
 
 .tox-tbtn{
@@ -597,3 +619,145 @@ margin-left:6px;
       left: -515px;
     }
   }
+
+  @media only screen and (max-width: 1280px) {
+    button[aria-label="formatSelector"].tox-tbtn--select{
+      max-width : 120px!important;
+    }
+    button[aria-label="insertMedia"] span.tox-tbtn__select-label{
+      min-width : 44px!important;
+    }
+    button[aria-label="insertMedia"].tox-tbtn--select{
+      max-width : 60px!important;
+    }
+    button[aria-label="formatSelector"] span.tox-tbtn__select-label {
+      min-width : 100px!important;
+    }
+    button[aria-label="Bold"].tox-tbtn, button[aria-label="Underline"].tox-tbtn, button[aria-label="Italic"].tox-tbtn,button[aria-label="Strikethrough"].tox-tbtn, button[aria-label="Clear formatting"].tox-tbtn, button[aria-label="Subscript"].tox-tbtn,
+    button[aria-label="Superscript"].tox-tbtn, button[aria-label="Footnote"].tox-tbtn, button[aria-label="Glossary"].tox-tbtn,button[aria-label="WIRIS EDITOR math"].tox-tbtn, button[aria-label="WIRIS EDITOR chemistry"].tox-tbtn, button[aria-label="Inline code"].tox-tbtn,
+    button[aria-label="Open Print-Index"].tox-tbtn, button[aria-label="Unordered List"].tox-tbtn, button[aria-label="Increase indent"].tox-tbtn,button[aria-label="Decrease indent"].tox-tbtn
+    {
+      width : 32px!important;
+    }
+  }
+  @media only screen and (max-width: 1250px) {
+    button[aria-label="formatSelector"].tox-tbtn--select{
+      max-width : 80px!important;
+    }
+    button[aria-label="insertMedia"] span.tox-tbtn__select-label{
+      min-width : 38px!important;
+      font-size: 14px !important;
+    }
+    button[aria-label="insertMedia"].tox-tbtn--select{
+      max-width : 51px!important;
+    }
+    button[aria-label="formatSelector"] span.tox-tbtn__select-label {
+      min-width : 66px!important;
+      font-size: 14px !important;
+    }
+    button[aria-label="Bold"].tox-tbtn, button[aria-label="Underline"].tox-tbtn, button[aria-label="Italic"].tox-tbtn,button[aria-label="Strikethrough"].tox-tbtn, button[aria-label="Clear formatting"].tox-tbtn, button[aria-label="Subscript"].tox-tbtn,
+    button[aria-label="Superscript"].tox-tbtn, button[aria-label="Footnote"].tox-tbtn, button[aria-label="Glossary"].tox-tbtn,button[aria-label="WIRIS EDITOR math"].tox-tbtn, button[aria-label="WIRIS EDITOR chemistry"].tox-tbtn, button[aria-label="Inline code"].tox-tbtn,
+    button[aria-label="Open Print-Index"].tox-tbtn, button[aria-label="Unordered List"].tox-tbtn, button[aria-label="Increase indent"].tox-tbtn,button[aria-label="Decrease indent"].tox-tbtn
+    {
+      width : 30px!important;
+    }
+    button[aria-label="Capitalization"].tox-tbtn--select, button[aria-label="Special Character"].tox-tbtn--select, button[aria-label="Text Alignment"].tox-tbtn--select,button[aria-label="Callout"].tox-tbtn--select,button[aria-label="Cross Linking"].tox-tbtn--select{
+      width : 42px!important;
+    }
+    .tox .tox-tbtn svg {
+      height: 22px !important;
+    }
+  }
+
+  /************************* read-only tooltip - subscribed & approved *************************************************/
+
+.banner{
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.read-only-banner{
+  height: 48px;
+  background: #FBE4CC;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-top: #EA7600 2.5px solid;
+  border-bottom: #EA7600 2.5px solid;
+}
+.toolbar-text{
+  display: flex;
+  justify-content: left;
+  align-items:center;
+  margin-right: auto;
+}
+.read-only{
+  margin-left: 8px;
+  margin-right: auto;
+  font-family: 'Open Sans',sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  color: #454545;
+}
+.subscribe-approved-container{
+  width: calc(100% - 85px);
+  display: flex;
+  align-items: center;
+  height:100%;
+  float:left;
+  padding-left: 24px;
+}
+.separatorClass{
+  cursor: default;
+  padding-left: 15px;
+  border-left: 1px solid #777777
+}
+.approved-banner{
+  height: 48px;
+  background: #E6E6E6;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-top: #666666 2.5px solid;
+  border-bottom: #666666 2.5px solid;
+}
+.toolbar-para-text{
+  margin-left: 5px;
+  color: #454545;
+}
+.edit-content-btn {
+  border-radius: 2px;
+  background: white;
+  color: #005A70;
+  font-size: 13px;
+  margin-left: 10px;
+  border: 1px solid #005A70;
+  font-family: inherit;
+  font-weight: 400;
+  padding: 5px 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.lock-button{
+  color: #005A70 !important;
+  height: 28px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  letter-spacing: 0px !important;
+  text-align: center;
+  background-color: #ffffff !important;
+  border: solid 1px #005A70 !important;
+}
+
+.locked-user{
+  padding-right: 5px;
+}

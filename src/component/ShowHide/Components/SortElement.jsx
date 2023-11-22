@@ -4,9 +4,11 @@ import Sortable from 'react-sortablejs';
 function SortElement(props) {
 
 	return (
+		<div>
 			<Sortable
 				options={{
 					sort: true,  // sorting inside list
+					disabled: props.hasReviewerRole,
 					//preventOnFilter: true, // Call event.preventDefault() when triggered filter
 					animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
 					dragoverBubble: false,
@@ -19,7 +21,7 @@ function SortElement(props) {
 					scroll: true, // or HTMLElement
 					filter: ".ignore-for-drag",
 					preventOnFilter: false,
-					draggable: ".editor",
+					draggable: ".lazyload-wrapper",
 					forceFallback: true,
 					onStart: function (/**Event*/) {},
 					// Element dragging ended
@@ -31,6 +33,7 @@ function SortElement(props) {
 			>
 				{props.children}
 			</Sortable>
+		</div>
 	)
 }
 

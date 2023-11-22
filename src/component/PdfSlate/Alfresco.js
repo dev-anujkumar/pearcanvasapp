@@ -27,7 +27,8 @@ export const handleC2MediaClick = (props) => {
                     appName:'cypress',
                     citeName: citeName,
                     citeNodeRef: citeNodeRef,
-                    elementId: props.element.id
+                    elementId: props.element.id,
+                    currentAsset: { type: "Pdf" }
                 }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 const messageDataToSave = {
@@ -42,7 +43,8 @@ export const handleC2MediaClick = (props) => {
         }
     }} else {
         if (props.permissions.includes('alfresco_crud_access')) {
-            handleSiteOptionsDropdown(alfrescoPath, props.element.id, props)
+            let currentAsset = { type: "Pdf" }
+            handleSiteOptionsDropdown(alfrescoPath, props.element.id, props, currentAsset);
         } else {
             props.accessDenied(true)
         }
@@ -50,9 +52,8 @@ export const handleC2MediaClick = (props) => {
 
 }
 
-const handleSiteOptionsDropdown = (alfrescoPath, id, props) =>{
-    let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-    let SSOToken = config.ssoToken;
+const handleSiteOptionsDropdown = (alfrescoPath, id, props, currentAsset) =>{
+    let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
     return axios.get(url,
  {
             headers: {
@@ -63,10 +64,11 @@ const handleSiteOptionsDropdown = (alfrescoPath, id, props) =>{
             }
         })
         .then(function (response) {
-           let payloadObj = {launchAlfrescoPopup: true, 
-            alfrescoPath: alfrescoPath, 
+           let payloadObj = {launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
             alfrescoListOption: response.data.list.entries,
-            id
+            id,
+            currentAsset
         }
             props.alfrescoPopup(payloadObj)
         })

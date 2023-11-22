@@ -75,10 +75,10 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
         case FIGURE:
             glossarySnap = []
             assetPopoverSnap = []
-            footnoteWipList = { 
+            footnoteWipList = {
                 title: element.title ? element.title.footnotes : [],
-                subtitle: element.subtitle ? element.subtitle.footnotes : [], 
-                caption: element.captions ? element.captions.footnotes : [], 
+                subtitle: element.subtitle ? element.subtitle.footnotes : [],
+                caption: element.captions ? element.captions.footnotes : [],
                 credit: element.credits ? element.credits.footnotes : []
             }
 
@@ -106,7 +106,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
  * @description-This function is to prepare snapshot content for each Glossary entry
  * @param {String} status - status of the action performed
  * @param {Array} footnoteList - List of Footnote entries
- * @returns {Array} All Footnote Snapshots for given element 
+ * @returns {Array} All Footnote Snapshots for given element
 */
 const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteHtmlList) => {
     return [
@@ -118,13 +118,13 @@ const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, foo
         ]
 }
 
-/** 
+/**
  * @function setSnapshotsInListAndPoetry
- * @description This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry 
+ * @description This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry
  *              in a List and Poetry element
  * @param {String} status - status of the action performed
  * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
- * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
+ * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element
 */
 const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList,index,element) => {
     let snapshotsList = []
@@ -153,11 +153,11 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
  * @description-This function is to prepare snapshot content for each Glossary entry
  * @param {String} status - status of the action performed
  * @param {Array} glossaryList - List of Glossary entries
- * @returns {Array} All  Glossary Snapshots for given element 
+ * @returns {Array} All  Glossary Snapshots for given element
 */
 const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtmlList) => {
     let glossarySnap = []
-    glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
+    glossaryList && glossaryList.length && glossaryList.forEach(glossaryItem => {
         let dataID = glossaryItem.itemid;
         let glossaryHtml = JSON.parse(glossaryHtmlList[dataID])
         if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] ) {
@@ -188,7 +188,7 @@ const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtml
  * @description-This function is to prepare snapshot content for each Glossary entry
  * @param {String} status - status of the action performed
  * @param {Array} footnoteList - List of Footnote entries
- * @returns {Array} All Footnote Snapshots for given element 
+ * @returns {Array} All Footnote Snapshots for given element
 */
 const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteHtmlList) => {
     let footnoteSnap = []
@@ -216,7 +216,7 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
  * @function prepareAssetPopoverSnapshotContent
  * @description-This function is to prepare snapshot content for each Asset Popover entry
  * @param {Array} assetsList - List of Asset Popover entries
- * @returns {Array} All AssetPopover Snapshots for given element 
+ * @returns {Array} All AssetPopover Snapshots for given element
 */
 export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, actionStatus, element=null) => {
     let assetPopoverSnap = [];
@@ -291,19 +291,22 @@ export const fetchElementsTag = (element,metadataField) => {
             eleSubType = ""
             break;
     }
-    
+
     if (eleSubType === "interactive") {
         if (element.figuredata.interactivetype !== "fpo" && interactiveArray.includes(element.figuredata.interactivetype) ) {
             eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactivetype]
         }
         else {
             eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactiveformat]
-        }  
+        }
     }
     else {
         eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
+    if(eleSubType === "image" && element?.figuredata?.decorative) {
+        labelText = "DI"
+    }
     return labelText;
 }
 
@@ -476,41 +479,41 @@ const setElementTag = {
                 parentTag: "EQ"
             },
             'audio': {
-                parentTag: "AUD" 
+                parentTag: "AUD"
             },
             'video': {
-                parentTag: "VID" 
+                parentTag: "VID"
             },
             "codelisting":{
-                parentTag: "BCE" 
+                parentTag: "BCE"
             },
             "authoredtext":{
-                parentTag: "MML" 
+                parentTag: "MML"
             },
             "interactive": {
                 subtype: {
-                    [interactiveSubtypeConstants.THIRD_PARTY] : { 
+                    [interactiveSubtypeConstants.THIRD_PARTY] : {
                         parentTag: "SL"
                     },
-                    [interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK] : { 
+                    [interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK] : {
                         parentTag: "SL"
                     },
-                    [interactiveSubtypeConstants.PDF] : { 
+                    [interactiveSubtypeConstants.PDF] : {
                         parentTag: "SL"
                     },
-                    [interactiveSubtypeConstants.LEGACY_WEB_LINK] : { 
+                    [interactiveSubtypeConstants.LEGACY_WEB_LINK] : {
                         parentTag: "SL"
                     },
-                    [interactiveSubtypeConstants.TABLE] : { 
+                    [interactiveSubtypeConstants.TABLE] : {
                         parentTag: "SL"
                     },
-                    [interactiveSubtypeConstants.QUAD] : { 
+                    [interactiveSubtypeConstants.QUAD] : {
                         parentTag: "Quad"
                     },
                     [interactiveSubtypeConstants.ELM] : {
                         parentTag: "Elm"
                     },
-                    
+
                 }
             }
         }
@@ -622,19 +625,19 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
         case interactiveSubtypeConstants.TABLE:
             interactiveDataToReturn = {
                 ...interactiveDataToReturn,
-                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>` 
+                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>`
             }
             break;
-        case interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK:  
+        case interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK:
         case interactiveSubtypeConstants.PDF:
         case interactiveSubtypeConstants.LEGACY_WEB_LINK:
             interactiveDataToReturn = {
                 ...interactiveDataToReturn,
                 itemButtonLabel:  html.postertext ? html.postertext.match(/<p>/g) ? html.postertext : `<p>${html.postertext}</p>` : "<p></p>",
-                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>` 
+                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>`
             }
             break;
-             
+
         default:
             switch (figuredata.interactiveformat) {
                 case interactiveSubtypeConstants.ELM:
@@ -665,7 +668,7 @@ export const removeCalloutTitle = (elementHTML) =>{
         const callout3List = hiddenDiv.querySelectorAll(`span.calloutThree`) ?? []
         const callout4List = hiddenDiv.querySelectorAll(`span.calloutFour`) ?? []
         const calloutList = [callout1List, callout2List, callout3List, callout4List];
-        calloutList && calloutList.length && calloutList.map((calloutTypeList) => {
+        calloutList && calloutList.length && calloutList.forEach((calloutTypeList) => {
             for (let index = 0; index < calloutTypeList.length; index++) {
                 calloutTypeList[index].removeAttribute('title');
             }

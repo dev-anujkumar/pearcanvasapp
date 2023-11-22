@@ -155,6 +155,7 @@ module.exports = {
         https: true,
         open: true,
         //overlay: true,
+      	host:'local-dev.pearson.com',
         port: 443,
         //index: 'index.html',
         //hot: true,

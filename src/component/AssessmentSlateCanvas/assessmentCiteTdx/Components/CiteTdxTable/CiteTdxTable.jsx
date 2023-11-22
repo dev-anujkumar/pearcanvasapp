@@ -1,4 +1,4 @@
-/*** 
+/***
  * @description - The Body comoinent of ELM Assessment
 */
 import React, { Component } from 'react';
@@ -48,7 +48,7 @@ class CiteTdxTable extends Component {
             })
         }
     }
-    
+
     addAssessment = (addedValue) => {
         this.props.setCurrentCiteTdx(addedValue);
     }
@@ -75,7 +75,7 @@ class CiteTdxTable extends Component {
         this.props.assessmentSorting(sortByParameter,sortOrder);
         this.props.getCiteTdxData(this.props.assessmentType, this.props.searchTitle, this.props.searchUuidVal,this.props.currentPageNo);
         }
-        
+
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
@@ -85,7 +85,7 @@ class CiteTdxTable extends Component {
         const apiData = (this.props.assessmentType === CITE) ? citeApiData : (this.props.assessmentType === TDX) ? tdxApiData : mmiApiData;
         return (
             <div>
-                <div className='cite-wrapper main-div'>
+                <div className={`cite-wrapper main-div ${this.props.isBannerVisible ? 'root-container-banner' : ''}`}>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                     { (isLoading == false) && (assessmenterrFlag == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
@@ -145,7 +145,8 @@ const mapStateToProps = (state) => {
         isLoading: state.citeTdxReducer.isLoading,
         currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
         assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
-        sortingData:state.citeTdxReducer
+        sortingData:state.citeTdxReducer,
+        isBannerVisible: state.projectInfo.isBannerVisible
     }
 }
 

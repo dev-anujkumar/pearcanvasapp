@@ -179,8 +179,36 @@
   height: 28px;  
 }
 
+.dialog-button{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+
+.edit-metadata-sub-heading{
+padding-top: 5px;
+font-size: 14px;
+}
+
 .subscriberSlate-buttons{
   height: 36px;
+}
+
+.subscriberSlate-ok-button{
+  background-color: #005A70;
+  color: #FFFFFF;
+  border-radius: 2px;
+  float: right;
+  margin: 0 0 0 16px;
+  font-family: inherit;
+  padding: 8px 20px;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: normal;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .dialog-buttons.tcm-canvas-popup{
@@ -331,7 +359,7 @@
   font-family: "Helvetica Neue", sans-serif;
   color: #000;
   line-height: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   font-size: 12px;
 }
 
@@ -443,7 +471,7 @@
 }
 .loPopupHeader {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   margin-top: 2px;
   color: #005a70;
 }
@@ -477,7 +505,7 @@
 
 .figure-popup{
   width: 640px;
-  height: 476px;
+  height: 505px;
   z-index: 9999;
   background-color: #fff;
   top: -32px;
@@ -580,7 +608,7 @@
   font-size: 16px;
   color: #005a70;
   font-weight: 600;
-  float: left;
+  /* float: left; */
 }
 
 .alt-text-body {
@@ -675,10 +703,10 @@
   border-bottom: 1px solid #005a70;
 }
 .figuremetadata-field {
-  margin-top:42px;
+  margin-top:15px;
 }
 .metadata-button{
-  margin-top: 35px;
+  margin-top: 25px;
 }
 .figuremetadata-field-table {
   margin-top:14px;
@@ -762,6 +790,18 @@
   max-height: 50vh;
   position: relative;
 }
+.dialog-window.tcm-canvas-popup .non-breaking-space {
+  margin: 0px 1px;
+  position: relative;
+  bottom: -0.5px;
+  color: transparent;
+  text-decoration-color: #FF0000;
+  text-decoration-line: underline;
+  pointer-events: none;
+}
+.non-breaking-space ins {
+  color: transparent !important;
+}
 
 .dialog-window p {
   margin: 0 0 0 0 !important;
@@ -786,12 +826,12 @@
   }
 }
 ins{
-  background: rgb(153, 230, 103);
-  color: rgb(121, 121, 121);
+  background: #C3F273;
+  color: #081E27;
 }
 del{
-  background: rgb(253, 118, 127);
-  color: rgb(121, 121, 121);
+  background: #FFDAD9;
+  color: #081E27;
   text-decoration: line-through;
 }
 .dialog-window.tcm-canvas-popup::-webkit-scrollbar {
@@ -821,7 +861,7 @@ a.paragraphNumeroUnoFootnote ins{
 
 a.paragraphNumeroUnoFootnote del{
   text-decoration-line: line !important;
-  background: rgb(253, 118, 127) !important;
+  background: #FFDAD9 !important;
 } 
 
 .dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm ins{
@@ -830,7 +870,7 @@ a.paragraphNumeroUnoFootnote del{
 }
 
 .dialog-window.tcm-canvas-popup strong ins{
-  color: #5a5656 !important;
+  color: #081E27 !important;
   font-weight: bold !important;
 }
 
@@ -850,7 +890,7 @@ span.answerLineContent{
 }
 ins.mod{
   background: rgb(251, 188, 72) !important;
-  color: rgb(121, 121, 121);
+  color: #081E27;
 }
 
 /* added css for callout, Glossary in tCM after accepted changes */
@@ -882,6 +922,25 @@ span.calloutOne > ins.diffmod{
     text-decoration: underline dotted #F56831;
     position: relative;
     background: rgb(251, 188, 72);
+}
+
+.modal-content.tcm-canvas-popup  span.calloutOne .diffins,
+.modal-content.tcm-canvas-popup  span.calloutFour .diffins {
+  background: #fbbc48;
+  color: #f56831;
+  position: relative;
+}
+.modal-content.tcm-canvas-popup  span.calloutTwo .diffins,
+.modal-content.tcm-canvas-popup  span.calloutThree .diffins {
+  background: #fbbc48;
+  color: #f56831;
+  position: relative;
+}
+.modal-content.tcm-canvas-popup span.calloutOne .mod,
+.modal-content.tcm-canvas-popup  span.calloutTwo .mod,
+.modal-content.tcm-canvas-popup  span.calloutThree .mod,
+.modal-content.tcm-canvas-popup  span.calloutFour .mod {
+  color: #f56831;
 }
 /* .modal-content.tcm-canvas-popup span.calloutOne:hover::after {
   content: 'Callout: Option 1';
@@ -984,7 +1043,7 @@ span.calloutFour > ins.diffmod{
 } */
 
 /* added css for list elements */
-li ol, li ul{
+ol:not(.te ol), ul:not(.te ul) {
   counter-reset: section !important;
 }
 ol li.listItemNumeroUnoNumber, 
@@ -1000,6 +1059,7 @@ ol li.listItemNumeroUnoLowerRoman {
   color: #000;
   text-align: center;
   align-items: center;
+  margin-top: 10px;
 }
 
 .OwnersSlateCheckBox{
@@ -1098,8 +1158,9 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-right: 2px;
 }
 
-.disable-mouse-click {
-  pointer-events: none;
+.enable-scrolling {
+  overflow: auto;
+  /* pointer-events: none; */
 }
 
 /**Popup Buttons Focus Classes Start*/
@@ -1142,4 +1203,50 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-right:6px;
   margin-top: 2px;
   outline: 0;
+}
+
+.dialog-window.removemarkedindexclass {
+  color: #000 !important;
+}
+.dialog-buttons.removemarkedindexclass {
+  margin-top: 30px;
+}
+.markedIndexWarning {
+  margin-bottom: 9px;
+  font-size: 16px;
+  color: #005a70;
+  font-weight: 600;
+  height: 22px;
+  margin-top: 6px;
+}
+.unsupContent {
+  color: rgba(188,22,22,1);;
+  font-size: 12px;
+  line-height: 20px;
+  margin-bottom: 15px;
+}
+.pdf-tcm-icon {
+  margin-top: -4px;
+  width: 22px !important;
+}
+
+.wPasteClswithInvalidContent {
+  height: 610px;
+  top: 306px;
+}
+
+.approved-warning-txt{
+  padding-top: 16px;
+  font-size: 16px;
+  line-height: 1.38;
+  color: #000000;
+  width: 99%;
+}
+
+.updateAssessment-enable{
+  display: block;
+}
+
+.updateAssessment-disable{
+  display: none;
 }

@@ -41,6 +41,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           this.addMathmlFormulaButton(editor);
         }
         this.editorClick(editor);
+        this.editorPaste(editor);
         this.onEditorBlur(editor);
         this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
@@ -56,7 +57,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           }
         });
         editor.on('init', (e) => {
-          editor.shortcuts.remove('meta+u', '', ''); 
+          editor.shortcuts.remove('meta+u', '', '');
           editor.shortcuts.remove('meta+b', '', '');
           editor.shortcuts.remove('meta+i', '', '');
           if (document.querySelector('div.index-container')) {
@@ -120,6 +121,15 @@ export class ReactMarkedIndexEditor extends React.Component {
       elementNode.innerHTML = revertingTempContainerHtml;
     }
   }
+  editorPaste = (editor) => {
+    editor.on('paste', (e) => {
+        //restrict paste when user is reviewer or subscriber
+        if(hasReviewerRole()){
+            e.preventDefault();
+        }
+    });
+}
+
   /**
   * Called on Keyup
   * @param {*} e Event Object
@@ -140,6 +150,9 @@ export class ReactMarkedIndexEditor extends React.Component {
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').removeClass('disabled');
         }
+        if(this.props.id === "markedindex-cross-reference") {
+          tinymce.$('.cross-ref-tooltip').removeClass('disable-tooltip')
+        }
       }
       else {
         activeElement.classList.add('place-holder')
@@ -149,6 +162,9 @@ export class ReactMarkedIndexEditor extends React.Component {
         }
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').addClass('disabled');
+        }
+        if(this.props.id === "markedindex-cross-reference") {
+          tinymce.$('.cross-ref-tooltip').addClass('disable-tooltip')
         }
       }
     }
@@ -311,7 +327,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   addMathmlFormulaButton = editor => {
     /*
       Adding button and bind exec command on clicking the button to open the Mathml editor
-      Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command 
+      Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command
       copying from wiris plugin file(onAction)
     */
     editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
@@ -487,7 +503,7 @@ export class ReactMarkedIndexEditor extends React.Component {
       const indexEntry = document.getElementById('markedindex-0')?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
       if(indexEntry) {
         document.getElementById("markedindex-cross-reference").contentEditable = true;
-      } else { 
+      } else {
         document.getElementById("markedindex-cross-reference").contentEditable = false;
       }
     }
@@ -504,7 +520,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
+        <p ref={this.editorRef} className={`${this.placeHolderClass} ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={!hasReviewerRole()} id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
   }
 }

@@ -12,8 +12,8 @@ import {
 import { hideTocBlocker } from '../../js/toggleLoader'
 import { deleteAudio,REFRESH_MESSAGE } from '../../constants/IFrameMessageTypes.js'
 /**
- * 
- * @param {*} value 
+ *
+ * @param {*} value
  */
 
 export const showAudioRemovePopup = (value,isGlossary) => (dispatch, getState) => {
@@ -22,7 +22,7 @@ export const showAudioRemovePopup = (value,isGlossary) => (dispatch, getState) =
         payload:{
             value:value,
             isGlossary:isGlossary
-        } 
+        }
     })
 }
 
@@ -68,8 +68,8 @@ export function removeAudioActions(glossaryAudioData,addAudioPopup,openAudioPopu
 }
 
 /**
- * Method to get audio narration for container / state 
- * @param {object} slateData 
+ * Method to get audio narration for container / state
+ * @param {object} slateData
  */
 export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => async(dispatch, getState) => {
 
@@ -80,7 +80,9 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
     }
     else{
-        let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
+        const storeData = store.getState()
+        const slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
+        let url = `${config.STRUCTURE_READONLY_ENDPOINT}context/v3/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio`;
         try {
             let audioDataResponse = await axios.get(url,{
                 headers: {
@@ -116,7 +118,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
             }
-    
+
         } catch (e){
             dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
             dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
@@ -126,11 +128,11 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
 }
 
 /**
- * Method to Delete audio narration for container / state 
- * @param {object} slateObject 
+ * Method to Delete audio narration for container / state
+ * @param {object} slateObject
  */
 export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dispatch, getState) => {
-    
+
     if(isGlossary){
         store.dispatch(removeAudioActions({},false,false))
     }
@@ -144,7 +146,8 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
         if (storeData?.audioReducer?.audioData?.data && storeData?.audioReducer?.audioData?.data.length) {
             narrativeAudioUrn = storeData.audioReducer.audioData.data[0].narrativeAudioUrn
         }
-        let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio/${narrativeAudioUrn}`;
+        const slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
+        let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio/${narrativeAudioUrn}`;
 
         try {
             let audioDataResponse = await axios.delete(url, {
@@ -156,10 +159,12 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                 }
             });
             if (audioDataResponse && audioDataResponse.status == 200) {
+                // Making condition true for triggering slate level save api
+                localStorage.setItem('isChangeInSlate', 'true');
                 fetchAudioNarrationForContainer(slateData)
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
-                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && config.CYPRESS_PLUS_WINDOW) { 
+                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && config.CYPRESS_PLUS_WINDOW) {
                     const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
                     const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
                     const obj = { type: deleteAudio, message: REFRESH_MESSAGE }
@@ -181,6 +186,7 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
 }
 
 export const addAudioNarrationForContainer = (audioData, isGlossary='') => async(dispatch, getState) => {
+    const storeData = store.getState();
         let slateData = {
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN
@@ -217,7 +223,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
 
 
     }else{
-        let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
+        const slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
+        let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio`;
         try {
             let audioPutResponse = await axios.put(url, audioData, {
                 headers: {
@@ -231,7 +238,7 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
             if( audioPutResponse && audioPutResponse.status == 400) {
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
-    
+
             } else {
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
@@ -242,7 +249,7 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
             console.log("Error while adding / updating audio narrative tool",e);
             dispatch({type: ERROR_POPUP, payload:{show: true}})
         }
-    } 
+    }
 }
 
 export const saveDataFromAlfresco = (message) => dispatch => {

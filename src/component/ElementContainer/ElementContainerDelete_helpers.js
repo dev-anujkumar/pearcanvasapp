@@ -1,13 +1,13 @@
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
-import { 
+import {
     prepareTcmSnapshots,
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
-import { 
+import {
     AUTHORING_ELEMENT_CREATED,
     GET_TCM_RESOURCES,
 } from "./../../constants/Action_Constants";
-import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
+import ElementConstants, { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
 import store from '../../appstore/store.js';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
@@ -44,21 +44,26 @@ export const onDeleteSuccess = (params) => {
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
 
+
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
-    const tcmDeleteArgs = {
-        deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
-        deleteElemData,
-        type,
-        parentUrn,
-        asideData,
-        contentUrn,
-        index,
-        poetryData,
-        cutCopyParentUrn,
-        showHideObj,
-        element
+    /** This check is to prevent the screenshots for TB element. It will be removed when TB supports TCM --*/
+    let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+    if (!isTbElement) {
+        const tcmDeleteArgs = {
+            deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
+            deleteElemData,
+            type,
+            parentUrn,
+            asideData,
+            contentUrn,
+            index,
+            poetryData,
+            cutCopyParentUrn,
+            showHideObj,
+            element
+        }
+        prepareTCMSnapshotsForDelete(tcmDeleteArgs)
     }
-    prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
     const currentSlateData = newParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
@@ -87,7 +92,7 @@ export const onDeleteSuccess = (params) => {
         operationType: 'delete'
     }
     deleteFromStore(args)
-    
+
     /** Delete Tcm data on element delete*/
     if (config.tcmStatus) {
         prepareTCMforDelete(elmId, dispatch, getState);
@@ -120,7 +125,7 @@ export function prepareTCMforDelete(elmId, dispatch, getState) {
     else{
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
     }
-    
+
 }
 
 export const deleteFromPopupInStore = (cutCopyParentData, popupContent) => {
@@ -177,12 +182,24 @@ export const deleteFromStore = async (params) => {
             /* delete the element inside showhide on cut from sh */
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
+        /* To update redux store while deleting Tab element from TB */
+    } else if (parentUrn?.type === ElementConstants.MULTI_COLUMN && parentUrn?.subtype === ElementConstants.TAB && (asideData?.parentManifestUrn === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
+        newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter.splice(elIndex[1], 1);
+        /* To update redux store while deleting element from TB->Tab->Column */
+    } else if (parentUrn?.elementType === "group" && asideData?.subtype === ElementConstants.TAB && (parentUrn?.tbId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
+        newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[elIndex[2]].groupdata.bodymatter.splice(elIndex[3], 1);
     } else if (parentUrn && parentUrn.elementType == "group" && (parentUrn?.mcId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
+                /* To delete element from TB->Tab->AS/WE->element */
+            } else if (asideData?.parent?.type === ElementConstants.MULTI_COLUMN && asideData?.parent?.subtype === ElementConstants.TAB && element.id === asideData?.parent?.id && asideData?.type !== ElementConstants.BLOCK_LIST) {
+                element = element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]];
+                element?.groupdata?.bodymatter?.map(item => {
+                    delInsideWE(item, asideData, parentUrn, elmId);
+                })
             } else if (parentUrn && parentUrn.elementType == "element-aside" && asideData?.parent?.type !== 'showhide') {
                 if (element.id === parentUrn.manifestUrn) {
                     element.elementdata.bodymatter.forEach((ele, indexInner) => {
@@ -228,7 +245,17 @@ export const deleteFromStore = async (params) => {
                                 }
                             })
                         }
-                    })
+                    }) /* To update redux store while deleting element inside TB->Tab->Block Poetry->Stanza */
+                } else if (poetryData?.parent?.type === ElementConstants.MULTI_COLUMN && poetryData?.parent?.subtype === ElementConstants.TAB && element.id === poetryData?.parent?.id && poetryData.index) {
+                    const poetryIndex = poetryData.index?.split("-");
+                    element = element.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+                    if (element.type == "poetry" && element.id == poetryData?.parentUrn) {
+                        element.contents?.bodymatter.forEach((stanza, innerIndex) => {
+                            if (stanza.id === elmId) {
+                                element.contents.bodymatter.splice(innerIndex, 1);
+                            }
+                        })
+                    }
                 } else if (element?.type == "groupedcontent" && element?.id === poetryData?.parent?.id) {  /* To update redux store while deleting new element inside Multi-column->Block Poetry->Stanza */
                   element.groupeddata?.bodymatter.forEach((ele) => {
                         ele.groupdata?.bodymatter.forEach((ele1) =>{
@@ -240,7 +267,7 @@ export const deleteFromStore = async (params) => {
                                 })
                             }
                         })
-                      
+
                     })
                 /* To update redux store while deleting new element inside SH->Block Poetry->Stanza */
                 } else if (element?.type == "showhide" && element?.id === poetryData?.parent?.id) {
@@ -265,7 +292,7 @@ export const deleteFromStore = async (params) => {
                             })
                         }
                     })
-                } else 
+                } else
                 */
                 /* Delete element inside 2C->WE->element */
                 if(element?.type === "groupedcontent") {
@@ -304,6 +331,10 @@ export const deleteFromStore = async (params) => {
             }else if (element?.type === "groupedcontent" && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
                 let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminAS); // check multicolumn has a blocklist inside it and then delete
+                // If Tab element has blocklist inside it then delete
+            } else if (element?.type === ElementConstants.MULTI_COLUMN && element?.subtype === ElementConstants.TAB && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.type === ElementConstants.BLOCK_LIST) {
+                let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]];
+                deleteBlockListElement(elmId, blEleminAS);
             }else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
             }
@@ -316,7 +347,7 @@ export const deleteFromStore = async (params) => {
             slateLevelData: newParentData
         }
     })
-    
+
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
     const isAutoNumberingEnabled = getState()?.autoNumberReducer?.isAutoNumberingEnabled;
     const autoNumberParams = {
@@ -332,10 +363,10 @@ export const deleteFromStore = async (params) => {
 }
 
 /**
- * function to find selected block list element inside block list data 
- * to delete 
- * @param {String} elementId 
- * @param {Object} elementData 
+ * function to find selected block list element inside block list data
+ * to delete
+ * @param {String} elementId
+ * @param {Object} elementData
  */
 export const deleteBlockListElement = (elementId, elementData) => {
     if (elementData?.listdata?.bodymatter) {
@@ -440,9 +471,9 @@ export const prepareTCMSnapshotsForDelete = async (params, operationType = null)
             index,
             deletedElementVersionUrn: deleteElemData.versionUrn
         }
-        /** 
+        /**
         * @description For SHOWHIDE Element - prepare parent element data
-        * Update - 2C/Aside/POP:SH:New 
+        * Update - 2C/Aside/POP:SH:New
         */
         const typeOfElement = asideData?.type;
         if (typeOfElement === "showhide") {
@@ -489,7 +520,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     const parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
-    let currentSlateData = cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn? elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN] 
+    let currentSlateData = cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn? elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN]
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }

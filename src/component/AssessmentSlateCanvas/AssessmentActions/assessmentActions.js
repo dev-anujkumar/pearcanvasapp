@@ -8,13 +8,17 @@ import {
     SET_ITEM_UPDATE_EVENT,
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
-    ASSESSMENT_CONFIRMATION_POPUP,
     ELM_NEW_ITEM_DATA,
-    SET_ELM_PICKER_MSG
+    SET_ELM_PICKER_MSG,
+    UPDATE_ASSESSMENT_ID,
+    ASSESSMENT_RELOAD_CONFIRMATION,
+    UPDATED_ASSESSMENTS_ARRAY,
+    ASESSMENT_UPDATE_DATA_ARRAY
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
 import config from '../../../config/config';
+import store from '../../../appstore/store.js';
 import assessmentApiHandlers from './assessmentApiHandlers.js';
 import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
 import { hideBlocker} from '../../../js/toggleLoader';
@@ -39,19 +43,23 @@ const {
  * This action creator is used to fetch usage-type based on entityType
  */
 export const fetchUsageTypeData = (entityType) => (dispatch) => {
-    let url = `${config.AUDIO_NARRATION_URL}/usagetypes/v3/${entityType}?locale=en`;
-    return axios.get(url, {
-        headers: {
-            myCloudProxySession: config.myCloudProxySession
-        }
-    }).then((res) => {
-        dispatchUsageTypeList(entityType, res, 200, dispatch);
-        dispatchUsageTypeData(entityType, prepareUsageTypeData(res), 200, dispatch);
-    })
-    .catch((error) => {
-        dispatchUsageTypeData(entityType, [], 404, dispatch);
-        console.error('Error in Fetching UsageType from API>>>', error)
-    })
+    const usageTypeList = store.getState().appStore?.usageTypeListData?.usageTypeList;
+    const usageTypeListData = store.getState().assessmentReducer?.usageTypeListData;
+    if (!usageTypeList || Object.keys(usageTypeListData).length === 0) {
+        let url = `${config.STRUCTURE_READONLY_ENDPOINT}usagetypes/v3/${entityType}?locale=en`;
+        return axios.get(url, {
+            headers: {
+                myCloudProxySession: config.myCloudProxySession
+            }
+        }).then((res) => {
+            dispatchUsageTypeList(entityType, res, 200, dispatch);
+            dispatchUsageTypeData(entityType, prepareUsageTypeData(res), 200, dispatch);
+        })
+        .catch((error) => {
+            dispatchUsageTypeData(entityType, [], 404, dispatch);
+            console.error('Error in Fetching UsageType from API>>>', error)
+        })
+    }
 }
 /**
  * This action creator is used to fetch the assessment metadata including status
@@ -77,7 +85,7 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                         break;
                     case 'assessmentArray':
                         return assessmentEntityUrnHandler(res.data);
-                    case 'interactive': 
+                    case 'interactive':
                         return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
                     default:
                         assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
@@ -157,12 +165,14 @@ export const fetchAssessmentItems = (itemEntityUrn, apiParams) => dispatch => {
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
-    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
-    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+    // sending durn when assessment/assessment item/elm interactives are inside frontmatter or backmatter in the url to launch elm
+    const elmContainerUrn = config.parentContainerUrn && config.parentOfParentItem !== "frontmatter" && config.parentOfParentItem !== "backmatter"
+    let { assessmentWorkUrn, projDURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
+    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
-        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
     } else if(interactiveId){
-        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
     }
     /* Append Element id in url to identify post messages for which element, if exist */
     url = elementId ? `${url}&elementUrn=${elementId}` : url;
@@ -187,13 +197,18 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
 }
 
 /**
- * This Function is used to update all the assessments with the given workUrn present in the project with the latest workUrn 
+ * This Function is used to update all the assessments with the given workUrn present in the project with the latest workUrn
  * @param oldWorkUrn current workURN of the assessment
  * @param updatedWorkUrn latest workURN of the assessment
  */
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
+    // dispatching updatedWorkUrn of the assessment item after VCS API call
+    dispatch({
+        type: UPDATED_ASSESSMENTS_ARRAY,
+        payload: updatedWorkUrn
+    })
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
@@ -201,7 +216,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
         }
     }).then((res) => {
         if (res.status == 202) {
-            dispatch(assessmentConfirmationPopup(true));
+            dispatch(assessmentReloadConfirmation(true))
         }
     }).catch(() => {
         dispatch({
@@ -226,7 +241,7 @@ export const resetAssessmentStore = () => {
 }
 
 /**
- * This Function is used to call updateAssessmentVersion in case of same assessment being updated 
+ * This Function is used to call updateAssessmentVersion in case of same assessment being updated
  * @param assessmentID array of old & new AssessmentIds
  */
 export const checkEntityUrn = (assessmentID) => async (dispatch) => {
@@ -238,13 +253,6 @@ export const checkEntityUrn = (assessmentID) => async (dispatch) => {
     }))
     if (workIds.length > 0 && workIds[0] === workIds[1]) {
         dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1]))
-    }
-}
-
-export const assessmentConfirmationPopup = (data) => {
-    return {
-        type: ASSESSMENT_CONFIRMATION_POPUP,
-        payload: data
     }
 }
 
@@ -299,5 +307,29 @@ export const setElmPickerData = (message) => {
     return {
         type: SET_ELM_PICKER_MSG,
         payload: message
+    }
+}
+
+export const updateAssessmentId = (assessmentId) => {
+    return {
+        type: UPDATE_ASSESSMENT_ID,
+        payload: assessmentId
+    }
+}
+
+export const assessmentReloadConfirmation = (data) => {
+    return {
+        type: ASSESSMENT_RELOAD_CONFIRMATION,
+        payload: data
+    }
+}
+
+export const saveUpdatedAssessmentArray = (oldAssessmentId, newAssessmentId) => {
+    return {
+        type: ASESSMENT_UPDATE_DATA_ARRAY,
+        payload: {
+            oldAssessmentId: oldAssessmentId,
+            newAssessmentId: newAssessmentId
+        }
     }
 }

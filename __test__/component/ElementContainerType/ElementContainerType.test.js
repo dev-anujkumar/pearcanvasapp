@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ElementContainerType from './../../../src/component/ElementContainerType/ElementContainerType';
 import { blocktextList, interactiveList } from "../../../fixtures/ElementContainerTypeTestingData";
+import config from '../../../src/config/config.js';
 let props = {
     closeDropDown: jest.fn(),
     data: [
@@ -73,6 +74,38 @@ describe('Component renders List according to LOB permissions', () => {
 describe('Component renders list in Multicolumn', () => {
     it('Add Show/Hide option renders when Element type is 2C || 3C', () => {
         const wrapper = mount(<ElementContainerType elementType="group" text="interactive-elem-button" data={interactiveList} />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(true);
+    })
+    it('Test : ElementContainerType : container-elem-button : true', () => {
+        const wrapper = mount(<ElementContainerType elementType="showhide" text="container-elem-button" data={interactiveList} />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(false);
+    })
+    it('Test : ElementContainerType : container-elem-button : false', () => {
+        const wrapper = mount(<ElementContainerType elementType="group" text="container-elem-button" data={interactiveList} />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(true);
+    })
+    it('Test : ElementContainerType : block-text-button', () => {
+        const wrapper = mount(<ElementContainerType elementType="group" text="block-text-button" data={interactiveList} />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(true);
+    })
+    it('Test : ElementContainerType : multi-column-group', () => {
+        const wrapper = mount(<ElementContainerType elementType="group" text="multi-column-group" data={interactiveList} />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(true);
+    })
+    it('renderMenu ', () => {
+        config.isPopupSlate = true
+        const asideData = {parent:{type: "groupedcontent"}}
+        const wrapper = mount(<ElementContainerType elementType="element-aside" text="block-text-button" data={interactiveList} asideData={asideData}/>)
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Add Show Hide");
         expect(includes).toBe(true);

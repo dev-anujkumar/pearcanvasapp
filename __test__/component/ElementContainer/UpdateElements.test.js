@@ -9,7 +9,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     removeBlankTags: jest.fn(),
     createLabelNumberTitleModel: jest.fn(),
     getDesignType:jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+    handleTinymceEditorPlugins: jest.fn(() => 'lists advlist placeholder charmap paste image casechange'),
+    removeBlankSpaceAndConvertToLowercase: jest.fn(() => "pearsoncanadainline")
 }))
 
 config["elementStatus"] = {}
@@ -84,7 +85,17 @@ describe('Test for UpdateElements Functions', () => {
             secondaryOption = "secondary-interactive-mmi",
             activeEditorId = "cypress-7-1",
             index = 7,
-            containerContext = {},
+            containerContext = {props : {
+                activeElement:{
+                    assetIdFor3PISmartlink: "3rd-party",
+                    selectedIntendedPlaybackModeValue: [
+                        { label: 'Inline', value: 'inline' },
+                        { label: 'Modal', value: 'modal' },
+                        { label: 'New Tab', value: 'tab' },
+                        { label: 'New Window', value: 'window' },
+                    ]
+                }
+            }},
             parentElement = {
                 type: 'showhide',
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
@@ -831,7 +842,17 @@ describe('Test for UpdateElements Functions', () => {
             secondaryOption = "secondary-interactive-mmi",
             activeEditorId = "cypress-7-1",
             index = 7,
-            containerContext = {},
+            containerContext = {props : {
+                activeElement:{
+                    assetIdFor3PISmartlink: "3rd-party",
+                    selectedIntendedPlaybackModeValue: [
+                        { label: 'Inline', value: 'inline' },
+                        { label: 'Modal', value: 'modal' },
+                        { label: 'New Tab', value: 'tab' },
+                        { label: 'New Window', value: 'window' },
+                    ]
+                }
+            }},
             parentElement = {
                 type: 'showhide',
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
@@ -1014,7 +1035,18 @@ describe('Test for UpdateElements Functions', () => {
                         }
                     }
                 }
-                updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                let containerContext = {props : {
+                    activeElement:{
+                        assetIdFor3PISmartlink: "3rd-party",
+                        selectedIntendedPlaybackModeValue: [
+                            { label: 'Inline', value: 'inline' },
+                            { label: 'Modal', value: 'modal' },
+                            { label: 'New Tab', value: 'tab' },
+                            { label: 'New Window', value: 'window' },
+                        ]
+                    }
+                }};
+                updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number", containerContext);
                 expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
             })
             it("AutoNumbering is true - autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER", () => {
@@ -1057,7 +1089,18 @@ describe('Test for UpdateElements Functions', () => {
                         }
                     }
                 }
-                updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Remove label & number");
+                let containerContext = {props : {
+                    activeElement:{
+                        assetIdFor3PISmartlink: "3rd-party",
+                        selectedIntendedPlaybackModeValue: [
+                            { label: 'Inline', value: 'inline' },
+                            { label: 'Modal', value: 'modal' },
+                            { label: 'New Tab', value: 'tab' },
+                            { label: 'New Window', value: 'window' },
+                        ]
+                    }
+                }};
+                updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Remove label & number",containerContext);
                 expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
             })
             describe(`previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "table"`, () => {
@@ -1105,7 +1148,18 @@ describe('Test for UpdateElements Functions', () => {
                             "podwidth": "100%"
                         }
                     }
-                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    let containerContext = {props : {
+                        activeElement:{
+                            assetIdFor3PISmartlink: "3rd-party",
+                            selectedIntendedPlaybackModeValue: [
+                                { label: 'Inline', value: 'inline' },
+                                { label: 'Modal', value: 'modal' },
+                                { label: 'New Tab', value: 'tab' },
+                                { label: 'New Window', value: 'window' },
+                            ]
+                        }
+                    }};
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number", containerContext);
                     expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
                 })
                 it("When podwidth is not present", () => {
@@ -1149,7 +1203,128 @@ describe('Test for UpdateElements Functions', () => {
                     figureElmInteractiveData2["figuredata"] = {
                         "interactivetype": "table",
                     }
-                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    let containerContext = {props : {
+                        activeElement:{
+                            assetIdFor3PISmartlink: "3rd-party",
+                            selectedIntendedPlaybackModeValue: [
+                                { label: 'Inline', value: 'inline' },
+                                { label: 'Modal', value: 'modal' },
+                                { label: 'New Tab', value: 'tab' },
+                                { label: 'New Window', value: 'window' },
+                            ]
+                        }
+                    }};
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number",containerContext);
+                    expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+                })
+                it("When podwidth is present and interactivetype === '3rd-party'", () => {
+                    jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                    document.getElementById = jest.fn()
+                        .mockReturnValueOnce({
+                            innerHTML: "Interactive",
+                            innerText: "Interactive"
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Caption for Elm Interactive",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Credit for Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                            }
+                        })
+                    document.querySelector = jest.fn()
+                        .mockReturnValue({
+                            getAttribute: jest.fn().mockReturnValue("100%") 
+                        })
+                    jest.spyOn(utils, "matchHTMLwithRegex").mockReturnValue(true);
+                    jest.spyOn(updateFunction, "podHtmlmatchWithRegex").mockReturnValue(true);
+                    let figureElmInteractiveData2 = {...figureElmInteractiveData};
+                    figureElmInteractiveData2["figuredata"] = {
+                        "interactivetype": "3rd-party",
+                        "posterimage": {
+                            "podwidth": "100%"
+                        }
+                    }
+                    let containerContext = {props : {
+                        activeElement:{
+                            assetIdFor3PISmartlink: "3rd-party",
+                            selectedIntendedPlaybackModeValue: [
+                                { label: 'Inline', value: 'inline' },
+                                { label: 'Modal', value: 'modal' },
+                                { label: 'New Tab', value: 'tab' },
+                                { label: 'New Window', value: 'window' },
+                            ]
+                        }
+                    }};
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number", containerContext);
+                    expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+                })
+                it("When podwidth is present and interactivetype === '3rd-party' else case", () => {
+                    jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                    document.getElementById = jest.fn()
+                        .mockReturnValueOnce({
+                            innerHTML: "Interactive",
+                            innerText: "Interactive"
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Caption for Elm Interactive",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Credit for Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                            }
+                        })
+                    document.querySelector = jest.fn()
+                        .mockReturnValue({
+                            getAttribute: jest.fn().mockReturnValue("100%") 
+                        })
+                    jest.spyOn(utils, "matchHTMLwithRegex").mockReturnValue(true);
+                    jest.spyOn(updateFunction, "podHtmlmatchWithRegex").mockReturnValue(true);
+                    let figureElmInteractiveData2 = {...figureElmInteractiveData};
+                    figureElmInteractiveData2["figuredata"] = {
+                        "interactivetype": "3rd-party",
+                        "posterimage": {
+                            "podwidth": "100%"
+                        }
+                    }
+                    let containerContext = {props : {
+                        activeElement:{
+                            assetIdFor3PISmartlink: "3rd-party"
+                        }
+                    }};
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number", containerContext);
                     expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
                 })
             })
@@ -1196,7 +1371,18 @@ describe('Test for UpdateElements Functions', () => {
                             "text": "Lorem Ipsum"
                         }
                     }
-                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    let containerContext = {props : {
+                        activeElement:{
+                            assetIdFor3PISmartlink: "3rd-party",
+                            selectedIntendedPlaybackModeValue: [
+                                { label: 'Inline', value: 'inline' },
+                                { label: 'Modal', value: 'modal' },
+                                { label: 'New Tab', value: 'tab' },
+                                { label: 'New Window', value: 'window' },
+                            ]
+                        }
+                    }};
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number",containerContext);
                     expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
                 })
                 it("When posterObject & postertext is present", () => {
@@ -1234,7 +1420,18 @@ describe('Test for UpdateElements Functions', () => {
                     figureElmInteractiveData2["figuredata"] = {
                         "interactivetype": "pdf"
                     }
-                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    let containerContext = {props : {
+                        activeElement:{
+                            assetIdFor3PISmartlink: "3rd-party",
+                            selectedIntendedPlaybackModeValue: [
+                                { label: 'Inline', value: 'inline' },
+                                { label: 'Modal', value: 'modal' },
+                                { label: 'New Tab', value: 'tab' },
+                                { label: 'New Window', value: 'window' },
+                            ]
+                        }
+                    }};
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number",containerContext);
                     expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
                 })
             })

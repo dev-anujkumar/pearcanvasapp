@@ -17,7 +17,7 @@ export default {
     SLATE:"slate",
     WE_MANIFEST: "manifest",
     MULTI_COLUMN: "groupedcontent",
-    SECTION_BREAK:"SECTION_BREAK",    
+    SECTION_BREAK:"SECTION_BREAK",
     ELEMENT_ASIDE: "element-aside",
     WORKED_EXAMPLE: "workedexample",
     CONTAINER_INTRO:"container-introduction",
@@ -39,7 +39,7 @@ export default {
     /********************Semantics*************************/
     GLOSSARY:"glossary",
     FOOTNOTE:"footnote",
-    ASSET_POPOVER:"assetpopover", 
+    ASSET_POPOVER:"assetpopover",
     AP_TYPE:"Asset Popover",
     SLATE_LINK:"Slate Link",
     /*****************Interactive subtypes*******************/

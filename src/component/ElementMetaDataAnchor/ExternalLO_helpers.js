@@ -42,7 +42,7 @@ export const getMetadataAnchorLORef = () => (dispatch, getState) => {
  * @param {Array} finalArray
  */
 const findLOsToLink = (array1, array2, finalArray = []) => {
-    array1.map(item1 => {
+    array1.forEach(item1 => {
         const itemExists = array2.some(item2 => item2 === item1);
         !itemExists && finalArray.push(item1)
     })
@@ -165,7 +165,7 @@ export const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN)
  * @param {Array} finalArray
  */
 export const anyMatchInArray = (array1, key1, array2, key2, finalArray = []) => {
-    array1 && array1.map(item1 => {
+    array1 && array1.forEach(item1 => {
         const itemExists = array2 && array2.some(item2 => item2[key2] === item1[key1]);
         !itemExists && item1[key1] && finalArray.push(item1[key1])
     })
@@ -181,7 +181,7 @@ export const anyMatchInArray = (array1, key1, array2, key2, finalArray = []) => 
 export const setCurrentSlateLOs = (existingSlateLOs, unlinkedLOs, linkedLOs) => {
     let updatedSlateLOs = [];
     const slateLO_Unlinked = unlinkedLOs?.length ? unlinkedLOs.map(unlinkedLO => unlinkedLO.id) : [];
-    existingSlateLOs && existingSlateLOs.length && existingSlateLOs.map(slateLO => {
+    existingSlateLOs && existingSlateLOs.length && existingSlateLOs.forEach(slateLO => {
         if (!slateLO.hasOwnProperty("id")) {
             slateLO["id"] = slateLO["loUrn"]
         }

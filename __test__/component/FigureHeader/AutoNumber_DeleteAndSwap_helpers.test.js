@@ -497,4 +497,40 @@ describe('-----------------Testing AutoNumber_DeleteAndSwap_helpers-------------
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     });
+
+    it('Test- getSwappedElementsURN > case containerElements.GROUP', () => {
+        let swappedElementData = autoNumberingSlateData['urn:pearson:manifest:51aeb4cf-7234-4a0b-8a56-ea7079bcb355'].contents.bodymatter[5];
+        const swapParams =  {
+            getState: mockGetState,
+            dispatch: dispatch,
+            currentSlateData,
+            swappedElementData: swappedElementData
+        }
+        jest.spyOn(slateLevelMediaMapper, 'getImagesInsideSlates').mockImplementation(() => {
+            return Promise.resolve(slateData1);
+        });
+
+        const spyFunction = jest.spyOn(autoNumber_deleteFunctions, 'handleAutoNumberingOnSwapping');
+        autoNumber_deleteFunctions.handleAutoNumberingOnSwapping(true, swapParams);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+
+    it('Test- getSwappedElementsURN >  case containerElements.MULTI_COLUMN > else', () => {
+        let swappedElementData = autoNumberingSlateData['urn:pearson:manifest:51aeb4cf-7234-4a0b-8a56-ea7079bcb355'].contents.bodymatter[6];
+        const swapParams =  {
+            getState: mockGetState,
+            dispatch: dispatch,
+            currentSlateData,
+            swappedElementData: swappedElementData
+        }
+        jest.spyOn(slateLevelMediaMapper, 'getImagesInsideSlates').mockImplementation(() => {
+            return Promise.resolve(slateData1);
+        });
+
+        const spyFunction = jest.spyOn(autoNumber_deleteFunctions, 'handleAutoNumberingOnSwapping');
+        autoNumber_deleteFunctions.handleAutoNumberingOnSwapping(true, swapParams);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
 })

@@ -528,7 +528,7 @@ export const spanHandlers = {
 }
 /**
  * Returns the alt text of wiris image
- * @param {Object} targetWirisImage 
+ * @param {Object} targetWirisImage
  */
 export const getWirisAltText = ({target}) =>{
     const WIRIS_ALT_TEXT = target.getAttribute('alt');
@@ -579,10 +579,11 @@ export const prepareBqHtml = (node) => {
             const callOut = node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild
             if(callOut){
                 if(checkStyle.nodeName == "SUP" || checkStyle.nodeName == 'ABBR' || checkStyle.nodeName == 'SPAN'){
-                    return node.parentNode.parentNode.firstElementChild.firstElementChild.innerHTML
-                } else{
+                    return node?.parentNode?.parentNode?.firstElementChild.firstElementChild.innerHTML
+                }
+                else {
                 //for callout and figure link
-                return node.parentNode.parentNode.firstElementChild.firstElementChild.firstElementChild.innerHTML
+                return node.parentNode.parentNode.firstElementChild.firstElementChild.innerHTML
                 }
             }
             else{

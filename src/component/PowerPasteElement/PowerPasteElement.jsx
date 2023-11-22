@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 
 //Helper methods and constants
 import powerPasteHelpers from "./powerpaste_helpers.js";
-import { SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons } from '../PopUp/PopUp_helpers.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons, focusElement, isPrimaryButtonFocused, isSecondaryButtonFocused } from '../PopUp/PopUp_helpers.js';
 
 // Tinymce library and plugins
 import tinymce from 'tinymce/tinymce';
@@ -12,6 +12,8 @@ import "tinymce/plugins/powerpaste/plugin.min.js"
 import "tinymce/plugins/powerpaste/js/wordimport.js"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
+import { handleImagePaste } from '../../constants/utility.js';
+import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
 
 const PowerPasteElement = (props) => {
 
@@ -48,7 +50,7 @@ const PowerPasteElement = (props) => {
     powerpaste_word_import: 'clean',
     powerpaste_html_import: 'clean',
     smart_paste: false,
-    // auto_focus: `textarea-${props.index}`,
+    auto_focus: `textarea-${props.index}`,
     paste_preprocess: (plugin, data) => pastePreProcess(data),
     paste_postprocess: (plugin, data) => pastePostProcess(data, props),
     setup: (editor) => {
@@ -61,7 +63,7 @@ const PowerPasteElement = (props) => {
 
   return (
     <>
-      <p 
+      <p
         ref={editorRef}
         id={`textarea-${props.index}`}
         dangerouslySetInnerHTML={{ __html: '' }}
@@ -78,7 +80,7 @@ export default PowerPasteElement
  */
 export const pastePreProcess = (data) => {
   if (!["msoffice"].includes(data.source)) {
-    data.content = "" 
+    data.content = ""
   }
 }
 
@@ -89,14 +91,19 @@ export const pastePreProcess = (data) => {
  */
 export const pastePostProcess = (data, props) => {
   if (data.node) {
-    // if you dont click inside the editor after pasting data first time and try to paste again by 
+    // if you dont click inside the editor after pasting data first time and try to paste again by
     // pressing ctrl + v then this condition runs again so clearing the previous data of editor
     tinyMCE.activeEditor.setContent('');
 
     const childNodes = data.node.children;
     const elements = [];
     createPastedElements(childNodes, elements);
-    
+    const updatedElements = []
+    //preparing content that needs to be pasted
+    data.node = prepareFinalPasteContent(elements,data.node,props)
+    //preparing content that needs to send in API
+    filterSupportedTagAndData(elements,updatedElements)
+
      /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
       const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
       createPastedElements(childElements, elements);
@@ -110,17 +117,73 @@ export const pastePostProcess = (data, props) => {
       createPastedElements(childElements, elements);
     } */
     const parentIndex = props.index;
-    if (elements.length) {
+    if (updatedElements.length) {
       props.toggleWordPasteProceed(true)
       focusPopupButtons();
     }
-    props.onPowerPaste(elements, parentIndex);
-
+    props.onPowerPaste(updatedElements, parentIndex);
     // if valid data has been pasted in to editor once then make editor non-editable
     elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
 }
 
+/**
+ * This function identifies unsupported content during paste from word
+ * and replace that content with "Unsupported Content" message in text-editor
+ * @param {array} elements
+ * @param {Object} nodeData
+ * @param {Object} props
+ * @returns Content that needs to be pasted on text-editor
+ */
+export const prepareFinalPasteContent = (elements,nodeData,props) => {
+  let isPreviousUnsupportedContent = false
+  const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
+  const allSupUnsupChildNodes = nodeData.childNodes
+  let contentToPaste = ""
+  const elementsHtml = elements.map(item => {return item.html})
+  for (let index = 0; index < allSupUnsupChildNodes.length; index++) {
+    const element = allSupUnsupChildNodes[index];
+    if(elementsHtml.includes(element.outerHTML)) {
+      isPreviousUnsupportedContent = false
+      let elementOuterHtml = element?.outerHTML
+      if(element?.outerHTML?.match(/<img ([\w\W]+?)>/g)) {
+        if(!props.isPowerPasteInvalidContent) {
+          props.checkInvalidPowerPasteContent(true)
+        }
+        elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
+      }
+      contentToPaste += elementOuterHtml
+    } else if(!spacesAndNewLineFormatArray.includes(element?.data)){
+      if(!props.isPowerPasteInvalidContent) {
+        props.checkInvalidPowerPasteContent(true)
+      }
+      if(!isPreviousUnsupportedContent) {
+        isPreviousUnsupportedContent = true
+      contentToPaste += UnsupportedContentString
+      }
+    }
+  }
+
+  const updatedPasteContent = document.createElement('div');
+  updatedPasteContent.innerHTML = contentToPaste;
+
+  return updatedPasteContent
+}
+
+/**
+ * This function filters the supported powerpaste tags and remove images
+ * from the content that needs to pass in powerpaste API as payload
+ * @param {Array} elements
+ * @param {array} updatedElements
+ */
+export const filterSupportedTagAndData = (elements,updatedElements) => {
+  elements.forEach(item => {
+   if(item.tagName !== 'IMG' && item?.html) {
+     item.html = handleImagePaste(item.html)
+     updatedElements.push(item)
+   }
+ })
+}
 /**
  * Processes and stores copied data to an array
  * @param {HTMLElement} childElements HTML element node object
@@ -130,25 +193,30 @@ export const createPastedElements = (childElements, elements) => {
   for (let i = 0; i < childElements.length; i++) {
     switch (childElements[i].tagName) {
       case 'P':
-          if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
-            let imgSrc = childElements[i].children[0].getAttribute('src');
-            imgSrc = imgSrc ? imgSrc : childElements[i].children[0].getAttribute('data-image-src');
-            elements.push({html: imgSrc, tagName: childElements[i].children[0].tagName});
-          } else {
+          //commenting this code as when there is image in para, this code is converting whole
+          //para into a image tag, which is creating an issue because image support is not provided
+          // Note: Condition of Removing image from para is handled in filterSupportedTagAndData function
+          // if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
+          //   let imgSrc = childElements[i].children[0].getAttribute('src');
+          //   imgSrc = imgSrc ? imgSrc : childElements[i].children[0].getAttribute('data-image-src');
+          //   elements.push({html: imgSrc, tagName: childElements[i].children[0].tagName});
+          // } else {
             const paraNode = powerPasteHelpers.addParagraphClass(childElements[i]);
             elements.push({ html: paraNode.outerHTML, tagName: childElements[i].tagName });
-          }
+          // }
         break;
         case 'UL':
           powerPasteHelpers.addUListClasses(childElements[i], 1);
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'OL':
-          // if the list starts other than numeric format then calls addSpecificOListClasses method 
-          // otherwise calls addOListClasses method for adding list classes to html and if the list 
+          // if the list starts other than numeric format then calls addSpecificOListClasses method
+          // otherwise calls addOListClasses method for adding list classes to html and if the list
           // does not start with digits and has style attribute then remove it
           childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
-          childElements[i].hasAttribute('style') ? childElements[i].removeAttribute('style') : childElements[i];
+          if(childElements[i].hasAttribute('style')){
+            childElements[i].removeAttribute('style');
+          }
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'IMG':
@@ -170,7 +238,7 @@ export const createPastedElements = (childElements, elements) => {
 
 /**
  * TinyMCE keydown event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const setupKeydownEvent = (editor) => {
   editor.on('keydown', e => {
@@ -192,7 +260,7 @@ export const setupKeydownEvent = (editor) => {
 
 /**
  * TinyMCE focus event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const editorFocus = (editor) => {
   editor.on('focus', () => {
@@ -202,7 +270,7 @@ export const editorFocus = (editor) => {
 
 /**
  * TinyMCE blur event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const editorBlur = (editor) => {
   editor.on('blur', () => {
@@ -212,10 +280,18 @@ export const editorBlur = (editor) => {
 
 /**
  * TinyMCE click event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const editorClick = (editor) => {
   editor.on('click', () => {
-    blurPopupButtons();
+    if (editor.getContent()?.length === 0) {
+      blurPopupButtons();
+    } else {
+      if (isPrimaryButtonFocused()) {
+        focusElement(PRIMARY_BUTTON);
+      } else if (isSecondaryButtonFocused()) {
+        focusElement(SECONDARY_BUTTON);
+      }
+    }
   });
 }

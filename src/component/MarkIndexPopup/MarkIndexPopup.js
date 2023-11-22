@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Close, ErrorOutline } from '@material-ui/icons'
+import { Close, ErrorOutline } from '@mui/icons-material'
 import '../../styles/MarkIndexPopup/MarkIndexPopup.css';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeMarkedIndexDOMAttributes } from '../../constants/utility.js';
 import config from '../../config/config';
 import { setFormattingToolbar, saveGlossaryAndFootnote } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
@@ -11,12 +11,18 @@ import { markedIndexPopupOverGlossary, getCrossReferenceValues } from '../MarkIn
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
 import { checkforToolbarClick } from '../../js/utils'
 import { CrossReference } from './MarkIndex_CrossReference';
+import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
+import Tooltip from '../Tooltip';
+import PopUp from '../PopUp';
+import { showTocBlocker, hideBlocker, hideToc } from '../../js/toggleLoader'
+import { MARKEDINDEX_DIALOG_TEXT, INDEX_REMOVED_TEXT, INDEX_ADDED_TEXT } from './../../constants/Element_Constants';
 
 class PrintIndexPopup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      markIndexCurrentValue: this.props.markedIndexCurrentValue?.secondLevel ? (tinyMCE.$(this.props.markedIndexCurrentValue?.secondLevel))[0].innerHTML : ''
+      markIndexCurrentValue: this.props.markedIndexCurrentValue?.secondLevel ? (tinyMCE.$(this.props.markedIndexCurrentValue?.secondLevel))[0].innerHTML : '',
+      showMarkIndexWarningMsg: false
     }
     this.wrapperRef = null;
   }
@@ -92,7 +98,7 @@ componentWillMount() {
       if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))) {
         config.isGlossarySaving = true;
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField, null, null, null, crossReferences)
+        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField, null, null, null, crossReferences)
       }
     }
     this.props.showMarkedIndexPopup(false);
@@ -122,16 +128,16 @@ componentWillMount() {
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
-      
+
       let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))
       if(markedIndexEntryURN){
         if(checkDifference){
-          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField,null,null,null,crossReferences);
         }
         this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference, crossReferences);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", async res => {
-          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField,null,null,null,crossReferences);
           this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference, crossReferences);
           this.props.showingToastMessage(true);
         });
@@ -140,7 +146,7 @@ componentWillMount() {
       const { markedIndexValue } = this.props.markedIndexData;
       this.saveContent(crossReferences, crossRefValues);
       if (Object.keys(markedIndexValue).includes('isNewIndex') && markedIndexValue?.isNewIndex) {
-        this.props.showingToastMessage(true);
+        this.props.showingToastMessage(true, INDEX_ADDED_TEXT);
       }
     }
   }
@@ -181,9 +187,58 @@ componentWillMount() {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
+  showMarkedIndexWarningPopup = (status) => {
+    this.setState({
+      showMarkIndexWarningMsg: status
+    })
+  }
+
+  processRemoveMarkedIndexConfirmation = () => {
+    hideBlocker()
+    this.props.showBlocker(false)
+    this.showMarkedIndexWarningPopup(false);
+    const currentMarkedIndexId = this.props?.markedIndexData?.markedIndexValue?.markIndexid
+    let currentDOMAttributes = document.querySelector(`[data-uri="${currentMarkedIndexId}"]`)?.parentNode
+    let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes?.innerHTML, currentMarkedIndexId)
+    currentDOMAttributes.innerHTML = updatedDOMAttributes
+    let workEditor = document.getElementById('cypress-' + this.props?.elementIndexForMarkedIndex)
+    workEditor?.focus()
+    workEditor?.blur()
+    this.props.showMarkedIndexPopup(false);
+    this.props.showingToastMessage(true, INDEX_REMOVED_TEXT);
+  }
+
+  toggleMarkedIndexPopup = () => {
+    this.props.showBlocker(false)
+    hideToc()
+    hideBlocker()
+    this.showMarkedIndexWarningPopup(false);
+  }
+
+  showMarkedIndexRemoveConfirmationPopup = () => {
+    if (this.state.showMarkIndexWarningMsg) {
+      this.props.showBlocker(true)
+      showTocBlocker()
+      return (
+        <PopUp
+          dialogText={MARKEDINDEX_DIALOG_TEXT}
+          active={true}
+          removeMarkedIndex={true}
+          removeMarkedClass="removemarkedindexclass"
+          removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
+          toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
+        />
+      )
+    }
+    else {
+      return null
+    }
+  }
+
   render() {
     let buttonText = ""
     const {markedIndexValue, markedIndexGlossary } =  this.props.markedIndexData;
+    const isReadOnly = hasReviewerRole() ? "blurButton" : "";
     if(Object.keys(markedIndexValue).includes('isNewIndex')){
       buttonText = markedIndexValue.isNewIndex ? 'Add': 'Update'
     } else {
@@ -222,15 +277,18 @@ componentWillMount() {
                 </div>
               </div>
             </div>
-            
+
             <CrossReference crossRefValue={this.props.markedIndexCurrentValue?.crossReferences}/>
 
             <div className="button-group">
+              <Tooltip direction="removeMarkedIndex" tooltipText="Remove Index entry">
+                {buttonText === 'Update' ? <span className={`deleteMarkedIndexbutton ${isReadOnly}`} onClick={() => this.showMarkedIndexWarningPopup(true)}><img className='markedindex-delete-icon' src={figureDeleteIcon} /></span> : ''}
+              </Tooltip>
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
-              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
+              <span className={`printIndex-save-button ${isReadOnly}`} disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
             </div>
           </div>
-
+          {this.showMarkedIndexRemoveConfirmationPopup()}
         </div>
       </div>
     );
@@ -240,7 +298,8 @@ componentWillMount() {
 const mapStateToProps = state => {
   return {
     glossaryData: state.glossaryFootnoteReducer,
-    markedIndexData:  state.markedIndexReducer
+    markedIndexData:  state.markedIndexReducer,
+    elementIndexForMarkedIndex:  state.markedIndexReducer.elementIndex,
   }
 }
 

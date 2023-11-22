@@ -9,8 +9,9 @@ import  { getMCQGuidedData}  from '../../../src/component/AssessmentSlateCanvas/
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
-    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm } from '../../../fixtures/ElementInteractiveTesting.js'
+    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm, InteractiveAlfresco } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
+import * as utils from '../../../src/constants/utility';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const dummyData = [
@@ -121,7 +122,8 @@ const store = mockStore({
         elementId: "urn",
         alfrescoListOption: [],
         launchAlfrescoPopup: true
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 const store1 = mockStore({
     citeTdxReducer : { currentAssessmentSelected : {} },
@@ -133,7 +135,8 @@ const store1 = mockStore({
         elementId: "urn",
         alfrescoListOption: [],
         launchAlfrescoPopup: true
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 const store2 = mockStore({
     citeTdxReducer : { currentAssessmentSelected : {} },
@@ -145,7 +148,8 @@ const store2 = mockStore({
         elementId: "urn",
         alfrescoListOption: [],
         launchAlfrescoPopup: true
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
@@ -542,6 +546,33 @@ describe('Testing Interactive element component', () => {
             showBlocker: jest.fn(),
 
         };
+        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
+        let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+        const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
+            const e = {
+                target:{
+                    classList: {contains: ()=>{return true}    } ,
+                tagName: "p"           },
+                stopPropagation() { }
+            }
+            elementInteractiveInstance.togglePopup(e,true);
+            elementInteractiveInstance.forceUpdate();
+            elementInteractive.update();
+            expect(spytogglePopup).toHaveBeenCalledWith(e,true)
+            spytogglePopup.mockClear()
+        })
+        it('Test Function-togglePopup -if - if - case', () => {
+            let type = "interactive";
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            model: InteractiveAlfresco,
+            handleFocus: jest.fn(),
+            showBlocker: jest.fn(),
+        };
+
         const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
         const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
@@ -1464,6 +1495,7 @@ describe("Testing methods", () => {
         let e = {
             stopPropagation :jest.fn()
         }
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
         elementInteractiveInstance.handleClickElement(e);
     })
     it('testing togglePopup',()=>{

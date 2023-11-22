@@ -1,20 +1,21 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { matchHTMLwithRegex, removeBlankTags, getDesignType } from '../../constants/utility.js'
+import { matchHTMLwithRegex, removeBlankTags, getDesignType, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
+import { findElementType, getDefaultPlaybackMode } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
+import { UNITY_TINY } from '../SlateWrapper/SlateWrapperConstants';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
     mathml: [ ]
 }
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -23,7 +24,7 @@ const {
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const replaceUnwantedtags = (html,flag) => {
-    let tempDiv = document.createElement('div'); 
+    let tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
     tinyMCE.$(tempDiv).find('br').remove();
     if(flag){
@@ -38,11 +39,11 @@ export const replaceUnwantedtags = (html,flag) => {
 
 /**
  * Generates updated element data for figure element
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
 export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
     let titleDOM = document.getElementById(`cypress-${index}-0`),
@@ -98,10 +99,14 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE
         previousElementData.figuredata.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
-    }  
+    }
 
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
-    previousElementData.hasOwnProperty('indexPos') ? delete previousElementData.indexPos : previousElementData;  // Key added for autonumbering
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
+    if(previousElementData && previousElementData.hasOwnProperty('indexPos')){
+        delete previousElementData.indexPos                                     // Key added for autonumbering
+    }
 
     let data = {
         ...previousElementData,
@@ -129,7 +134,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             text: ""
         },
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
-        inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
+        inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""
     }
 
     // Adding tableasHTML in html for table element
@@ -145,7 +150,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             }
         }
     const dataToReturn = updateAutoNumberedElement(autoNumberOption,data,{ displayedlabel,    manualoverride })
-    data = {...dataToReturn}  
+    data = {...dataToReturn}
     }
     return data
 }
@@ -197,13 +202,13 @@ export const podHtmlmatchWithRegex = (html) => {
 
 /**
  * Generates updated element data for figure interactive element
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
-export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption,isAutoNumberingEnabled, autoNumberOption ) => {
+export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption,isAutoNumberingEnabled, autoNumberOption, containerContext ) => {
     const oldFigureData = Object.assign({},previousElementData.figuredata);
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -216,7 +221,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
-    
+
     titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
 
@@ -249,7 +254,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         titleHTML = replaceUnwantedtags(titleHTML,false)
 
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
-    
+
         /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
         subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
         captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
@@ -272,20 +277,21 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
                         podwidth: podwidthToSend,
                         imageid: '',
                         path: ''
-                        
                     }
                 }
                 previousElementData.figuredata = figuredata;
             }
         }
-    
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
 
     let data = {
         ...previousElementData,
         title :{
             ...indivisualData,
-            text : titleText        
+            text : titleText
         },
         captions : {
             ...indivisualData,
@@ -310,7 +316,14 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+    }
+
+    // updating the intendedPlayBackMode for 3PI smartlink
+    //commenting this code for future reference
+    const { assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue } = containerContext.props.activeElement
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink && removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== UNITY_TINY) {
+        data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : getDefaultPlaybackMode(previousElementData?.figuredata)
     }
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
@@ -353,26 +366,30 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             displayedlabel : displayedlabel,
             manualoverride : manualoverride
         }
-        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.manualoverride : data;
-        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete data.displayedlabel : data;
+        if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
+            delete data.manualoverride
+        }
+        if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+            delete data.displayedlabel
+        }
     }
     return data
 }
 
 /**
  * Data preparation for blockcode element
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
-    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || true;
-    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || true ;
+    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber") || previousElementData?.figuredata?.startNumber;
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || previousElementData?.figuredata?.numbered;
+    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || previousElementData?.figuredata?.syntaxhighlighting;
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -420,13 +437,15 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         titleHTML = replaceUnwantedtags(titleHTML,false)
 
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
-    
+
         /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
         subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
         captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
         creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
 
     let data = {
         ...previousElementData,
@@ -454,7 +473,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             tableasHTML: "",
             text: "",
             preformattedtext: matchHTMLwithRegex(preformattedText)?preformattedText:`<p>${preformattedText}</p>`
-        }, 
+        },
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
             type: "codelistingformatted",
@@ -465,7 +484,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
     }
     /**Autonumbering Code */
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
@@ -477,7 +496,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             }
         }
         const dataToReturn = updateAutoNumberedElement(autoNumberOption, data, { displayedlabel, manualoverride })
-        data = {...dataToReturn}  
+        data = {...dataToReturn}
     }
     /**********************/
     return data
@@ -485,11 +504,11 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
 /**
  * Data preparation for MathML/ChemML image or figure authored text
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
 const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
@@ -506,7 +525,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
         textHTML = textDOM ? textDOM.innerHTML : ""
-    
+
     titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
 
@@ -548,7 +567,9 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
     creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
 
     let data = {
         ...previousElementData,
@@ -587,7 +608,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
     }
     /**Autonumbering Code */
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
@@ -599,7 +620,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             }
         }
         const dataToReturn = updateAutoNumberedElement(autoNumberOption, data, { displayedlabel, manualoverride })
-        data = {...dataToReturn}  
+        data = {...dataToReturn}
     }
     /**********************/
     return data
@@ -607,11 +628,11 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
 
 /**
  * Data preparation for assessment element
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     let assessmentNodeSelector = `div[data-id='${previousElementData.id}'] figure.figureAssessment `;
@@ -656,11 +677,11 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 }
 /**
  * Data preparation for assessment slate
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel : previousElementData.elementdata.assessmenttitle;
@@ -677,11 +698,11 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
 
 /**
  * Data preparation for Citation element
- * @param {*} index 
- * @param {*} previousElementData 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
+ * @param {*} index
+ * @param {*} previousElementData
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
  */
 const generateCitationElementData = (index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement) => {
     let { innerHTML, innerText } = node;
@@ -724,7 +745,7 @@ const validateRevealAnswerData = (showHideType, node, elementType, isHeader) => 
 
 /**
  * Returns MetaDataField
- * @param {*} popupdata Popup container data 
+ * @param {*} popupdata Popup container data
  * @param {*} _previousElementData element data inside popup
  */
 export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
@@ -745,15 +766,15 @@ export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousEle
 
 /**
  * Prepares new element data for all elements
- * @param {*} type 
- * @param {*} previousElementData 
- * @param {*} node 
- * @param {*} elementType 
- * @param {*} primaryOption 
- * @param {*} secondaryOption 
- * @param {*} activeEditorId 
- * @param {*} index 
- * @param {*} containerContext 
+ * @param {*} type
+ * @param {*} previousElementData
+ * @param {*} node
+ * @param {*} elementType
+ * @param {*} primaryOption
+ * @param {*} secondaryOption
+ * @param {*} activeEditorId
+ * @param {*} index
+ * @param {*} containerContext
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, isAutoNumberingEnabled, autoNumberOption) => {
     let { appStore } = store.getState()
@@ -767,7 +788,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             const elementTypeObj = findElementType(previousElementData, index)
             if (type === 'stanza') { /**Resolve PCAT- 9199 */
                 elementType = 'stanza'
-            }    
+            }
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let innerHTML, innerText;
 
@@ -808,12 +829,12 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 }
                 dataToReturn.html['indexEntries'] = previousElementData.html.indexEntries || {}
             }
-            
+
             if(type==="stanza"){
                 dataToReturn.html.text=`<p>${innerHTML}</p>`;
                 dataToReturn.html['indexEntries'] = previousElementData.html?.indexEntries || {};
                 delete dataToReturn.poetrylines;
-            } 
+            }
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
@@ -830,11 +851,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     dataToReturn["sectionType"] = "creditsarray";
                 }
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
-                
+
             } else if(parentElement && parentElement.type === "citations") {
                 dataToReturn["metaDataField"] = "formattedTitle"
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
-            } 
+            }
             else if(asideData?.type==="manifestlist" && (parentElement && (parentElement?.type === "showhide" && showHideType) || parentElement?.type === "groupedcontent") || asideData?.parent?.type === 'element-aside' || config.isPopupSlate) {
                 dataToReturn["elementParentEntityUrn"] = containerContext?.props?.parentManifestListItem?.contentUrn
             }
@@ -881,7 +902,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.INTERACTIVE:
 
-                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption, containerContext)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
                         dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
@@ -890,22 +911,26 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataAT(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                 }
-                
+
                 break;
-            
+
         case elementTypeConstant.ELEMENT_ASIDE:
-            dataToReturn = { 
+            dataToReturn = {
                 ...previousElementData,
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
             }
             break;
-        
+
         case elementTypeConstant.ASSESSMENT_SLATE:
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
         case elementTypeConstant.CITATION_ELEMENT:
-            dataToReturn = generateCitationElementData(index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement)
+            const citationElementData = findElementType(previousElementData, index);
+            const citationElementType = citationElementData?.elementType;
+            const citationPrimaryOption = citationElementData?.primaryOption;
+            const citationSecondaryOption = citationElementData?.secondaryOption;
+            dataToReturn = generateCitationElementData(index, previousElementData, citationElementType, citationPrimaryOption, citationSecondaryOption, node, parentElement)
             break;
     }
     dataToReturn.slateVersionUrn = config.slateManifestURN;
@@ -914,6 +939,16 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     }
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
+    // WE is approved and user focuses on another sub-element immediately updating a sub-element
+    if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved" && asideData?.element?.subtype === 'workedexample' && index) {
+        const iList = index?.toString()?.split("-") || [];
+        // index length is 2 then it will be direct child of WE otherwise child of SB
+        if (iList?.length === 2) {
+            dataToReturn = { ...dataToReturn, elementParentEntityUrn: asideData?.element?.contentUrn }
+        } else {
+            dataToReturn = { ...dataToReturn, elementParentEntityUrn: asideData?.element?.elementdata?.bodymatter[iList[1]]?.contentUrn }
+        }
+    }
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {
         config.savingInProgress = true
     }
@@ -933,12 +968,12 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         dataToReturn = {
             ...elementData,
             inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"OPENER_ELEMENT",
-            inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:"OPENER_ELEMENT",   
+            inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:"OPENER_ELEMENT",
             slateVersionUrn: config.slateManifestURN,
             elementParentEntityUrn: config.slateEntityURN
         }
     }
-    
+
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {
         config.savingInProgress = true
     }

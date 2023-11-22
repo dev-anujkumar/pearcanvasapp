@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
-import { sendDataToIframe, defaultMathImagePath } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
@@ -19,7 +19,7 @@ export class ElementMetaDataAnchor extends Component {
 
     const { slateLockInfo } = this.props
     return (
-      <div className="learningObjectiveContainer" id="slateLO" onClick={(e) => { this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
+      <div className="learningObjectiveContainer" id="slateLO" onClick={(e) => { !hasReviewerRole() && this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
         <div className="container" >
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -59,7 +59,7 @@ export class ElementMetaDataAnchor extends Component {
 
   /**
      * @description - Prepare HTML for LO item on slate
-     * @param {object} lodata | object of lo data 
+     * @param {object} lodata | object of lo data
   */
   prepareLOData = () => {
     let loData = ""
@@ -67,13 +67,6 @@ export class ElementMetaDataAnchor extends Component {
       loData = this.props?.currentSlateLOData?.find(learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref || learningObj?.id == this.props?.element?.elementdata?.loref))
     } else if (this.props?.currentSlateLOData) {
       loData = this.props.currentSlateLOData
-    }
-    if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
-      let element = document.getElementsByClassName('learningObjectiveinnerText');
-      element = Array.from(element);
-      element.forEach((item) => {
-        item.classList.add("place-holder");
-      })
     }
     let jsx;
     if (loData && loData != "" && loData.label && loData.label.en) {
@@ -118,20 +111,10 @@ export class ElementMetaDataAnchor extends Component {
         this.props.showBlocker(true);
         this.launchExternalFrameworkPopup()
       }
-    else{
-        this.props.showBlocker(true);
-        let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-        let apiKeys_LO = {
-          'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
-          'strApiKey': config.STRUCTURE_APIKEY,
-          'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
-          'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-          'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-          'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-          'myCloudProxySession': config.myCloudProxySession
-        };
-        sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } }) 
-      }
+      else if ( !loData ) {
+          this.props.showBlocker(true);
+          sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: '', apiKeys_LO: '', wrapperURL: config.WRAPPER_URL } })
+        }
     }
   }
 
@@ -145,7 +128,8 @@ export class ElementMetaDataAnchor extends Component {
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-      'myCloudProxySession': config.myCloudProxySession
+      'myCloudProxySession': config.myCloudProxySession,
+      'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];
@@ -180,7 +164,7 @@ export class ElementMetaDataAnchor extends Component {
           'defaultLF':defaultLF
         }
       })
-  } 
+  }
 
 }
 ElementMetaDataAnchor.defaultProps = {

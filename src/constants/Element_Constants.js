@@ -4,7 +4,7 @@ export const SLATE_API_ERROR = "Error in getting slate data. Please try again."
 export const SECTION_BREAK_LABELTEXT = "SB"
 
 /*---------------Element Figure ----------------------*/
-export const TABLE_AS_MARKUP = "tableasmarkup" 
+export const TABLE_AS_MARKUP = "tableasmarkup"
 export const FIGURE = "figure"
 export const IMAGE = "image"
 export const TABLE = "table"
@@ -19,18 +19,20 @@ export const WIDER = "wider"
 export const FULL = "full"
 export const DEFAULT_IMAGE_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
-/*---------------Element Audio-Video ----------------------*/ 
+/*---------------Element Audio-Video ----------------------*/
 export const AUDIO = "audio"
 export const VIDEO = "video"
 export const INTERACTIVE = "interactive"
 export const DEFAULT_ASSET="Asset data undefined"
+export const MULTI_COLUMN = "groupedcontent"
+export const TAB = "tab"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
-/*---------------Element Interactive ----------------------*/ 
+/*---------------Element Interactive ----------------------*/
 export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
 export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
 export const AUTHORED_TEXT_SCHEMA = "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
-/*---------------Element Single Assessment ----------------------*/ 
+/*---------------Element Single Assessment ----------------------*/
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
 export const ESA_POPUP_ROWS='1'
@@ -42,11 +44,11 @@ export const ASSESSMENT_SLATE = "element-assessment"
 export const DEFAULT_ASSESSMENT_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 
-/*---------------Comments Panel PopUp----------------------*/ 
+/*---------------Comments Panel PopUp----------------------*/
 export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
-/*---------------Delete PopUp----------------------*/ 
+/*---------------Delete PopUp----------------------*/
 export const SECTION_BREAK_DELETE_TEXT="Are you sure you want to delete the section break, elements beneath it will also get deleted?"
 export const OWNERS_ELM_DELETE_DIALOG_TEXT="You are trying to delete a container/element that is subscribed to in other projects. Are you sure you want to continue?"
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
@@ -84,12 +86,12 @@ export const LIST_TYPE_MAPPINGS = {
 }
 
 
-/****************SlateTagDropdown************************ */ 
+/****************SlateTagDropdown************************ */
 export const SLATE_ASSESSMENT = 'assessment';
 export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
-/****************Print On Demand************************ */ 
+/****************Print On Demand************************ */
 export const POD_DEFAULT_VALUE = '';
 /*********************** Sidebar Dropdown*********************** */
 export const disabledPrimaryOption = [
@@ -109,6 +111,7 @@ export const disabledPrimaryOption = [
     "primary-element-citation",
     "primary-multicolumn",
     "primary-multicolumn-3c",
+    "primary-tab"
 ];
 // this constant is used by sidebar
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", 'assessment']
@@ -117,19 +120,26 @@ export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio',
 export const GLOSSARY = 'Glossary'
 /** Component source for element saprator */
 
+export const MARKEDINDEX_DIALOG_TEXT = 'Are you sure you want to remove the index marker entry? This action cannot be undone.'
+export const INDEX_REMOVED_TEXT = "Index removed successfully."
+export const INDEX_ADDED_TEXT = "Index added successfully."
+export const MARKEDINDEX_NO_RESULT_FOUND_TEXT = "No result found"
+
 export const CITATION_SOURCE = 'CITATION';
 export const ASIDE_SOURCE = 'ASIDE';
 export const POETRY_SOURCE = 'POETRY';
 export const MULTICOLUMN_SOURCE = 'MULTICOLUMN';
 export const TEXT_SOURCE = 'TEXT';
 export const SHOW_HIDE = "SHOWHIDE";
+export const TABBED_SOURCE = "TABBED_2_COLUMN"
 export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
-    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN'] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN', 'TABBED_2_COLUMN'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
-    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST'], 'notSupport': [] }
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP','TAB_ELEMENT', 'TABBED_2_COLUMN'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
+    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION','TAB_ELEMENT'] },
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4', 'DECORATIVE'], 'notSupport': [] },
+    [TABBED_SOURCE]: { 'support': ['TAB_ELEMENT'], 'notSupport': [] },
 };
 const SHOWHIDE = "SHOW_HIDE";
 // This mapping is used for conditional rendering of Paste Button inside Elements
@@ -141,13 +151,24 @@ const CONDITIONAL_PASTE_SUPPORT = {
 
 export const getPasteValidated = (separatorProps, sourceType, selectionType) => {
     let validation = true;
+    let index;
+    let parentType = separatorProps?.asideData?.parent?.type;
+    const selectedColumn = selectionType === "COLUMN_VIEW_1" || selectionType === 'COLUMN_VIEW_2' || selectionType === 'COLUMN_VIEW_3' || selectionType === 'COLUMN_VIEW_4'
+    if(separatorProps.elementType === SHOW_HIDE.toLowerCase()){
+        index = separatorProps?.index
+        index = index?.split('-');
+    }
     if (sourceType in SOURCE_MAP) {
         if (SOURCE_MAP[sourceType].support.length > 0) {
             if ((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
                 validation = false;
+            }else if(selectedColumn && sourceType === SHOW_HIDE && index?.length > 3){
+                validation = false;
             }
         } else if (SOURCE_MAP[sourceType].notSupport.length > 0) {
             if ((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
+                validation = false;
+            }else if(sourceType === ASIDE_SOURCE && (parentType === SHOW_HIDE.toLowerCase() || parentType === "groupedcontent")){
                 validation = false;
             }
         }
@@ -172,11 +193,11 @@ export const getPasteValidated = (separatorProps, sourceType, selectionType) => 
 
 /**
  * Function - Check if Aside/WE selected to CUT/COPY has PE/SH/POPUP then restrict it be copied inside SH
- * @param {*} separatorProps 
- * @param {*} sourceType 
- * @param {*} selectionType 
- * @param {*} validation 
- * @returns 
+ * @param {*} separatorProps
+ * @param {*} sourceType
+ * @param {*} selectionType
+ * @param {*} validation
+ * @returns
  */
 const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex) => {
     let isValidPaste = validation;
@@ -209,11 +230,11 @@ const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType
 }
 /**
  * Function - Check if Showhide selected to CUT/COPY has AS/WE then restrict it be copied inside 2C/3C
- * @param {*} separatorProps 
- * @param {*} sourceType 
- * @param {*} selectionType 
- * @param {*} validation 
- * @returns 
+ * @param {*} separatorProps
+ * @param {*} sourceType
+ * @param {*} selectionType
+ * @param {*} validation
+ * @returns
  */
 const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionType, validation) => {
     let isValidPaste = validation;
@@ -235,11 +256,11 @@ const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionT
 }
 /**
  * Function - Check if Showhide selected to CUT/COPY has AS/WE then restrict it be copied inside AS/WE
- * @param {*} separatorProps 
- * @param {*} sourceType 
- * @param {*} selectionType 
- * @param {*} validation 
- * @returns 
+ * @param {*} separatorProps
+ * @param {*} sourceType
+ * @param {*} selectionType
+ * @param {*} validation
+ * @returns
  */
 const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex, parentDetails) => {
     let isValidPaste = validation;
@@ -264,10 +285,21 @@ const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, va
 }
 
 /** Metadata Anchor Element constants */
-export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework.`
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
+
+/** Tabbed 2 column element - TABBED_2_COLUMN */
+export const TABBED_2_COLUMN = {
+    "ELEMENT_TAG_NAME": "TB",
+    "ELEMENT_NAME" : "primary-tabbed-elem"
+}
+
+/** Tabbed tab element - TAB_2_COLUMN */
+export const TABBED_TAB = {
+    "ELEMENT_TAG_NAME": "Tab",
+    "ELEMENT_NAME" : "primary-tab-elem"
+}
 
 /** Multi column - 3 column constants */
 export const MULTI_COLUMN_3C = {
@@ -296,3 +328,28 @@ export const BLOCK_LIST_ELEMENT_EVENT_MAPPING = {
 
 /** Not supported TCM revet functionality element types */
 export const notAllowedTCMElementTypes = ['openerelement', 'tableasmarkup', 'manifestlist', 'element-generateLOlist']
+
+/* Tab Title Placeholder */
+export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
+
+/* TB sidebar conversion endpoint */
+export const tbSidebarEndpoint = "tabbed-2-column"
+
+/*------------------ Approved slate moved to WIP ------------------*/
+export const MOVED_TO_WIP = "and parent container(s) has moved to WIP status";
+/* Fetch Learning objectives for these slates*/
+export const FETCH_LO_FOR_SLATES = ['section','pdfslate','ltislate']
+
+export const intendedPlaybackModeDropdown = [
+    { label: 'Inline', value: 'inline' },
+    { label: 'Modal', value: 'modal' },
+    { label: 'New Tab', value: 'tab' },
+    { label: 'New Window', value: 'window' },
+];
+
+/* Decorative Image */
+export const DECORATIVE = "DECORATIVE"
+export const DECORATIVE_IMAGE = "primary-image-decorative"
+
+/* Unlock Slate Button */
+export const UNLOCKSLATEWARNING = 'Content may be lost if the locked user is still active and working on an element. This slate will now get locked in your name.'

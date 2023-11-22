@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import ElementContainerWrapper from "../HOCs/ElementContainerHOC";
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
-import { sendDataToIframe, guid } from '../../constants/utility.js';
+import ElementConstants from '../ElementContainer/ElementConstants';
+import { sendDataToIframe, guid, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import { POETRY_SOURCE } from '../../constants/Element_Constants.js';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 let random = guid();
 
@@ -47,6 +50,7 @@ class ElementPoetry extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
                                     removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -58,7 +62,7 @@ class ElementPoetry extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd
@@ -78,7 +82,9 @@ class ElementPoetry extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'pe',
                                             poetryId: this.props.element.id,
-                                            sectionType: this?.props?.showHideType
+                                            sectionType: this?.props?.showHideType,
+                                            parentElement: this.props?.parentElement,
+                                            elementIndex: this.props?.index
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -134,7 +140,7 @@ class ElementPoetry extends Component {
             </>
         )
     }
-    
+
     /**
     * @description - renderStanzas is a function for rendering the stanza element inside poetry element
     * @param {*} stanzas is the array of stanza element
@@ -142,13 +148,14 @@ class ElementPoetry extends Component {
     * @param {*} parentUrn is the URN of poetry elememt
     */
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
-        const { id, type, contentUrn, groupeddata } = this.props?.parentElement || {};
+        const { id, type, subtype, contentUrn, groupeddata } = this.props?.parentElement || {};
         let poetryData = {
             type: "poetry",
             parentUrn: this.props.elementId,
             id: this.props.elementId,
             contentUrn : this.props.model.contentUrn,
-            element : this.props.model,           
+            element : this.props.model,
+            index : this.props?.index
         };
          /* @columnIndex@ */
          const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
@@ -159,12 +166,23 @@ class ElementPoetry extends Component {
 
         /* Adding parent id and type to update redux store while creating new element inside WE/Aside->Block Poetry->Stanza */
         poetryData = (type === "element-aside") ? {...poetryData, parent: { id, type, contentUrn }} : poetryData;
-        
+
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
-        poetryData = (type === "groupedcontent") ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
-        
+        poetryData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
+
         /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
         poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
+        /* Adding parent id and type to update redux store while creating new element inside TB->Tab->Aside->New */
+        if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB) {
+            let indexes = this.props?.index?.toString()?.split('-') || [];
+            let columnDetails = {
+                columnIndex: Number(indexes[2]),
+                columnId: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.id,
+                columnContentUrn: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.contentUrn,
+                columnName: Number(indexes[2]) === 0 ? "C1" : "C2"
+            }
+            poetryData = {...poetryData, parent: {...this.props.parentElement, columnDetails: columnDetails}}
+        }
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
@@ -183,7 +201,11 @@ class ElementPoetry extends Component {
                        showHideType: this.props?.showHideType
                    }
                     return (
-                        <React.Fragment key={element.id}>                                   
+                        <React.Fragment key={element.id}>
+                            <LazyLoad
+                                once={true}
+                                placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                            >
                             {index === 0 && <ElementSaprator
                                 index={index}
                                 firstOne={index === 0}
@@ -232,6 +254,7 @@ class ElementPoetry extends Component {
                                 source={POETRY_SOURCE}
                                 dataId = {element.id}
                             />
+                            </LazyLoad>
                         </React.Fragment>
                     )
 
@@ -243,7 +266,7 @@ class ElementPoetry extends Component {
             console.log("error", error)
         }
     }
-    
+
     render() {
         return this.renderStanzaContainer(this.props)
     }

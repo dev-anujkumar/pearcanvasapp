@@ -8,19 +8,19 @@ import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
 import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import Toolbar from '../Toolbar';
+import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 import PopUp from '../PopUp';
 import config from './../../config/config';
-import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
+import { getSlateLockStatus, releaseSlateLock, saveLockDetails } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
+import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -42,6 +42,8 @@ import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../Alfr
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
+import { REFRESH_BROWSER_ACTION } from '../SlateWrapper/SlateWrapperConstants';
+import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -50,7 +52,7 @@ export class CanvasWrapper extends Component {
             toggleApo : false,
             isConfigLoaded : true,
             toastMessage : false
-        }  
+        }
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
@@ -61,15 +63,15 @@ export class CanvasWrapper extends Component {
             };
         }
         if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
-            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} });
         }
-        return null;    
+        return null;
      }
 
 
-    componentDidMount() {  
+    componentDidMount() {
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed, a moment ago'} });
-        
+
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -78,22 +80,36 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
-        this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
+        this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN)
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
+            const paramDetails = {
+                'slateEntityURN': config.slateEntityURN,
+                'projectUrn': config.projectUrn,
+                'myCloudProxySession': config.myCloudProxySession,
+                'userId': config.userId
+            }
+            localStorage.setItem('paramDetails', JSON.stringify(paramDetails));
+            localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-            this.props.releaseSlateLock(config.projectUrn, slateId)
+            this.props.releaseSlateLock(config.projectUrn, slateId);
         }
+        // Trigger slate level save api on browser refresh
+        setTimeout(() => {
+            let paramDetails = JSON.parse(localStorage.getItem('paramDetails'));
+            if (paramDetails) triggerSlateLevelSave(paramDetails?.slateEntityURN, REFRESH_BROWSER_ACTION, paramDetails);
+        }, 5000);
     }
 
-    showingToastMessage = (status) => {
+    showingToastMessage = (status, toastMsgText) => {
         this.setState({
-            toastMessage: status
+            toastMessage: status,
+            toastMsgText: toastMsgText
         })
         setTimeout(() => {
             this.setState({
                 toastMessage: false
-            })  
+            })
         }, 2000);
     }
 
@@ -102,7 +118,7 @@ export class CanvasWrapper extends Component {
         this.countTimer =  Date.now();
         removeWirisOverlay()
     }
-    
+
     handleCommentspanel = (event,elementId,index) => {
          event.stopPropagation();
         this.props.toggleCommentsPanel(true);
@@ -110,10 +126,10 @@ export class CanvasWrapper extends Component {
         sendDataToIframe({
             'type': TocToggle,
             'message': {"open":false}
-        });       
+        });
     }
 
-    
+
 
     updateTimer = () => {
         setInterval(() => {
@@ -126,23 +142,22 @@ export class CanvasWrapper extends Component {
         if(config.totalPageCount <= config.page) return false;
         this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
     }
-    
+
     ReleaseErrorPopup = () => {
         hideBlocker()
         store.dispatch({type:'ERROR_POPUP', payload:{show:false}})
         return true;
     }
     handleNavClick=(nav)=> {
-        if(config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement){
+        if (config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement) {
             return false
         }
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        if(nav === "back"){
-            sendDataToIframe({'type': PreviousSlate,'message': {}})
-        }else{
-            sendDataToIframe({'type': NextSlate,'message': {}})
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        if (nav === "back") {
+            sendDataToIframe({ 'type': PreviousSlate, 'message': {} })
+        } else {
+            sendDataToIframe({ 'type': NextSlate, 'message': {} })
         }
-        
     }
 
     render() {
@@ -154,7 +169,7 @@ export class CanvasWrapper extends Component {
         if(config.isPopupSlate) {
             popupFilter = 'popup';
         }
-        
+
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -175,7 +190,7 @@ export class CanvasWrapper extends Component {
                     {/* custom list editor component */}
                 </div>
 
-                <div className='workspace'>               
+                <div className='workspace'>
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
                             <div className="artboard-parent">
@@ -200,7 +215,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     this.state.toastMessage &&
                                     <div className="toastMsg">
-                                        <p>Index added successfully.</p>
+                                        <p>{this.state.toastMsgText}</p>
                                     </div>
                                 }
                                  {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
@@ -214,7 +229,7 @@ export class CanvasWrapper extends Component {
                                 }
                                 <div className='clr'></div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div className = "sidebar-panel">
@@ -231,7 +246,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
                                         }
                                         if(markIndexpopUpStatus){
-                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}/>
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage} showBlocker = {this.props.showCanvasBlocker}/>
 
                                         }
                                         else {
@@ -279,7 +294,9 @@ const mapStateToProps = state => {
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
         defaultLF: state.metadataReducer.defaultLF,
         isSlateTagEnable: state.metadataReducer.slateTagEnable,
-        getRequiredSlateData: state.appStore.getRequiredSlateData
+        getRequiredSlateData: state.appStore.getRequiredSlateData,
+        assessmentReducer: state.assessmentReducer,
+        roleId:state.appStore.roleId,
     };
 };
 
@@ -321,7 +338,6 @@ export default connect(
         setSlateLength,
         toggleElemBordersAction,
         togglePageNumberAction,
-        tcmCosConversionSnapshot,
         assetIdForSnapshot,
         audioGlossaryPopup,
         fetchLearnosityContent,
@@ -337,20 +353,23 @@ export default connect(
         showWrongImagePopup,
         setProjectSharingRole,
         setProjectSubscriptionDetails,
-        fetchFigureDropdownOptions,
         isOwnersSubscribedSlate,
         markedIndexPopup,
         fetchProjectFigures,
         setTocContainersAutoNumberList,
         toggleSpellCheckAction,
-        addNewComment, 
+        addNewComment,
         deleteComment,
         cypressPlusEnabled,
         setSlateMatterType,
         updateFigureDropdownValues,
         savePopupParentSlateData,
         fetchLOBList,
-        fetchUserLocation,
-        fetchDefaultLF
+        fetchDefaultLF,
+        setCautionBannerStatus,
+        approvedSlatePopupStatus,
+        isSubscribersSubscribedSlate,
+        setTocSlateLabel,
+        saveLockDetails
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

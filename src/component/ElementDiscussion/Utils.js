@@ -6,7 +6,7 @@ export const createDiscussionForUpdateAPI = (_props, elementDiscussion) => {
     }
     const index = _props.index.toString().split('-') || [];
     const {type, subtype, elementdata, groupeddata, contentUrn} = _props?.parentElement || {};
-    
+
     let slateEntityUrn =  contentUrn || config.slateEntityURN;
     if(type === "groupedcontent") {
         slateEntityUrn = groupeddata?.bodymatter[index[1]].contentUrn;
@@ -42,7 +42,7 @@ export const clearElement = (element) => {
 
     return clearedElement;
   };
-  
+
 
   export const removeLabel = (html) => {
       if(typeof html === 'string' && html.length>0) {

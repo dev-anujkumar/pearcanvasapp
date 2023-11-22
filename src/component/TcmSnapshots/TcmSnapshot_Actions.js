@@ -69,7 +69,7 @@ var allSnapshotData = [];
 export const sendElementTcmSnapshot = async (snapshotData) => {
         allSnapshotData.push(snapshotData);
         if (timerID) clearTimeout(timerID);
-        timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
+        timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);
 }
 
 const callSnapshotAPI = async (snapshotData) => {
@@ -91,7 +91,7 @@ const callSnapshotAPI = async (snapshotData) => {
 */
 export const getLatestVersion = async (containerUrn) => {
     try {
-        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
+        const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
                 'myCloudProxySession': config.myCloudProxySession
@@ -104,13 +104,13 @@ export const getLatestVersion = async (containerUrn) => {
 }
 
 /**
-     * @description - Get slate linking details for snapshots 
+     * @description - Get slate linking details for snapshots
      * @param {String} containerUrn | Container Entity URN
      * @returns {Object} - Slate Linking label and manifest urn
 */
 export const slateLinkDetails = async (containerUrn) => {
     try {
-        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}`, {
+        const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}`, {
             headers: {
                 "Content-Type": "application/json",
                 'myCloudProxySession': config.myCloudProxySession
@@ -124,7 +124,7 @@ export const slateLinkDetails = async (containerUrn) => {
 
 export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , index) => (dispatch, getState) => {
     const elementCount = getState().appStore.slateLength
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
@@ -148,7 +148,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
             } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== 'groupedcontent' ) {   /** Inside WE-BODY */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
             }
-            
+
         }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,

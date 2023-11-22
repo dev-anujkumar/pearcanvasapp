@@ -7,7 +7,8 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import ContainerHeader from '../../../src/component/ContainerHeader/ContainerHeader';
 import config from '../../../src/config/config';
-import { initialState, initialState2, props, props1, props2, props3, props4, props5, props6, props7, props8 } from './ContainerHeaderMockData'
+import { initialState, initialState2, initialState3, props, props1, props2, props3, props4, props5, props6, props7, props8 } from './ContainerHeaderMockData'
+import { getNumberData } from '../../../src/component/FigureHeader/AutoNumber_helperFunctions';
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
@@ -93,5 +94,24 @@ describe('Testing ContainerHeader component', () => {
         containerHeaderWrapper2.find('div.figure-label-number').simulate('click');
         containerHeaderWrapper2.find('.figure-number-dropdown ul li').at(0).simulate('click');
     })
+    it('Checking for workedexampleCustom case k', () => {
+        let containerHeaderWrapper2 = mount(<Provider store={store}><ContainerHeader {...props8} /></Provider>);
+        containerHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        containerHeaderWrapper2.find('.figure-number-dropdown ul li').at(0).simulate('click');
+        containerHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        containerHeaderWrapper2.find('.figure-number-dropdown ul li').at(0).simulate('click');
+    })
 
+})
+
+describe('Testing ContainerHeader component', () => {
+    let store3 = mockStore(initialState3);
+    let containerHeaderWrapper;
+    beforeEach(() => {
+        containerHeaderWrapper = mount(<Provider store={store3}><ContainerHeader {...props3} /></Provider>);
+    });
+    
+    it('renders without crashing', () => {
+        expect(containerHeaderWrapper).toHaveLength(1);
+    })
 })

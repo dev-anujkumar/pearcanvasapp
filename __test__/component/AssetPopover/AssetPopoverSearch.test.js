@@ -52,12 +52,30 @@ const store = mockStore({
         tables: [],
         workedExamples: [],
         currentlyLinkedImageData: {
-            title: "test"
+            title: "test",
+            caption: "caption"
         },
     }
 });
 
-let wrapper;
+const store2 = mockStore({
+    assetPopOverSearch: {
+        showApoSearch: false,                 // Weather show or not the popover window
+        showApoCurrentlyLinked: true,        // Show or not currently linked part of the window
+        showApoBody: true,                   // Show or not APO Body
+        showApoFooter: false,                  // Show or not APO footer
+        selectedFigureValue: {},              // Name of Selected Figure
+        noSearchResultFound: false,           // If Error or No search results found from API
+        figureIsSelected: false,              // Figure is selected or not
+        apoObject: {},
+        imageData: [],
+        searchTerm: '',                        //Figure name to be find
+        assetID: "",
+        currentlyLinkedImageData: {},
+    }
+});
+
+let wrapper, wrapper2;
 const searchForFigures = jest.fn();
 let props = {
     searchForFigures: jest.fn(),
@@ -70,6 +88,7 @@ let props = {
 
 beforeEach(() => {
     wrapper = mount(<Provider store={store}>< AssetPopoverSearch {...props} /> </Provider>)
+    wrapper2 = mount(<Provider store={store2}>< AssetPopoverSearch {...props} /> </Provider>)
 })
 
 global.fetch = jest.fn().mockImplementation(() => {
@@ -93,8 +112,20 @@ describe('Interaction functions test cases', () => {
         expect(typeof returnedValue).toEqual('object');
     });
 
+    it('Testing currentlyLinkedJsx function : false', () => {
+        const instance = wrapper2.find('AssetPopoverSearch').instance();
+        let returnedValue = instance.currentlyLinkedJsx();
+        expect(typeof returnedValue).toEqual('object');
+    });
+
     it('Testing apoBodyJsx function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
+        let returnedValue = instance.apoBodyJsx();
+        expect(typeof returnedValue).toEqual('object');
+    });
+
+    it('Testing apoBodyJsx function : false', () => {
+        const instance = wrapper2.find('AssetPopoverSearch').instance();
         let returnedValue = instance.apoBodyJsx();
         expect(typeof returnedValue).toEqual('object');
     });
@@ -303,7 +334,7 @@ describe('Interaction functions test cases', () => {
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props} /> </Provider>);
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         const spysaveAssetLinkedMedia = jest.spyOn(instance, 'saveAssetLinkedMedia')
-        let apoObject = { 'assetId': 'urn:work:1b4234nb234bv523b4v52b3v45' }, imageObj = { 'entityUrn': 'urn:entity:12gdh1g34g12v12h34512' }
+        let apoObject = { 'assetId': 'urn:work:1b4234nb234bv523b4v52b3v45' }, imageObj = { 'contentUrn': 'urn:entity:12gdh1g34g12v12h34512'}
         tinymce.activeEditor = { 'id': 'cypress-1' }
         let simpleDiv = document.createElement('div');
         simpleDiv.setAttribute('id', 'cypress-1');
@@ -349,7 +380,7 @@ describe('Interaction functions test cases', () => {
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props} /> </Provider>);
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         const spysaveAssetLinkedMedia = jest.spyOn(instance, 'saveAssetLinkedMedia')
-        let apoObject = { 'assetId': 'urn:work:1b4234nb234bv523b4v52b3v45' }, imageObj = { 'entityUrn': 'urn:entity:12gdh1g34g12v12h34512' }
+        let apoObject = { 'assetId': 'urn:work:1b4234nb234bv523b4v52b3v45' }, imageObj = { 'contentUrn': 'urn:entity:12gdh1g34g12v12h34512'}
         tinymce.activeEditor = { 'id': 'cypress-1' }
         let simpleDiv = document.createElement('div');
         simpleDiv.setAttribute('id', 'cypress-1');
@@ -377,7 +408,7 @@ describe('Interaction functions test cases', () => {
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props} /> </Provider>);
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         const spysaveAssetLinkedMedia = jest.spyOn(instance, 'saveAssetLinkedMedia')
-        let apoObject = {}, imageObj = { 'entityUrn': 'urn:entity:12gdh1g34g12v12h34512' }
+        let apoObject = {}, imageObj = { 'contentUrn': 'urn:entity:12gdh1g34g12v12h34512' }
         let simpleDiv = document.createElement('div');
         simpleDiv.setAttribute('id', 'asset-popover-attacher');
         simpleDiv.innerHTML = '<span> Hello </abbr>';

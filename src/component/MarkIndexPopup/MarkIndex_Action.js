@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES  } from '../../constants/Action_Constants';
+import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES } from '../../constants/Action_Constants';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
@@ -10,14 +10,14 @@ import { UpdateElementWorkId } from '../GlossaryFootnotePopup/GlossaryFootnote_A
  * is clicked from the tinyMCE toolbar
  * @param {*} status, Status of the marked index pop-up (it is a boolean value)
  * @param {*} popupType, This variable will contain 'Markedindex' value
- * @param {*} markIndexid, This will contain URN id for indexed text  
+ * @param {*} markIndexid, This will contain URN id for indexed text
  * @param {*} elementWorkId This will contain Work URN of the container element
  * @param {*} elementType This will contain element type e.g element authored text
  * @param {*} index This will contain index of the container element in the slate data
- * @param {*} elementSubType 
+ * @param {*} elementSubType
  * @param {*} markIndexText This will contain the text which is going to be indexed
- * @param {*} typeWithPopup 
- * @param {*} poetryField 
+ * @param {*} typeWithPopup
+ * @param {*} poetryField
  */
 export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField, isNewIndex) => async (dispatch) => {
     let markedIndexValue = {
@@ -30,7 +30,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         markIndexText,
         typeWithPopup: typeWithPopup ? typeWithPopup : undefined,
         poetryField: poetryField ? poetryField : undefined,
-        isNewIndex
+        isNewIndex,
+        index
     }
 
     if (status === true) {
@@ -39,10 +40,10 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[slateId];
         const showHideElement = store.getState().appStore?.showHideObj;
-
-        if (currentSlateData?.type === "popup" && currentSlateData?.status === "approved") {
-            return false;
-        }
+        // commenting this code to allow opening of markindex popup in readonly mode
+        // if (currentSlateData?.type === "popup" && currentSlateData?.status === "approved") {
+        //     return false;
+        // }
         let newBodymatter = currentSlateData?.contents?.bodymatter;
         var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText, crossReferences;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
@@ -118,8 +119,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
  * along with glossary
  * @param {*} status, Status of the marked index pop-up over glossary
  * @param {*} indexEntry, Value of Index entry field in the marked index pop-up
- * @param {*} subEntry, Value of sub entry field in the marked index pop-up 
- * @param {*} markedIndexEntryURN, URN of indexed text 
+ * @param {*} subEntry, Value of sub entry field in the marked index pop-up
+ * @param {*} markedIndexEntryURN, URN of indexed text
  */
 export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue, crossReferences) => (dispatch) => {
     let indexEntries = {};
@@ -175,7 +176,7 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
  * @param {*} glossaryFootElem This will contain html object which contains the glossary data.
  * @param {*} glossaaryFootnoteValue This object will contain all the glossry data.
  * @param {*} index This will contain index of the container element in the slate data.
- * @returns 
+ * @returns
  */
 export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, glossaaryFootnoteValue, index) => {
     let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {}, markedIndexCrossReferences = [];
@@ -212,9 +213,9 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
                 crossReferences: markedIndexCrossReferences
             },
             markedIndexGlossary: {
-                popUpStatus: false,  
-                indexEntries, 
-                markedIndexEntryURN 
+                popUpStatus: false,
+                indexEntries,
+                markedIndexEntryURN
             },
             elementIndex: index
         }
@@ -222,12 +223,12 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
 }
 
 /**
- * This function makes a call to the content-api and get the drop-down values for the 
+ * This function makes a call to the content-api and get the drop-down values for the
  * cross-reference and after re-formatting the data in the required format, update the
  * redux store
  */
 export const getCrossReferenceValues = () => async (dispatch) => {
-    let url = `${config.ASSET_POPOVER_ENDPOINT}v1/${config.projectUrn}/indexes`;
+    let url = `${config.MANIFEST_READONLY_ENDPOINT}v1/${config.projectUrn}/indexes`;
     try{
         const result = await axios.get(url, {
             headers: {
@@ -267,13 +268,13 @@ const prepareCrossRefArray = result => {
 
             if(indexObj?.firstlevelentry){
                 let firstLvlObj = indexObj.firstlevelentry;
-                if(firstLvlObj?.firstlevelentry){
+                if(firstLvlObj?.firstlevelentry && crossRefValues.indexOf(firstLvlObj.firstlevelentry.text) < 0){
                     crossRefValues.push(firstLvlObj.firstlevelentry.text);
                 }
 
                 if(firstLvlObj?.secondlevelentries && firstLvlObj.secondlevelentries.length > 0) {
                     let secondLvlObj = firstLvlObj.secondlevelentries[0];
-                    if(secondLvlObj?.secondlevelentry){
+                    if(secondLvlObj?.secondlevelentry && crossRefValues.indexOf(secondLvlObj.secondlevelentry.text) < 0){
                         crossRefValues.push(secondLvlObj.secondlevelentry.text);
                     }
                 }

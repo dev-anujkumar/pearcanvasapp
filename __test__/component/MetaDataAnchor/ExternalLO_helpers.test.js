@@ -137,6 +137,43 @@ describe("-----------------Testing ExternalLO_helpers-----------------", () => {
       );
       expect(result).toEqual(expectedResult);
     });
+    it("Test-2.1---prepareLODataForUpdate else", () => {
+      config.tempSlateManifestURN = null;
+      config.slateManifestURN =
+        "urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd";
+      config.isPopupSlate = false;
+      let message = {
+        LO_Link_Status: true,
+        LO_UnLink_Status: true,
+        currentSlateLF: "externalLF",
+        loListLength: 4,
+        loUnlinked: [testData.currentSlateLOs_1[3]],
+        statusForExtLOSave: true,
+        toastData: "Learning Objective(s) updated.",
+      };
+      let expectedResult = [
+        {
+          elementVersionType: "element-learningobjectivemapping",
+          elementdata: {
+            loref:
+              "",
+          },
+          loIndex: ["1-0"],
+          metaDataAnchorID: [
+            "urn:pearson:work:13c99072-413a-4d59-85a2-3f4f4dce3b80",
+          ],
+        },
+      ];
+      let slateLevelData =
+        testData.slateLevelData_1_MainSlate[
+          "urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd"
+        ];
+      let result = externalLO_actions.prepareLODataForUpdate(
+        slateLevelData.contents.bodymatter,
+        message
+      );
+      expect(result).toEqual(expectedResult);
+    });
     it("Test-2.2---prepareLODataForUpdate", () => {
       config.tempSlateManifestURN = null;
       config.slateManifestURN =

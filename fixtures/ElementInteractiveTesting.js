@@ -584,3 +584,231 @@ export const interactiveElm = {
 	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
 	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
 }
+export const interactiveWeblink = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "figure",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactivetype": "web-link",
+		"interactiveformat": "mmi",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+export const interactiveElm3PI = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "figure",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactiveformat": "mmi-elm",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+export const SmartLinkinteractive = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "figure",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactivetype": "3rd-party",
+		"interactiveformat": "mmi",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+export const OpenerElement = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "openerelement",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "backgroundimage": {
+        "imageid":"urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec"
+    },
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactivetype": "web-link",
+		"interactiveformat": "mmi",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+
+export const InteractiveAlfresco =
+    {
+        "id": "urn:pearson:work:a7433eb8-5f26-43fc-94de-54a383639ba9",
+        "type": "figure",
+        "figuretype": "interactive",
+        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+        "titlecontentintitlefield": true,
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": ""
+        },
+        "captions": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": ""
+        },
+        "credits": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": ""
+        },
+        "figuredata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+            "path": "https://mediaplayer.pearsoncmg.com/assets/_pmd.true/Explain_Raising_a_power_to_a_power?mimeType=mp4",
+            "alttext": "updated ",
+            "longdescription": "updated ",
+            "interactiveid": "urn:pearson:alfresco:f1e4bca6-5351-4ab2-89f3-7080fa6e5e9c",
+            "interactivetype": "3rd-party",
+            "interactiveformat": "external-link",
+            "interactivetitle": "Wonda",
+            "intendedPlaybackMode": "inline",
+            "posterimage": {
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+                "imageid": "urn:pearson:alfresco:f1e4bca6-5351-4ab2-89f3-7080fa6e5e9c"
+            },
+            "vendor": "Wonda",
+            "mobileready": false
+        },
+        "html": {
+            "title": "<p></p>",
+            "captions": "<p></p>",
+            "credits": "<p></p>",
+            "footnotes": {},
+            "assetsPopover": {},
+            "glossaryentries": {},
+            "indexEntries": {}
+        },
+        "versionUrn": "urn:pearson:work:a7433eb8-5f26-43fc-94de-54a383639ba9",
+        "contentUrn": "urn:pearson:entity:11d70f59-482e-4610-98f1-0d6769477e10",
+        "sectionType": "bodymatter",
+        "alfrescoPlatformMetadata": {
+            "nodeRef": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+            "repositoryName": "AWS US",
+            "repositoryFolder": "001_C5 Media POC",
+            "repositoryUrl": "https://staging.api.pearson.com/content/cmis/uswip-aws",
+            "visibility": "MODERATED",
+            "siteId": "001_C5 Media POC",
+            "currentAsset": {}
+        },
+        "indexPos": "12",
+        "parentDetails": [],
+        "slateEntityUrn": "urn:pearson:entity:0fbd1e10-1647-4256-bd1e-a4d8d0caa260"
+    }

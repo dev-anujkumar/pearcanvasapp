@@ -5,20 +5,20 @@ import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
 import Tooltip from '../Tooltip';
-import { 
+import {
     stageDirectionIcon,
     dialougeElementIcon,
     workedExampleIcon,
-    sectionBreakElement, 
-    assessmentIcon, 
+    sectionBreakElement,
+    assessmentIcon,
     openerElement,
-    tcmIcon, 
+    tcmIcon,
     editInCypressPlus,
-    textIcon, 
-    imageIcon, 
-    interativeIcon, 
-    audioIcon, 
-    containerIcon, 
+    textIcon,
+    imageIcon,
+    interativeIcon,
+    audioIcon,
+    containerIcon,
     lockIcon,
     metaDataAnchor,
     elmCloseWindowIcon,
@@ -48,19 +48,22 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
-import ElementConstants from '../ElementContainer/ElementConstants'; 
+import tabIcon from '../../images/ElementButtons/tabIcon.png'
+import ElementConstants from '../ElementContainer/ElementConstants';
+import blureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 class ElementButton extends Component {
-   
+
   /**
   * Responsible for rendering Button component according to the props received
   * @param type type of button
   * @param clickHandlerFn Handler method to be called on click event
-  *  
+  *
   */
-    renderButton = (type, clickHandlerFn, elementType, btnClassName = '') => {
+    renderButton = (type, clickHandlerFn, elementType, btnClassName = '', isButtonDisabled = false) => {
         let buttonJSX = null
-        const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
-        const { labelText,elementId,isSubscribersSlate } = this.props
+        const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : '';
+        const { labelText,elementId,isSubscribersSlate, isgreyBorder } = this.props;
+        const isBorderOff = isgreyBorder ? "greyElementTag" : "";
         switch(type){
             case buttonTypes.CLOSE_CONTAINER:
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
@@ -75,7 +78,7 @@ class ElementButton extends Component {
                 </div>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
-                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} cypress-plus ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
                     {editInCypressPlus}
                 </span></Tooltip>
                 break;
@@ -89,14 +92,14 @@ class ElementButton extends Component {
                 </div>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${isBorderOff} ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
-                buttonJSX = <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}>
-                    <img src={deleteIcon} /></span>
+                buttonJSX = isButtonDisabled ? <span className={`btn-element delete-icon ${elementTypeClassName} icon-disabled`} > <img src={blureDeleteIcon} /></span>
+                : <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}> <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
-                buttonJSX = <span className={`btn-element small tcm-icon`} title="Track Changes" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small tcm-icon ${btnClassName}`} title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;
@@ -127,7 +130,7 @@ class ElementButton extends Component {
                     {audioIcon}
                     </span>
                 break;
-            case buttonTypes.INTERACTIVE_ELEMENT:                
+            case buttonTypes.INTERACTIVE_ELEMENT:
                 buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
@@ -212,6 +215,11 @@ class ElementButton extends Component {
                     {multiColumnContainer}
                 </span>
                 break;
+            case buttonTypes.TABBED_TAB:
+                buttonJSX = <span className="btn-element multi-column-group-tabbed-tab" onClick={clickHandlerFn}>
+                    <img src={tabIcon} />
+                </span>
+                break;
             case ButtonTypes.ELM_INTERACTIVE_ICON:
                 buttonJSX = <span className="" onClick={clickHandlerFn}>
                     {elmInteractiveIcon}
@@ -261,7 +269,7 @@ class ElementButton extends Component {
                 </span>
                 break;
             case buttonTypes.ELEMENT_LABEL_CLICKABLE:
-                buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label-clickable-button ${isBorderOff} ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.COMMENT_FLAGGED:
                 buttonJSX = <div className='flag-te-btn'>
@@ -280,13 +288,13 @@ class ElementButton extends Component {
         }
         return buttonJSX
     }
-    
+
     render() {
-        const { type, onClick, btnClassName, elementType } = this.props
-        
+        const { type, onClick, btnClassName, elementType, isButtonDisabled } = this.props
+
         return(
             <>
-                {this.renderButton(type, onClick, elementType, btnClassName )}             
+                {this.renderButton(type, onClick, elementType, btnClassName, isButtonDisabled )}
             </>
         )
     }

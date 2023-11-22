@@ -46,6 +46,10 @@
     appearance: none;
 }
 
+.element-dropdown-title.smartlink-element-dropdown-title{
+    margin: 0 0 24px 0 !important;
+}
+
 .canvas-sidebar .element-dropdown .element-dropdown-pod{
     width: 100%;
     border: 0 none;
@@ -302,4 +306,71 @@ pointer-events: none;
 
 .asideSlider:before{
     background-color: none !important;
+}
+
+.element-dropdown .categories, .element-dropdown .sub-categories{
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 16px 0 0 0;
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+}
+
+.element-dropdown .sub-categories{
+    margin-top: 24px;
+}
+
+.element-dropdown-content.secondary-options.playback-dropdown{
+    top: 70px;
+    padding: 0px;
+}
+
+.canvas-sidebar .element-dropdown .element-dropdown-title.intented-dropdown-banner {
+    margin: 0 0 4px 0 !important;
+}
+
+.modalBanner{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px;
+    width: 209px;
+    height: 40px;
+    background: #DDE1E6;
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.modalIcon{
+    left: 20.83%;
+    right: 25%;
+    top: 4.17%;
+    bottom: 4.17%;
+    padding: 0 8px;
+}
+
+.modalBanner .modalText{
+    width: 165px;
+    height: 24px;
+    font-family: 'Open Sans', sans-serif !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 9px !important;
+    line-height: 12px !important;
+    color: #737373;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.disablePlaybackMode {
+    opacity: 50%;
+    pointer-events: none;
 }

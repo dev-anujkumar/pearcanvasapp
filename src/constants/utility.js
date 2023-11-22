@@ -8,7 +8,8 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
-// DECLARATION - const or variables 
+import { checkSlateLock } from '../js/slateLockUtility';
+// DECLARATION - const or variables
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
 export const CHECKBOX_MESSAGE = "Don't ask me again";
@@ -20,6 +21,12 @@ export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="he
 export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature','element-list']
 export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
 export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content", "Enter Button Label"]
+export const GLOSSARY = 'GLOSSARY';
+export const MARKEDINDEX = 'MARKEDINDEX';
+export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
+export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
+export const validFirstNodeTags = ['span','dfn'];
+export const withoutCursorInitailizedElements = ['figure', 'element-aside']
 
 export const requestConfigURI = () => {
     let uri = '';
@@ -65,19 +72,73 @@ export const guid = () => {
 
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
+    const isReadOnlyContent = isApprovedOrSubscribed(authStore)
     let permissions = authStore && authStore.appStore.permissions;
-    let hasPermissions = permissions && permissions.includes(value)
+    let hasPermissions = permissions && permissions.includes(value);
+    //if reviewer user, then preference will be given to Reviewer
+    if(hasPermissions && value === 'note_viewer') return true
+    // if not reviewer user but contetn is subscriber/approved, then readonly conditions willl
+    // get preference
+    if(isReadOnlyContent) return false
+    //if not reviewer user or not readonly condition, then check other permissions
     return hasPermissions;
+}
+/**
+ * This function check whether the current slate is approve or subscribed
+ * and also check the conditions for popup slate
+ * @param {Object} authStore
+ * @returns
+ */
+export const isApprovedOrSubscribed = (authStore) => {
+    const {appStore, projectInfo} = authStore;
+    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
+    const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
+    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber || isSlateLocked());
+}
+/**
+ * This function checks the conditions for Reviewer users and approved/subscribed content both
+ * at same time to show or hide elements borders. Preference is giving to reviewer user and border
+ * will be visible for reviewer user
+ * @returns
+ */
+export const isApproved = () =>{
+    const authStore = store.getState();
+    const {appStore} = authStore;
+    const hasRole= appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
+    if(hasRole && !isSlateLocked())  return false
+    return isApprovedOrSubscribed(authStore)
+}
+
+export const isSlateLocked = () =>{
+    const authStore = store.getState();
+    const slateLockInfo = authStore?.slateLockReducer?.slateLockInfo;
+    return checkSlateLock(slateLockInfo);
 }
 
 
+
 export const hasReviewerRole = (value) => {
-    if (value) {
-        return !(hasProjectPermission(value) ? true : false)
-    }
     const authStore = store.getState();
-    let hasRole = authStore.appStore && (authStore.appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) ? true : false;
+    const {appStore} = authStore;
+    if (value) {
+        return !((hasProjectPermission(value) && !isApproved() && !isSlateLocked()) ? true : false)
+    }
+    let hasRole = (appStore && (appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isApproved() || isSlateLocked());
+    return hasRole;
+}
+
+/**
+ * This function checks the conditions for Reviewer users and subscribed content both
+ * @returns
+ */
+export const hasReviewerSubscriberRole = () => {
+    const authStore = store.getState();
+    const {appStore, projectInfo} = authStore;
+    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    let hasRole = (appStore && (appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isSubscriber);
     return hasRole;
 }
 /**
@@ -135,7 +196,7 @@ export const encodeHTMLInWiris = (str) => {
  */
 const removeTagsforSubTitle = (htmlText, elementType) => {
     if (elementType === 'figure') {
-        return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<number>?.+<\/number>/g, "").replace(/<p>|<\/p>/g, "")    
+        return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<number>?.+<\/number>/g, "").replace(/<p>|<\/p>/g, "")
     }
     return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
 }
@@ -154,7 +215,7 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
         if (modelType === "formatted-title"){
             try{
                 if(model && model.match(/<label>?.+<\/label>/g)){
-                    modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
+                    modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`
                 }
                 else{
                     modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -166,8 +227,8 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
         } else if (modelType === "formatted-number"){
             try{
                 if(model && model.match(/<number>?.+<\/number>/g)){
-                    let numberHtml = modelDom.children[0].tagName === 'NUMBER' ? modelDom.children[0].innerHTML : modelDom.children[1].innerHTML; 
-                    modelToReturn = `<p class="paragraphNumeroUno">${numberHtml}</p>`   
+                    let numberHtml = modelDom.children[0].tagName === 'NUMBER' ? modelDom.children[0].innerHTML : modelDom.children[1].innerHTML;
+                    modelToReturn = `<p class="paragraphNumeroUno">${numberHtml}</p>`
                 }
                 else{
                     modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -246,9 +307,9 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
     if (labelHTML === "" && numberHTML === ""){
         return `<p>${titleHTML}</p>`
     } else if (numberHTML === "" && labelHTML) {
-        return `<p><label>${labelHTML}&nbsp;</label>${titleHTML}</p>`    
+        return `<p><label>${labelHTML}&nbsp;</label>${titleHTML}</p>`
     } else if (labelHTML === "" && numberHTML) {
-        return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`    
+        return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
     }
     return `<p><label>${labelHTML}&nbsp;</label><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
 }
@@ -267,11 +328,15 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
         } else if (figureObj.hasOwnProperty('subtitle')) {
             figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
-        figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+        if (figureObj.hasOwnProperty('subtitle')) {
+            delete figureObj.subtitle;
+        }
      } else if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
              figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
-             figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-     }
+             if (figureObj.hasOwnProperty('subtitle')) {
+                delete figureObj.subtitle;
+            }
+        }
 
     let data = {};
      if(figureObj?.html && figureObj?.html?.title || figureObj?.html && figureObj?.html?.preformattedtext){
@@ -290,7 +355,7 @@ export const checkHTMLdataInsideString = (htmlNode) => {
     if (tempDiv?.firstChild && tempDiv?.firstChild?.innerHTML) {
         if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
             return '';
-        } else { 
+        } else {
             return tempDiv?.firstChild?.innerHTML;
         }
     } else {
@@ -359,7 +424,7 @@ export const dropdownValueForFiguretype = (element, figureDropdownData) => {
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
- *  It is used for mapping special characters in Wiris data 
+ *  It is used for mapping special characters in Wiris data
  */
 const htmlEntityList = {
     "§#160;": ["", "&nbsp;"],
@@ -570,7 +635,7 @@ const htmlEntityList = {
 
 /**
  * Removes blank/unused HTML tags from model
- * @param {String} htmlString HTML model string 
+ * @param {String} htmlString HTML model string
  */
 export const removeBlankTags = htmlString => {
     let domParsed = new DOMParser().parseFromString(htmlString, "text/html")
@@ -598,7 +663,7 @@ export const removeUnoClass = (htmlString) => {
     }
     catch (error) {
         /** Probably 'classToRemove' would be null
-         * So, returning input without processing 
+         * So, returning input without processing
         */
         return htmlString
     }
@@ -638,7 +703,7 @@ export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_p
  * @param {Object} element Showhide element data
  */
 export const getShowhideChildUrns = (element) => {
-    
+
     try {
         const extractIdCallback = ({ id }) => id
         const interactivedataObj = element.interactivedata
@@ -655,10 +720,12 @@ export const getShowhideChildUrns = (element) => {
     }
 }
 
-export const removeClassesFromHtml = (html) => {
+export const removeClassesFromHtml = (html, SD_DE_indent) => {
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
-    tinyMCE.$(tempDiv).find('p').removeAttr('class')
+    if (!SD_DE_indent) {
+        tinyMCE.$(tempDiv)?.find('p')?.removeAttr('class')
+    }
     return replaceUnwantedtags(tempDiv.innerHTML);
 }
 
@@ -705,13 +772,20 @@ export const prepareDialogueDom = (model) => {
     let lineModel = ConvertedModel ? ConvertedModel : '<span class="dialogueLine"><br /></span>'
     return lineModel;
 }
+// This function is use to add Playscript stageDirection class
+export const prepareStageDirectionDom = (model) => {
+    const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : model
+    return ConvertedModel;
+}
 
 /**sets Owner key in localstorage
  * @param data - whether the checkout is checked or not
  */
-export const releaseOwnerPopup=(data)=>{
-    if(data){
+export const releaseOwnerPopup=(data, projectSharingRole, isSubscribed)=>{
+    if(data && isOwnerRole(projectSharingRole, isSubscribed)){
         localStorage.setItem('hasOwnerEdit', true);
+    }else if( data && isSubscriberRole(projectSharingRole, isSubscribed)){
+        localStorage.setItem('hasSubscriberView', true);
     }
 
 }
@@ -721,10 +795,7 @@ export const releaseOwnerPopup=(data)=>{
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "OWNER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "OWNER" && isSubscribed;
 }
 
 /**It checks whether its a Subscriber project or not
@@ -732,10 +803,7 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "SUBSCRIBER" && isSubscribed;
 }
 
 // function to remove tinymce spellcheck DOM attributes from innerHTML
@@ -886,13 +954,13 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
             default: break;
         }
     }
-    
+
     if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
             if (updatedText.match('class="Wirisformula')) {
                 pastedContent = handleWirisImgPaste(updatedText)
             } else if(props?.element?.type === 'element-blockfeature' && props.placeholder === "Attribution Text") {
-                   pastedContent = handleImagePaste(updatedText) 
+                   pastedContent = handleImagePaste(updatedText)
             } else {
                 pastedContent = updatedText;
             }
@@ -914,9 +982,9 @@ export const handleTinymceEditorPlugins = (plugins) => {
     return editorPlugins;
 }
 /**
- * This function is used to restricts Pasting of Wiris Images 
- * @param {*} updatedText 
- * @returns 
+ * This function is used to restricts Pasting of Wiris Images
+ * @param {*} updatedText
+ * @returns
  */
 export const handleWirisImgPaste = (updatedText) => {
     let updatePasteContent = updatedText.replace(/<img align="middle" class="Wirisformula"([\w\W]+?)>/g,'')
@@ -925,8 +993,8 @@ export const handleWirisImgPaste = (updatedText) => {
 /**
  * This function is used to restricts pasting of images inside title,caption,credit etc..
  * fields of figure (or other) elements
- * @param {*} updatedText 
- * @returns 
+ * @param {*} updatedText
+ * @returns
  */
 export const handleImagePaste = (updatedText) => {
    let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
@@ -943,4 +1011,116 @@ export const removeStyleAttribute = (html) => {
     tinyMCE.$(tempDiv).find('span').removeAttr('style');
     tinyMCE.$(tempDiv).find('s').removeAttr('style');
     return tempDiv.innerHTML;
+}
+
+export const getSelectionTextWithFormatting = (node) => {
+    let tagName = node.tagName;
+    let tempDiv = document.createElement(tagName);
+    tempDiv.innerHTML = node.innerHTML;
+    return tempDiv.outerHTML;
+}
+
+export const getParentNode = (node, stylingOrderList) => {
+    let parentNode = node?.parentNode;
+    if (parentNode && parentNode.tagName && validStylesTagList.indexOf(parentNode.tagName.toLowerCase()) > -1) {
+        stylingOrderList.push(parentNode.tagName.toLowerCase());
+        getParentNode(parentNode, stylingOrderList);
+    }
+}
+
+export const findStylingOrder = (node) => {
+    let stylingOrderList = [];
+    if (node && node.tagName && validFirstNodeTags.indexOf(node.tagName.toLowerCase()) > -1) {
+        getParentNode(node, stylingOrderList);
+    }
+    return stylingOrderList;
+}
+
+export const removeMarkedIndexDOMAttributes = (innerHTML, currentMarkedIndexId) => {
+    const markedIndexDiv = document.createElement('div');
+    markedIndexDiv.innerHTML = innerHTML
+    while(tinyMCE.$(markedIndexDiv).find(`span[data-uri="${currentMarkedIndexId}"]`)?.length) {
+        tinyMCE.$(markedIndexDiv).find(`span[data-uri="${currentMarkedIndexId}"]`).each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+    }
+    return markedIndexDiv?.innerHTML;
+}
+
+export const removedDOMAttributes = (innerHTML, className) => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = innerHTML
+    while (tinyMCE.$(tempDiv).find(`span.${className}`)?.length) {
+        tinyMCE.$(tempDiv).find(`span.${className}`).each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+        if (tinyMCE.$(tempDiv).find(`span.${className}`)?.length === 0) {
+            break;
+        }
+    }
+    return tempDiv?.innerHTML;
+}
+
+export const showNotificationOnCanvas = (message, type) => {
+    let linkNotification = document.getElementById('link-notification');
+    if (linkNotification) {
+        if(type && type==='metadataUpdated')
+        {
+            linkNotification.style.background = '#000000'
+            linkNotification.style.fontSize = '14px'
+        }
+        linkNotification.innerText = message;
+        linkNotification.style.display = "block";
+        setTimeout(() => {
+            linkNotification.style.display = "none";
+            linkNotification.innerText = "";
+            if(type && type==='metadataUpdated'){
+                linkNotification.style.background = '#444'
+                linkNotification.style.fontSize = '12px'
+            }
+        }, 3000);
+    }
+}
+
+// This function is use to handle Indentation for the Element
+export const isElementIndent = (stanzaClassList) => {
+    return (stanzaClassList?.contains('poetryLineLevel1') || stanzaClassList?.contains('poetryLineLevel2') || stanzaClassList?.contains('poetryLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
+}
+
+// This function is use to handle Indentation for Playscript
+export const isDialogueIndent = (stanzaClassList) => {
+    return (stanzaClassList?.contains('SDLineLevel1') || stanzaClassList?.contains('SDLineLevel2') || stanzaClassList?.contains('SDLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
+}
+
+// This function is use to return Playscript character class
+export const getDEClassType = (classList) => {
+    if(classList?.contains("CNLineLevel1")) {
+        return 'class=\"CNLineLevel1\"';
+    } else if(classList?.contains("CNLineLevel2")) {
+        return 'class=\"CNLineLevel2\"';
+    } else if(classList?.contains("CNLineLevel3")) {
+        return 'class=\"CNLineLevel3\"';
+    }
+}
+// This function is use to return Playscript character class
+export const getDEClassName = (classList) => {
+    if(classList?.includes("CNLineLevel1")) {
+        return 'CNLineLevel1';
+    } else if(classList?.includes("CNLineLevel2")) {
+        return 'CNLineLevel2';
+    } else if(classList?.includes("CNLineLevel3")) {
+        return 'CNLineLevel3';
+    } else {
+        return "characterPS";
+    }
+}
+/**
+ * This function remove blankspaces and converters the provided string in lowercase
+ * @param {String} string
+ * @returns
+ */
+export const removeBlankSpaceAndConvertToLowercase = (string) => {
+    if (string) return string.split(' ').join('').toLowerCase()
 }

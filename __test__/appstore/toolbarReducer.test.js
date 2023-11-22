@@ -5,6 +5,7 @@ const INIT_STATE = {
     elemBorderToggle: true,
     pageNumberToggle:false,
     spellCheckToggle: true,
+    unlockSlateToggle: false
 }
 const expectedState={
     ...INIT_STATE,
@@ -26,9 +27,7 @@ describe('testing Toolbar Reducer cases --', () => {
     it('Change elemBorderToggle value ', () => {
      expect(toolbarReducer(INIT_STATE, {
             type: TOGGLE_BORDERS,
-            payload: {
-                elemBorderToggle: false
-            }
+            payload: false
         })).toEqual(expectedState);
     })
     it('Change pagenumber value ', () => {

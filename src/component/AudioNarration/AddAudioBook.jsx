@@ -27,11 +27,10 @@ class AddAudioBook extends React.Component {
         this.props.closeAddAudioBook();
         this.handleC2MediaClick(this)
     }
-    
-    handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary) => {
+
+    handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary,currentAsset) => {
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
+        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         return axios.get(url,
             {
                 headers: {
@@ -42,11 +41,12 @@ class AddAudioBook extends React.Component {
                 }
             })
             .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+               let payloadObj = {launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 id,
-                isGlossary
+                isGlossary,
+                currentAsset
             }
                 that.props.alfrescoPopup(payloadObj);
             })
@@ -61,7 +61,6 @@ class AddAudioBook extends React.Component {
         if(hasReviewerRole()){
             return true
         }
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
@@ -73,10 +72,11 @@ class AddAudioBook extends React.Component {
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                    let messageObj = {appName:'cypress', citeName:  citeName, 
+                    let messageObj = {appName:'cypress', citeName:  citeName,
                         citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
-                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary 
+                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary,
+                        currentAsset: { type: "audio" }
                     }
 
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
@@ -95,7 +95,8 @@ class AddAudioBook extends React.Component {
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary)
+                let currentAsset = { type: "audio" }
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary, currentAsset);
             } else {
                 this.props.accessDenied(true)
             }

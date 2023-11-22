@@ -53,7 +53,7 @@
     }
 }
 
-.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl) * {
+.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl):not(.tb):not(.tab):not(.tcc) * {
     cursor: default !important;
 }
 
@@ -141,8 +141,17 @@
     margin-bottom: 0px !important;
     /*margin-top: 10px !important; */
 }
+.manifest-list-li > .editor > .element-container.p.showBorder, .manifest-list-li > .editor > .element-container.p.active{
+    background: none;
+}
 .bl .cypress-editable.place-holder::before {
     margin-top: -2px !important;
+}
+.tb .bl .bl .bl .bl .cypress-editable.place-holder::before {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100px;
+    overflow: hidden
 }
 .bl .p {
     border: none !important;
@@ -158,6 +167,7 @@
 }
 .bl .disc{
     padding-top: 10px;
+    margin-left: 0em;
 }
 .bl .element-container p.paragraphNumeroUno{
     font-size: 12px !important;
@@ -324,6 +334,10 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     content: attr(data-placeholder);
 }
 
+p.blockquoteTextCredit {
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia Pro, serif !important;
+}
+
 .hideElement {
     display: none;
 }
@@ -371,4 +385,15 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     font-family: monospace !important;
     font-size: 1.2175em !important;
     font-style: inherit !important;
+}
+.metadata-pdfElement {
+    width: 22px;
+}
+.btn-element.alfresco-metadata-icon.metadata-pdfElement img {
+    width: 20px;
+    padding: 4px 2px 0 2px;
+}
+.cypress-plus {
+    width: 22px;
+    margin-bottom: -2px;
 }

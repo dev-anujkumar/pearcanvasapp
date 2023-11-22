@@ -4,7 +4,7 @@ import { imageIcon } from '../../images/ElementButtons/ElementButtons.jsx'
 import './../../styles/ElementFigure/ElementFigure.css';
 
 const FigureTinyMceGlossary = (props) => {
-    
+
     return (
         <>
             {

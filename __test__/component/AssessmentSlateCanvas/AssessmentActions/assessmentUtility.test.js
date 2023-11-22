@@ -4,7 +4,7 @@ import React from 'react';
 import * as assessment_UtiltyFn from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { newFigureObj } from '../../../../fixtures/ElementFigureTestingData';
 import { audioElementTypeAlfrescoWithData } from '../../../../fixtures/ElementAudioVideoTestingData';
-import { Interactive3party, interactiveElm } from '../../../../fixtures/ElementInteractiveTesting';
+import { Interactive3party, interactiveElm3PI, interactiveWeblink, OpenerElement , SmartLinkinteractive } from '../../../../fixtures/ElementInteractiveTesting';
 
 describe('Test---Assessment Utility Functions', () => {
     describe('Test 1---setAssessmentTitle Function', () => {
@@ -361,7 +361,7 @@ describe('Test---Assessment Utility Functions', () => {
             "titlecontentintitlefield": true,
             "figuredata": {
                 "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
-                "tableasHTML": "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>"
+                "tableasHTML": "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" class=\"imageAssetContent inlineImage\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>"
             },
            
         };
@@ -412,7 +412,14 @@ describe('Test---Assessment Utility Functions', () => {
         spyFunction.mockClear();
     });
     it('Test 17---checkInteractive', () => {
-        let element = interactiveElm;
+        let element = interactiveWeblink;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
+        assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkInteractive', () => {
+        let element = interactiveElm3PI;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
         expect(spyFunction).toHaveReturnedWith(true);
@@ -422,6 +429,34 @@ describe('Test---Assessment Utility Functions', () => {
         let element = {};
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkSmartLinkInteractive', () => {
+        let element = SmartLinkinteractive;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkSmartLinkInteractive');
+        assessment_UtiltyFn.checkSmartLinkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkSmartLinkInteractive', () => {
+        let element = {};
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkSmartLinkInteractive');
+        assessment_UtiltyFn.checkSmartLinkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 18---checkOpenerElement', () => {
+        let element = OpenerElement;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkOpenerElement');
+        assessment_UtiltyFn.checkOpenerElement(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 18---checkOpenerElement', () => {
+        let element = {};
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkOpenerElement');
+        assessment_UtiltyFn.checkOpenerElement(element);
         expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });

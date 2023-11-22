@@ -75,7 +75,7 @@ export default {
         },
         'primary-blockquote': {
             text: 'Blockquotes',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag','alignment','IndexEntry'],
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag','alignment','IndexEntry','increaseindent','decreaseindent'],
             enum: 'BLOCKFEATURE',
             subtype: {
                 'secondary-pullquote': {
@@ -146,7 +146,7 @@ export default {
         },
         enumType: 'text',
     },
-    
+
     'figure': {
         'primary-image-figure': {
             text: 'Figure Image',
@@ -177,7 +177,7 @@ export default {
                     text: '75% Text Width',
                     labelText: 'Fg',
                     enum: 'IMAGE_75_TEXT'
-                },               
+                },
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
@@ -281,6 +281,48 @@ export default {
                 long_description: {
                     text: 'Long Description',
                     isEditable: false
+                }
+            }
+        },
+        'primary-image-decorative': {
+            text: 'Decorative Image',
+            toolbar: ['insertMedia', 'formatSelector', 'crossLinkingIcon', 'assetpopover', 'glossary', 'decreaseindent', 'alignment', 'calloutIcon', 'IndexEntry'],
+            enum: 'DECORATIVE',
+            subtype: {
+                'secondary-image-figure-width': {
+                    text: 'Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_TEXT_WIDTH'
+                },
+                'secondary-image-figure-actual': {
+                    text: 'Actual Size',
+                    labelText: 'DI',
+                    enum: 'IMAGE_ACTUAL_SIZE'
+                },
+                'secondary-image-figure-quarter': {
+                    text: '25% Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_25_TEXT'
+                },
+                'secondary-image-figure-half': {
+                    text: '50% Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_50_TEXT'
+                },
+                'secondary-image-figure-three-quarter': {
+                    text: '75% Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_75_TEXT'
+                },
+                'secondary-image-figure-wider': {
+                    text: 'Wider Than Text',
+                    labelText: 'DI',
+                    enum: 'IMAGE_WIDER'
+                },
+                'secondary-image-figure-full': {
+                    text: 'Full Screen',
+                    labelText: 'DI',
+                    enum: 'IMAGE_FULL'
                 }
             }
         },
@@ -445,7 +487,7 @@ export default {
                     text: 'XML',
                     labelText: 'BCE',
                     enum: 'XML'
-                },      
+                },
             }
         },
         'primary-editor-table-equation': {
@@ -700,17 +742,17 @@ export default {
         },
         enumType: 'workedexample'
     },
-	'element-assessment': {		
-        'primary-single-assessment': {		
+	'element-assessment': {
+        'primary-single-assessment': {
             text: 'Single Assessment',
             toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
-            enum: 'SINGLE_ASSESSMENT',		
-            subtype: {	
+            enum: 'SINGLE_ASSESSMENT',
+            subtype: {
                 'secondary-single-assessment-puf': {
                     text: 'Elm',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_PUF'
-                },	
+                },
                 'secondary-single-assessment-cite': {
                     text: 'QuAD CITE',
                     labelText: 'Qu',
@@ -721,52 +763,52 @@ export default {
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_TDX'
                 },
-                
+
                 'secondary-single-assessment-learnosity': {
                     text: 'Learnosity',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_LEARNOSITY'
                 }
-            }		
+            }
         },
         'primary-assessment-slate' : {
             text: 'Assessment Slate',
-            enum: '',		
-            subtype: {		
+            enum: '',
+            subtype: {
                 'secondary-assessment-puf' : {
-                    text: 'ELM',		
-                    labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
-                },
-                'secondary-assessment-cite': {		
-                    text: 'QuAd CITE',		
+                    text: 'ELM',
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'
-                },		
-                'secondary-assessment-tdx': {		
-                    text: 'TDX',		
-                    labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'		
                 },
-                
-                'secondary-assessment-learnosity' : {
-                    text: 'LEARNOSITY',		
+                'secondary-assessment-cite': {
+                    text: 'QuAd CITE',
                     labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
+                    enum: 'ELEMENT_ASSESSMENT'
+                },
+                'secondary-assessment-tdx': {
+                    text: 'TDX',
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'
+                },
+
+                'secondary-assessment-learnosity' : {
+                    text: 'LEARNOSITY',
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'
                 },
                 'secondary-assessment-learningtemplate' : {
-                    text: 'LEARNING TEMPLATE',		
+                    text: 'LEARNING TEMPLATE',
                     labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
-                }			
+                    enum: 'ELEMENT_ASSESSMENT'
+                }
             }
         },
-        enumType: 'assessment',		
+        enumType: 'assessment',
     },
      'element-interactive': {
         'primary-elm-interactive': {
             text: 'Elm Interactive',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry','decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
             enum: 'MMI_ELM',
             subtype: {
                 'secondary-elm-interactive': {
@@ -779,7 +821,7 @@ export default {
         },
         'primary-mmi': {
             text: 'Quad Interactive',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry','decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
@@ -808,7 +850,7 @@ export default {
                         long_description: {
                             text: 'Long Description',
                             isEditable: false
-                        }            
+                        }
                     }
                 },
                 'secondary-interactive-smartlink-pdf': {
@@ -823,10 +865,14 @@ export default {
                     enum: 'WEB_LINK',
                     wipValue: 'web-link',
                     attributes: {
+                        alt_text: {
+                            text: 'Alt Text',
+                            isEditable: false
+                        },
                         long_description: {
                             text: 'Long Description',
                             isEditable: false
-                        } 
+                        }
                     }
                 },
                 'secondary-interactive-smartlink-pop-up-web-link': {
@@ -848,7 +894,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','increaseindent','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
             dropdownDisabled: true,
             enum:'POP_UP',
             subtype: {
@@ -858,7 +904,7 @@ export default {
                     enum : "NA"
                 }
             }
-        } 
+        }
     },
     "showhide": {
         "primary-showhide": {
@@ -872,7 +918,7 @@ export default {
                     enum : "NA"
                 }
             }
-        } 
+        }
     },
     "openerelement": {
         "primary-openerelement": {
@@ -896,7 +942,7 @@ export default {
                     isEditable: false
                 }
             }
-        } 
+        }
     },
     'citations' : {
         'primary-citations-group': {
@@ -925,12 +971,12 @@ export default {
                 }
             }
         }
-    },   
+    },
     "poetry" : {
         "primary-poetry": {
             text: 'Block Poetry',
             enum: 'POETRY',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','increaseindent','alignment', 'calloutIcon', 'IndexEntry'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {
@@ -939,7 +985,7 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
+        }
     },
     "stanza" : {
         "primary-stanza": {
@@ -954,14 +1000,14 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
+        }
     },
-    'groupedcontent': {		
-        'primary-multicolumn': {		
+    'groupedcontent': {
+        'primary-multicolumn': {
             text: '2 Column',
             toolbar: [],
-            enum: 'MULTI_COLUMN',		
-            subtype: {		
+            enum: 'MULTI_COLUMN',
+            subtype: {
                 'secondary-multicolumn-wider': {
                     text: 'Wider than text width 60/40%',
                     labelText: '2C',
@@ -982,21 +1028,68 @@ export default {
                     labelText: '2C',
                     enum: 'TEXT_WIDTH_50_50'
                 }
-            }		
+            }
         },
-        'primary-multicolumn-3c': {		
+        'primary-multicolumn-3c': {
             text: '3 Column',
             toolbar: [],
-            enum: 'MULTI_COLUMN',		
-            subtype: {		
+            enum: 'MULTI_COLUMN',
+            subtype: {
                 'secondary-multicolumn-3c-wider': {
                     text: 'Wider than text width 33/33/33%',
                     labelText: '3C',
                     enum: 'WIDER_33_33_33'
                 }
-            }		
+            }
         },
-        enumType: 'multicolumn'		
+        'primary-tabbed-elem': {
+            text: 'Tabbed 2 Column',
+            toolbar: [],
+            enum: 'TABBED_2_COLUMN',
+            subtype: {
+                'secondary-multicolumn-wider': {
+                    text: 'Distribution 4 : 60% - 40%',
+                    labelText: 'TB',
+                    enum: 'TEXT_WIDTH_60_40'
+                }
+            }
+        },
+        enumType: 'multicolumn'
+    },
+    'group': {
+        'primary-tab': {
+            text: 'Tab 2 Column',
+            toolbar: [],
+            enum: 'TABBED_2_COLUMN',
+            subtype: {
+                'secondary-tabbed-30-70': {
+                    text: 'Distribution 1 : 30% - 70%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_30_70'
+                },
+                'secondary-tabbed-40-60': {
+                    text: 'Distribution 2 : 40% - 60%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_40_60'
+                },
+                'secondary-tabbed-50-50': {
+                    text: 'Distribution 3 : 50% - 50%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_50_50'
+                },
+                'secondary-tabbed-60-40': {
+                    text: 'Distribution 4 : 60% - 40%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_60_40'
+                },
+                'secondary-tabbed-70-30': {
+                    text: 'Distribution 5 : 70% - 30%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_70_30'
+                }
+            }
+        },
+        enumType: 'tabbed-2-column'
     },
     "element-dialogue" : {
         "primary-element-dialogue": {
@@ -1011,7 +1104,7 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
+        }
     },
     "discussion" : {
         "primary-element-discussion": {
@@ -1025,6 +1118,6 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
-    }, 
+        }
+    },
 };

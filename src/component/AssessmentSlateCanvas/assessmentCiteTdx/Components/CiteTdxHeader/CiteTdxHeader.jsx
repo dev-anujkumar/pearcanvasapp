@@ -6,7 +6,7 @@ import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTd
 import Button from './../../../../ElementButtons';
 import { ASSESSMENT_PICKER_OPENERS } from '../../../AssessmentSlateConstants.js';
 class CiteTdxHeader extends Component {
-    
+
     handleClose = () => {
         const { openedFrom, assessmentType, assessmentSlateObj, setCiteTdxFilterData } = this.props.headerProps;
         this.props.headerProps.closeWindowAssessment();
@@ -15,7 +15,7 @@ class CiteTdxHeader extends Component {
             setCiteTdxFilterData(assessmentType, assessmentSlateObj);
         }
     }
-    
+
     render() {
         const { title } = this.props.headerProps;
 

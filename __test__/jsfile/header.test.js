@@ -1,10 +1,4 @@
 import { SET_CURRENT_SLATE, GET_CURRENT_SLATE, trackChanges, publishContent, releaseLockAndRedirect, logout } from '../../src/js/header.js';
-jest.mock("../../src/js/auth_module", () => {
-    let OPEN_AM = {
-        logout: jest.fn()
-    }
-    return OPEN_AM
-})
 import config from '../../src/config/config';
 var current_slate_urn = '';
 
@@ -33,6 +27,16 @@ describe('Header module testing', () => {
             let c4PublishObj = {
                 publishTitle : jest.fn()
             }
+            return c4PublishObj
+        })
+       
+        publishContent(type)
+    })
+
+    it('Testing publishContent : else', () => {
+        let type = 'test'
+        jest.mock("../../src/js/c4_module", () => {
+            let c4PublishObj = {}
             return c4PublishObj
         })
        

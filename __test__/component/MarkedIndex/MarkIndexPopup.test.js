@@ -28,26 +28,47 @@ const initialState = {
     markedIndexReducer: {
         markedIndexValue: {
             popUpStatus: false,
-            type: "Markedindex"
+            type: "Markedindex",
+            markIndexid: "123"
         },
         markedIndexGlossary: {
             popUpStatus: false, indexEntries: {}, markedIndexEntryURN: ''
-        }
+        },
+        elementIndex: "0"
     }
 }
 const initialState1 = {
     markedIndexReducer: {
         markedIndexValue: {
             popUpStatus: false,
-            type: "Markedindex"
+            type: "Markedindex",
+            markIndexid: "123"
         },
         markedIndexGlossary: {
             popUpStatus: false, indexEntries: {}, markedIndexEntryURN: ''
-        }
+        },
+        elementIndex: "0"
+    }
+}
+const initialState2 = {
+    markedIndexReducer: {
+        markedIndexValue: {
+            popUpStatus: false,
+            type: "Markedindex",
+            markIndexid: "123"
+        },
+        markedIndexGlossary: {
+            popUpStatus: false, indexEntries: {}, markedIndexEntryURN: '123'
+        },
+        markedIndexCurrentValue: {
+            secondLevel: "123"
+        },
+        elementIndex: "0"
     }
 }
 let store = mockStore(initialState);
 let store1 = mockStore(initialState1)
+let store2 = mockStore(initialState2)
 
 describe('Testing Markedindex component with props', () => {
     let props = {
@@ -61,7 +82,9 @@ describe('Testing Markedindex component with props', () => {
             markedIndexGlossary: {
                 popUpStatus: false
             }
-        }
+        },
+        showBlocker: jest.fn(),
+        elementIndexForMarkedIndex: 1,
 
     }
     const e = {
@@ -130,6 +153,33 @@ describe('Testing Markedindex component with props', () => {
         let MarkIndexPopupInstance = wrapper.find('PrintIndexPopup').instance();
         MarkIndexPopupInstance.saveMarkedIndex()
     })
+
+    it('saveMarkedIndex Function- if path isInGlossary and markedIndexEntryURN', () => {
+        let props = {
+            permissions: [],
+            showGlossaaryFootnote: jest.fn(),
+            showingToastMessage: jest.fn(),
+            markedIndexCurrentValue: { firstLevel: 'imageAssetContent', crossReferences: ['test1', 'test2'] },
+            showMarkedIndexPopup: jest.fn(),
+            markedIndexData: {markedIndexValue: {isNewIndex: "2"},markedIndexGlossary: {
+                popUpStatus: false, indexEntries: {}, markedIndexEntryURN: '123'
+            }},
+            isInGlossary: {
+                markedIndexGlossary: {
+                    popUpStatus: false
+                }
+            }
+        }
+        document.querySelector = (selector) => {
+            return { 
+                innerHTML: "<p></p>" 
+        }
+    }
+        let wrapper = mount(<Provider store={store2}>< PrintIndexPopup {...props} /></Provider>);
+        let MarkIndexPopupInstance = wrapper.find('PrintIndexPopup').instance();
+        MarkIndexPopupInstance.saveMarkedIndex()
+    })
+
     it('renders markedIndexValueDifference function correctly', () => {
         let newTerm = 'abc'
         let oldTerm = 'cde'
@@ -161,6 +211,47 @@ describe('Testing Markedindex component with props', () => {
         let MarkIndexPopupInstance = wrapper.find('PrintIndexPopup').instance();
         const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'closePopUp')
         MarkIndexPopupInstance.closePopUp()
+        expect(spyclosePopUp).toHaveBeenCalled()
+        spyclosePopUp.mockClear()
+    })
+    it('Test-showMarkedIndexWarningPopup function', () => {
+        const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'showMarkedIndexWarningPopup')
+        MarkIndexPopupInstance.showMarkedIndexWarningPopup()
+        expect(spyclosePopUp).toHaveBeenCalled()
+        spyclosePopUp.mockClear()
+    })
+    it('Test-toggleMarkedIndexPopup function', () => {
+        const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'toggleMarkedIndexPopup')
+        MarkIndexPopupInstance.toggleMarkedIndexPopup()
+        expect(spyclosePopUp).toHaveBeenCalled()
+        spyclosePopUp.mockClear()
+    })
+    it('showMarkedIndexRemoveConfirmationPopup function ', () => {
+        MarkIndexPopupInstance.setState({showMarkIndexWarningMsg: true});
+        const spy = jest.spyOn(MarkIndexPopupInstance, 'showMarkedIndexRemoveConfirmationPopup')
+        MarkIndexPopupInstance.showMarkedIndexRemoveConfirmationPopup();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('Test-getCrossRefData function -- if case', () => {
+        document.querySelector = (selector) => {
+            if (selector == '#markedindex-cross-reference') {
+                return { innerHTML: "Testing" }
+            }
+        }
+        const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'getCrossRefData')
+        MarkIndexPopupInstance.getCrossRefData()
+        expect(spyclosePopUp).toHaveBeenCalled()
+        spyclosePopUp.mockClear()
+    })
+    it('Test-processRemoveMarkedIndexConfirmation function -- if case', () => {
+        document.querySelector = (selector) => {
+                return { parentNode : {
+                    innerHTML: "Testing" }
+            }
+        }
+        const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'processRemoveMarkedIndexConfirmation')
+        MarkIndexPopupInstance.processRemoveMarkedIndexConfirmation()
         expect(spyclosePopUp).toHaveBeenCalled()
         spyclosePopUp.mockClear()
     })

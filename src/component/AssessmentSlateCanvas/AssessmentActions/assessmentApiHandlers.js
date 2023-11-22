@@ -11,6 +11,7 @@ import {
     SET_USAGE_TYPE,
     SET_INTERACTIVE_METADATA
 } from "../../../constants/Action_Constants";
+import { sendDataToIframe } from '../../../constants/utility.js';
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
 import { hideBlocker} from '../../../js/toggleLoader';
@@ -33,6 +34,7 @@ const AssessmentAPIHandlers = {
                 usageTypeData.push({ usagetype: usageType.usagetype, label: usageType.label.en })
             })
         }
+        sendDataToIframe({ 'type': 'saveUsageTypeListData', 'message': { usageTypeListData: usageTypeData } });
         dispatch({
             type: SET_USAGE_TYPE,
             payload: {
@@ -128,7 +130,8 @@ const AssessmentAPIHandlers = {
             assessmentEntityUrn: responseData.entityUrn,
             targetId: assessmentData.targetId,
             createdDate: responseData.dateCreated,
-            intendedUsage: responseData.intendedUsage
+            intendedUsage: responseData.intendedUsage,
+            modifiedDate: responseData.dateModified
         }
     },
     /** @description This function returns assessment-metadata for assessment with status-final */

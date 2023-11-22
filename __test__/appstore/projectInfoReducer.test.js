@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions";
 import { projectInfo } from "../../src/appstore/projectInfoReducer";
-import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, UPDATE_PROJECT_INFO, UPDATE_USAGE_TYPE, UPDATE_DISCUSSION_ITEMS, UPDATE_LOB_WORKFLOW } from "../../src/constants/Action_Constants";
+import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, UPDATE_PROJECT_INFO, UPDATE_USAGE_TYPE, UPDATE_DISCUSSION_ITEMS, UPDATE_LOB_WORKFLOW, BANNER_IS_VISIBLE, SUBSCRIBERS_SUBSCRIBED_SLATE, SET_TOC_SLATE_LABEL } from "../../src/constants/Action_Constants";
 
 const INITIAL_STATE = {
     usageType: [],
@@ -15,7 +15,10 @@ const INITIAL_STATE = {
     isOwnersSubscribedSlateChecked: true,
     isOwnerKeyExist: false,
     LOBList:[],
-    showDiscussionLOBDropdown: false
+    showDiscussionLOBDropdown: false,
+    isBannerVisible: false,
+    isSubscribersSubscribedSlateChecked: true,
+    isSubscriberKeyExist: false,
 }
 
 describe("Testing LOB permissions", () => {
@@ -145,6 +148,44 @@ describe("Testing LOB permissions", () => {
             type: OWNERS_SUBSCRIBED_SLATE,
             payload:
                 isOwnersSubscribedSlateChecked
+
+        })).toEqual(output)
+    });
+    it('SUBSCRIBERS_SUBSCRIBED_SLATE', () => {
+        let isSubscribersSubscribedSlateChecked = true
+        let output = {
+            ...INITIAL_STATE,
+            isSubscribersSubscribedSlateChecked: true
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: SUBSCRIBERS_SUBSCRIBED_SLATE,
+            payload:
+            isSubscribersSubscribedSlateChecked
+        })).toEqual(output)
+    });
+    it('BANNER_IS_VISIBLE', () => {
+        let isBannerVisible = true
+        let output = {
+            ...INITIAL_STATE,
+            isBannerVisible: true
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: BANNER_IS_VISIBLE,
+            payload:
+            isBannerVisible
+
+        })).toEqual(output)
+    });
+    it('SET_TOC_SLATE_LABEL', () => {
+        let slateTocLabel = true
+        let output = {
+            ...INITIAL_STATE,
+            slateTocLabel: true
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: SET_TOC_SLATE_LABEL,
+            payload:
+            slateTocLabel
 
         })).toEqual(output)
     });

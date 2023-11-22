@@ -20,8 +20,6 @@ const AcceptedTransactionsDataMapper = {
       },
     } = data;
 
-    // replacing the &nbsp; with space character
-    acceptedElementSnapshot = TCMUtils.replaceNBSPWithSpace(acceptedElementSnapshot);
     elementChangeType = elementChangeType.toLowerCase();
     returnValue.elementChangeType = elementChangeType;
     returnValue.theme = elementChangeType === 'delete' ? 'deleted' : 'changeAccepted';
@@ -33,7 +31,7 @@ const AcceptedTransactionsDataMapper = {
 
       returnValue.contentDifference = JSON.parse(acceptedElementSnapshot).contentSnapshot;
       returnValue.lastAcceptedContent = JSON.parse(acceptedElementSnapshot).contentSnapshot;
-    
+
     returnValue.trackChangeApprover = authorName;
     returnValue.changeStatus = changeStatus.toLowerCase();
     returnValue.feedback = feedBackData;

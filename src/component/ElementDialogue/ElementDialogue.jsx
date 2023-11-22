@@ -8,7 +8,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName } from '../../constants/utility.js';
+import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI, handleCommonEvents } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
@@ -17,6 +17,8 @@ import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx'
 import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
@@ -87,7 +89,7 @@ class ElementDialogue extends React.PureComponent {
         setTimeout(() => {
             this.setState({
                 showActionUndone: false
-            }) 
+            })
         }, 2000);
     }
 
@@ -169,16 +171,16 @@ class ElementDialogue extends React.PureComponent {
         this.props.handleCheckboxPopup({ event: { target: { checked: false } } })
         hideBlocker();
     }
-    /*** @description - This function is to disable all components 
+    /*** @description - This function is to disable all components
                         when update Popups are open in window */
     showCanvasBlocker = () => {
         this.props.showBlocker(true);
         showTocBlocker();
     }
     /**
-     * 
+     *
         @renderDialogueContent | This function used to render Dialogue Content
-        @param _props | This contains the props object 
+        @param _props | This contains the props object
     **/
     renderDialogueContent = (_props) => {
         let dialogueContent = _props.element?.html?.dialogueContent;
@@ -188,6 +190,10 @@ class ElementDialogue extends React.PureComponent {
                 let labelText = (element.type === 'lines') ? 'DE' : 'SD';
                 return (
                     <Fragment key={element.id}>
+                        <LazyLoad
+                            once={true}
+                            placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                        >
                         <div className={"editor"}
                             data-id={element.id}
                             innerElementID={_props.elementId+'-'+index}
@@ -239,6 +245,7 @@ class ElementDialogue extends React.PureComponent {
                             userRole={_props.userRole}
                             sepratorID={_props.elementId+'-'+index}
                         />
+                        </LazyLoad>
                     </Fragment>
                 )
             })
@@ -272,7 +279,7 @@ class ElementDialogue extends React.PureComponent {
         }
     }
 
-    // function to be called on click of dialogue inner elements delete button 
+    // function to be called on click of dialogue inner elements delete button
     handleDialogueInnerElementsDelete = (e, index, element, labelText) => {
         e.stopPropagation();
         this.showCanvasBlocker();
@@ -301,7 +308,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     renderButtons = (index, buttonClass, labelText, element) => {
-        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle) || this.props.borderToggle == 'active') {
+        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle && this.props.borderToggle !== 'hideBorder') || this.props.borderToggle == 'active') {
             return (
                 <div>
                     <Button
@@ -310,7 +317,7 @@ class ElementDialogue extends React.PureComponent {
                         labelText={labelText}
                     />
                     {
-                        this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
+                        this.props.permissions && this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() ?
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element, labelText)}
@@ -325,10 +332,10 @@ class ElementDialogue extends React.PureComponent {
 
     /**
      * Handles focus for inner elements (SD and DE)
-     * @param {} c2Flag 
-     * @param {*} showHideObj 
+     * @param {} c2Flag
+     * @param {*} showHideObj
      * @param {*} event Event object
-     * @param {*} index 
+     * @param {*} index
      */
     handleInnerFocus = (c2Flag, showHideObj, event, index) => {
         event.stopPropagation()
@@ -338,8 +345,8 @@ class ElementDialogue extends React.PureComponent {
 
     /**
      * Handles focus for outer parts (rest area except SD and DE)
-     * @param {*} c2Flag 
-     * @param {*} showHideObj 
+     * @param {*} c2Flag
+     * @param {*} showHideObj
      * @param {*} event Event object
      */
     handleOuterFocus = (c2Flag, showHideObj, event) => {
@@ -362,7 +369,7 @@ class ElementDialogue extends React.PureComponent {
         const { activeElement, element } = this.props;
         const elementdata = element.elementdata;
         if (activeElement.elementId === element.id) {
-              
+
             if (activeElement.numbered !== elementdata.numberedlines || activeElement.startNumber !== elementdata.startNumber) {
                 newPSData = {
                    ...newPSData,
@@ -371,8 +378,8 @@ class ElementDialogue extends React.PureComponent {
                        numberedlines: activeElement.numbered,
                        startNumber: activeElement.startNumber
                    }
-               } 
-             
+               }
+
                 callUpdate = true;
             }
         }
@@ -390,8 +397,8 @@ class ElementDialogue extends React.PureComponent {
         if (newPSData?.html?.hasOwnProperty("dialogueContent")) {
             newPSData.html.dialogueContent[index] = data;
             newPSData.html = this.removeTextKeyFromObject(newPSData.html);
-            if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field]) !==
-                removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
+            if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field], true) !==
+                removeClassesFromHtml(newPSData.html?.dialogueContent[index][field], true) &&
                 !config.savingInProgress) {
                 // create data and call update API
                 this.callUpdateApi(newPSData);

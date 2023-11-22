@@ -13,11 +13,13 @@ import { guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
-import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
-import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
+import ElementConstants from '../ElementContainer/ElementConstants';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 // IMPORT - Assets //
 
 let random = guid();
@@ -53,7 +55,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef.current.contains(event.target) && !this.props.isAutoNumberingEnabled) {
+        if (this.asideRef && !this.asideRef.current?.contains(event.target) && !this.props.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
@@ -75,9 +77,6 @@ class ElementAsideContainer extends Component {
 
     handleFocus = (e) => {
 
-        if (checkSlateLock(this.props.slateLockInfo)) {
-            return false
-        }
         this.props.setActiveElement(this.props.element);
         let toolbar = config.asideToolbar
         if (toolbar && toolbar.length) {
@@ -87,12 +86,12 @@ class ElementAsideContainer extends Component {
                         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
                     }
                 });
-        }     
+        }
         this.props.handleFocus();
     }
-    
+
     /**
-     * 
+     *
      * @discription - renderSlate | renders slate editor area with all elements it contain
      * @param {string} element -object of element
      */
@@ -118,6 +117,7 @@ class ElementAsideContainer extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
@@ -130,7 +130,7 @@ class ElementAsideContainer extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd
@@ -153,7 +153,7 @@ class ElementAsideContainer extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
                                             elementIndex: this.props.index,
-                                            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
+                                            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -223,7 +223,7 @@ class ElementAsideContainer extends Component {
             containerTypeElem: 'section',
             asideId: this.props.element.id,
             elementIndex: this.props.index,
-            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
+            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
         }
 
         this.props.swapElement(dataObj, (bodyObj) => { })
@@ -234,9 +234,9 @@ class ElementAsideContainer extends Component {
             showHideNode.classList.remove("show-hide-active")
         }
     }
-    
+
     /**
-    * 
+    *
     * @description - This function is section break
     * @param {string} element -object of element
     */
@@ -259,6 +259,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
+                        disabled: hasReviewerRole(),
                        // preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
@@ -271,7 +272,7 @@ class ElementAsideContainer extends Component {
                         scroll: true, // or HTMLElement
                         filter: ".ignore-for-drag",
                         preventOnFilter: false,
-                        draggable: ".editor",
+                        draggable: ".lazyload-wrapper",
                         forceFallback: true,
                         onStart: function (/**Event*/) {
                             // same properties as onEnd
@@ -297,7 +298,7 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-     * 
+     *
      * @description - This function is section break
      * @param {string} _elements -object of element
      */
@@ -339,6 +340,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
+                        disabled: hasReviewerRole(),
                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
@@ -350,7 +352,7 @@ class ElementAsideContainer extends Component {
                         dataIdAttr: 'data-id',
                         scroll: true, // or HTMLElement
                         filter: ".ignore-for-drag",
-                        draggable: ".editor",
+                        draggable: ".lazyload-wrapper",
                         preventOnFilter: false,
                         forceFallback: true,
                         onStart: function (/**Event*/) {
@@ -376,7 +378,7 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-   * 
+   *
    * @discription - This function is renders element
    * @param {string} _elements -object of element
    * @param {string} parentUrn -parent Entity urn for add new element
@@ -384,10 +386,10 @@ class ElementAsideContainer extends Component {
     renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
         let showSectionBreak;
-        const { id, type, groupeddata, contentUrn } = this.props?.parentElement || {};
+        const { id, type, subtype, groupeddata, contentUrn } = this.props?.parentElement || {};
         let asideData = {
             type: "element-aside",
-            subtype :this.props.element.subtype, 
+            subtype :this.props.element.subtype,
             id: this.props.element.id,
             contentUrn: this.props.element.contentUrn,
             element : this.props.element,
@@ -400,9 +402,20 @@ class ElementAsideContainer extends Component {
         const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
         const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
-        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
+        asideData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
         /* Adding parent id, type and contentUrn update redux store while creating new element inside S/H->Aside->New */
-        asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
+        asideData = (type === ElementConstants.SHOW_HIDE) ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
+        /* Adding parent id and type to update redux store while creating new element inside TB->Tab->Aside->New */
+        if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB) {
+            let indexes = this.props?.index?.toString()?.split('-') || [];
+            let columnDetails = {
+                columnIndex: Number(indexes[2]),
+                columnId: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.id,
+                columnContentUrn: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.contentUrn,
+                columnName: Number(indexes[2]) === 0 ? "C1" : "C2"
+            }
+            asideData = {...asideData, parent: {...this.props.parentElement, columnDetails: columnDetails}}
+        }
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {
@@ -454,12 +467,12 @@ class ElementAsideContainer extends Component {
                                 />
                                 {this.section(element, index)}
                                 </>
-                                
+
                                 )
                             }else{
                                 return  this.section(element, index);
                             }
-                           
+
                         } else if (element.type == "manifest" && !firstSection) {
                             return this.sectionBreak(element, index);
                         }
@@ -467,6 +480,10 @@ class ElementAsideContainer extends Component {
                             showSectionBreak = (elementLength == index + 1) ? true : false
                             return (
                                 <React.Fragment key={element.id}>
+                                    <LazyLoad
+                                        once={true}
+                                        placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                                    >
                                     {index === 0 && (!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar") && <ElementSaprator
                                         upperOne={true}
                                         firstOne={index === 0}
@@ -522,6 +539,7 @@ class ElementAsideContainer extends Component {
                                         handleCopyPastePopup={this.props.handleCopyPastePopup}
                                         dataId = {element.id}
                                     />
+                                </LazyLoad>
                                 </React.Fragment>
                             )
                         }
@@ -537,15 +555,15 @@ class ElementAsideContainer extends Component {
     }
 
 /**
- * 
+ *
  * @discription - this function render title fields
- * 
+ *
  */
     renderTitleField = (asideHtmlData) => {
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
         if (showTitleField) {
             return (
-                <div className="asideHeader">
+                <div className={`asideHeader ${hasReviewerRole() ? "pointer-events-none" : ""}`}>
                     <header className="figure-header new-figure-image-header">
                         <div className="image-label">
                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
@@ -576,7 +594,7 @@ class ElementAsideContainer extends Component {
 
 
     /**
-  * 
+  *
   * @discription - This function is renders workexample
   * @param {string} designtype -string to select type of work example
   */
@@ -592,7 +610,7 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-* 
+*
 * @discription - This function is renders diffrent types of border of aside
 * @param {string} designtype -string to select type of aside container
 */
@@ -641,10 +659,10 @@ class ElementAsideContainer extends Component {
         }
     }
 
-    
+
 
     /**
-  * 
+  *
   * @discription - This function is renders aside container
   * @param {string} designtype -string to select type of aside container
   */
@@ -664,7 +682,7 @@ class ElementAsideContainer extends Component {
         this.props.handleBlur();
         const { element, index } = this.props;
 
-        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
+        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
         const newToggleValue = hasAsideTitleData ? true : false;
         let labelElement = document.getElementById(`cypress-${index}-t1`);
         let numberElement = document.getElementById(`cypress-${index}-t2`);
@@ -695,7 +713,7 @@ class ElementAsideContainer extends Component {
             }
         }
         if (!newToggleValue && focusInLabel && focusInNumber && focusInTitle) {
-            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) { 
+            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) {
                 this.props.enableAsideNumbering(newToggleValue, element.id);
             }
         }

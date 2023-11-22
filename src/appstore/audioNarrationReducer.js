@@ -29,8 +29,8 @@ const INITIAL_ACTION = {
 
 /**
  * Reducer method for user related activation, deactivation and projects
- * @param {object} state 
- * @param {string} action 
+ * @param {object} state
+ * @param {string} action
  */
 
 export default function audioNarrationReducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
@@ -87,14 +87,14 @@ export default function audioNarrationReducer (state = INITIAL_STATE, action = I
         addAudioGlossaryPopup :action.payload
       }
     }
-    
+
     case HANDLE_GLOSSARY_AUDIO_DATA:{
       return{
         ...state,
         audioGlossaryData:action.payload
       }
     }
-   
+
     default:
       return state
   }

@@ -6,9 +6,8 @@ import {
     fetchSlateData,
     createPopupUnit
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { sendDataToIframe, getTitleSubtitleModel, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, getTitleSubtitleModel, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
-import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { findKey } from "lodash";
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
@@ -26,9 +25,12 @@ class ElementPopup extends React.Component {
         this.popupBorderRef = React.createRef()
     }
     componentDidMount = () => {
-        const { projectSharingRole, projectSubscriptionDetails } = this?.props?.projectSubscriptionDetails;
-        let subscriberContent = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed)
-        if (!subscriberContent) this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
+        this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
+        if(hasReviewerRole()){
+            document.getElementById(`cypress-${this.props.index}-0`)?.setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-1`)?.setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-2`)?.setAttribute('contenteditable', false);
+        }
     }
     componentWillUnmount = () => {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
@@ -39,7 +41,7 @@ class ElementPopup extends React.Component {
             return false
         }
         if(event.target.classList.contains("buttonWidgetPU")){
-            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
+            if(!(this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
                 this.renderSlate();
                 let popupParentSlateData = {
                     isPopupSlate: true,
@@ -51,9 +53,9 @@ class ElementPopup extends React.Component {
                 }
                 this.props.savePopupParentSlateData(popupParentSlateData);
             }
-        } 
+        }
     }
-    
+
     renderSlate =()=>{
         const { element, index, slateLevelData } = this.props
         const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro" ||  slate.type ==="titlepage" || slate.type === "moduleintro" || slate.type === "partintro" || slate.type === "volumeintro"))
@@ -74,13 +76,13 @@ class ElementPopup extends React.Component {
      * Creates Title/Subtitle element if not present.
      */
     createPopupUnit = async (popupField, forceupdate, index, parentElement, createdFromFootnote) => {
-        if (!config.popupCreationCallInProgress) {
+        if (!config.popupCreationCallInProgress && !hasReviewerRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
             config.popupCreationCallInProgress = true
             await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)
         }
     }
-    renderPopup = () => {        
+    renderPopup = () => {
         const {index, element, slateLockInfo} = this.props
         const { popupdata } = element
         let formattedTitle, formattedSubtitle
@@ -125,23 +127,23 @@ class ElementPopup extends React.Component {
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                             handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                         />
-                        <TinyMceEditor permissions = {this.props.permissions} 
-                            openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp} 
+                        <TinyMceEditor permissions = {this.props.permissions}
+                            openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp}
                             element = {element}
                             index = {`${index}-1`}
                             className = 'heading4WidgetPUTitle figureTitle formatted-text'
                             id = {this.props.id}
                             placeholder = "Enter Title..."
                             tagName = {'h4'}
-                            model={formattedSubtitle} 
+                            model={formattedSubtitle}
                             currentElement = {popupdata && (popupdata["formatted-title"] || popupdata["formatted-subtitle"])}
                             handleEditorFocus = {this.props.handleFocus}
                             handleBlur = {this.props.handleBlur}
                             slateLockInfo = {slateLockInfo}
                             glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
                             glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup}
-                            elementId = {this.props.elementId} 
-                            popupField = "formatted-subtitle" 
+                            elementId = {this.props.elementId}
+                            popupField = "formatted-subtitle"
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                             handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
@@ -152,18 +154,18 @@ class ElementPopup extends React.Component {
                             <a className="buttonWidgetPU">
                                 <TinyMceEditor permissions = {this.props.permissions}
                                     openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp}
-                                    index = {`${index}-2`} 
-                                    placeholder = "Enter call to action..." 
-                                    className = {"actionPU formatted-text"} 
+                                    index = {`${index}-2`}
+                                    placeholder = "Enter call to action..."
+                                    className = {"actionPU formatted-text"}
                                     id = {this.props.id}
                                     element = {element}
                                     currentElement = {popupdata && popupdata.postertextobject && popupdata.postertextobject[0]}
                                     model = {popupdata && popupdata.postertextobject ? popupdata.postertextobject[0].html.text : "" }
                                     handleEditorFocus = {this.props.handleFocus}
-                                    handleBlur = {this.props.handleBlur} 
-                                    slateLockInfo = {slateLockInfo} 
+                                    handleBlur = {this.props.handleBlur}
+                                    slateLockInfo = {slateLockInfo}
                                     elementId = {this.props.elementId}
-                                    popupField = "postertextobject" 
+                                    popupField = "postertextobject"
                                     createPopupUnit = {this.createPopupUnit}
                                     handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                                     handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
