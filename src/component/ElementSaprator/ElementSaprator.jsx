@@ -12,7 +12,7 @@ import elementTypeConstant, { containerTypeArray } from './ElementSepratorConsta
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
-import { ELEMENT_ASIDE, getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
+import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 

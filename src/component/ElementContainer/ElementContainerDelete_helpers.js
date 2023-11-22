@@ -19,7 +19,7 @@ import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus,
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { getSlateLevelData, updateChapterPopupData, popupCutCopyParentData } from '../FigureHeader/AutoNumberActions';
-import { ELEMENT_ASIDE } from '../../constants/Element_Constants.js';
+
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,

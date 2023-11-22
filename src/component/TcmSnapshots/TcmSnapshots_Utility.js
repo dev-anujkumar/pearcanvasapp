@@ -13,7 +13,7 @@ import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
 import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate.js';
-import { FORMATTED_TITLE, PARAGRAPH_HTML, PARAGRAPH_NUMEROUNO_CLASS } from '../../constants/Element_Constants.js';
+import { PARAGRAPH_HTML, PARAGRAPH_NUMEROUNO_CLASS } from '../../constants/Element_Constants.js';
 
 
 let operType = "";

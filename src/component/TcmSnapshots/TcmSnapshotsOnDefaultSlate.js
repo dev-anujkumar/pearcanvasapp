@@ -2,7 +2,6 @@ import { fetchElementsTag } from "./ElementSnapshot_Utility";
 import TcmConstants from "./TcmConstants";
 import store from '../../appstore/store.js';
 import { prepareAndSendTcmData, prepareTcmSnapshots, setElementTypeAndUrn } from "./TcmSnapshots_Utility";
-import { ELEMENT_ASIDE } from "../../constants/Element_Constants";
 
 const {
     elementType,

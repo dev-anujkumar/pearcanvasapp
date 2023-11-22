@@ -23,7 +23,7 @@ import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
 import elementTypeConstant from './ElementConstants';
-import { ELEMENT_ASIDE, ELEMENT_AUTHOREDTEXT, FORMATTED_TITLE } from '../../constants/Element_Constants';
+import { ELEMENT_AUTHOREDTEXT, FORMATTED_TITLE } from '../../constants/Element_Constants';
 
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST, ELEMENT_ASIDE } = ElementConstants;
