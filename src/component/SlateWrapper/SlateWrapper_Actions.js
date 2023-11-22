@@ -44,6 +44,7 @@ import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_Delete
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import { triggerCustomEventsGTM } from '../../js/ga';
+import { CONTENT_TYPE, ELEMENT_ASIDE } from '../../constants/Element_Constants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -90,7 +91,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -185,11 +186,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
             })
-        } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
+        } else if (asideData && asideData.type == ELEMENT_ASIDE  && type !== 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                } else if (item.type == ELEMENT_ASIDE && item.id == asideData.id) {
                     item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
                         if (ele.id === parentUrn.manifestUrn) {
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
@@ -275,7 +276,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
                 /* To update redux store while creating new element inside WE/Aside->Block Poetry->Stanza */
-                else if(poetryData?.parent?.type === "element-aside" && item.id === poetryData?.parent?.id){
+                else if(poetryData?.parent?.type === ELEMENT_ASIDE && item.id === poetryData?.parent?.id){
                     item?.elementdata?.bodymatter?.map((ele) => {
                             if (ele?.id === parentUrn.manifestUrn) {
                                 ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
@@ -315,7 +316,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         } else if (asideData && asideData.type === MULTI_COLUMN && asideData.subtype === TAB) {
             const parentIndexes = asideData.index && asideData.index.split("-")
             let item = newParentData[config.slateManifestURN].contents.bodymatter[parentIndexes[0]];
-            item.groupeddata.bodymatter[parentIndexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[parentIndexes[2]].groupdata.bodymatter.splice(index, 0, createdElementData);
+            item.groupeddata.bodymatter[parentIndexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[parentIndexes[2]].groupdata
+            .bodymatter.splice(index, 0, createdElementData);
         }
         else if (asideData && asideData.type === 'groupedcontent') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
@@ -338,8 +340,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]];
             let initialdata = {};
             // update store for SH,WE(body) if it has Bl inside it and its nesting level
-            if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")){
-                 initialdata = parentElement?.type === 'element-aside' ? newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+            if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === ELEMENT_ASIDE && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")){
+                initialdata = parentElement?.type === ELEMENT_ASIDE ?
+                    newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].
+                    listdata.bodymatter[indexes[3]].listitemdata.bodymatter
+                    : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].
+                    interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
                  if (indexes.length === 5) { // Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -347,14 +353,18 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else if (indexes.length === 9) { // Block list on 3 level nesting
-                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata
+                    .bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // level 4
-                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata
+                    .bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }// update store for AS/WE(header) if it has Bl inside it and its nesting level
-            else if(parentElement?.type === 'element-aside'){
-                initialdata =  newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter;
+            else if(parentElement?.type === ELEMENT_ASIDE){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].
+                elementdata.bodymatter[indexes[1]].listdata.
+                bodymatter[indexes[2]].listitemdata.bodymatter;
                  if (indexes.length === 4 ) { // For AS/WE(header) Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -362,13 +372,17 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else if (indexes.length === 8) { // Block list on 3 level nesting
-                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata
+                    .bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // level 4
-                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata
+                    .bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 } // Manifest List/Text element handelling for Tab element inside TB
             } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter;
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata
+                .bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata
+                .bodymatter[indexes[4]].listitemdata.bodymatter;
                 switch (indexes.length) {
                     case 6: // TB:Tab:c1:BL Level 1 nesting
                         initialdata.splice(index, 0, createdElementData);
@@ -377,16 +391,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                     case 10: // TB:Tab:c1:BL Level 3 nesting
-                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData);
-
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata
+                        .bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                     case 12: // TB:Tab:c1:BL Level 4 nesting
-                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata
+                        .bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata
+                        .bodymatter[indexes[10]].listitemdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                 }
             }
             else if(asideData.parent && asideData.parent.type === "groupedcontent"){
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata
+                .bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
                 if (indexes.length === 5) { // Block list on 1 level nesting
                    initialdata.splice(index, 0, createdElementData)
                }
@@ -394,10 +411,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
                else if (indexes.length === 9) { // Block list on 3 level nesting
-                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata
+                   .bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
                else { // level 4
-                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata
+                   .bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata
+                   .bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
             }
             else{
@@ -409,10 +429,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else if (indexes.length === 7) { // Block list on 3 level nesting
-                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata
+                    .bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // level 4
-                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata
+                    .bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
          }
@@ -421,8 +443,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
              const indexes = blockListDetails.indexOrder.split('-');
              let initialdata = {};
              let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]]
-             if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")){
-                  initialdata = parentElement?.type === 'element-aside' ? newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+            if ((asideData.parent && asideData.parent.type === "showhide") ||
+                (parentElement?.type === ELEMENT_ASIDE &&
+                parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")) {
+                  initialdata = parentElement?.type === ELEMENT_ASIDE ? newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
                  if (indexes.length === 5) { // Block list on 1 level nesting
                      initialdata.splice(index, 0, createdElementData)
                  }
@@ -430,26 +454,31 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
                  else if (indexes.length === 9) { // Manifest List Item on 3 level nesting
-                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata
+                     .bodymatter.splice(index, 0, createdElementData)
                  }
                  else { // Manifest List Item on 4 level nesting
-                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata
+                     .bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
-             }else if(currentSlateData?.contents?.bodymatter[indexes[0]]?.type === 'element-aside'){
+             }else if(currentSlateData?.contents?.bodymatter[indexes[0]]?.type === ELEMENT_ASIDE){
                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter;
                 if (indexes.length === 4) { // Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }else if (indexes.length === 6) { // Block list on 2 level nesting
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }else if (indexes.length === 8) { // Block list on 3 level nesting
-                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata
+                    .bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // level 4
-                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata
+                    .bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 // Manifest List Item handelling for Tab element inside TB
              } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata
+                .bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
                 switch (indexes.length) {
                     case 6: // TB:Tab:c1:BL Level 1 nesting
                         initialdata.splice(index, 0, createdElementData);
@@ -458,15 +487,18 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                     case 10: // TB:Tab:c1:BL Level 3 nesting
-                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata
+                        .bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                     case 12: // TB:Tab:c1:BL Level 4 nesting
-                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata
+                        .bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                 }
              }
              else if(asideData.parent && asideData.parent.type === "groupedcontent"){
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata
+                .bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
                 if (indexes.length === 5) { // Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -474,10 +506,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else if (indexes.length === 9) { // Manifest List Item on 3 level nesting
-                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata
+                    .bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // Manifest List Item on 4 level nesting
-                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata
+                    .bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata
+                    .bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
              }
             else{
@@ -489,10 +524,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
                  else if (indexes.length === 7) { // Manifest List Item on 3 level nesting
-                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata
+                     .bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
                  else { // Manifest List Item on 4 level nesting
-                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata
+                     .bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
             }
 
@@ -503,8 +540,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
              console.log("tets",indexes);
              let initialdata = {};
              let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]];
-             if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")) {
-                initialdata = parentElement?.type === 'element-aside' ?  newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+            if ((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === ELEMENT_ASIDE &&
+            parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")) {
+                initialdata = parentElement?.type === ELEMENT_ASIDE ?
+                    newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter
+                    : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
                 if (indexes.length === 7) { // Manifest List Item on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -512,9 +552,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // Manifest List Item on 3 level nesting
-                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata
+                    .bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
-            }else if(currentSlateData?.contents?.bodymatter[indexes[0]]?.type === 'element-aside'){
+            }else if(currentSlateData?.contents?.bodymatter[indexes[0]]?.type === ELEMENT_ASIDE){
                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter;
                 if (indexes.length === 6) { // Block list on 2 level nesting
                     initialdata.splice(index, 0, createdElementData)
@@ -523,10 +564,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // level 4
-                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata
+                    .bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
             } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
+                initialdata = newParentData[config.slateManifestURN].contents
+                .bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata
+                .bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
                 switch (indexes.length) {
                     case 8: // TB:Tab:c1:BL Level 2 nesting
                         initialdata.splice(index, 0, createdElementData);
@@ -535,12 +579,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                     case 12: // TB:Tab:c1:BL Level 4 nesting
-                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata
+                        .bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
                         break;
                 }
             }
             else if(asideData.parent && asideData.parent.type === 'groupedcontent'){
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata
+                .bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
                 if (indexes.length === 7) { // Manifest List Item on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -548,7 +594,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 else { // Manifest List Item on 3 level nesting
-                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata
+                    .bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
             else{
@@ -560,7 +607,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
                  else { // Manifest List Item on 3 level nesting
-                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata
+                     .bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
             }
             /* add a new tab element inside TB */
@@ -677,7 +725,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         const url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${index}`
         const response = await axios.post(url, JSON.stringify(_requestData), {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -724,11 +772,11 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
                     item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, ...response.data)
                 }
             })
-        } else if (asideData && asideData.type == 'element-aside') {
+        } else if (asideData && asideData.type == ELEMENT_ASIDE) {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, ...response.data)
-                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                } else if (item.type == ELEMENT_ASIDE && item.id == asideData.id) {
                     item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
                         if (ele.id === parentUrn.manifestUrn) {
                             ele.contents.bodymatter.splice(index, 0, ...response.data)
@@ -791,7 +839,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -830,7 +878,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     let sectionType = parentElement?.showHideType;
                     /* TB->Tab->AS/WE->HEAD: Swap Elements */
                     if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) {
-                        let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
+                        let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata
+                        ?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
                             asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
                         }
@@ -856,7 +905,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     let sectionType = parentElement?.showHideType;
                     /* TB->Tab->AS/WE->HEAD: Swap Elements */
                     if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) {
-                        newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]]?.elementdata?.bodymatter?.map(item => {
+                        newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata
+                        ?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
                                 item?.contents?.bodymatter?.move(oldIndex, newIndex);
                             }
@@ -906,7 +956,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     newBodymatter.forEach(element => {
                         if (element.id == poetryId) {
                             element.contents.bodymatter.move(oldIndex, newIndex);
-                        } else if (element?.type === 'element-aside') {  /** ----------Swapping block poetry elements inside Aside/WE Element----------------- */
+                        } else if (element?.type === ELEMENT_ASIDE) {  /** ----------Swapping block poetry elements inside Aside/WE Element----------------- */
                             element.elementdata?.bodymatter.forEach((ele) => {
                                 if (ele?.type === "poetry" && ele?.id === poetryId) {
                                     ele.contents.bodymatter.move(oldIndex, newIndex);
@@ -921,7 +971,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             /** ----------Swapping block poetry elements inside Tab Element----------------- */
                         } else if (element?.type === ElementConstants.MULTI_COLUMN && element?.subtype === ElementConstants.TAB) {
                             const indexs = elementIndex?.split('-') || [];
-                            let poetryElement = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
+                            let poetryElement = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata
+                            ?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
                             if (poetryElement?.type === "poetry" && poetryElement?.id === poetryId) {
                                 poetryElement.contents.bodymatter.move(oldIndex, newIndex);
                             }
@@ -958,7 +1009,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     newBodymatter[dataObj.containerIndex].groupeddata.bodymatter.move(oldIndex, newIndex);
                 } else if (containerTypeElem && containerTypeElem == 'Tab') {
                     const indexes = dataObj?.containerIndex?.split('-') || [];
-                    newBodymatter[indexes[0]].groupeddata.bodymatter[[indexes[1]]].groupdata.bodymatter[0].groupeddata.bodymatter[[dataObj.columnIndex]].groupdata.bodymatter.move(oldIndex, newIndex);
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[[indexes[1]]].groupdata.bodymatter[0].groupeddata
+                    .bodymatter[[dataObj.columnIndex]].groupdata.bodymatter.move(oldIndex, newIndex);
                 } else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
@@ -1037,7 +1089,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         JSON.stringify({ slateDataList }),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -1154,7 +1206,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
             data,
             {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': CONTENT_TYPE,
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
                     'myCloudProxySession': config.myCloudProxySession
@@ -1198,7 +1250,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
             `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementId}`,
             {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': CONTENT_TYPE,
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
                     'myCloudProxySession': config.myCloudProxySession
@@ -1365,7 +1417,7 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
     }
     return axios.get(apiUrl, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
 })
@@ -1492,7 +1544,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
             // Check for autonumbering parameters needs to send or not in request
             if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(selection?.element?.figuretype)) {
-                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined &&
+                Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
                     _requestData = {
                         "content": [{
                             ..._requestData.content[0],
@@ -1522,7 +1575,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
 
-        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup','manifestlist']
+        const acceptedTypes=[ELEMENT_ASIDE,"citations","poetry","groupedcontent","workedexample",'showhide','popup','manifestlist']
         if(acceptedTypes.includes(selection.element.type)) {
             const payloadParams = {
                 ...params,
@@ -1535,14 +1588,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 let section = sectionType ? sectionType : asideData?.sectionType;
                 _requestData.content[0].sectionType = section;
             }
-            if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
+            if (selection?.element?.type === ELEMENT_ASIDE && selection?.element?.html?.title) {
                 _requestData.content[0].html = selection.element.html;
 
             }
 
             // Check for autonumbering parameters needs to send or not in request
             if (isAutoNumberingEnabled && autoNumberContainerTypesAllowed.includes(selection?.element?.type)) {
-                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined &&
+                Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
                     _requestData = {
                         "content": [{
                             ..._requestData.content[0],
@@ -1606,7 +1660,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 JSON.stringify(_requestData),
                 {
                     headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": CONTENT_TYPE,
                         'myCloudProxySession': config.myCloudProxySession
                     }
                 }
@@ -1628,7 +1682,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     responseData = [response.data[_requestData.content[0].id]]
                  }
 
-                if((responseData[0]?.type === "figure") && (figureTypes.includes(responseData[0]?.figuretype))  || interactiveType.includes(responseData[0]?.figuredata?.interactivetype)){
+                if((responseData[0]?.type === "figure") && (figureTypes.includes(responseData[0]?.figuretype))  ||
+                interactiveType.includes(responseData[0]?.figuredata?.interactivetype)){
                     const elementId = responseData[0].id
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)
                 }
@@ -1655,9 +1710,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         callCutCopySnapshotAPI(tcmSnapshotPayload,isAutoNumberingEnabled)
                     }
                 }
-                if (selection?.element?.type === 'element-aside') {
+                if (selection?.element?.type === ELEMENT_ASIDE) {
                     const { element } = selection;
-                    let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
+                    let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" &&
+                    element.html.title !== "<p></p>") ? true : false;
                     const newToggleValue = hasAsideTitleData ? true : false;
                     const asideTitleData = getState()?.appStore?.asideTitleData
                     const setFieldsForAside = (elem, titleData) => {
@@ -1723,8 +1779,8 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
             {
                 headers: {
                     "ApiKey": config.STRUCTURE_APIKEY,
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
+                    "Accept": CONTENT_TYPE,
+                    "Content-Type": CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
@@ -1760,7 +1816,7 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
     const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?isRCEnabled=${updateRCSlate}`;
     return axios.post(versioningStatus, null, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {

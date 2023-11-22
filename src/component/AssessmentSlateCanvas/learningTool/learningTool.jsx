@@ -12,7 +12,8 @@ import LearningToolBody from './Components/LearningToolBody.jsx'
 import './../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 import { LT_LA_HEADER, LT_LA_SEARCH_TEXT, BUTTON_TEXT_LINK, BUTTON_TEXT_CANCEL, learningToolTableHeaders, learningToolPages } from './learningToolUtility.js';
 /** ----- Import - Action Creators ----- */
-import { removeSelectedData, closeLtAction, selectedFigureAction, learningToolDisFilterAction, learningToolSearchAction, paginationFunctionAction } from './learningToolActions.js';
+import { removeSelectedData, closeLtAction, selectedFigureAction, learningToolDisFilterAction, learningToolSearchAction,
+    paginationFunctionAction } from './learningToolActions.js';
 
 /** @description - LearningTool is a class based component. It is defined simply to make a skelten of the Learning Tool UI */
 class LearningTool extends React.Component {
@@ -95,7 +96,8 @@ class LearningTool extends React.Component {
     }
 
     render() {
-        const { searchLoading, errorFlag, showLTBody, apiResponse, learningSystems, linkButtonDisable, apiResponseForDis, showDisFilterValues, selectedResultFormApi, showAppTypeValues } = this.props.learningToolReducer
+        const { searchLoading, errorFlag, showLTBody, apiResponse, learningSystems, linkButtonDisable, apiResponseForDis,
+             showDisFilterValues, selectedResultFormApi, showAppTypeValues } = this.props.learningToolReducer
         const searchProps = {
             showError: this.state.showError,
             searchTextCondition: LT_LA_SEARCH_TEXT,
@@ -130,10 +132,13 @@ class LearningTool extends React.Component {
                     </div>
                     <hr />
                     {/* Body of the popup table */}
-                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} learningSystems={learningSystems} />}
+                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse}
+                     selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure}
+                      learningToolTableHeaders={learningToolTableHeaders} learningSystems={learningSystems} />}
                     {/* Footer for the popUp */}
                     <div className="learningToolFooter">
-                        <button disabled={this.props.learningToolReducer.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button" onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>
+                        <button disabled={this.props.learningToolReducer.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button"
+                         onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>
                         <button className="learning-tool-button learning-tool-cancel" onClick={this.closeLt}>{BUTTON_TEXT_CANCEL}</button>
                     </div>
                 </div>

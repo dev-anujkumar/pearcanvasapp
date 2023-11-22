@@ -35,5 +35,7 @@ const commentsWithoutData = mockStore({
 storiesOf('CommentsPanel', module)
   .addDecorator(withInfo)
   .add('Commnets Panel', () => <Provider store={commentsWithData}><CommentsPanel onClick={action('Add Comments with reply')} /></Provider>, { notes: "Add Comments" })
-  .add('Without reply comment', () => <Provider store={commentsWithoutReply}><CommentsPanel togglePanel={true} onClick={action('Add Comments without reply')} /></Provider>, { notes: "Add Comments" })
-  .add('Without no comment', () => <Provider store={commentsWithoutData}><CommentsPanel togglePanel={true} comments={null} onClick={action('Add Comments without reply')} /></Provider>, { notes: "Add Comments" })
+  .add('Without reply comment', () => <Provider store={commentsWithoutReply}><CommentsPanel togglePanel={true}
+  onClick={action('Add Comments without reply')} /></Provider>, { notes: "Add Comments" })
+  .add('Without no comment', () => <Provider store={commentsWithoutData}><CommentsPanel togglePanel={true}
+  comments={null} onClick={action('Add Comments without reply')} /></Provider>, { notes: "Add Comments" })

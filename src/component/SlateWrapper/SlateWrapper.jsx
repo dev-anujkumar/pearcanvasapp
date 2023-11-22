@@ -12,7 +12,8 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole, isApproved } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName,
+         hasReviewerRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown, SlateLockStatus } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -28,7 +29,8 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader, showBlocker } from '../../js/toggleLoader';
-import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup ,
+         showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate, isSubscribersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
@@ -40,7 +42,7 @@ import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE, externalLOWarningtxt, UNLOCKSLATEWARNING } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, externalLOWarningtxt, UNLOCKSLATEWARNING, IMAGE_ELEM, ASSESSMENT_ELEM, WORKED_EXP_ELEM, SECTION_BREAK_ELEM } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
@@ -104,7 +106,8 @@ class SlateWrapper extends Component {
 
         if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
-            if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
+            if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) &&
+                this.props.commentSearchNode !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
             }
 
@@ -261,7 +264,8 @@ class SlateWrapper extends Component {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}, slateLockInfo}=this.props
-                    const isPopupReadOnly = _slateData?.[config.slateManifestURN]?.type === "popup" && _slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && _slateData?.[config.tempSlateManifestURN]?.status === "approved";
+                    const isPopupReadOnly = _slateData?.[config.slateManifestURN]?.type === "popup" && _slateData?.[config.slateManifestURN]?.status === "approved" &&
+                    config.tempSlateManifestURN  && _slateData?.[config.tempSlateManifestURN]?.status === "approved";
                     if(_slateObject==undefined){
                         return false
                     }
@@ -277,7 +281,8 @@ class SlateWrapper extends Component {
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType)
                     let _context = this;
                     return (
-                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''}
+                        ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 <Sortable
                                     options={{
@@ -514,8 +519,10 @@ class SlateWrapper extends Component {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
         let isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
-        if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) || (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
-            const subscriberPopupDailogText = <>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</>
+        if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) ||
+         (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
+            const subscriberPopupDailogText =
+            <>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</>
             this.props.showBlocker(true);
             showTocBlocker();
             const isCurrentSlate = isOwnerRole(projectSharingRole,isSubscribed) ? 'owner' : 'subscriber'
@@ -623,7 +630,7 @@ class SlateWrapper extends Component {
         /* For showing the spinning loader send HideLoader message to Wrapper component */
         if (type) { sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); }
         switch (type) {
-            case 'image-elem':
+            case IMAGE_ELEM:
                 this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'audio-elem':
@@ -632,19 +639,19 @@ class SlateWrapper extends Component {
             case 'interactive-elem':
                 this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
-            case 'assessment-elem':
+            case ASSESSMENT_ELEM:
                 this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'container-elem':
                 this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
-            case 'worked-exp-elem':
+            case WORKED_EXP_ELEM:
                 this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'opener-elem':
                 this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
                 break;
-            case 'section-break-elem':
+            case SECTION_BREAK_ELEM:
                 parentUrn.contentUrn = asideData.contentUrn
                 parentUrn.manifestUrn = asideData.id
                 if (typeof (outerAsideIndex) == "string") {
@@ -747,8 +754,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'image-elem',
-                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne, parentUrn, asideData),
+                buttonType: IMAGE_ELEM,
+                buttonHandler: () => this.splithandlerfunction(IMAGE_ELEM, index, firstOne, parentUrn, asideData),
                 tooltipText: 'Image',
                 tooltipDirection: 'left'
             },
@@ -777,8 +784,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, parentUrn, asideData),
+                buttonType: ASSESSMENT_ELEM,
+                buttonHandler: () => this.splithandlerfunction(ASSESSMENT_ELEM, index, firstOne, parentUrn, asideData),
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
@@ -789,8 +796,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn, asideData),
+                buttonType: WORKED_EXP_ELEM,
+                buttonHandler: () => this.splithandlerfunction(WORKED_EXP_ELEM, index, firstOne, parentUrn, asideData),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
@@ -807,8 +814,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'section-break-elem',
-                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne, parentUrn, asideData, outerAsideIndex),
+                buttonType: SECTION_BREAK_ELEM,
+                buttonHandler: () => this.splithandlerfunction(SECTION_BREAK_ELEM, index, firstOne, parentUrn, asideData, outerAsideIndex),
                 tooltipText: 'Section Break',
                 tooltipDirection: 'left'
             },
@@ -1379,7 +1386,9 @@ class SlateWrapper extends Component {
     }
 
     saveAndClose = () =>{
-        if(this.props && config.tempSlateManifestURN && config.slateManifestURN &&  this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && (this.props.slateData[config.tempSlateManifestURN].status === "approved" || this.props.slateData[config.slateManifestURN].status === "approved")){
+        if(this.props && config.tempSlateManifestURN && config.slateManifestURN &&  this.props.slateData &&
+            this.props.slateData[config.tempSlateManifestURN] && (this.props.slateData[config.tempSlateManifestURN].status === "approved" ||
+            this.props.slateData[config.slateManifestURN].status === "approved")){
             if (config.savingInProgress || config.isSavingElement) {
                 if(Object.keys(this.props.asideData).length > 0){
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -1404,14 +1413,17 @@ class SlateWrapper extends Component {
     closePopup = () =>{
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
-        if( this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].status === "wip"){
+        if( this.props.slateData && this.props.slateData[config.tempSlateManifestURN] &&
+            this.props.slateData[config.tempSlateManifestURN].status === "approved" &&
+            this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         // When normal slate is Wip but popupslate is approved. BG-2742
         if((this.props.slateData[config.slateManifestURN].id !== config.cachedActiveElement.element.id) && config.cachedActiveElement.element.status === "approved"){
             this.props.slateData[config.slateManifestURN].index = config.cachedActiveElement.index;
-            this.props.fetchSlateData(this.props.slateData[config.slateManifestURN].id, this.props.slateData[config.slateManifestURN].contentUrn,0 , this.props.slateData[config.slateManifestURN],"",true);
+            this.props.fetchSlateData(this.props.slateData[config.slateManifestURN].id,
+                                    this.props.slateData[config.slateManifestURN].contentUrn,0 , this.props.slateData[config.slateManifestURN],"",true); 
         }
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
@@ -1590,7 +1602,8 @@ class SlateWrapper extends Component {
                           : ''
                     }
                 </div>
-                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""} ${isApproved() ? 'hide-scrollbar' : ""}`} onScroll={this.handleScroll}>
+                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""} ${isApproved() ?
+                    'hide-scrollbar' : ""}`} onScroll={this.handleScroll}>
                 <KeyboardUpDown>
                     {
                         this.renderSlate(this.props)

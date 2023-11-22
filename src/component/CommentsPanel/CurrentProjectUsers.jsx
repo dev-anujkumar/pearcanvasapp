@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+import { ASIGNEE_SELECTED } from '../../constants/Element_Constants';
 class CurrentProjectUsers extends React.Component {
     constructor(props) {
         super(props)
@@ -14,7 +15,7 @@ class CurrentProjectUsers extends React.Component {
         const previousSelectedItems = document.getElementsByClassName("assign-user-list-items")
         for (let i = 0; i < previousSelectedItems.length; i++) {
             let className = previousSelectedItems[i]
-            className.classList.remove("asignee-selected")
+            className.classList.remove(ASIGNEE_SELECTED)
         }
         e.target.className = "assign-user-list-items asignee-selected"
         this.props.newAssigneeUser(user)
@@ -30,7 +31,8 @@ class CurrentProjectUsers extends React.Component {
                         users.map((item, i) => {
                                 let fullName = item.lastName + ',' + item.firstName
                             return (
-                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? ASIGNEE_SELECTED : ""}`}
+                                key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
                             )
                         }
                         )
@@ -44,7 +46,8 @@ class CurrentProjectUsers extends React.Component {
                         users.map((item, i) => {
                                 let fullName = item.label
                             return (
-                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? ASIGNEE_SELECTED : ""}`}
+                                key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
                             )
                         }
                         )

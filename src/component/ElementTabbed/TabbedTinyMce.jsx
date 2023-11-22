@@ -5,16 +5,16 @@
 import React from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 import { getTitleSubtitleModel } from "../../constants/utility.js";
-import { labelHtmlData } from '../../constants/Element_Constants';
+import { labelHtmlData, TRANSITION_NONE } from '../../constants/Element_Constants';
 
 const onTabTitleFieldFocus = (id) => {
     let labelElement = document.getElementById(`cypress-${id}`);
-    if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+    if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
         labelElement?.nextElementSibling?.classList?.add('label-color-change');
-    } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
-        labelElement?.nextElementSibling?.classList?.add('transition-none');
+    } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE))) {
+        labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
     } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
-        labelElement?.nextElementSibling?.classList?.add('transition-none');
+        labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
     }
 }
 
@@ -24,7 +24,7 @@ const onTabTitleFieldBlur = (id) => {
         labelElement?.nextElementSibling?.classList?.remove('label-color-change');
     }
     if (labelHtmlData.includes(labelElement?.innerHTML)) {
-        labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        labelElement?.nextElementSibling?.classList?.remove(TRANSITION_NONE);
         labelElement?.nextElementSibling?.classList?.add('floating-title');
     }
 }
@@ -39,7 +39,8 @@ const TabbedTinyMCE = (props) => {
         className : "figureTitle formatted-text",
         id : props.id,
         tagName : 'h4',
-        model : props.element?.hasOwnProperty('html') && props.element["html"].title ? getTitleSubtitleModel(props.element["html"].title, "formatted-subtitle").replace(/&nbsp;/g, ""): `<p class="paragraphNumeroUno"><br/></p>`,
+        model : props.element?.hasOwnProperty('html') && props.element["html"].title ?
+                getTitleSubtitleModel(props.element["html"].title, "formatted-subtitle").replace(/&nbsp;/g, ""): `<p class="paragraphNumeroUno"><br/></p>`,
         handleEditorFocus : props.handleFocus,
         handleBlur  :  props.handleBlur,
         slateLockInfo : props.slateLockInfo,

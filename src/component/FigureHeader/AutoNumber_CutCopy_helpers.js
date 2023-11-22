@@ -90,17 +90,25 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
                     case containerElements.MULTI_COLUMN:
                     case containerElements.SHOW_HIDE:
                     case containerElements.POPUP:
-                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: slateOldNumberedContainerElements, updatedSlateAutoNumberedElements : slateUpdatedNumberedContainerElements, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
-                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
+                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements,
+                            prevSelectedAutoNumberElements: slateOldNumberedContainerElements, updatedSlateAutoNumberedElements : slateUpdatedNumberedContainerElements,
+                            slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
+                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements,
+                            prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors,
+                            tocContainerSlateList, autoNumber_ElementTypeKey });
                         break;
                     case containerElements.ASIDE:
-                        updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures: slateUpdatedNumberedContainerElements, slateAncestors, autoNumber_ElementTypeKey });
-                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
+                        updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements,
+                            slateFigures: slateUpdatedNumberedContainerElements, slateAncestors, autoNumber_ElementTypeKey });
+                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements,
+                            prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList,
+                            autoNumber_ElementTypeKey });
                         break;
                 }
             }
             else if (selectedElement?.type === 'figure') {
-                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
+                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures,
+                    slateAncestors, autoNumber_ElementTypeKey })
             }
         }
 
@@ -141,7 +149,8 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
             const referenceFigure = activeLabelFigures[refIndex].contentUrn;
             if (operationType == 'cut') {
                 if (figureParentEntityUrn && numberedElements) {
-                    numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
+                    numberedElements[labelType][figureParentEntityUrn] =
+                    numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
                 }
             }
 
@@ -163,7 +172,8 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         } else if (activeLabelFigures?.length === 1) { // when same label elements are not on current slate
             if (operationType == 'cut') {
                 if (figureParentEntityUrn && numberedElements) {
-                    numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn);
+                    numberedElements[labelType][figureParentEntityUrn] =
+                    numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn);
                     dispatch({
                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                         payload: {

@@ -15,7 +15,7 @@ const divStyle = {
   padding: '20px'
 }
 
-const buttonTypes = () => ( 
+const buttonTypes = () => (
   <div style={parentStyle}>
     <div title="Add comment" style = {divStyle}>
       <Button type="add-comment" onClick={action('Add comment')} />
@@ -88,11 +88,11 @@ storiesOf('Components|Button', module)
   .add('Comment flag', () => <Button type="comment-flag" onClick={action('Open comments panel')} />, { notes: "open/view notes" })
   .add('Element block label', () => <div style={{width:"32px"}}>
                                       <Button type="element-label" labelText="UL" onClick={action('This is for element')} />
-                                    </div>, 
+                                    </div>,
                                     { notes: "Paragraph element block/shell tag", info:"This requires an additional prop 'labelText' to render any text inside this block." })
   .add('Delete element', () => <div style={{width:"32px"}}>
                                   <Button type="delete-element" onClick={action('Delete element')} />
-                                </div>, 
+                                </div>,
                                 { notes: "Remove element" })
   .add('TCM', () => <Button type="tcm" onClick={action('Open TCM window')} />)
   .add('Forward Navigation (active)', () => <Button type="forward-nav-active" onClick={action('Forward navigation')} />, { notes: "Next slate" })

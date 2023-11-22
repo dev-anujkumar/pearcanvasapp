@@ -1,12 +1,20 @@
 const schema = "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
+const schemaUrl = "http://schemas.pearson.com/wip-authoring/manifest/1"
+const schemaUrlDefinitions = "http://schemas.pearson.com/wip-authoring/manifest/1"
+const manifestUrn = "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d"
+const schemaPoetry = "http://schemas.pearson.com/wip-authoring/poetry/1"
+const contentUrn = "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02"
+const workUrn = "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b"
+const contentUrn2 = "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3"
+const contentUrn3 = "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981"
 
 export default {
   "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i": {
       "id": "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f",
-      "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+      "schema": schemaUrl,
       "type": "manifest",
       "contents": {
-          "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+          "schema": schemaUrlDefinitions,
           "title": {
               "schema": schema,
               "text": "Test Slate 1"
@@ -15,11 +23,11 @@ export default {
           "bodymatter": [
               {
 
-                      "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
+                      "id": manifestUrn,
                       "type": "poetry",
-                      "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-                      "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
-                      "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                      "schema": schemaPoetry,
+                      "versionUrn": manifestUrn,
+                      "contentUrn": contentUrn,
                       "elementdata": {
                         "bodymatter":[
                           {
@@ -29,18 +37,18 @@ export default {
                                 "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
                               }
                             },
-                            "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                            "id": workUrn,
                             "type": "stanza",
-                            "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                            "versionUrn": workUrn,
                             "tcm": false,
                             "feedback": false,
                             "comments": false,
-                            "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                            "contentUrn": contentUrn2,
                             "status": "wip",
 
                             "poetrylines": [
                               {
-                                "id": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981",
+                                "id": contentUrn3,
                                 "type": "line",
                                 "authoredtext": {
                                   "schema": schema,
@@ -69,14 +77,14 @@ export default {
                           {
                             "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642m",
                             "type": "stanza",
-                            "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                            "schema": schemaPoetry,
                             "html": {
                               "footnotes":{
                                 "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
                               }
                             },
                             "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642m",
-                            "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                            "contentUrn": contentUrn2,
                             "status": "wip",
                             "tcm": false,
                             "feedback": false,
@@ -115,7 +123,7 @@ export default {
                           "inputSubType": "NA",
                           "slateUrn": "urn:pearson:manifest:10d6a725-a40b-4d91-8fc9-ece827150f19",
                           "metaDataField": "formattedTitle",
-                          "elementParentEntityUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                          "elementParentEntityUrn": contentUrn,
                           "index": "1",
                           "parentType": "poetry",
                           "projectURN": "urn:pearson:distributable:e0b22b7d-919c-4aba-bca6-a420dc423b9e",
@@ -457,7 +465,7 @@ export default {
                       }, {
                         "id": "urn:pearson:manifest:0ced53cc-54cd-477f-af8f-2fba081d167d",
                         "type": "manifest",
-                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "schema": schemaUrl,
                         "versionUrn": "urn:pearson:manifest:0ced53cc-54cd-477f-af8f-2fba081d167d",
                         "contentUrn": "urn:pearson:entity:57e06af2-3b24-48e0-abae-8692509f7264",
                         "contents": {
@@ -553,11 +561,11 @@ export default {
                             "versionUrn": "urn:pearson:work:21a36812-ee94-4ff5-af97-e1cbac12365e",
                             "contentUrn": "urn:pearson:entity:63c14276-a471-4bd3-99f2-05786b27db1a"
                           }],
-                          "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                          "schema": schemaUrlDefinitions
                         },
                         "status": "wip"
                       }],
-                      "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                      "schema": schemaUrlDefinitions
                     },
                     "versionUrn": "urn:pearson:manifest:71b227cf-2d3b-4a01-8fbf-9969f08356f1",
                     "contentUrn": "urn:pearson:entity:a20539c3-077d-4a38-8138-5628ab7d5de1",
@@ -702,7 +710,7 @@ export default {
                                               "type":"element-authoredtext",
                                               "versionUrn":"urn:pearson:work:f773c57f-0c83-4431-bd96-d6e501c47ecd"
                                            },
-                                           "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                                           "schema":schemaUrlDefinitions
                                         }
                                      ]
                                   },
@@ -729,11 +737,11 @@ export default {
                 "width":"wider"
              },
             {
-              "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
+              "id": manifestUrn,
               "type": "poetry",
-              "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-              "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
-              "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+              "schema": schemaPoetry,
+              "versionUrn": manifestUrn,
+              "contentUrn": contentUrn,
               "elementdata": {
                 bodymatter:[
                   {
@@ -821,22 +829,22 @@ export default {
             },
             {
 
-              "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
+              "id": manifestUrn,
               "type": "poetry",
-              "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-              "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
-              "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+              "schema": schemaPoetry,
+              "versionUrn": manifestUrn,
+              "contentUrn": contentUrn,
               "contents": {
                 "creditsarray": [
                   {
                     "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642o",
                     "type": "stanza",
-                    "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                    "schema": schemaPoetry,
                     "html": {
                       "text": "<p><span class=\"poetryLine\" data-id=\"urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7468-4eb2-aee2-296d0d0f2981\"><br></span></p>"
                     },
                     "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642o",
-                    "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                    "contentUrn": contentUrn2,
                     "status": "wip",
                     "tcm": false,
                     "feedback": false,
@@ -875,7 +883,7 @@ export default {
                   "inputSubType": "NA",
                   "slateUrn": "urn:pearson:manifest:10d6a725-a40b-4d91-8fc9-ece827150f19",
                   "metaDataField": "formattedTitle",
-                  "elementParentEntityUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                  "elementParentEntityUrn": contentUrn,
                   "index": "1",
                   "parentType": "poetry",
                   "projectURN": "urn:pearson:distributable:e0b22b7d-919c-4aba-bca6-a420dc423b9e",
@@ -1061,7 +1069,7 @@ export default {
                     }, {
                       "id": "urn:pearson:manifest:0ced53cc-54cd-477f-af8f-2fba081d167d",
                       "type": "manifest",
-                      "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                      "schema": schemaUrl,
                       "versionUrn": "urn:pearson:manifest:0ced53cc-54cd-477f-af8f-2fba081d167d",
                       "contentUrn": "urn:pearson:entity:57e06af2-3b24-48e0-abae-8692509f7264",
                       "contents": {
@@ -1157,11 +1165,11 @@ export default {
                           "versionUrn": "urn:pearson:work:21a36812-ee94-4ff5-af97-e1cbac12365e",
                           "contentUrn": "urn:pearson:entity:63c14276-a471-4bd3-99f2-05786b27db1a"
                         }],
-                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                        "schema": schemaUrlDefinitions
                       },
                       "status": "wip"
                     }],
-                    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                    "schema": schemaUrlDefinitions
                   },
                   "versionUrn": "urn:pearson:manifest:71b227cf-2d3b-4a01-8fbf-9969f08356f1",
                   "contentUrn": "urn:pearson:entity:a20539c3-077d-4a38-8138-5628ab7d5de1",
@@ -1681,11 +1689,11 @@ export default {
             },
             {
 
-              "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
+              "id": manifestUrn,
               "type": "showhide",
-              "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-              "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
-              "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+              "schema": schemaPoetry,
+              "versionUrn": manifestUrn,
+              "contentUrn": contentUrn,
               "groupeddata":{
                 "bodymatter": [
                   {
@@ -1722,18 +1730,18 @@ export default {
                         "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
                       }
                     },
-                    "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                    "id": workUrn,
                     "type": "stanza",
-                    "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                    "versionUrn": workUrn,
                     "tcm": false,
                     "feedback": false,
                     "comments": false,
-                    "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                    "contentUrn": contentUrn2,
                     "status": "wip",
 
                     "poetrylines": [
                       {
-                        "id": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981",
+                        "id": contentUrn3,
                         "type": "line",
                         "authoredtext": {
                           "schema": schema,
@@ -1749,14 +1757,14 @@ export default {
                   {
                     "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642m",
                     "type": "groupedcontent",
-                    "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                    "schema": schemaPoetry,
                     "html": {
                       "footnotes":{
                         "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
                       }
                     },
                     "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642m",
-                    "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                    "contentUrn": contentUrn2,
                     "status": "wip",
                     "tcm": false,
                     "feedback": false,
@@ -1795,7 +1803,7 @@ export default {
                   "inputSubType": "NA",
                   "slateUrn": "urn:pearson:manifest:10d6a725-a40b-4d91-8fc9-ece827150f19",
                   "metaDataField": "formattedTitle",
-                  "elementParentEntityUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                  "elementParentEntityUrn": contentUrn,
                   "index": "1",
                   "parentType": "poetry",
                   "projectURN": "urn:pearson:distributable:e0b22b7d-919c-4aba-bca6-a420dc423b9e",
@@ -1808,12 +1816,12 @@ export default {
             },
             {
 
-              "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
+              "id": manifestUrn,
               "type": "groupedcontent",
               "subtype": "tab",
-              "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-              "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
-              "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+              "schema": schemaPoetry,
+              "versionUrn": manifestUrn,
+              "contentUrn": contentUrn,
               "groupeddata":{
                 "bodymatter": [
                   {
@@ -1850,18 +1858,18 @@ export default {
                         "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
                       }
                     },
-                    "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                    "id": workUrn,
                     "type": "stanza",
-                    "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                    "versionUrn": workUrn,
                     "tcm": false,
                     "feedback": false,
                     "comments": false,
-                    "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                    "contentUrn": contentUrn2,
                     "status": "wip",
 
                     "poetrylines": [
                       {
-                        "id": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981",
+                        "id": contentUrn3,
                         "type": "line",
                         "authoredtext": {
                           "schema": schema,
@@ -1877,14 +1885,14 @@ export default {
                   {
                     "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642m",
                     "type": "groupedcontent",
-                    "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                    "schema": schemaPoetry,
                     "html": {
                       "footnotes":{
                         "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
                       }
                     },
                     "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642m",
-                    "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                    "contentUrn": contentUrn2,
                     "status": "wip",
                     "tcm": false,
                     "feedback": false,
@@ -1923,7 +1931,7 @@ export default {
                   "inputSubType": "NA",
                   "slateUrn": "urn:pearson:manifest:10d6a725-a40b-4d91-8fc9-ece827150f19",
                   "metaDataField": "formattedTitle",
-                  "elementParentEntityUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                  "elementParentEntityUrn": contentUrn,
                   "index": "1",
                   "parentType": "poetry",
                   "projectURN": "urn:pearson:distributable:e0b22b7d-919c-4aba-bca6-a420dc423b9e",

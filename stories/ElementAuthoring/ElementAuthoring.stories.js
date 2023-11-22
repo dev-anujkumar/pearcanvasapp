@@ -12,7 +12,7 @@ const mockStore = configureMockStore(middlewares);
 
 const slateData = mockStore({
     slateLevelData: {},
-    slateLockReducer:{slateLockInfo:false}   
+    slateLockReducer:{slateLockInfo:false}
 });
 
 const paragraphModel = {
@@ -20,7 +20,7 @@ const paragraphModel = {
 }
 const pullquoteModel = {
   text: `<h3 class="pullQuoteNumeroUno">This is a Pullquote element.</h3>`
-} 
+}
 const marginaliaModel = {
   text: `<blockquote class="blockquoteMarginalia"><p class="paragraphNummerEins">This is BQ with Marginalia.</p></blockquote>`
 }
@@ -33,24 +33,27 @@ storiesOf('ElementAuthoring', module)
   .add('Paragraph', () => {
     return(
       <Provider store={slateData}>
-        <ElementAuthoring type="element-authoredtext" model={paragraphModel} onKeyup = {action("Paragraph blured")} onFocus = {action("Paragraph blured")} onBlur = {action("Paragraph blured")} onClick={action('Add Paragraph')} />
+        <ElementAuthoring type="element-authoredtext" model={paragraphModel}
+        onKeyup = {action("Paragraph blured")} onFocus = {action("Paragraph blured")} onBlur = {action("Paragraph blured")} onClick={action('Add Paragraph')} />
       </Provider>
     )
   }, { notes: "Paragraph Element" })
-  
+
   .add('Blockquote | Pullquote', () =>{
     return(
       <Provider store={slateData}>
-        <ElementAuthoring type="element-blockfeature" model={pullquoteModel}  onKeyup = {action("Pullquote blured")} onFocus = {action("Pullquote blured")} onBlur = {action("Pullquote blured")} onClick={action('Add Pullquote')} />
+        <ElementAuthoring type="element-blockfeature" model={pullquoteModel}
+        onKeyup = {action("Pullquote blured")} onFocus = {action("Pullquote blured")} onBlur = {action("Pullquote blured")} onClick={action('Add Pullquote')} />
       </Provider>
-    )  
+    )
   }, { notes: "Pullquote Element" })
 
   .add('Blockquote | Marginalia', () =>{
     return(
       <Provider store={slateData}>
         <div style={{marginLeft: '8px'}}>
-          <ElementAuthoring type="element-blockfeature" model={marginaliaModel} onKeyup = {action("Blockquote blured")} onFocus = {action("Blockquote blured")} onBlur = {action("Blockquote blured")} onClick={action('Add Blockquote')} />
+          <ElementAuthoring type="element-blockfeature" model={marginaliaModel}
+          onKeyup = {action("Blockquote blured")} onFocus = {action("Blockquote blured")} onBlur = {action("Blockquote blured")} onClick={action('Add Blockquote')} />
         </div>
       </Provider>
     )
@@ -60,8 +63,9 @@ storiesOf('ElementAuthoring', module)
     return(
       <Provider store={slateData}>
         <div style={{marginLeft: '8px'}}>
-          <ElementAuthoring type="element-blockfeature" model={marginaliaWithAttrModel}  onKeyup = {action("Marginalia blured")} onFocus = {action("Marginalia blured")} onBlur = {action("Marginalia blured")} onClick={action('Add Marginalia')} />
+          <ElementAuthoring type="element-blockfeature" model={marginaliaWithAttrModel}
+          onKeyup = {action("Marginalia blured")} onFocus = {action("Marginalia blured")} onBlur = {action("Marginalia blured")} onClick={action('Add Marginalia')} />
         </div>
       </Provider>
-    ) 
+    )
   }, { notes: "Marginalia Element" })

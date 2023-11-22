@@ -2,7 +2,8 @@ let config = {
     NODE_ENV : process.env.NODE_ENV || "development",
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://local-dev.pearson.com:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr` :"http://localhost:5000",
-    TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
+    TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :
+                                                    "https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
     STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT:"https://contentapis-staging.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
@@ -39,7 +40,8 @@ let config = {
     //c2 required keys and urls
     CMDS_APIKEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATABASE:  '?db=qa2',
-    CMIS_REPO   : [{repo:"https://staging.api.pearson.com/content/cmis/ukwip",repoName:"UK"},{repo:"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}],
+    CMIS_REPO   : [{repo:"https://staging.api.pearson.com/content/cmis/ukwip",repoName:"UK"},{repo:"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},
+                    {"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}],
     CMDS_AUTHORIZATION: 'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==',
     EPS_API: 'https://us-school-stg.pearsoned.com/school',
     REACT_APP_API_URL :"https://10.11.7.24:8081/cypress-api/",

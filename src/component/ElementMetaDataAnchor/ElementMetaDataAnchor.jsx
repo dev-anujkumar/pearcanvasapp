@@ -64,7 +64,8 @@ export class ElementMetaDataAnchor extends Component {
   prepareLOData = () => {
     let loData = ""
     if (this.props?.currentSlateLOData && Array.isArray(this.props.currentSlateLOData)) {
-      loData = this.props?.currentSlateLOData?.find(learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref || learningObj?.id == this.props?.element?.elementdata?.loref))
+      loData = this.props?.currentSlateLOData?.find(learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref ||
+              learningObj?.id == this.props?.element?.elementdata?.loref))
     } else if (this.props?.currentSlateLOData) {
       loData = this.props.currentSlateLOData
     }
@@ -113,7 +114,8 @@ export class ElementMetaDataAnchor extends Component {
       }
       else if ( !loData ) {
           this.props.showBlocker(true);
-          sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: '', apiKeys_LO: '', wrapperURL: config.WRAPPER_URL } })
+          sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: '',
+          apiKeys_LO: '', wrapperURL: config.WRAPPER_URL } })
         }
     }
   }

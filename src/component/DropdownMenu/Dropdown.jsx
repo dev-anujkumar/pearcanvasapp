@@ -22,7 +22,8 @@ export const Dropdown = (props) => {
 
     return (
         <ul className={`dropdown-parent ${ulClass}`}>
-            {hasDefaultOption && <li className={`dropdown-li-item ${dropdownClass}`} onClick={(e) => !hasReviewerRole() && clickHandlerFn(DEFAULT_OPTION, e, type)}>{DEFAULT_OPTION}</li>}
+            {hasDefaultOption && <li className={`dropdown-li-item ${dropdownClass}`}
+             onClick={(e) => !hasReviewerRole() && clickHandlerFn(DEFAULT_OPTION, e, type)}>{DEFAULT_OPTION}</li>}
             {showDropdown && renderDropdown(type)}
         </ul>
     )

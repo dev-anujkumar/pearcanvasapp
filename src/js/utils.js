@@ -124,7 +124,11 @@ export const utils = {
 };
 
 export const checkforToolbarClick = (classList) => {
-    let existingToolbarClasses = ["tox-dialog__body-nav-item", "tox-tab", "tox-dialog__body-nav-item--active", "tox-dialog__content-js", "tox-dialog", "tox-collection__item-icon", "tox-tbtn", "tox-tbtn--select", "tox-split-button", "wrs_focusElement", "tox-split-button__chevron", "definition-editor", "dialog-input-textarea", "SearchLibAutoSuggest__input___jIHit", "plautosuggestTheme__input___Jd4Ux", "patterns__col100___1reM7", "markedindex-editor"];
+    let existingToolbarClasses = ["tox-dialog__body-nav-item", "tox-tab", "tox-dialog__body-nav-item--active",
+                                "tox-dialog__content-js", "tox-dialog", "tox-collection__item-icon", "tox-tbtn",
+                                "tox-tbtn--select", "tox-split-button", "wrs_focusElement", "tox-split-button__chevron",
+                                "definition-editor", "dialog-input-textarea", "SearchLibAutoSuggest__input___jIHit", "plautosuggestTheme__input___Jd4Ux",
+                                "patterns__col100___1reM7", "markedindex-editor"];
     let isTargetFound = false;
 
     classList.forEach((val) => {
@@ -253,9 +257,11 @@ export const spanHandlers = {
         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== childClass) {
             currentElement = editor.selection.getNode().closest(`.${childClass}`);
         }
-        if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement && currentElement.innerHTML !== '<br>' && editor.selection.getContent() === '' && currentElement.textContent.trim() != '') {
+        if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement && currentElement.innerHTML !== '<br>' && editor.selection.getContent() === '' &&
+            currentElement.textContent.trim() != '') {
             e.preventDefault();
-        } else if (currentElement && ((currentElement.innerHTML && (currentElement.innerHTML.length === 1 || currentElement.textContent.trim().length === 1)) || (key === 8 && currentElement.tagName == 'SPAN' && (currentElement.innerHTML == '<br>' || currentElement.textContent.trim() === '')))) {
+        } else if (currentElement && ((currentElement.innerHTML && (currentElement.innerHTML.length === 1 || currentElement.textContent.trim().length === 1)) ||
+                (key === 8 && currentElement.tagName == 'SPAN' && (currentElement.innerHTML == '<br>' || currentElement.textContent.trim() === '')))) {
             if (currentElement.previousSibling) {
                 if (key === 46) {
                     e.preventDefault();
@@ -404,7 +410,8 @@ export const spanHandlers = {
         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== childClass) {
             elementSearch = editor.selection.getNode().closest(`.${childClass}`);
         }
-        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && ((childClass === 'poetryLine' && elementSearch.innerHTML != '<br>') || childClass === 'codeNoHighlightLine' || (childClass === 'dialogueLine' && elementSearch.innerHTML != '<br>'))) {
+        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && ((childClass === 'poetryLine' && elementSearch.innerHTML != '<br>') ||
+            childClass === 'codeNoHighlightLine' || (childClass === 'dialogueLine' && elementSearch.innerHTML != '<br>'))) {
             editor.undoManager.transact(() => {
                 this.performSplitOperation(editor, elementId, parentTag, childClass, position, elementSearch);
             });
@@ -422,7 +429,9 @@ export const spanHandlers = {
                 position = 'previous';
             }
         } else {
-            if (editor.selection.getContent() !== '' || editor.selection.getNode().tagName.toLowerCase() === 'img' || editor.selection.getNode().tagName.toLowerCase() === 'dfn' || editor.selection.getNode().tagName.toLowerCase() === 'abbr' || editor.selection.getNode().tagName.toLowerCase() === 'a') {
+            if (editor.selection.getContent() !== '' || editor.selection.getNode().tagName.toLowerCase() === 'img' ||
+                editor.selection.getNode().tagName.toLowerCase() === 'dfn' || editor.selection.getNode().tagName.toLowerCase() === 'abbr' ||
+                editor.selection.getNode().tagName.toLowerCase() === 'a') {
                 if (elementSearch.nextSibling) {
                     elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
                     editor.selection.setCursorLocation(elementSearch.nextSibling, 0);

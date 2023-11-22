@@ -177,7 +177,8 @@ const getAllElementsInShowhide = async (containerData, numberedElements, created
                     element.parentDetails.push(colData.contentUrn) //column -id
                     if (element.displayedlabel === createdElementData.displayedlabel) {
                         let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails });
+                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel ||
+                        'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails });
                     } else if (element.type === 'showhide' || element.type === 'element-aside') {
                         element.parentDetails.push(element.contentUrn)
                         await getSameElementsInsideElement(await containerBodyMatter(element), numberedElements, createdElementData);
@@ -286,7 +287,8 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 item.indexPos = count;
                 count++;
             });
-            if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
+            if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber &&
+            (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
                 let nearestElementObj = findNearestElement(slateElements, elementObj, labelType);
 
                 if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
@@ -324,7 +326,8 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
             }
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
         } else if (Array.isArray(elementObj?.indexPos)) {
-            handleAutonumberingForElementsInContainers(bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch);
+            handleAutonumberingForElementsInContainers(bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj,
+            slateElements, listType, labelType, getState, dispatch);
         } else if (activeLabelElements?.length === 1) {
             checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
         }
@@ -338,7 +341,8 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
  * @param {*} imagesList
  * @returns
  */
-export const handleAutonumberingForElementsInContainers = async (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
+export const handleAutonumberingForElementsInContainers = async (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData,
+    autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
     let elementsInContainer = await findElementsInContainer(bodyMatter[elementObj.indexPos[0]], [], createdElementData);
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
     let activeLabelElementsInSlate = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
@@ -358,8 +362,10 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
     let popupSlateElements = [];
     let slateElements = [];
     if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
-        popupSlateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, popupSlateElements);
-        slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
+        popupSlateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter,
+        containerElements.ASIDE, popupSlateElements);
+        slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter,
+        containerElements.ASIDE, slateElements);
     } else {
         popupSlateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config.slateManifestURN], { dispatch });
         slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
@@ -399,7 +405,8 @@ export const appendElementToList = (elementsArr, createdElementData, labelType, 
     }
     let nearestElementObj = findNearestElement(elementsArr, elementObjInContainer, labelType);
     if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
-        if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && elementsList[slateEntityForAutonumber].length > 0) {
+        if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) &&
+            elementsList[slateEntityForAutonumber].length > 0) {
             let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
             index = nearestElementObj?.key === 'above' ? index + 1 : index;
             elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
@@ -535,7 +542,8 @@ export const findElementInLastSlates = (slatesArr, slateIndex, elementsList, par
     let index;
     for (let i = slateIndex - 1; i > -1; i--) {
         let refrenceSlateEntityURN = slatesArr[i].entityUrn;
-        let initialIndex = elementsList[parentUrn].slice().reverse().findIndex(element => (element.slateEntityUrn === refrenceSlateEntityURN && element.displayedlabel === elementLabel));
+        let initialIndex = elementsList[parentUrn].slice().reverse().findIndex(element => (element.slateEntityUrn === refrenceSlateEntityURN &&
+                        element.displayedlabel === elementLabel));
         index = initialIndex >= 0 ? (elementsList[parentUrn].length - 1) - initialIndex : initialIndex;
         if (index > -1) {
             return index;

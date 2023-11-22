@@ -15,7 +15,8 @@ export class ElementMetaLOList extends Component {
     this.renderCurrentModule()
   }
   componentDidUpdate(prevProps, prevState){
-    if((this.props.isRenderMetdataLO !=prevProps.isRenderMetdataLO && this.props.isRenderMetdataLO==true)|| (this.props.currentSlateLOData.length!=prevProps.currentSlateLOData.length)){
+    if((this.props.isRenderMetdataLO !=prevProps.isRenderMetdataLO && this.props.isRenderMetdataLO==true)||
+    (this.props.currentSlateLOData.length!=prevProps.currentSlateLOData.length)){
       this.props.reRenderLO(false)
       this.renderCurrentModule()
     }
@@ -153,7 +154,8 @@ export class ElementMetaLOList extends Component {
       showTocBlocker();
       let that = this;
       setTimeout(function () {
-        sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': NoSlateTagIS, 'data': '', 'chapterContainerUrn': '', 'isLOExist': false, 'editAction': '' } }, config.WRAPPER_URL)
+        sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': NoSlateTagIS, 'data': '', 'chapterContainerUrn': '',
+        'isLOExist': false, 'editAction': '' } }, config.WRAPPER_URL)
         that.props.showBlocker(false);
       }, 1000);
     }

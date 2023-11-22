@@ -10,12 +10,14 @@ import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
 import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole, showNotificationOnCanvas} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED,
+        CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION, CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION,
+        CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES } from '../../../constants/Element_Constants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, IMG_HTML, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
@@ -166,7 +168,7 @@ function CommunicationChannel(WrappedComponent) {
                     if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.LOList.map(loData => {
-                            loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>");
+                            loData.label.en = loData.label.en.replace(regex, IMG_HTML);
                         });
                         this.props.currentSlateLOMath(message.LOList);
                     } else {
@@ -213,7 +215,7 @@ function CommunicationChannel(WrappedComponent) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         this.props.currentSlateLOData.map(loData => {
                             if (loData?.label?.en) {
-                                loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>")
+                                loData.label.en = loData.label.en.replace(regex, IMG_HTML)
                             }
                         })
                         this.props.currentSlateLO(this.props.currentSlateLOData);
@@ -223,7 +225,8 @@ function CommunicationChannel(WrappedComponent) {
                     });
                     // handles Element Update API call with loAssociation key from TOC and RC
                     if(message.hasOwnProperty('slateTagEnabled')){
-                        let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] : this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                        let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] :
+                                        this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
                         let messageData = {assessmentResponseMsg:message.slateTagEnabled};
                         let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
                         let isFromRC = message.assessmentSlateData ? true : false;
@@ -231,9 +234,10 @@ function CommunicationChannel(WrappedComponent) {
                         const { assessmenId } = this.props.assessmentReducer
                         const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN]?.status
                         const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
-                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
+                        if (config.parentEntityUrn !== (FRONT_MATTER || BACK_MATTER)) {
                             let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn : config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn :
+                                             config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
@@ -616,14 +620,16 @@ function CommunicationChannel(WrappedComponent) {
                                 editor = item;
 
                                 let elementTag = "";
-                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
+                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) :
+                                item.querySelector('#' + linkData.linkId);
                                 if(linkNode.classList.contains('sup')) {
                                     elementTag = 'sup';
                                 } else if(linkNode.classList.contains('sub')) {
                                     elementTag = 'sub';
                                 }
                                 linkHTML = linkNode.innerHTML || '';
-                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId +
+                                '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
                                 if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
                                     linkNotification = "Link updated to slate '" + pageLinkText + "'.";
                                 } else {
@@ -644,7 +650,8 @@ function CommunicationChannel(WrappedComponent) {
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
-                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
+                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) :
+                                        item.querySelector('#' + linkData.linkId);
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = linkHTML;
                                 if (linkData.link == "unlink" || linkData.link == "unlinkToc") {
@@ -684,7 +691,9 @@ function CommunicationChannel(WrappedComponent) {
         handleAudioData = (message) => {
             let imageData = message.asset;
             let figureType = imageData?.content?.mimeType?.split('/')[0]
-            let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+            let smartLinkAssetType = imageData?.properties[CM_DESCRIPTION] && (typeof (imageData.properties[CM_DESCRIPTION]) == "string") ?
+            imageData.properties[CM_DESCRIPTION].includes('smartLinkType') ?
+            JSON.parse(imageData.properties[CM_DESCRIPTION]).smartLinkType : "" : "";
             if (figureType == "audio" || smartLinkAssetType?.toLowerCase() == "audio") {
                 this.props.saveDataFromAlfresco(message);
                 let payloadObj = {
@@ -836,7 +845,7 @@ function CommunicationChannel(WrappedComponent) {
                 if (message?.loLinked?.length) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                     message.loLinked.map(loData => {
-                        loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>") ?? loData.label.en;
+                        loData.label.en = loData?.label?.en.replace(regex, IMG_HTML) ?? loData.label.en;
                     });
                 }
                 const newLOsLinked = [...message.loLinked];
@@ -882,7 +891,7 @@ function CommunicationChannel(WrappedComponent) {
                 message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
-                    message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
+                    message.loObj.label.en = message.loObj.label.en.replace(regex, IMG_HTML);
                 }
                 const loDataToSave = config.slateType == SLATE_ASSESSMENT ? message : message.loObj ? [message.loObj] : [message]
                 this.props.currentSlateLO(loDataToSave);
@@ -895,13 +904,13 @@ function CommunicationChannel(WrappedComponent) {
 
                 let loIndex = [];
                 bodymatter.forEach((item, index) => {
-                    if (item.type == "element-learningobjectivemapping") {
+                    if (item.type == ELEMENT_LEARNING_OBJECTIVE_MAPPING) {
                         LOElements.push(item.id)
                         loIndex.push(index);
                     }
                     if (item.type == "element-aside") {
                         item.elementdata.bodymatter.forEach((ele, indexInner) => {
-                            if (ele.type == "element-learningobjectivemapping") {
+                            if (ele.type == ELEMENT_LEARNING_OBJECTIVE_MAPPING) {
                                 LOElements.push(ele.id)
                                 indexInner = index + "-" + indexInner;
                                 loIndex.push(indexInner);
@@ -916,7 +925,7 @@ function CommunicationChannel(WrappedComponent) {
                         "loref": loUrn
                     },
                     "metaDataAnchorID": LOElements,
-                    "elementVersionType": "element-learningobjectivemapping",
+                    "elementVersionType": ELEMENT_LEARNING_OBJECTIVE_MAPPING,
                     "loIndex": loIndex
                 }
                 if (LOElements.length) {
@@ -943,7 +952,8 @@ function CommunicationChannel(WrappedComponent) {
             const isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
             if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
                 this.props.isOwnersSubscribedSlate(true);
-            }else if(isSubscriberRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isSubscribersKeyExist){
+            }else if(isSubscriberRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) &&
+                    !isSubscribersKeyExist){
                 this.props.isSubscribersSubscribedSlate(true);
             }
         }
@@ -1122,14 +1132,15 @@ function CommunicationChannel(WrappedComponent) {
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                     'structureApiEndpoint':config.AUDIO_NARRATION_URL
                 }
-                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
+                if (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                     }
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
+                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN,
+                    apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
                 }
-                else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
+                else if (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER && config.slateType == "container-introduction") {
                     sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
                 }
             }
@@ -1290,7 +1301,8 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker}
+                    tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

@@ -72,7 +72,8 @@ class CiteTdxFooter extends Component {
         const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === CITE) ? citeApiData : (this.props.assessmentType === TDX) ? tdxApiData : mmiApiData;
         let hideNavigationPrevious = (currentPage <= 1) ? 'hideNavigation' : '';
-        let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 25)) ? 'hideNavigation' : '';
+        let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments &&
+                                apiData.assessments.length < 25)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';
         let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') || (searchUuidVal == undefined || searchUuidVal == '')? '' : 'hideNavigation';
         let addClass;

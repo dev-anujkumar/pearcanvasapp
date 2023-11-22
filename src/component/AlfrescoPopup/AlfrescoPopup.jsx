@@ -109,7 +109,8 @@ function AlfrescoPopup(props) {
             setFocusedButton(SECONDARY_BUTTON);
             blurElement(primaryButton.current, PRIMARY_BUTTON);
             focusElement(secondaryButton.current, SECONDARY_BUTTON);
-        } else if (e.keyCode === 39 && focusedButton && focusedButton.current && focusedButton.current === SECONDARY_BUTTON && (primaryButton && primaryButton.current && primaryButton.current.classList && !primaryButton.current.classList.contains('disable'))) {
+        } else if (e.keyCode === 39 && focusedButton && focusedButton.current && focusedButton.current === SECONDARY_BUTTON &&
+                (primaryButton && primaryButton.current && primaryButton.current.classList && !primaryButton.current.classList.contains('disable'))) {
             setFocusedButton(PRIMARY_BUTTON);
             blurElement(secondaryButton.current, SECONDARY_BUTTON);
             focusElement(primaryButton.current, PRIMARY_BUTTON);
@@ -146,7 +147,9 @@ function AlfrescoPopup(props) {
         let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
         locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
         const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
-        let messageObj = {appName:'cypress', citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,  calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote, currentAsset: props.currentAsset}
+        let messageObj = {appName:'cypress', citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef,
+                         elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
+                        calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote, currentAsset: props.currentAsset}
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         const messageDataToSave = {
             id: props.alfrescoElementId,

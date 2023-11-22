@@ -98,13 +98,15 @@ class GlossaryFootnotePopup extends Component {
                 <div id="toolbarGlossaryFootnote"></div>
                 <div className="glossary-toolbar">
                 {
-                    glossaryFootnote === GLOSSARY &&<div className = {'audio-wrapper'+ accessToolbar} id='glossary-audio'><AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle} /></div>
+                    glossaryFootnote === GLOSSARY &&<div className = {'audio-wrapper'+ accessToolbar} id='glossary-audio'>
+                    <AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle} /></div>
                 }
 
                 {this.state.audioToggle && <AddAudioBook isGlossary={true} closeAddAudioBook={this.closeAddAudioBook} elementId={glossaryFootnoteValue.elementWorkId}/>}
 
                 {
-                    glossaryFootnote === GLOSSARY &&<div className = {'image-wrapper'+ accessToolbar} id='glossary-figure-image'><FigureTinyMceGlossary handleFigureToggle={this.handleFigureToggle} /></div>
+                    glossaryFootnote === GLOSSARY &&<div className = {'image-wrapper'+ accessToolbar} id='glossary-figure-image'>
+                    <FigureTinyMceGlossary handleFigureToggle={this.handleFigureToggle} /></div>
                 }
                 {this.state.figureToggle && <AddImageGlossary isImageGlossary={true} closeFigurePopup={this.closeFigurePopup} elementId={glossaryFootnoteValue.elementWorkId} />}
                 </div>
@@ -114,15 +116,21 @@ class GlossaryFootnotePopup extends Component {
                         (glossaryFootnote === GLOSSARY) &&
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
-                            <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} markedIndexIcon={markedIndex} elementType={this.props.glossaryFootnoteValue?.elementType} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
+                            <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')}
+                            onBlur={(e) => this.toolbarHandling(e, 'add')}>
+                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} markedIndexIcon={markedIndex}
+                                elementType={this.props.glossaryFootnoteValue?.elementType} className='definition-editor place-holder'
+                                placeholder="Type Something" id='glossary-0' />
                             </div>
                         </div>
                     }
                     <div className="glossary-definition-header">
                         <div className="glossary-definition-label">{(glossaryFootnote === GLOSSARY) ? 'Definition:' : 'Note:'}</div>
-                        <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                            <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
+                        <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher"
+                        onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
+                            <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                            glossaryFootNoteCurrentValue = {footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>
                     </div>
                     <div className="glossary-definition-buttons">
@@ -142,7 +150,8 @@ class GlossaryFootnotePopup extends Component {
                     change wiris images to avoid converting to mathml
                 */
                let tempContainerHtml = tinyMCE.$("#" + ed_id).html();
-               tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+               tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+               .replace(/\sWirisformula/g, ' temp_Wirisformula');
                document.getElementById( ed_id ).innerHTML = tempContainerHtml;
 
                 tinymce.remove(`#${ed_id}`)

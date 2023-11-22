@@ -2,7 +2,8 @@
  * Prepare API data to get media elements based on Type
  */
 
-import { AUTO_NUMBER_ELEMENTS, slateTypes, SHOWHIDE_SECTION, CONTAINER_LABELS, DISPLAYED_LABELS, ELEMENT_TYPES, containerElements, autoNumberElementsAllowed } from './AutoNumberConstants';
+import { AUTO_NUMBER_ELEMENTS, slateTypes, SHOWHIDE_SECTION, CONTAINER_LABELS, DISPLAYED_LABELS, ELEMENT_TYPES, containerElements,
+        autoNumberElementsAllowed } from './AutoNumberConstants';
 /**
  * Common API Data handler for all elements supporting Auto-numbering
  * @param {*} projectContent
@@ -65,7 +66,8 @@ export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
             if (container?.label === CONTAINER_LABELS.PART) {
                 if (container?.contents['frontMatter']?.length > 0) {
                     /** Get Media Elements on PART-IS */
-                    const mediaElementOnPartIS = getImagesInsideSlates(container.contentUrn,{ isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents['frontMatter'][0].contents.bodyMatter) || []
+                    const mediaElementOnPartIS = getImagesInsideSlates(container.contentUrn,{ isSlate: true,
+                        manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents['frontMatter'][0].contents.bodyMatter) || []
                     numberedElements = getNumberedElementsList(container.contentUrn, numberedElements, mediaElementOnPartIS)
                 }
                 if (container?.contents['bodyMatter']?.length > 0) {
@@ -78,7 +80,8 @@ export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
                 numberedElements = getContentInChapter(container, '', numberedElements)
             }
             else if (slateTypes.indexOf(container?.label) > -1) {
-                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn,
+                                        entityURN: container.contentUrn },container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList('bodyMatter', numberedElements, slateMediaElements)
             }
         })
@@ -105,7 +108,8 @@ const getContentInChapter = (apiContent, matterType, numberedElements) => {
                 getContainerMediaElementsList(container, 'bodyMatter', numberedElements, apiContent.contentUrn)
             }
             else if (slateTypes.indexOf(container?.label) > -1 && container?.contents?.bodyMatter?.length > 0) {
-                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn,
+                                        entityURN: container.contentUrn },container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList(apiContent.contentUrn, numberedElements, slateMediaElements)
             }
         }))
@@ -124,7 +128,8 @@ const getContainerMediaElementsList = (container, matterType, numberedElements, 
     if (container?.contents?.bodyMatter?.length > 0) {
        container?.contents?.bodyMatter?.forEach((innerContainer) => {
             if (slateTypes.indexOf(innerContainer?.label) > -1 && innerContainer?.contents?.bodyMatter?.length > 0) {
-                const slateMediaElements = getImagesInsideSlates(innerContainer.contentUrn, { isSlate: true, manifestURN: innerContainer.versionUrn, entityURN: innerContainer.contentUrn },innerContainer.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(innerContainer.contentUrn, { isSlate: true,
+                    manifestURN: innerContainer.versionUrn, entityURN: innerContainer.contentUrn },innerContainer.contents.bodyMatter) || []
                 if (matterType === 'frontMatter' || matterType === 'backMatter') {
                     numberedElements = getNumberedElementsList(matterType, numberedElements, slateMediaElements)
                 }
@@ -296,7 +301,8 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
                             numberedElements = prepareElementList(element, numberedElements, slateEntityUrn)
                         } else if (element.type === 'container' || (Object.values(containerElements).indexOf(element.type) > -1)) {
                             element.parentDetails.push(element.contentUrn)
-                            numberedElements = getImagesInsideSlates(slateEntityUrn, {isSlate:false},containerBodyMatter(element), numberedElements, containerData.parentDetails) || numberedElements
+                            numberedElements = getImagesInsideSlates(slateEntityUrn, {isSlate:false},containerBodyMatter(element),
+                            numberedElements, containerData.parentDetails) || numberedElements
                         }
                     })
                 }
@@ -343,7 +349,8 @@ export const getContentInFMandBM = (apiContent, matterType, numberedElements) =>
                 getContainerMediaElementsList(container, matterType, numberedElements)
             }
             else if (slateTypes.indexOf(container?.label) > -1 && container?.contents?.bodyMatter?.length > 0) {
-                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn,
+                    entityURN: container.contentUrn }, container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList(matterType, numberedElements, slateMediaElements)
             }
         })

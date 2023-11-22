@@ -8,7 +8,8 @@ export class ElementBlockquote extends Component {
     }
 
     render() {
-        const { element, className, model, openGlossaryFootnotePopUp, slateLockInfo, openAssetPopoverPopUp, glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
+        const { element, className, model, openGlossaryFootnotePopUp, slateLockInfo, openAssetPopoverPopUp, glossaryFootnoteValue,
+                openMarkedIndexPopUp, markedIndexValue } = this.props
         let blockquoteClass = "blockquoteMarginalia"
         let firstClass = "paragraphNummerEins"
         let secondClass = "blockquoteTextCredit"
@@ -16,8 +17,9 @@ export class ElementBlockquote extends Component {
         tempDiv.innerHTML = model.text;
         //checking no of childs in node
         let firstParaBlock = tempDiv.children[0]?.children[0]?.outerHTML
-        let attrParaBlock = tempDiv.children[0]?.children[1]?.classList?.contains('blockquoteTextCredit') ? tempDiv.children[0]?.children[1].outerHTML : tempDiv.children[0]?.children[2]?.outerHTML
-        let blockquoteElement =
+        let attrParaBlock = tempDiv.children[0]?.children[1]?.classList?.contains('blockquoteTextCredit') ?
+                            tempDiv.children[0]?.children[1].outerHTML : tempDiv.children[0]?.children[2]?.outerHTML
+        let blockquoteElement = 
       <div>
          <blockquote className={blockquoteClass}>
          <KeyboardWrapper enable index={`${this.props.index}-0`}>

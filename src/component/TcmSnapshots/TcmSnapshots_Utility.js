@@ -13,6 +13,7 @@ import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
 import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate.js';
+import { PARAGRAPH_HTML, PARAGRAPH_NUMEROUNO_CLASS } from '../../constants/Element_Constants.js';
 
 
 let operType = "";
@@ -73,7 +74,9 @@ export const prepareTcmSnapshots = async (wipData, actionStatus, containerElemen
     const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
-    let defaultKeys = config.isPopupSlate ? await setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback, popupCutCopyParentData, popupParentSlateData) : await setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback, popupCutCopyParentData, popupParentSlateData);
+    let defaultKeys = config.isPopupSlate ? await setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn,
+    elmFeedback, popupCutCopyParentData, popupParentSlateData) : await setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn,
+    elmFeedback, popupCutCopyParentData, popupParentSlateData);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -85,7 +88,8 @@ export const prepareTcmSnapshots = async (wipData, actionStatus, containerElemen
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
+    let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType :
+    asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
     /* Set grant parent tag 2C||3C */
     if( (containerElement?.sectionType === 'show' || 'hide') && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
         tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
@@ -146,7 +150,8 @@ export const prepareTcmSnapshots = async (wipData, actionStatus, containerElemen
         if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type,index);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
-            const isMultiColumnInPopup = hasParentData && config.isPopupSlate && ((parentUrn?.elementType === MULTI_COLUMN_GROUP && (type === CONTAINER || type === WE_TYPE) ) || asideData?.parent?.type === MULTI_COLUMN) ? true : false
+            const isMultiColumnInPopup = hasParentData && config.isPopupSlate && ((parentUrn?.elementType === MULTI_COLUMN_GROUP &&
+            (type === CONTAINER || type === WE_TYPE) ) || asideData?.parent?.type === MULTI_COLUMN) ? true : false
             snapshotsData.tag.isMultiColumnInPopup = isMultiColumnInPopup;
             tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, index, "", operationType, popupCutCopyParentData);
         }
@@ -217,9 +222,11 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
     let elementDetails;
     const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
-    let wipDataTitle = calledFrom == 'delete'|| calledFrom == 'create' ? wipData.popupdata['formatted-title'] : wipData  // delete Whole pop case handling
+    let wipDataTitle = calledFrom == 'delete'|| calledFrom == 'create' ? wipData.popupdata[FORMATTED_TITLE] : wipData  // delete Whole pop case handling
     elementId.parentId = parentElement.id;
-    elementId.childId = wipData.type === POPUP_ELEMENT ? wipData.popupdata['formatted-title'] && wipData.popupdata['formatted-title'].id : wipData.id;; // delete Whole pop case handling
+    elementId.childId = wipData.type === POPUP_ELEMENT ?
+        wipData.popupdata[FORMATTED_TITLE] && wipData.popupdata[FORMATTED_TITLE].id :
+        wipData.id;; // delete Whole pop case handling
 
     tag.parentTag = fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(parentElement, type ? type : metaDataField ? metaDataField : "");
@@ -263,13 +270,14 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
     if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys,index);
-        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+        if((metaDataField && parentElement && parentElement.popupdata[FORMATTED_TITLE])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
-    else if ((defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') || (operationType === 'cut' && defaultKeys.action === 'update')) {     /** Create Popup */
+    else if ((defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') || (operationType === 'cut' &&
+        defaultKeys.action === 'update')) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
-        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+        if((metaDataField && parentElement && parentElement.popupdata[FORMATTED_TITLE])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
@@ -333,7 +341,8 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
     let popupParent = popupAsideData ? popupAsideData : popupParentUrn ? popupParentUrn :  undefined;
     elementId.popupParentId = popupParent && popupParent.id ? popupParent.id : ""; //we:id
     tag.popupParentTag = popupParent && fetchElementsTag(popupParent);//WE/AS
-    let headWE = popupAsideData && popupAsideData.type === ELEMENT_ASIDE && popupAsideData.subtype === WORKED_EXAMPLE ? popupParentUrn.manifestUrn == popupAsideData.id ? "HEAD" : "BODY" : "";
+    let headWE = popupAsideData && popupAsideData.type === ELEMENT_ASIDE && popupAsideData.subtype === WORKED_EXAMPLE ?
+    popupParentUrn.manifestUrn == popupAsideData.id ? "HEAD" : "BODY" : "";
     let bodyWE = headWE == "BODY" ? popupParentUrn && popupParentUrn.manifestUrn ? popupParentUrn.manifestUrn : "" : "";//body-id
     tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
     elementId.popupParentId = `${elementId.popupParentId}${headWE == "BODY" ? "+"+bodyWE : ""}`
@@ -355,7 +364,8 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
 }
 export const checkContainerPopupVersion = async (containerElement) => {
     if (containerElement && (containerElement.popupAsideData && containerElement.popupAsideData.element?.status === "approved")) {
-        let contentUrn = containerElement.popupAsideData ? containerElement.popupAsideData.contentUrn : containerElement.popupParentUrn ? containerElement.popupParentUrn.contentUrn : ""
+        let contentUrn = containerElement.popupAsideData ? containerElement.popupAsideData.contentUrn : containerElement.popupParentUrn ?
+        containerElement.popupParentUrn.contentUrn : ""
         if (contentUrn) {
             let newManifestData = await getLatestVersion(contentUrn);
             if (newManifestData && containerElement.popupAsideData) {
@@ -391,7 +401,8 @@ export const checkElementsInPopupInContainer = () => {
  * @description Check if Popup Slate is inside a Container Element
 */
 export const checkParentData = (containerElement) => {
-    let poetryData = containerElement && ((containerElement.poetryData != undefined ||containerElement.poetryData != null)  && !isEmpty(containerElement.poetryData)) ? true : false;
+    let poetryData = containerElement && ((containerElement.poetryData != undefined ||containerElement.poetryData != null)  &&
+    !isEmpty(containerElement.poetryData)) ? true : false;
     let asideData = containerElement && ((containerElement.asideData != undefined ||containerElement.asideData != null)  && !isEmpty(containerElement.asideData)) ? true : false;
     let parentUrn = containerElement && ((containerElement.parentUrn != undefined ||containerElement.parentUrn != null)  && !isEmpty(containerElement.parentUrn)) ? true : false;
     return (poetryData || asideData || parentUrn);
@@ -414,10 +425,12 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
             snapshotUrn: elementDetails.elementUrn,
             elementType: elementDetails.elementType,
             elementWip: JSON.stringify(res),
-            elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
+            elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) :
+            JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
             ...defaultKeys
         };
-        if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
+        if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) ||
+            currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
             currentSnapshot.status = 'accepted'
             if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
                 res.elementdata.text = ''
@@ -439,7 +452,8 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot
 */
-export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}, actionStatus = null, popupCutCopyParentData = null) => {
+export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement,
+    containerElement = {}, actionStatus = null, popupCutCopyParentData = null) => {
     const { asideData, parentUrn, showHideObj } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
@@ -485,7 +499,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
 
         if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
             elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID :
+                slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
         else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
             elementTag = `POP:BODY:${elementTag}`;
@@ -497,7 +512,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
 
-        if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate
+        if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+            popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
         }
@@ -514,7 +530,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.parentTag}:${tag.childTag}`;
         // if (popupInContainer && config.isPopupSlate){  // PE inside popup
         //     elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-        //     elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        //     elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID :
+        //     slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         // }
        if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
             elementTag = `AS:${elementTag}`
@@ -523,17 +540,17 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype === WORKED_EXAMPLE) { //poetry inside WE - head/body
             const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
             elementTag = `WE:${headString}:${elementTag}`
-            elementId = `${poetryAsideData.id}+${(poetryParentURN?.manifestUrn && headString === "BODY") ? `${poetryParentURN.manifestUrn}+` : ""}${eleId.parentId}+${eleId.childId}`
-
+            elementId = `${poetryAsideData.id}+${(poetryParentURN?.manifestUrn && headString === "BODY") ?
+            `${poetryParentURN.manifestUrn}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
-
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
             const {columnName, manifestUrn, mcId} = poetryParentURN;
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
         else if (showHideObj?.element?.type === SHOWHIDE || poetryAsideData?.type === SHOWHIDE) {
-            const showSectionType = showHideObj?.sectionType ? showHideObj?.sectionType : showHideObj?.element?.sectionType ? showHideObj?.element?.sectionType : showHideObj?.showHideType
+            const showSectionType = showHideObj?.sectionType ? showHideObj?.sectionType :
+            showHideObj?.element?.sectionType ? showHideObj?.element?.sectionType : showHideObj?.showHideType
             let section = showSectionType ? showSectionType : poetryAsideData?.sectionType;
             let shId = showHideObj?.element?.id ? showHideObj?.element?.id : poetryAsideData?.id;
             let showHideSection = getShowHideTag(section);
@@ -543,8 +560,10 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
 
         if ((popupInContainer && config.isPopupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
             elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
-        } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from popup slate to normal slate
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}
+            ${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+            !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from popup slate to normal slate
             elementTag = `${elementTag}`;
             elementId = `${elementId}`;
         } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
@@ -552,7 +571,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
 
-        if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate
+        if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+            popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
         }
@@ -560,15 +580,18 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
 
     else if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID :
+                    slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
     else if (popupInContainer) {                   //WE:BODY:POP:HEAD:CTA | WE:BODY:POP:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
-    } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from normal slate to popup slate
+    } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+        !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from normal slate to popup slate
         elementTag = `${elementTag}`;
         elementId = `${elementId}`;
-    } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate ) {            // operation cut from popup slate to normal slate
+    } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+        popupCutCopyParentData?.isPopupSlate ) {            // operation cut from popup slate to normal slate
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
     } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup && !(containerElement?.cutCopyParentUrn)) {                //POP:BODY:WE:BODY:P
@@ -620,13 +643,16 @@ export const getShowHideTag = (showHideType) => {
  * @param {Object} action - type of action performed
  * @returns {Object} Default keys for the snapshot
 */
-export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null, popupCutCopyParentData, popupParentSlateData) => {
+export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null,
+    popupCutCopyParentData, popupParentSlateData) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
 
     tcmKeys = {
-        slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
-        slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
+        slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn &&
+        cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
+        slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn &&
+        cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
@@ -635,7 +661,9 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status;
-    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) || (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate)) && !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate or vice versa
+    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) ||
+    (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate)) && !popupCutCopyParentData?.isSlateApproved)
+    {            // operation cut from popup slate to normal slate or vice versa
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
@@ -643,7 +671,8 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
             slateType: CONTAINER_INTRO
         }
     }
-    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+        popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate
         let newManifestUrn = await getLatestVersion(popupCutCopyParentData?.parentSlateEntityUrn);
         tcmKeys = {
             ...tcmKeys,
@@ -651,7 +680,9 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
             slateUrn: newManifestUrn ? newManifestUrn : tcmKeys.slateUrn
         }
     }
-    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && config.isPopupSlate && (popupCutCopyParentData?.versionUrn !== popupParentSlateData?.versionUrn) && !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to popup slate
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
+        popupCutCopyParentData?.isPopupSlate && config.isPopupSlate && (popupCutCopyParentData?.versionUrn !== popupParentSlateData?.versionUrn) &&
+        !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to popup slate
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : tcmKeys.slateID,
@@ -803,12 +834,12 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let formattedLabel, formattedNumber, formattedTitle
     let isAutoNumberingEnabled= store?.getState()?.autoNumberReducer?.isAutoNumberingEnabled ?? false;
-    formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
+    formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(PARAGRAPH_NUMEROUNO_CLASS, '');
     if (isAutoNumberingEnabled && autoNumberedElements(element)) {
         formattedLabel = getAutoNumberedLabelData(element)
     } else {
-        formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
-        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+        formattedLabel = getTitleSubtitleModel(element.html.title, FORMATTED_TITLE, "figure").replace(PARAGRAPH_NUMEROUNO_CLASS, '');
+        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(PARAGRAPH_NUMEROUNO_CLASS, '');
     }
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
@@ -822,17 +853,17 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     }
     switch (element.figuretype) {
         case "video":
-            snapshotData["metadata"] = element.figuredata?.videoid?.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata?.videoid?.trim().length ? `<p>${element.figuredata.videoid}</p>` : PARAGRAPH_HTML
             break;
         case "audio":
-            snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : PARAGRAPH_HTML
             break;
         case "codelisting":             // for BCE
-            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
+            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : PARAGRAPH_HTML
             snapshotData["metadata"] = prepareMetablock(element, actionStatus)
             break;
         case "authoredtext":            // for MML
-            snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : "<p><br></p>"
+            snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : PARAGRAPH_HTML
             break;
         case "interactive":
             snapshotData = {
@@ -860,7 +891,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
         case "table":
         case "mathImage":
         default:
-            snapshotData["metadata"] = element.figuredata.imageid.trim().length ? `<p>${element.figuredata.imageid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata.imageid.trim().length ? `<p>${element.figuredata.imageid}</p>` : PARAGRAPH_HTML
             break;
     }
     return snapshotData
@@ -871,7 +902,9 @@ export const prepareMetablock = (element, actionStatus) => {
     let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == false ? 'OFF' : 'ON'
     let toggleNumber = element.figuredata.numbered == false ? 'OFF' : 'ON'
     let startNumberField = element.figuredata.startNumber && toggleNumber == 'ON' ? element.figuredata.startNumber : "NA"
-    let finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
+    let finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language:
+    </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p>
+    <p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
 
     return finalMetaBlock
 }
@@ -884,7 +917,8 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
-    } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
+    } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus &&
+        actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'
     }
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){

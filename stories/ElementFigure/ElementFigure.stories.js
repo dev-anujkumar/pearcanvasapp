@@ -11,7 +11,7 @@ import configureMockStore from 'redux-mock-store';
 const mockStore = configureMockStore(middlewares);
 
 const elemFigureData = mockStore({
-    slateLockReducer:{slateLockInfo:false}   
+    slateLockReducer:{slateLockInfo:false}
   });
 const mockData1={
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
@@ -70,7 +70,7 @@ const mockData1={
 
 }
 const mockData2={
-    
+
     "id": "urn:pearson:work:591e0376-8bde-42cf-bea1-70dc846fca1c",
     "type": "figure",
     "figuretype": "table",
@@ -128,7 +128,7 @@ const mockData2={
 
 }
 const mockData3={
-    
+
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "mathImage",
@@ -185,14 +185,14 @@ const mockData3={
 
 }
 const mockData4={
-    
+
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "image",
     "subtype": "imageFullscreen",
     "alignment": "full",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-   
+
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
         "text": "",
@@ -243,7 +243,7 @@ const mockData4={
 
 }
 const mockData5={
-    
+
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "authoredtext",
@@ -277,7 +277,7 @@ const mockData5={
         "mathml": [],
         "footnotes": []
     },
-    
+
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
         "title": "",
@@ -303,7 +303,7 @@ const mockData5={
 
 }
 const mockData6={
-    
+
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "codelisting",
@@ -356,10 +356,10 @@ const mockData6={
         "startNumber": "1",
         "programlanguage": "Java",
         "preformattedtext": [
-           
+
             ]
     },
-      
+
     "comments" : true,
     "tcm" : true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -370,7 +370,8 @@ const mockData6={
 storiesOf('Components|ElementFigure', module)
 
     .addDecorator(withInfo)
-    .add('default Figure-50', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <Provider store={elemFigureData}> <ElementFigure model={mockData1} index="1" /></Provider></div>)
+    .add('default Figure-50', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <Provider store={elemFigureData}>
+    <ElementFigure model={mockData1} index="1" /></Provider></div>)
     .add('Figure Image-FS', () => {
         return (
             <div style={{width:"500px", position:"relative", left:"100px"}}><Provider store={elemFigureData}>

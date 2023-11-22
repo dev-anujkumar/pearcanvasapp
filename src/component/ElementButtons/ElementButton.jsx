@@ -71,14 +71,17 @@ class ElementButton extends Component {
             case buttonTypes.ADD_COMMENT:
                 buttonJSX = <div className='add-comment-btn'>
                     <Tooltip direction='comment' tooltipText="Add Comment">
-                        <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                        <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`}
+                         onClick={clickHandlerFn}>
                             <img src={add2} />
                         </span>
                     </Tooltip>
                 </div>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
-                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} cypress-plus ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+">
+                    <span className={`btn-element small ${btnClassName} cypress-plus ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`}
+                     onClick={clickHandlerFn}>
                     {editInCypressPlus}
                 </span></Tooltip>
                 break;
@@ -92,7 +95,8 @@ class ElementButton extends Component {
                 </div>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${isBorderOff} ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${isBorderOff} ${btnClassName} ${elementTypeClassName}`}
+                onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = isButtonDisabled ? <span className={`btn-element delete-icon ${elementTypeClassName} icon-disabled`} > <img src={blureDeleteIcon} /></span>
@@ -233,7 +237,8 @@ class ElementButton extends Component {
             case ButtonTypes.EDIT_TE_BUTTON:
                 buttonJSX = <div  className='te-btn'>
                 <Tooltip className='tooltip te-btn' direction='picker-for-table' tooltipText="Edit Alfresco Metadata">
-                <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="" onClick={clickHandlerFn}> {editIcon} </span>
+                <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`}
+                 title="" onClick={clickHandlerFn}> {editIcon} </span>
                 </Tooltip>
                 </div>
                 break;
@@ -249,12 +254,14 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
                 break;
             case ButtonTypes.ALFRESCO_METADATA:
-                buttonJSX = <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
+                buttonJSX = <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`}
+                 onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
                 break;
             case ButtonTypes.ALFRESCO_TE_METADATA:
                 buttonJSX = <div  className='expand-te-btn'>
                 <Tooltip direction='picker-for-table' tooltipText="Expand in Alfresco">
-                <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="" ><img src={alfrescoMetadata} /></span>
+                <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`}
+                 onClick={clickHandlerFn} title="" ><img src={alfrescoMetadata} /></span>
                 </Tooltip>
                 </div>
                 break;

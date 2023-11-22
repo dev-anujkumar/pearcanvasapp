@@ -16,16 +16,24 @@ import PopUp from '../PopUp';
 import OpenerElement from '../OpenerElement';
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus,
+         updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
          prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle, getAlfrescoMetadataForAsset } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, TABLE_ELEMENT, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
+import {
+    COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C,
+    MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, TABLE_ELEMENT, SECTION_BREAK_LABELTEXT,
+    TABBED_2_COLUMN, TABBED_TAB, DECORATIVE_IMAGE, FORMATTED_TITLE, FORMATTED_SUBTITLE, URN_PEARSON_ALFRESCO, DATA_MCE_STYLE, DATA_MCE_SELECTED,
+    IMG_WIRIS_FORMULA_CLASS, POP_UP_WEB_LINK, PREVIOUS_SLATE_BUTTON, STOP_EVENT, NEXT_SLATE_BUTTON, MULTIPLE_ELEMENT_CLASSES
+} from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags,
+         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole,
+        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -53,10 +61,12 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive,checkSmartLinkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement, checkImageForMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive,checkSmartLinkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement,
+         checkImageForMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT,
+         SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import ElementDialogue from '../ElementDialogue';
@@ -72,7 +82,9 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, validateLabelNumberSetting, generateDropdownDataForFigures, generateDropdownDataForContainers, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore,
+        setAutonumberingValuesForPayload, validateLabelNumberSetting, generateDropdownDataForFigures, generateDropdownDataForContainers,
+        getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions';
@@ -148,19 +160,19 @@ class ElementContainer extends Component {
             this.props.getElementStatus(element.id, this.props.index)
         }
         else if (element && element.type === "popup") {
-            if (element.popupdata.hasOwnProperty("formatted-title")) {
-                !elementStatus[element.popupdata["formatted-title"].id] && this.props.getElementStatus(element.popupdata["formatted-title"].id, this.props.index)
+            if (element.popupdata.hasOwnProperty(FORMATTED_TITLE)) {
+                !elementStatus[element.popupdata[FORMATTED_TITLE].id] && this.props.getElementStatus(element.popupdata[FORMATTED_TITLE].id, this.props.index)
             }
-            if (element.popupdata.hasOwnProperty("formatted-subtitle")) {
-                !elementStatus[element.popupdata["formatted-subtitle"].id] && this.props.getElementStatus(element.popupdata["formatted-subtitle"].id, this.props.index)
+            if (element.popupdata.hasOwnProperty(FORMATTED_SUBTITLE)) {
+                !elementStatus[element.popupdata[FORMATTED_SUBTITLE].id] && this.props.getElementStatus(element.popupdata[FORMATTED_SUBTITLE].id, this.props.index)
             }
             if (element.popupdata.hasOwnProperty("postertextobject")) {
                 !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
             }
         }
         else if (element && (element.type === "poetry" || element.type === "citations")) {
-            if (element.contents && element.contents.hasOwnProperty("formatted-title")) {
-                !elementStatus[element.contents["formatted-title"].id] && this.props.getElementStatus(element.contents["formatted-title"].id, this.props.index)
+            if (element.contents && element.contents.hasOwnProperty(FORMATTED_TITLE)) {
+                !elementStatus[element.contents[FORMATTED_TITLE].id] && this.props.getElementStatus(element.contents[FORMATTED_TITLE].id, this.props.index)
             }
             if (element.contents && element.contents.hasOwnProperty("creditsarray")) {
                 !elementStatus[element.contents["creditsarray"][0].id] && this.props.getElementStatus(element.contents["creditsarray"][0].id, this.props.index)
@@ -225,7 +237,8 @@ class ElementContainer extends Component {
 
         if (this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
-            if (this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) && this.props.commentSearchUrn !== this.props.commentSearchParent) {
+            if (this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) &&
+                 this.props.commentSearchUrn !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`).offsetTop;
             }
 
@@ -358,7 +371,8 @@ class ElementContainer extends Component {
                 showHideNode.classList.remove("show-hide-active")
             }
         }
-        if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
+        if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') ||
+             this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
         // Prevent TB element to be highlighted when we click on Tab element properties
@@ -406,7 +420,7 @@ class ElementContainer extends Component {
         if(this.state.borderToggle==='showBorder' && !hasReviewerRole() && !preventFirstFigActivation){
                 if(element?.type===ELEMENT_FIGURE){
                     if(checkImageForMetadata(element) && element?.figuredata?.imageid){
-                        const assetId = element?.figuredata?.imageid?.replace('urn:pearson:alfresco:', '')
+                        const assetId = element?.figuredata?.imageid?.replace(URN_PEARSON_ALFRESCO, '')
                         const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
                         if(!checkMetadataIdentical(element?.figuredata?.alttext, element?.figuredata?.longdescription, assetMetadata?.altText, assetMetadata?.longDescription)){
                             let	figureData = { ...element?.figuredata };
@@ -420,7 +434,7 @@ class ElementContainer extends Component {
                         }
                     }
                     else if(checkSmartLinkInteractive(element)){
-                        const assetId = element?.figuredata?.interactiveid?.replace('urn:pearson:alfresco:', '')
+                        const assetId = element?.figuredata?.interactiveid?.replace(URN_PEARSON_ALFRESCO, '')
                         const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
 		                /*-- Updata the image metadata in wip */
                         if(!checkMetadataIdentical(element?.figuredata?.alttext, element?.figuredata?.longdescription, assetMetadata?.altText, assetMetadata?.longDescription)){
@@ -435,7 +449,7 @@ class ElementContainer extends Component {
                     }
                 }
                 else if(checkOpenerElement(element)){
-                    const assetId = element?.backgroundimage?.imageid?.replace('urn:pearson:alfresco:', '')
+                    const assetId = element?.backgroundimage?.imageid?.replace(URN_PEARSON_ALFRESCO, '')
                     const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
                     if(!checkMetadataIdentical(element?.backgroundimage?.alttext, element?.backgroundimage?.longdescription, assetMetadata?.altText, assetMetadata?.longDescription)){
                         let tempElementData = {...element}
@@ -472,40 +486,41 @@ class ElementContainer extends Component {
         let tempDiv = document.createElement('div');
         // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
         html = removeSpellCheckDOMAttributes(html);
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula')
+            .replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
         html = html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
-        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr(DATA_MCE_STYLE);
         tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
-        tinyMCE.$(tempDiv).find('p').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('h1').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('h2').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('h3').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('h4').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('h5').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('h6').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('p').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h1').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h2').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h3').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h4').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h5').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h6').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('ol').removeAttr(DATA_MCE_STYLE);
         tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
-        tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('height');
-        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('width');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr(DATA_MCE_SELECTED);
+        tinyMCE.$(tempDiv).find('code').removeAttr(DATA_MCE_SELECTED);
+        tinyMCE.$(tempDiv).find('img').removeAttr(DATA_MCE_SELECTED);
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('height');
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('width');
         tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
-        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('a').removeAttr(DATA_MCE_SELECTED);
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
-        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
-        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('data-mce-src');
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('src');
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('data-mce-src');
         tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
@@ -537,8 +552,9 @@ class ElementContainer extends Component {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, labeleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) &&
+                 this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -555,11 +571,14 @@ class ElementContainer extends Component {
             }
             titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`;
             const validDropdownOptions = generateDropdownDataForContainers(previousElementData);
-            if (!labeleHTML || labeleHTML === '' || (!validDropdownOptions.includes(labeleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+            if (!labeleHTML || labeleHTML === '' || (!validDropdownOptions.includes(labeleHTML) &&
+                 this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
                 labeleHTML = previousElementData.displayedlabel;
             }
-            isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue : labeleHTML !== previousElementData.displayedlabel;
-            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== this.removeClassesFromHtml(previousElementData?.html?.title) : checkHTMLdataInsideString(titleHTML) ? true : false;
+            isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue :
+                               labeleHTML !== previousElementData.displayedlabel;
+            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== this.removeClassesFromHtml(previousElementData?.html?.title) :
+                                    checkHTMLdataInsideString(titleHTML) ? true : false;
             return (isLabelDifferent || isNumberDifferent || isTitleDifferent);
         }
         if (!(previousElementData?.html?.title)) {
@@ -641,8 +660,10 @@ class ElementContainer extends Component {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') &&
+                !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn &&
+                this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -662,11 +683,14 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)
+                && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
-            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
-            if (previousElementData.figuredata?.decorative) { // Not comparing title and captions fields in the case of decorative images for AUTONUM projects
+            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ?
+             titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
+            if (previousElementData.figuredata?.decorative) 
+            { // Not comparing title and captions fields in the case of decorative images for AUTONUM projects
                 return (creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                     (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
                     || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null));
@@ -703,7 +727,8 @@ class ElementContainer extends Component {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             numberDOM = document.getElementById(`cypress-${index}-1`),
             subtitleDOM = document.getElementById(`cypress-${index}-2`),
-            preformattedText = document.getElementById(`cypress-${index}-3`) ? document.getElementById(`cypress-${index}-3`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
+            preformattedText = document.getElementById(`cypress-${index}-3`) ? document.getElementById(`cypress-${index}-3`).innerHTML.trim() :
+                                '<span class="codeNoHighlightLine"><br /></span>',
             captionDOM = document.getElementById(`cypress-${index}-4`),
             creditsDOM = document.getElementById(`cypress-${index}-5`);
 
@@ -714,7 +739,8 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) ||
+                             document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
         let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
         let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
         let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting")
@@ -749,8 +775,9 @@ class ElementContainer extends Component {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) &&
+                this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -770,10 +797,12 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)
+             && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
-            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
+            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ?
+                                     titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
                 return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
                 || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -827,32 +856,35 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
 
-        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', POP_UP_WEB_LINK, 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
         // Commented for future reference > for intended playback mode
         const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
         const currentIntendedPlaybackModeValue = this.props?.activeElement?.selectedIntendedPlaybackModeValue;
-        const is3PIIntendedPlaybackDropdownUpdate = ((removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== slateWrapperConstants.UNITY_TINY) && (oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue));
+        const is3PIIntendedPlaybackDropdownUpdate = ((removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== slateWrapperConstants.UNITY_TINY) &&
+                                                     (oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue));
         let oldImage = this.props.oldImage;
              oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // add is3PIIntendedPlaybackDropdownUpdate  in the below check for intended playback mode
-            let isValid = (is3PIIntendedPlaybackDropdownUpdate || validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth));
+            let isValid = (is3PIIntendedPlaybackDropdownUpdate || validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML,
+                             numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth));
             return isValid;
         }
         let isAltTextLongDescModified = false;
         if(interactivetype.includes(previousElementData?.figuredata?.interactivetype)) {
             isAltTextLongDescModified = this.props.oldSmartLinkDataForCompare !== previousElementData.figuredata
         }
-        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === POP_UP_WEB_LINK ||
             previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' ||
             previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`;
 
-            let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
+            let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ?
+                                previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
@@ -912,8 +944,9 @@ class ElementContainer extends Component {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) &&
+                this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -933,10 +966,13 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) &&
+                (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) &&
+                this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
-            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
+            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ?
+                                     titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
                 return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
                 || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -980,9 +1016,11 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
+        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid :
+                     (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
         let oldImage = this.props.oldImage;
-        oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
+        oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid :
+                 this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
@@ -990,8 +1028,10 @@ class ElementContainer extends Component {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') &&
+                !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn &&
+                this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -1012,7 +1052,9 @@ class ElementContainer extends Component {
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) &&
+                (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) &&
+                this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
@@ -1051,7 +1093,8 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
+    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement,
+                        showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
@@ -1064,7 +1107,9 @@ class ElementContainer extends Component {
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
             case elementTypeConstant.POETRY_STANZA:
-                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature' && parentElement?.elementdata?.type !== "pullquote") ? activeEditorId : `cypress-${this.props.index}`
+                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" ||
+                            parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature' && parentElement?.elementdata?.type !== "pullquote") ?
+                            activeEditorId : `cypress-${this.props.index}`
                 let currentNode = document.getElementById(index)
                 const blockquoteCondition = currentNode?.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
@@ -1085,8 +1130,11 @@ class ElementContainer extends Component {
                         contentUrn: parentElement.contentUrn
                     };
                 }
-                let isPosterTextSelected = parentElement && parentElement.type === "popup" && parentElement.popupdata["postertextobject"] && parentElement.popupdata["postertextobject"].length && parentElement.popupdata["postertextobject"][0].id === previousElementData.id
-                if ((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations" || (parentElement.type === "popup" && !isPosterTextSelected)) {
+                let isPosterTextSelected = parentElement && parentElement.type === "popup" && parentElement.popupdata["postertextobject"] &&
+                                           parentElement.popupdata["postertextobject"].length && parentElement.popupdata["postertextobject"][0].id === previousElementData.id
+                if ((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] &&
+                    parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations" ||
+                    (parentElement.type === "popup" && !isPosterTextSelected)) {
                     let titleDOMNode = document.getElementById(`cypress-${this.props.index}-0`),
                         subtitleDOMNode = document.getElementById(`cypress-${this.props.index}-1`)
 
@@ -1119,7 +1167,8 @@ class ElementContainer extends Component {
                     // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     parentElement["index"] = this.props.index
                 }
-                else if ((parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id) || isPosterTextSelected) {
+                else if ((parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length &&
+                         parentElement.contents.creditsarray[0].id === previousElementData.id) || isPosterTextSelected) {
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
@@ -1140,8 +1189,10 @@ class ElementContainer extends Component {
                 previousElementData.html.text = previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !config.isGlossarySaving && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData, poetryData)
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) &&
+                    !assetPopoverPopupIsVisible && !config.savingInProgress && !config.isGlossarySaving && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId,
+                                 this.props.index, this, parentElement, showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
                     /*** @description For showhide Element, ON RevealAnswer text update, sending RevealAnswer element index */
@@ -1193,10 +1244,12 @@ class ElementContainer extends Component {
                         if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
                             delete updatedElement['manualoverride']
                         }
-                        if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+                        if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER ||
+                            this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
                             delete updatedElement['displayedlabel']
                         }
-                        this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                        this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements,
+                            this.props.currentSlateAncestorData, this.props.slateLevelData);
                     }
                 }
                 break;
@@ -1216,7 +1269,9 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption,
+                                        secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData,
+                                        this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
                             // Updating saving call payload for decorative images
                             if(primaryOption === DECORATIVE_IMAGE) {
                                 delete dataToSend.captions
@@ -1238,19 +1293,23 @@ class ElementContainer extends Component {
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (this.props.isAutoNumberingEnabled) {
-                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements,
+                                this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption,
+                                        activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled,
+                                        this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (this.props.isAutoNumberingEnabled) {
-                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements,
+                                this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
@@ -1258,42 +1317,52 @@ class ElementContainer extends Component {
 
                         const data = JSON.parse(JSON.stringify(previousElementData));
                         this.props.storeOldAssetForTCM(data.figuredata);
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption,
+                                    secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         config.isSavingElement = true
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if (this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption,
+                                        secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData,
+                                        this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement)
                             if (this.props.isAutoNumberingEnabled) {
-                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements,
+                                this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
 
                     case elementTypeConstant.FIGURE_CODELISTING:
                         if (this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption,
+                                        secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData,
+                                        this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (this.props.isAutoNumberingEnabled) {
-                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements,
+                                this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         if (this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption,
+                                        secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData,
+                                        this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (this.props.isAutoNumberingEnabled) {
-                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements,
+                                this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
@@ -1301,7 +1370,8 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ASSESSMENT_SLATE:
-                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, undefined)
+                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption,
+                             activeEditorId, this.props.index, this, undefined, undefined, undefined)
                 this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                 break;
             case elementTypeConstant.ELEMENT_LIST:
@@ -1309,7 +1379,7 @@ class ElementContainer extends Component {
                     // let html = node.innerHTML;
                     let parentIndex = parentElement.type == "showhide" || parentElement.type == "popup" ? activeEditorId : `cypress-${this.props.index}`
                     let currentListNode = document.getElementById(parentIndex)
-                    tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
+                    tinyMCE.$(currentListNode).find('ol').removeAttr(DATA_MCE_STYLE);
                     currentListNode.innerHTML = currentListNode.innerHTML.replace(/counter-increment:section/g, "counter-increment: section")
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/[\r\n]+/gm, "");
@@ -1324,7 +1394,8 @@ class ElementContainer extends Component {
                         let nodeData = this.replaceUnwantedtags(nodehtml);
                         nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g, '');
                         if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption,
+                                         secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
@@ -1342,8 +1413,10 @@ class ElementContainer extends Component {
                 tempDivForCE.innerHTML = removeBlankTags(tempDivForCE.innerHTML)
                 tempDivForCE.innerHTML = handleBlankLineDom(tempDivForCE.innerHTML);
                 ceHtml = removeBlankTags(ceHtml)
-                if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
+                if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) ||
+                    forceupdate) && !config.savingInProgress) {
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption,
+                                 secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     parentElement["index"] = this.props.index
                     config.isSavingElement = true
@@ -1360,7 +1433,8 @@ class ElementContainer extends Component {
         }
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         // remove/override to default means gets added to numbering system
-        if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
+        if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) &&
+            dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
                     ...dataToSend,
@@ -1376,7 +1450,8 @@ class ElementContainer extends Component {
             }
         } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
-        } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) ) {
+        } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) &&
+                    (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) ) {
             // resume case
             dataToSend = {
                 ...dataToSend,
@@ -1385,10 +1460,12 @@ class ElementContainer extends Component {
                 }
             }
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
-        } else if ((previousElementData?.numberedandlabel) && (!dataToSend.hasOwnProperty('displayedlabel')) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridelabelvalue'))) {
+        } else if ((previousElementData?.numberedandlabel) && (!dataToSend.hasOwnProperty('displayedlabel')) &&
+                (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridelabelvalue'))) {
             // override label and number case
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
-        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) &&
+                (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override number only case
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ( (previousElementData?.numberedandlabel) && (!(dataToSend.hasOwnProperty('manualoverride'))) ) {
@@ -1420,9 +1497,11 @@ class ElementContainer extends Component {
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
         /* Update title/credit of block poetry inside Tab element of TB */
-        if (containerParent && this.props?.parentElement?.type == elementTypeConstant.MULTI_COLUMN && this.props?.parentElement?.subtype === elementTypeConstant.TAB && this.props?.element?.type == elementTypeConstant.POETRY_ELEMENT) {
+        if (containerParent && this.props?.parentElement?.type == elementTypeConstant.MULTI_COLUMN && this.props?.parentElement?.subtype === elementTypeConstant.TAB &&
+            this.props?.element?.type == elementTypeConstant.POETRY_ELEMENT) {
             const poetryIndex = this.props?.index?.split("-");
-            let poetryElement = this.props.parentElement.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+            let poetryElement = this.props.parentElement.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata
+                                .bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
             if (poetryElement.type === elementTypeConstant.POETRY_ELEMENT && poetryElement.id === this.props.element?.id) {
                 parentElement = poetryElement;
             }
@@ -1440,9 +1519,11 @@ class ElementContainer extends Component {
         }
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
-            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData, triggeredFrom);
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate,
+                                    parentElement, showHideType, null, cgTitleFieldData, triggeredFrom);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,
+                                     parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom)
         }
     }
 
@@ -1528,7 +1609,8 @@ class ElementContainer extends Component {
         const { showColorPaletteList, activeColorIndex } = this.state
         if (showColorPaletteList) {
             return config.colors.map((color, index) => {
-                return <li className={`color-palette-item ${index === activeColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectColor(event)} key={index} data-value={color}></li>
+                return <li className={`color-palette-item ${index === activeColorIndex ? 'selected' : ''}`}
+                        onClick={(event) => this.selectColor(event)} key={index} data-value={color}></li>
             })
         }
         else {
@@ -1579,7 +1661,8 @@ class ElementContainer extends Component {
         const { showColorTextList, activeTextColorIndex } = this.state
         if (showColorTextList) {
             return config.textcolors.map((colortext, index) => {
-                return <li className={`color-text-item ${index === activeTextColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectTextColor(event)} key={index} data-value={colortext}></li>
+                return <li className={`color-text-item ${index === activeTextColorIndex ? 'selected' : ''}`}
+                        onClick={(event) => this.selectTextColor(event)} key={index} data-value={colortext}></li>
             })
         }
         else {
@@ -1666,11 +1749,11 @@ class ElementContainer extends Component {
         deletedElm?.classList?.remove("hideElement");
         const sapratorElm = document.getElementById(`${this.state.undoElement}`)
         sapratorElm?.classList?.remove("hideElement");
-        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+        document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+        document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+        const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
         for (const elm of multipleElement) {
-            elm.classList.remove('stop-event')
+            elm.classList.remove(STOP_EVENT)
         }
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
@@ -1691,8 +1774,8 @@ class ElementContainer extends Component {
     handleUndoOptionTimer = () => {
         let { parentElement } = this.props;
         const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
-        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+        document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1710,9 +1793,9 @@ class ElementContainer extends Component {
         this.props.storeDeleteElementKeys({});
         sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
         setTimeout(() => {
-            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
             for (const elm of multipleElement) {
-                elm.classList.remove('stop-event')
+                elm.classList.remove(STOP_EVENT)
             }
         }, 300)
     }
@@ -1793,11 +1876,11 @@ class ElementContainer extends Component {
             deletedElm?.classList?.add("hideElement");
             const sapratorElm = document.getElementById(`${id}`)
             sapratorElm?.classList?.add("hideElement");
-            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
-            document.getElementById('next-slate-button')?.classList?.add('stop-event')
-            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.add(STOP_EVENT)
+            document.getElementById(NEXT_SLATE_BUTTON)?.classList?.add(STOP_EVENT)
+            const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
             for (const elm of multipleElement) {
-                elm.classList.add('stop-event')
+                elm.classList.add(STOP_EVENT)
             }
             this.props.storeDeleteElementKeys(object);
         } else {
@@ -1811,11 +1894,11 @@ class ElementContainer extends Component {
                 this.showHideTimer = setTimeout(() => {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+                    document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
                     for (const elm of multipleElement) {
-                        elm.classList.remove('stop-event')
+                        elm.classList.remove(STOP_EVENT)
                     }
                 }, 5000)
             } else {
@@ -1827,11 +1910,11 @@ class ElementContainer extends Component {
                 this.timer = setTimeout(() => {
                     this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+                    document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
                     for (const elm of multipleElement) {
-                        elm.classList.remove('stop-event')
+                        elm.classList.remove(STOP_EVENT)
                     }
                 }, 5000)
             } else {
@@ -1929,8 +2012,8 @@ class ElementContainer extends Component {
             if (element.popupdata && element.popupdata.bodymatter && element.popupdata.bodymatter.length > 0) {
                 popupChildUrns.push(element.popupdata.bodymatter[0].id);
             }
-            if (element.popupdata && element.popupdata['formatted-title']) {
-                popupChildUrns.push(element.popupdata['formatted-title'].id);
+            if (element.popupdata && element.popupdata[FORMATTED_TITLE]) {
+                popupChildUrns.push(element.popupdata[FORMATTED_TITLE].id);
             }
             if (element.popupdata && element.popupdata.postertextobject[0]) {
                 popupChildUrns.push(element.popupdata.postertextobject[0].id);
@@ -2074,7 +2157,8 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn, currentSlateAncestorData,projectInfo } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData,
+            spellCheckToggle, parentUrn, currentSlateAncestorData,projectInfo } = this.props;
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
@@ -2093,7 +2177,10 @@ class ElementContainer extends Component {
 
 
         // checking whether element is tab element or child of tab element
-        const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB || this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
+        const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB ||
+                            this.props.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB ||
+                            this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB ||
+                            this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
         const isTccElement = this.props.element?.type === ElementConstants.TCC_ELEMENT;
 
         const commonProps = {
@@ -2119,16 +2206,22 @@ class ElementContainer extends Component {
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
-                    editor = <AssessmentSlateCanvas openCustomPopup={this.props.openCustomPopup} permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist} />
+                    editor = <AssessmentSlateCanvas openCustomPopup={this.props.openCustomPopup} permissions={permissions} model={element}
+                            elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus}
+                            showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist} />
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex, activeTextColorIndex } = this.state
-                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
+                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions}
+                            backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index}
+                            handleFocus={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo}
+                            updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
+                    editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect}
+                            parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     {isBlockquote ?
@@ -2144,30 +2237,50 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_IMAGE:
                         case elementTypeConstant.FIGURE_TABLE:
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
-                            editor = <FigureImage model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
+                            editor = <FigureImage model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData}
+                                     updateFigureData={this.updateFigureData} {...commonProps}/>
                             break;
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
-                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData}
+                                    parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementAudioVideo model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData}
+                                    updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement} />;
+                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied}
+                                    updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus}
+                                    handleBlur={this.handleBlur} model={element} index={index}
+                                    elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} asideData={this.props.asideData} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} asideData={this.props.asideData} showBlocker={this.props.showBlocker}
+                                    updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                                    handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo}
+                                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                    handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId}
+                                    parentElement={this.props?.parentElement}
+                                    handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} handleListElementWarningPopupCheckbox={this.handleListElementWarningPopupCheckbox} listElementWarningPopupCheckbox={this.state.listElementWarningPopupCheckbox} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions}
+                    openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                    markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus}
+                    handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html}
+                    slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation}
+                    parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType}
+                    handleListElementWarningPopupCheckbox={this.handleListElementWarningPopupCheckbox}
+                    listElementWarningPopupCheckbox={this.state.listElementWarningPopupCheckbox} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -2212,11 +2325,14 @@ class ElementContainer extends Component {
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
-                    editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleBlur={this.handleBlur} handleFocus={this.handleFocus} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleBlur={this.handleBlur}
+                    handleFocus={this.handleFocus} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                     labelText = 'LO'
                     break;
                 case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                    editor = <ElementMetaLOList showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    editor = <ElementMetaLOList showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus}
+                    handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html}
+                    slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
                     labelText = 'MA'
                     break;
                 case elementTypeConstant.POOPUP_ELEMENT:
@@ -2937,7 +3053,7 @@ class ElementContainer extends Component {
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
         const figureTypes = ["image", "mathImage", "table", "video", "audio"]
-        const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
+        const interactiveType = ["3rd-party", "pdf", "web-link", POP_UP_WEB_LINK, "table"]
         if ((element?.type === "figure") && (figureTypes.includes(element?.figuretype)) || interactiveType.includes(element?.figuredata?.interactivetype) ) {
             detailsToSet['alfrescoSiteData'] = element?.alfrescoPlatformMetadata
         }
@@ -3093,7 +3209,7 @@ class ElementContainer extends Component {
         }else{
             imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         }
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
+        imageId = imageId.replace(URN_PEARSON_ALFRESCO, '');
         this.props.showBlocker(togglePopup);
         if(elementType === 'TE'){
             this.setState({
@@ -3162,7 +3278,7 @@ class ElementContainer extends Component {
                 }
             }
             if (imageId) {
-                imageId = imageId.replace('urn:pearson:alfresco:', '');
+                imageId = imageId.replace(URN_PEARSON_ALFRESCO, '');
                 this.openInNewWindow(imageId);
             }
         }

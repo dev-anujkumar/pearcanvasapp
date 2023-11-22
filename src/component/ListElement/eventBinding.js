@@ -7,6 +7,7 @@
 require('./polyfills.js')
 import tinyMCE from 'tinymce';
 import { checkActiveElement } from '../../js/TinyMceUtility.js';
+import { LOWER_ALPHA, LOWER_ROMAN, SHF_TAB_EVNT_CLASS, TOX_TBTN_ENABLED_CLASS, UPPER_ALPHA } from '../../constants/Element_Constants.js';
 
 /* ------------------------------ START - List toolbar button methods ----------------------------- */
 /**
@@ -214,7 +215,8 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
             return false
         }
 
-        let currentLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
+        let currentLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) ||
+        (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
         let updatelistFlag = true;
 
         // prevent tab indent event at last level of list tree //
@@ -245,7 +247,8 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
          */
         else if ((e.shiftKey || e.which === 8) && !isMultilineSelection) {
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            let closestTreeLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel') || anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
+            let closestTreeLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel') ||
+            anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
             /**
              * Case - prevent hitting Shift+TAB on very first list tree level
              */
@@ -259,18 +262,18 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                 updatelistFlag = false;
                 let timeoutInstance = setTimeout(() => {
                     clearTimeout(timeoutInstance);
-                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol').length &&
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ol') ||
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ul');
+                    let allOlElems = document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol').length &&
+                        document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol') ||
+                        document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ul');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
                     let levelUpOL = firstLi.findChildren('ol')[0] || firstLi.findChildren('ul')[0];
                     let liSiblings = [...firstOlElem.children].slice(1);
                     levelUpOL.append(...liSiblings);
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0].remove();
-                    document.querySelector('li.shfTabEvnt').append(levelUpOL);
-                    document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
+                    document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol')[0] && document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol')[0].remove();
+                    document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ul')[0] && document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ul')[0].remove();
+                    document.querySelector(SHF_TAB_EVNT_CLASS).append(levelUpOL);
+                    document.querySelector(SHF_TAB_EVNT_CLASS).classList.remove('shfTabEvnt');
                     updateNestedList(e.target);
                     listUpdatedOnce = true;
                 });
@@ -357,18 +360,18 @@ const reformatting = (editor) => {
                 let closestLi = parentOl.closest('li')
                 if ((closestLi.findChildren('ol').length > 0) || (closestLi.findChildren('ul').length > 0)) {
                     closestLi.classList.add('shfTabEvnt');
-                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol').length &&
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ol') ||
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ul');
+                    let allOlElems = document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol').length &&
+                        document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol') ||
+                        document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ul');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
                     let levelUpOL = firstLi.findChildren('ol')[0] || firstLi.findChildren('ul')[0];
                     let liSiblings = [...firstOlElem.children].slice(1);
                     levelUpOL.append(...liSiblings);
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0].remove();
-                    document.querySelector('li.shfTabEvnt').append(levelUpOL);
-                    document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
+                    document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol')[0] && document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ol')[0].remove();
+                    document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ul')[0] && document.querySelector(SHF_TAB_EVNT_CLASS).querySelectorAll('ul')[0].remove();
+                    document.querySelector(SHF_TAB_EVNT_CLASS).append(levelUpOL);
+                    document.querySelector(SHF_TAB_EVNT_CLASS).classList.remove('shfTabEvnt');
                     updateNestedList(editor.targetElm);
                 }
             }
@@ -381,19 +384,19 @@ const reformatting = (editor) => {
  * @param {*} element | target element
  */
 export const updateNestedList = (element) => {
-    let decimalOlClassList = ['decimal', 'lower-alpha', 'lower-roman', 'decimal'];
+    let decimalOlClassList = ['decimal', LOWER_ALPHA, LOWER_ROMAN, 'decimal'];
     let decimalLiClassList = ['listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber'];
 
-    let upperAlphaClassList = ['upper-alpha', 'lower-alpha', 'lower-roman', 'decimal'];
+    let upperAlphaClassList = [UPPER_ALPHA, LOWER_ALPHA, LOWER_ROMAN, 'decimal'];
     let upperAlphaLiClassList = ['listItemNumeroUnoUpperAlpha', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber']
 
-    let lowerAlphaClassList = ['lower-alpha', 'lower-roman', 'decimal', 'lower-alpha'];
+    let lowerAlphaClassList = [LOWER_ALPHA, LOWER_ROMAN, 'decimal', LOWER_ALPHA];
     let lowerAlphaLiClassList = ['listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha'];
 
-    let upperRomanClassList = ['upper-roman', 'upper-alpha', 'decimal', 'lower-alpha'];
+    let upperRomanClassList = ['upper-roman', UPPER_ALPHA, 'decimal', LOWER_ALPHA];
     let upperRomanLiClassList = ['listItemNumeroUnoUpperRoman', 'listItemNumeroUnoUpperAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha'];
 
-    let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
+    let lowerRomanClassList = [LOWER_ROMAN, LOWER_ALPHA, 'decimal', LOWER_ROMAN];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
     let UlLiClassList = ['listItemNumeroUnoDisc', 'listItemNumeroUnoSquare', 'listItemNumeroUnoCircle', 'listItemNumeroUnoDisc'];
 
@@ -434,11 +437,11 @@ export const updateNestedList = (element) => {
                 allOlElement[i].classList.add(decimalOlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(decimalLiClassList[treelevel - 1]) });
                 break;
-            case "upper-alpha":
+            case UPPER_ALPHA:
                 allOlElement[i].classList.add(upperAlphaClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(upperAlphaLiClassList[treelevel - 1]) });
                 break;
-            case "lower-alpha":
+            case LOWER_ALPHA:
                 allOlElement[i].classList.add(lowerAlphaClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(lowerAlphaLiClassList[treelevel - 1]) });
                 break;
@@ -446,7 +449,7 @@ export const updateNestedList = (element) => {
                 allOlElement[i].classList.add(upperRomanClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(upperRomanLiClassList[treelevel - 1]) });
                 break;
-            case "lower-roman":
+            case LOWER_ROMAN:
                 allOlElement[i].classList.add(lowerRomanClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(lowerRomanLiClassList[treelevel - 1]) });
                 break;
@@ -538,19 +541,19 @@ const createDefaultOlLi = (treelevel, olClass, listType, element) => {
 
 export const removeListHighliting = _ => {
     let listToolbar = document.querySelector('button[title="Unordered List"]')
-    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    listToolbar && listToolbar.classList.remove(TOX_TBTN_ENABLED_CLASS)
 
     listToolbar = document.querySelector('div[title="Ordered List"]')
-    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    listToolbar && listToolbar.classList.remove(TOX_TBTN_ENABLED_CLASS)
 }
 
 export const highlightListIcon = props => {
     if (props.element.subtype === "disc" || (props.currentElement && props.currentElement.subtype === "disc")) {
         let listToolbar = document.querySelector('button[title="Unordered List"]')
-        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        listToolbar && listToolbar.classList.add(TOX_TBTN_ENABLED_CLASS)
     } else {
         let listToolbar = document.querySelector('div[title="Ordered List"]');
-        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        listToolbar && listToolbar.classList.add(TOX_TBTN_ENABLED_CLASS)
     }
 }
 /* ------------------------------ END - List customized events method ----------------------------- */

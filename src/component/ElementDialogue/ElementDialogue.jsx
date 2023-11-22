@@ -231,7 +231,9 @@ class ElementDialogue extends React.PureComponent {
                                     handleAudioPopupLocation = {_props.handleAudioPopupLocation}
                                     handleAssetsPopupLocation={_props.handleAssetsPopupLocation}
                                 />
-                                { this.state.selectedInnerElementIndex == index && ( _props.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { _props.handleAssetsPopupLocation(false) }} position={_props.position} isImageGlossary={true} isGlossary={true} />)}
+                                { this.state.selectedInnerElementIndex == index && ( _props.assetsPopupStatus &&
+                                <OpenGlossaryAssets closeAssetsPopup={() => { _props.handleAssetsPopupLocation(false) }} position={_props.position}
+                                isImageGlossary={true} isGlossary={true} />)}
                             </div>
                         </div>
                         <DialogueSeprator index={index}
@@ -444,7 +446,8 @@ class ElementDialogue extends React.PureComponent {
                 <div className="figureElement">
                     <div className="divImageTextWidth">
                         <figure className="figureImageTextWidth" resource="">
-                           {this.props.element?.elementdata?.numberedlines === true && <p id="startLineSetting">Start Line number-{this.props.element?.elementdata?.startNumber || 1}</p> }
+                           {this.props.element?.elementdata?.numberedlines === true &&
+                            <p id="startLineSetting">Start Line number-{this.props.element?.elementdata?.startNumber || 1}</p> }
                             <header className="figure-header">
                             <KeyboardWrapper index={`${this.props.index}-0`}  enable>
                                 <TinyMceEditor
