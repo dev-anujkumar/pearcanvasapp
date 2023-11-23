@@ -1140,3 +1140,12 @@ export const getDEClassName = (classList) => {
 export const removeBlankSpaceAndConvertToLowercase = (string) => {
     if (string) return string.split(' ').join('').toLowerCase()
 }
+
+export const checkAssessmentsSnapshotFlag = (authStore, isPopupSlate,calledFrom, versioningData) => {
+    const { appStore, projectInfo } = authStore;
+    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const hasReviewerRole = appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
+    if (isSubscriber || hasReviewerRole || calledFrom === "containerVersioning"
+        || isPopupSlate || versioningData.callFrom === "showhide") return false
+    return true
+}

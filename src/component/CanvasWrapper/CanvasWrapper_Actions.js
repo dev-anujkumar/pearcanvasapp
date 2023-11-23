@@ -38,7 +38,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel, removeBlankSpaceAndConvertToLowercase, checkAssessmentsSnapshotFlag } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
@@ -594,6 +594,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
     let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true :false;
 
+    
+    // usercase to handle the reviewer,subsriber user, popup slate and container elements
+    // versioning
+    const assessmentSnapshotflag = checkAssessmentsSnapshotFlag(store.getState(),isPopupSlate, calledFrom,versioning)
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
             ...config.popupParentElement,
@@ -628,7 +632,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     dispatch(resetAssessmentStore());//reset Assessment Store
     const elementCount = getState().appStore.slateLength;
     let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/
-                ${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
+                ${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}&assessmentSnapshotflag=${assessmentSnapshotflag}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
     }
