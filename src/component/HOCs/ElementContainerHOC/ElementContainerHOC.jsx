@@ -35,7 +35,7 @@ const ElementContainerHOC = (WrappedComponent) => {
 
             let formattedCredit = model.contents.hasOwnProperty('creditsarray') && model.contents['creditsarray'].length ?
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p><br/></p>";
-            let subTitle
+            let subTitle = element.contents && element.contents['formatted-title'];
             let credit = element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0]
 
             let poetryElem = <div className={divClass}>
