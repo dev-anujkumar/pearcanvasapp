@@ -162,6 +162,11 @@
 .bl .manifestlist {
     display: block !important;
 }
+.bl .element-label.manifestlist {
+    display: table !important;
+    font-family: Open Sans, sans-serif;
+    line-height: normal;
+}
 .bl .decimal{
     padding-top: 8px;
 }
