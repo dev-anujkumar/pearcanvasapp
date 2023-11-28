@@ -3361,10 +3361,15 @@ export class TinyMceEditor extends Component {
             if (selectedText !== selectedNodeText) {
                 const selectedData = tinymce.activeEditor.selection.getContent();
                 if (ALLOWED_FORMATTING_TAGS.some(el => selectedData.match(el))) {
+                    // handle marked index multiple select with formatting for Figure Link and slate link
                     selectedText = selectedData?.includes('</abbr>') ? selectedData?.replace(/<abbr.+?>/g, '')?.replace(/<*\/abbr>/g, '') : selectedData
+                    // handle marked index multiple select with formatting for glossary
                     selectedText = selectedText?.includes('</dfn>') ? selectedText?.replace(/<dfn.+?>/g, '')?.replace(/<*\/dfn>/g, '') : selectedText
+                    // handle marked index multiple select with formatting for Footnote
                     selectedText = selectedText?.includes('</a>') ? selectedText?.replace(/<a.+?>/g, '')?.replace(/<*\/a>/g, '') : selectedText
+                    // handle marked index multiple select with formatting for callout
                     selectedText = selectedText?.includes('<span title') ? selectedText?.replace(/<span.+?>/g, '')?.replace(/<*\/span>/g, '') : selectedText
+                    // handle marked index multiple select with formatting for inline Image, wiris.
                     selectedText = selectedText?.includes('<img') ? selectedText?.replace(/<img.+?>/g, '') : selectedText
                 }
             }
@@ -3423,9 +3428,13 @@ export class TinyMceEditor extends Component {
             if (selectedText !== selectedNodeText) {
                 const selectedData = tinymce.activeEditor.selection.getContent();
                 if (ALLOWED_FORMATTING_TAGS.some(el => selectedData.match(el))) {
+                    // handle Glossary multiple select with formatting for Figure Link and slate link
                     selectedText = selectedData?.includes('</abbr>') ? selectedData?.replace(/<abbr.+?>/g, '')?.replace(/<*\/abbr>/g, '') : selectedData
+                     // handle Glossary multiple select with formatting for Callout,Marked Index
                     selectedText = selectedText?.includes('</span>') ? selectedText?.replace(/<span.+?>/g, '')?.replace(/<*\/span>/g, '') : selectedText
+                    // handle Glossary multiple select with formatting for Footnote
                     selectedText = selectedText?.includes('</a>') ? selectedText?.replace(/<a.+?>/g, '')?.replace(/<*\/a>/g, '') : selectedText
+                    // handle Glossary multiple select with formatting for inline Image, wiris.
                     selectedText = selectedText?.includes('<img') ? selectedText?.replace(/<img.+?>/g, '') : selectedText
                 }
             }
