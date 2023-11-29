@@ -79,6 +79,7 @@ export default PowerPasteElement
  * @param {*} data Raw Clipboard data
  */
 export const pastePreProcess = (data) => {
+  console.log(data, 'gggxxx');
   if (!["msoffice"].includes(data.source)) {
     data.content = ""
   }
@@ -90,6 +91,7 @@ export const pastePreProcess = (data) => {
  * @param {Object} props Powerpaste component props
  */
 export const pastePostProcess = (data, props) => {
+  console.log(data, 'postprocess');
   if (data.node) {
     // if you dont click inside the editor after pasting data first time and try to paste again by
     // pressing ctrl + v then this condition runs again so clearing the previous data of editor

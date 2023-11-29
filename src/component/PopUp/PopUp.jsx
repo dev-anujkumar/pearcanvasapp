@@ -4,6 +4,13 @@
 
 import React from 'react';
 import '../../styles/PopUp/PopUp.css';
+import importPopupSS1 from './Assets/importPopup-ss-1.svg';
+import importPopupSS2 from './Assets/importPopup-ss-2.svg';
+import importPopupSS3 from './Assets/importPopup-ss-3.svg';
+import importPopupSS4 from './Assets/importPopup-ss-4.svg';
+import importPopupSS5 from './Assets/importPopup-ss-5.svg';
+import importPopupSS6 from './Assets/importPopup-ss-6.svg';
+import importPopupSS7 from './Assets/importPopup-ss-7.svg';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
@@ -17,6 +24,8 @@ import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
+import mammoth from 'mammoth';
+import tinymce from 'tinymce';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -26,6 +35,7 @@ class PopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            docContent: '',
             wordPasteProceed: false,
             isChecked: false,
             focusedButton: this.setFocus(props),
@@ -34,6 +44,7 @@ class PopUp extends React.Component {
             setAsDecorativePopUpCheckbox: false
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
         this.modelRef = React.createRef();
         this.contentRef = React.createRef();
         this.wordPastePopupTextAreaRef = React.createRef();
@@ -60,6 +71,61 @@ class PopUp extends React.Component {
         this.setState({isPowerPasteInvalidContent: flag})
     }
     componentDidMount() {
+        const editorConfig = {
+            // content_style: powerpaste_list_content_style,
+            height: 400,
+            plugins: [
+              'advlist lists',
+             'powerpaste'
+            ],
+            toolbar: false,
+            menubar: false,
+            branding: false,
+            statusbar:false,
+            powerpaste_allow_local_images: true,
+            powerpaste_word_import: 'clean',
+            powerpaste_html_import: 'clean',
+            smart_paste: false,
+            auto_focus: `myTextarea`,
+            // paste_preprocess: (plugin, data) => pastePreProcess(data),
+            // paste_postprocess: (plugin, data) => pastePostProcess(data, props),
+            // setup: (editor) => {
+            //   setupKeydownEvent(editor)
+            //   editorFocus(editor)
+            //   editorBlur(editor)
+            //   editorClick(editor)
+            // }
+          }
+          editorConfig.selector = "#" + 'myTextarea'
+          const editorconfig2 = {
+            // content_style: powerpaste_list_content_style,
+            height: 400,
+            plugins: [
+              'advlist lists',
+             'powerpaste'
+            ],
+            toolbar: false,
+            menubar: false,
+            branding: false,
+            statusbar:false,
+            powerpaste_allow_local_images: true,
+            powerpaste_word_import: 'clean',
+            powerpaste_html_import: 'clean',
+            smart_paste: false,
+            auto_focus: `myTextarea2`,
+            // paste_preprocess: (plugin, data) => pastePreProcess(data),
+            // paste_postprocess: (plugin, data) => pastePostProcess(data, props),
+            // setup: (editor) => {
+            //   setupKeydownEvent(editor)
+            //   editorFocus(editor)
+            //   editorBlur(editor)
+            //   editorClick(editor)
+            // }
+          }
+        editorconfig2.selector = "#" + 'myTextarea2'
+        tinymce.init(editorConfig);
+        tinymce.init(editorconfig2);
+
         const refVal = this
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
             this.modelRef.current.querySelector("input, textarea").focus();
@@ -81,6 +147,9 @@ class PopUp extends React.Component {
         if (this.props.WordPastePopup) {
             document.addEventListener('mousedown', this.handleClickOutside);
         }
+        // if (this.props.importWordFilePopup) {
+        //     document.addEventListener('mousedown', this.handleClickOutside);
+        // }
     }
 
     componentWillUnmount() {
@@ -95,6 +164,9 @@ class PopUp extends React.Component {
         if (this.props.WordPastePopup) {
             document.removeEventListener('mousedown', this.handleClickOutside);
         }
+        // if (this.props.importWordFilePopup) {
+        //     document.removeEventListener('mousedown', this.handleClickOutside);
+        // }
     }
 
     handleClickOutside = (event) => {
@@ -435,7 +507,13 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-
+        if(props.importWordFilePopup){
+            return(
+            <div className={`dialog-buttons`}>
+                <span option={PRIMARY_BUTTON} className="start-import-button" onClick={(e) => props.togglePopup(false, e)}>Start Importing</span>
+            </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -450,7 +528,7 @@ class PopUp extends React.Component {
     * @param {event}
     */
     renderInputBox = (props) => {
-        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle || props.importWordFilePopup || props.uploadFilePopup) {
             return null
         }
         else if (props.assessmentAndInteractive) {
@@ -488,6 +566,32 @@ class PopUp extends React.Component {
     handleClickTextArea = (event) => {
         event.stopPropagation();
     }
+
+    handleFileChange = (event) => {
+        // const var = new FileReader
+        const file = event.target.files[0];
+        if (file) {
+          var options = {
+            styleMap: [
+              "p[style-name='h1'] => h1:fresh",
+              "p[style-name='h2'] => h2:fresh"
+            ]
+        };
+          mammoth.convertToHtml({arrayBuffer: file}, options)
+        .then((result) => {
+            console.log(result, 'fffttt');
+            var html = result.value; // The generated HTML
+            this.setState({docContent: html});
+            tinymce.get('myTextarea').setContent(html);
+            tinymce.get('myTextarea2').setContent(html);
+            console.log(html);
+            var messages = result.messages; // Any messages, such as warnings during conversion
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+        }
+      };
 
     renderCloseSymbol = (props) => {
         if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle) {
@@ -644,7 +748,20 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
-                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{this.props.isAutoNumberingEnabled ? SET_AS_DECORATIVE_IMAGE_AUTONUM : SET_AS_DECORATIVE_IMAGE_NON_AUTONUM}<br /><br />{SET_AS_DECORATIVE_IMAGE_NOTE}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{this.props.isAutoNumberingEnabled ? SET_AS_DECORATIVE_IMAGE_AUTONUM : SET_AS_DECORATIVE_IMAGE_NON_AUTONUM}<br /><br />Step 1 of 4
+Streamlining Word Document Imports for Cypress
+Make your Word file imports into Cypress a breeze by following these simple tips. Proper preparation ensures your document maintains its formatting and structure.
+Choose Word Format: We support Word documents in .doc and .docx.
+Style with Text Formatting: Consistently apply text styles, such as headings and Normal, for accurate import results.
+DOCX
+DOC
+File type
+Microsoft Word 1998-2021
+Simplicity is Key: Remember that Cypress doesn't support complex elements like images, charts, smart art, shapes, or nested tables. Stick to supported elements for smooth imports.
+List
+Table
+Column
+Text Highlight</div>
                 </>
             )
         }
@@ -662,6 +779,75 @@ class PopUp extends React.Component {
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
                     <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br /></div>
                 </>
+            )
+        }
+        else if (props.importWordFilePopup) {
+            return (
+              <>
+                {/* <div className='loPopupHeader'>{`${props.dialogText}`}</div> */}
+                <div className="import-wordpopup-heading">
+                  {props.dialogText}
+                  <br />
+                  <br />
+                </div>
+                <div className="import-wordpopup-content">
+                  <div className='import-wordpopup-content-description'>
+                            Make your Word file imports into Cypress a breeze by following these simple tips. Proper preparation ensures your document maintains its formatting and structure.
+                        </div>
+                        <div className='import-wordpopup-content-title'>
+                            <strong>Choose Word Format</strong>: We support Word documents in .doc and .docx.
+                        </div>
+                        <div className='import-wordpopup-content-title-2'>
+                            <strong>Style with Text Formatting</strong>: Consistently apply text styles, such as headings and Normal, for accurate import results.
+                        </div>
+                        <div className='import-wordpopup-content-title-3'>
+                            <img src={importPopupSS1} width='70px' height='47px' />
+                            <img src={importPopupSS2} width='70px' height='47px' />
+                            <img src={importPopupSS3} width='70px' height='47px' />
+                            <img src={importPopupSS4} width='70px' height='47px' />
+                        </div>
+                        <div className='import-wordpopup-content-title-4'>
+                            <strong>Simplicity is Key:</strong> Remember that Cypress doesn't support complex elements like images, charts, smart art, shapes, or nested tables. Stick to supported elements for smooth imports.
+                        </div>
+                        <div className='import-wordpopup-content-title-3'>
+                            <img src={importPopupSS5} width='48px' height='62px' />
+                            <img src={importPopupSS6} width='68px' height='62px' />
+                            <img src={importPopupSS7} width='84px' height='62px' />
+                        </div>
+                  {/* <h4>DOCX File Reader</h4>
+                  <input
+                    type="file"
+                    onChange={(event) => this.handleFileChange(event)}
+                    accept=".doc,.docx"
+                  />
+                  <div
+                    style={{
+                    //   height: "300px",
+                      border: "solid red 1px",
+                      overflowY: "auto",
+                    }}
+                    dangerouslySetInnerHTML={{ __html: this?.state?.docContent }}
+                  ></div> */}
+                  {/* <div id='myTextarea'></div> */}
+                </div>
+              </>
+            );
+        }
+        else if(props.uploadFilePopup){
+            return (                
+                <div>
+                    <h4>Upload File</h4>
+                    <br/>
+                    <input
+                    type="file"
+                    onChange={(event) => this.handleFileChange(event)}
+                    accept=".doc,.docx"
+                  /><br/>
+                  <div style={{display: 'flex', columnGap: '10px'}}>
+                  <div id='myTextarea' style={{width: '50%'}}></div>
+                  <div id='myTextarea2' style={{width: '50%'}}></div>
+                  </div>
+                </div>
             )
         }
         else if (props.isCurrentSlate === 'subscriber') {
@@ -705,7 +891,8 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.unlockSlateToggle) {
+        console.log(props.importWordFilePopup, 'pldsa');
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.unlockSlateToggle || props.importWordFilePopup) {
             return null
         }
         else {
@@ -773,7 +960,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.uploadFilePopup ? 'upload-file-popup' : `modal-content ${assessmentConfirmation} ${assessmentClass}`) } id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}

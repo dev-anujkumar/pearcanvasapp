@@ -20,11 +20,13 @@ import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../Assessment
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
+import store from '../../../appstore/store.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
             super(props);
             this.state = {
+                importWordFilePopup: false,
                 project_urn: "",
                 isTableLaunched: false,
                 showBlocker: false,
@@ -319,6 +321,14 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'GetActiveSlate':
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
+                    break;
+                case 'importpopupmessage':
+                    console.log('message received on canvas');
+                    this.setState({ importWordFilePopup: true })
+                    store.dispatch({
+                        type: 'save-import-message',
+                        payload: true
+                    })
                     break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
@@ -1290,7 +1300,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer} importWordFilePopup={this.state.importWordFilePopup}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

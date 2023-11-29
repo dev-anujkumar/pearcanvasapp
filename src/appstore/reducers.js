@@ -72,6 +72,7 @@ import {
  */
 
 const INITIAL_STATE = {
+    importMsgCanvas: false,
     slateLevelData: {},
     // elementsTag: {},
     activeElement: {},
@@ -456,6 +457,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 conversionData: action.payload
+            }
+        case 'save-import-message':
+            return {
+                ...state,
+                importMsgCanvas: action.payload
             }
         default:
             return state;

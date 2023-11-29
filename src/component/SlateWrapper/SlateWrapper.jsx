@@ -72,6 +72,8 @@ class SlateWrapper extends Component {
             powerPasteData: [],
             updatedindex:'',
             showOwnerSlatePopup: false,
+            showImportWordFilePopup: false,
+            showUploadFilePopup: false,
             parentUrn:null,
             updateAssessment: false,
             showSubscriberSlatePopup: false
@@ -90,7 +92,9 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevState, prevProps) {
+        // if(prevProps.importMsgCanvas !== this.props.importMsgCanvas && this.props.importMsgCanvas)
+        // this.setState({showImportWordFilePopup: true})
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
@@ -537,6 +541,55 @@ class SlateWrapper extends Component {
         }
     }
 
+    showImportWordFilePopup = () => {
+        console.log(this.state.showImportWordFilePopup, "toraq");
+        if (this.props.importMsgCanvas) {
+            showBlocker();
+            // showTocBlocker();
+            this.props.showBlocker(true);
+            const dialogText = `Get Started with Word Imports`
+            return (
+                <PopUp dialogText={dialogText}
+                    togglePopup={this.togglePopupForImportWordFile}
+                    // isCurrentSlate={isCurrentSlate}
+                    proceed={this.startImportingButtonHandling}
+                    importWordFilePopup={this.props.importMsgCanvas}
+                    // warningHeaderText={headerText}
+                    // lOPopupClass="lo-warning-txt"
+                    // withCheckBox={true}
+                    onPowerPaste = {this.onPowerPaste}
+                    // handleCopyPastePopup={this.handleCopyPastePopup}
+                />
+            )
+        }
+
+        return null
+    }
+
+    showUploadFilePopup = () => {
+        if (this.state.showUploadFilePopup) {
+            showBlocker();
+            // showTocBlocker();
+            this.props.showBlocker(true);
+            const dialogText = `Upload File`
+            return (
+                <PopUp dialogText={dialogText}
+                    togglePopup={this.togglePopupForUploadFilePopup}
+                    // isCurrentSlate={isCurrentSlate}
+                    proceed={this.startImportingButtonHandling}
+                    // importWordFilePopup
+                    uploadFilePopup={true}
+                    // warningHeaderText={headerText}
+                    // lOPopupClass="lo-warning-txt"
+                    // withCheckBox={true}
+                    onPowerPaste = {this.onPowerPaste}
+                    // handleCopyPastePopup={this.handleCopyPastePopup}
+                />
+            )
+        }
+
+        return null
+    }
 
     toggleCustomPopup = (toggleValue, event) => {
         this.setState({
@@ -566,6 +619,23 @@ class SlateWrapper extends Component {
         this.props.approvedSlatePopupStatus(false)
     }
 
+    togglePopupForImportWordFile = (toggleValue, event) => {
+        store.dispatch({type: 'save-import-message', payload: toggleValue})
+        this.props.showBlocker(toggleValue);
+        // this.props.showSlateLockPopup(false);
+        hideBlocker()
+        this.setState({showUploadFilePopup: true})
+        this.prohibitPropagation(event)
+        // this.props.approvedSlatePopupStatus(false)
+    }
+
+    togglePopupForUploadFilePopup = (toggleValue, event) => {
+        this.setState({showUploadFilePopup: toggleValue})
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        this.prohibitPropagation(event)
+    }
+
     proceedButtonHandling = (isChecked, toggleValue, e) => {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         if(isSubscriberRole(projectSharingRole, isSubscribed)){
@@ -587,6 +657,28 @@ class SlateWrapper extends Component {
         }
         this.props.isOwnersSubscribedSlate(false);
         this.props.isSubscribersSubscribedSlate(false);
+    }
+    startImportingButtonHandling = (isChecked, toggleValue, e) => {
+        // const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
+        // if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showImportWordFilePopup: toggleValue
+            })
+        // }
+        // if(isOwnerRole(projectSharingRole, isSubscribed)){
+        //     this.setState({
+        //         showOwnerSlatePopup: toggleValue
+        //     })
+        // }
+        this.props.showBlocker(toggleValue);
+        this.props.showSlateLockPopup(false);
+        hideBlocker()
+        this.prohibitPropagation(e);
+        // if (isChecked) {
+        //     releaseOwnerPopup(isChecked, projectSharingRole, isSubscribed);
+        // }
+        // this.props.isOwnersSubscribedSlate(false);
+        // this.props.isSubscribersSubscribedSlate(false);
     }
 
     handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
@@ -903,6 +995,7 @@ class SlateWrapper extends Component {
     }
 
     onPowerPaste = (powerPasteData, index) => {
+        console.log(powerPasteData, 'qpzm');
         this.setState({
             powerPasteData: powerPasteData,
             updatedindex: index
@@ -1632,6 +1725,9 @@ class SlateWrapper extends Component {
                 {/* **************** To reload slate after assessment update ************* */}
                 {this.reloadSlateAfterAssessmentUpdate()}
                 {this.showUnlockSlatePopup()}
+                {this.showImportWordFilePopup()}
+                {this.showUploadFilePopup()}
+                {console.log(this.props.importMsgCanvas, 'zzxx')}
             </React.Fragment>
         );
     }
@@ -1656,6 +1752,7 @@ const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         pageLoading: state.appStore.pageLoading,
+        importMsgCanvas: state.appStore.importMsgCanvas,
         slateTitleUpdated: state.appStore.slateTitleUpdated,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
