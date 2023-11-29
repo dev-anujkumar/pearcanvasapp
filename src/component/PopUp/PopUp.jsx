@@ -32,7 +32,8 @@ class PopUp extends React.Component {
             focusedButton: this.setFocus(props),
             deleteWarningPopupCheckbox: false,
             isPowerPasteInvalidContent: false,
-            setAsDecorativePopUpCheckbox: false
+            setAsDecorativePopUpCheckbox: false,
+            isPowerPasteLimitExceeding: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -59,6 +60,9 @@ class PopUp extends React.Component {
 
     checkInvalidPowerPasteContent = (flag) => {
         this.setState({isPowerPasteInvalidContent: flag})
+    }
+    checkPowerPasteLimit = (flag) => {
+        this.setState({isPowerPasteLimitExceeding: flag})
     }
     componentDidMount() {
         const refVal = this
@@ -487,6 +491,8 @@ class PopUp extends React.Component {
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
                     checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
                     isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
+                    checkPowerPasteLimit={this.checkPowerPasteLimit}
+                    isPowerPasteLimitExceeding={this.state.isPowerPasteLimitExceeding}
                 />
             )
         } else if (props.withCheckBox) {
@@ -645,6 +651,7 @@ class PopUp extends React.Component {
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
                     {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
+                    {this.state.isPowerPasteLimitExceeding && <div className='unsupContent'>Cannot paste more than 100 elements</div>}
                 </>
             )
         } else if (props.LOPopup) {
