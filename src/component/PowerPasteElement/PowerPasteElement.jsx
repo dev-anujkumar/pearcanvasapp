@@ -14,6 +14,7 @@ import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 import { handleImagePaste } from '../../constants/utility.js';
 import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
+import { pasteElementLimit } from '../SlateWrapper/SlateWrapperConstants.js';
 
 const PowerPasteElement = (props) => {
 
@@ -100,8 +101,8 @@ export const pastePostProcess = (data, props) => {
     createPastedElements(childNodes, elements);
     const updatedElements = []
     let limitedElements, tooManyElements = false
-    if (elements.length > 5) {
-      limitedElements = elements.slice(0, 5)
+    if (elements.length > pasteElementLimit) {
+      limitedElements = elements.slice(0, pasteElementLimit)
       tooManyElements = true
     }
     else {

@@ -223,3 +223,4 @@ export const DEFAULT_PLAYBACK_MODE = {
 }
 export const UNITY_TINY = "unitytiny"
 export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny']
+export const pasteElementLimit = 50;
