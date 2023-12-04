@@ -650,8 +650,8 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
-                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
-                    {this.state.isPowerPasteLimitExceeding && <div className='unsupContent'>Cannot paste more than {pasteElementLimit} elements</div>}
+                    {this.state.isPowerPasteInvalidContent && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
+                    {this.state.isPowerPasteLimitExceeding && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>Cannot paste more than {pasteElementLimit} elements</div>}
                 </>
             )
         } else if (props.LOPopup) {
@@ -821,7 +821,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` :
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent || this.state.isPowerPasteLimitExceeding ? 'wPasteClswithInvalidContent': ''}` :
                             this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` :
                             `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
