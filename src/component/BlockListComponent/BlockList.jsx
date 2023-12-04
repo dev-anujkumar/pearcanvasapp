@@ -64,8 +64,8 @@ const BlockList = (props) => {
                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 6 ?
                                 PRESS_SHIFT_TAB : TYPE_SOMETHING;
             }else if(type === "groupedcontent" && props?.parentElement?.groupeddata?.bodymatter[normalIndex[1]]?.groupdata?.bodymatter[normalIndex[2]]?.type === 'manifestlist'){
-                indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `
-                                ${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
+                indexToPass = `${typeof (props?.index) === 'number' ? props?.index :
+                                `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ?
                                 PRESS_SHIFT_TAB : TYPE_SOMETHING;
             }else if(props?.parentElement){
