@@ -74,9 +74,11 @@ class SlateWrapper extends Component {
             showOwnerSlatePopup: false,
             showImportWordFilePopup: false,
             showUploadFilePopup: false,
+            showImportAndDragFile: false,
             parentUrn:null,
             updateAssessment: false,
-            showSubscriberSlatePopup: false
+            showSubscriberSlatePopup: false,
+            fileToBeUploaded: {},
         }
         this.isDefaultElementInProgress = false;
     }
@@ -579,10 +581,39 @@ class SlateWrapper extends Component {
                     proceed={this.startImportingButtonHandling}
                     // importWordFilePopup
                     uploadFilePopup={true}
+                    fileToBeUploaded={this.state.fileToBeUploaded}
                     // warningHeaderText={headerText}
                     // lOPopupClass="lo-warning-txt"
                     // withCheckBox={true}
                     onPowerPaste = {this.onPowerPaste}
+                    // handleCopyPastePopup={this.handleCopyPastePopup}
+                />
+            )
+        }
+
+        return null
+    }
+
+    showImportAndDropPopup = () => {
+        if (this.state.showImportAndDragFile) {
+            showBlocker();
+            // showTocBlocker();
+            this.props.showBlocker(true);
+            const dialogText = `Import Word File`
+            return (
+                <PopUp dialogText={dialogText}
+                active
+                    // togglePopup={this.togglePopupForUploadFilePopup}
+                    // isCurrentSlate={isCurrentSlate}
+                    proceed={this.startImportingButtonHandling}
+                    importAndDropPopup
+                    toggleNextButton={this.toggleNextButton}
+                    // importWordFilePopup
+                    // uploadFilePopup={true}
+                    // warningHeaderText={headerText}
+                    // lOPopupClass="lo-warning-txt"
+                    // withCheckBox={true}
+                    // onPowerPaste = {this.onPowerPaste}
                     // handleCopyPastePopup={this.handleCopyPastePopup}
                 />
             )
@@ -597,6 +628,18 @@ class SlateWrapper extends Component {
         })
         this.props.showBlocker(toggleValue)
         hideBlocker()
+        this.prohibitPropagation(event)
+    }
+
+    toggleNextButton = (toggleValue, event, file) => {
+        if(toggleValue!==''){
+        this.props.showBlocker(toggleValue);
+        // this.props.showSlateLockPopup(false);
+        hideBlocker()
+        this.setState({showUploadFilePopup: true})
+        this.setState({showImportAndDragFile: false})
+        }
+        this.setState({fileToBeUploaded: file})
         this.prohibitPropagation(event)
     }
 
@@ -625,6 +668,7 @@ class SlateWrapper extends Component {
         // this.props.showSlateLockPopup(false);
         hideBlocker()
         this.setState({showUploadFilePopup: true})
+        // this.setState({showImportAndDragFile: true})
         this.prohibitPropagation(event)
         // this.props.approvedSlatePopupStatus(false)
     }
@@ -1727,6 +1771,7 @@ class SlateWrapper extends Component {
                 {this.showUnlockSlatePopup()}
                 {this.showImportWordFilePopup()}
                 {this.showUploadFilePopup()}
+                {this.showImportAndDropPopup()}
                 {console.log(this.props.importMsgCanvas, 'zzxx')}
             </React.Fragment>
         );

@@ -11,10 +11,16 @@ import importPopupSS4 from './Assets/importPopup-ss-4.svg';
 import importPopupSS5 from './Assets/importPopup-ss-5.svg';
 import importPopupSS6 from './Assets/importPopup-ss-6.svg';
 import importPopupSS7 from './Assets/importPopup-ss-7.svg';
+import importPopupSS8 from './Assets/importPopup-ss-8.svg';
+import importPopupSS9 from './Assets/importPopup-ss-9.svg';
+import importPopupSS10 from './Assets/importPopup-ss-10.svg';
+import importPopupSS11 from './Assets/importPopup-ss-11.svg';
+import importPopupSS12 from './Assets/importPopup-ss-12.svg';
+import CloseIcon from './Assets/CloseIcon.svg';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
-import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
+import PowerPasteElement, { pastePostProcess, pastePreProcess } from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
@@ -41,12 +47,16 @@ class PopUp extends React.Component {
             focusedButton: this.setFocus(props),
             deleteWarningPopupCheckbox: false,
             isPowerPasteInvalidContent: false,
-            setAsDecorativePopUpCheckbox: false
+            setAsDecorativePopUpCheckbox: false,
+            fileToBeUploaded: {},
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
+        this.handleFileChangeOnInput = this.handleFileChangeOnInput.bind(this);
+        this.handlebutton = this.handlebutton.bind(this);
         this.modelRef = React.createRef();
         this.contentRef = React.createRef();
+        this.inputRef = React.createRef();
         this.wordPastePopupTextAreaRef = React.createRef();
         this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
     }
@@ -70,8 +80,14 @@ class PopUp extends React.Component {
     checkInvalidPowerPasteContent = (flag) => {
         this.setState({isPowerPasteInvalidContent: flag})
     }
+
     componentDidMount() {
         const editorConfig = {
+            init_instance_callback: function (editor) {
+                editor.on('LoadContent', function (e) {
+                  console.log('Element clicked:', e);
+                });
+              },
             // content_style: powerpaste_list_content_style,
             height: 400,
             plugins: [
@@ -87,14 +103,38 @@ class PopUp extends React.Component {
             powerpaste_html_import: 'clean',
             smart_paste: false,
             auto_focus: `myTextarea`,
-            // paste_preprocess: (plugin, data) => pastePreProcess(data),
-            // paste_postprocess: (plugin, data) => pastePostProcess(data, props),
-            // setup: (editor) => {
+            paste_preprocess: (plugin, data) => pastePreProcess(data),
+            setup: (editor) => {
+                console.log(editor, 'edittt');
+                editor.on('init', (data)=>{
+                    console.log(data, 'inside load');
+                })
+                editor.on('change', (data)=>{
+                    console.log(data, 'inside change');
+                })
+                editor.on('Postrender', (data)=>{
+                    console.log(data, 'inside postrender');
+                })
+                editor.on('LoadContent', (data)=>{
+                    console.log(data, 'inside loadcontent');
+                })
+                editor.on('PostProcess', (data)=>{
+                    console.log(data, 'inside postprocess');
+                })
+                editor.on('Paste', (e, data) => {
+                    console.log("pasted ccc", e, data);
+                })
+                editor.on('ExecCommand', (e) => {
+                    console.log("executed", e);
+                    // if(e.command === 'mceFocus')
+                    // editor.execCommand('paste');
+                })
+                // execCommand()
             //   setupKeydownEvent(editor)
             //   editorFocus(editor)
             //   editorBlur(editor)
             //   editorClick(editor)
-            // }
+            }
           }
           editorConfig.selector = "#" + 'myTextarea'
           const editorconfig2 = {
@@ -114,7 +154,39 @@ class PopUp extends React.Component {
             smart_paste: false,
             auto_focus: `myTextarea2`,
             // paste_preprocess: (plugin, data) => pastePreProcess(data),
-            // paste_postprocess: (plugin, data) => pastePostProcess(data, props),
+            paste_postprocess: (plugin, data) => pastePostProcess(data),
+            setup: (editor) => {
+                console.log(editor, 'edittt');
+                editor.on('init', (data)=>{
+                    console.log(data, 'inside load');
+                })
+                editor.on('change', (data)=>{
+                    console.log(data, 'inside change');
+                })
+                editor.on('Postrender', (data)=>{
+                    console.log(data, 'inside postrender');
+                })
+                editor.on('LoadContent', (data)=>{
+                    console.log(data, 'inside loadcontent');
+                })
+                editor.on('PostProcess', (data)=>{
+                    console.log(data, 'inside postprocess');
+                })
+                editor.on('mce', (e, data) => {
+                    console.log("pasted ccc", e, data);
+                })
+                editor.on('mceInsertContent', (e, data) => {
+                    console.log("cvbn", e, data);
+                })
+                editor.on('ExecCommand', (e, data) => {
+                    console.log("executed", e, data);
+                    if(e.command==='mceInsertContent')
+                    console.log('mmmmmmmmmmmmmmm', data);
+                    // if(e.command === 'mceFocus')
+                    // editor.execCommand('paste');
+                })
+            }
+            // paste_postprocess: (plugin, data) => handleconsole(data),
             // setup: (editor) => {
             //   setupKeydownEvent(editor)
             //   editorFocus(editor)
@@ -167,6 +239,8 @@ class PopUp extends React.Component {
         // if (this.props.importWordFilePopup) {
         //     document.removeEventListener('mousedown', this.handleClickOutside);
         // }
+        tinymce?.get('myTextarea2')?.destroy?.()
+        tinymce?.get('myTextarea')?.destroy?.()
     }
 
     handleClickOutside = (event) => {
@@ -514,6 +588,15 @@ class PopUp extends React.Component {
             </div>
             )
         }
+        if(props.importAndDropPopup){
+            return(
+            <div className={`dialog-buttons`}>
+                {console.log(this.state.fileToBeUploaded, 'iiiiii')}
+                <button type='button' id='nextButtonForImoport' option={PRIMARY_BUTTON} className="start-import-button" onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>Next</button>
+                <span className="cancel-button-import" onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>Cancel</span>
+            </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -528,7 +611,7 @@ class PopUp extends React.Component {
     * @param {event}
     */
     renderInputBox = (props) => {
-        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle || props.importWordFilePopup || props.uploadFilePopup) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle || props.importWordFilePopup || props.uploadFilePopup || props.importAndDropPopup) {
             return null
         }
         else if (props.assessmentAndInteractive) {
@@ -567,14 +650,49 @@ class PopUp extends React.Component {
         event.stopPropagation();
     }
 
+    handleFileChangeOnInput = (event) => {
+        console.log('clicked or dropped', event.target.files[0]);
+        const file = event.target.files[0];
+        if (file) {
+            console.log(file, 'yyyyyyy');
+            this.setState({fileToBeUploaded: file});
+          var options = {
+            styleMap: [
+                "u => u"
+            ]
+        };
+        //   mammoth.convertToHtml({arrayBuffer: file}, options)
+        // .then((result) => {
+        //     console.log(result, 'fffttt');
+        //     var html = result.value; // The generated HTML
+        //     this.setState({docContent: html});
+        //     const parser = new DOMParser();
+        //     var doc = parser.parseFromString(html, "text/html")
+        //     console.log('Testing array', doc.body.children)
+        //     tinymce.get('myTextarea').setContent(html);
+        //     tinymce.get('myTextarea').getBody().setAttribute('contenteditable', false)
+        //     tinymce.get('myTextarea2').setContent(html);
+        //     pastePostProcess(doc)
+        //     // console.log(tinymce.get('myTextarea2').getContent({format: 'text'}), 'bbvv');
+        //     // tinymce.get('myTextarea2').editorCommands.commands.exec.paste;
+        //     // console.log(tinymce.activeEditor.targetElm.children, 'rrts'); 
+        //     // console.log(html);
+        //     // let editorDiv = document.getElementById('myTextarea2')
+        //     // editorDiv.innerHTML = html
+        //     // var messages = result.messages; // Any messages, such as warnings during conversion
+        // })
+        // .catch(function(error) {
+        //     console.error(error);
+        // });
+        }
+    }
     handleFileChange = (event) => {
         // const var = new FileReader
         const file = event.target.files[0];
         if (file) {
           var options = {
             styleMap: [
-              "p[style-name='h1'] => h1:fresh",
-              "p[style-name='h2'] => h2:fresh"
+                "u => u",
             ]
         };
           mammoth.convertToHtml({arrayBuffer: file}, options)
@@ -582,10 +700,20 @@ class PopUp extends React.Component {
             console.log(result, 'fffttt');
             var html = result.value; // The generated HTML
             this.setState({docContent: html});
+            const parser = new DOMParser();
+            var doc = parser.parseFromString(html, "text/html")
+            console.log('Testing array', doc.body.children)
             tinymce.get('myTextarea').setContent(html);
+            tinymce.get('myTextarea').getBody().setAttribute('contenteditable', false)
             tinymce.get('myTextarea2').setContent(html);
-            console.log(html);
-            var messages = result.messages; // Any messages, such as warnings during conversion
+            pastePostProcess(doc)
+            // console.log(tinymce.get('myTextarea2').getContent({format: 'text'}), 'bbvv');
+            // tinymce.get('myTextarea2').editorCommands.commands.exec.paste;
+            // console.log(tinymce.activeEditor.targetElm.children, 'rrts'); 
+            // console.log(html);
+            // let editorDiv = document.getElementById('myTextarea2')
+            // editorDiv.innerHTML = html
+            // var messages = result.messages; // Any messages, such as warnings during conversion
         })
         .catch(function(error) {
             console.error(error);
@@ -594,7 +722,7 @@ class PopUp extends React.Component {
       };
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle || props.importAndDropPopup) {
             return null
         }
         else {
@@ -604,12 +732,24 @@ class PopUp extends React.Component {
         }
     }
 
+    handlebutton = () => {
+        // console.log(tinymce.getContent(), '111aaa');
+        console.log(tinymce.get('myTextarea2').getContent(), '222bbb');
+        // console.log(tinymce.get('myTextarea2').BeforeSetContent(), '222ccc');
+        // console.log(tinymce.get('myTextarea2').befores(), '222ddd');
+        console.log('ppplll', tinymce?.execCommand('mceInsertContent', false, 'aaaaa'));
+        console.log('ppplll', tinymce?.execCommand('Paste', false, 'lllllllllll'));
+        // const lok = document?.getElementById('tinymce').children
+        console.log(lok, 'loku');
+        // tinymce.get('myTextarea').editorCommands.commands.exec.paste()
+    }
     /**
     * @description - This function is responsible for rendering the Dialog text in the popup.
     * @param {event}
     */
 
     renderDialogText = (props) => {
+        const {docContent} = this.state;
         if(props.alfrescoExpansionPopup){
             let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
                   <div className='imageContainer'>
@@ -781,6 +921,52 @@ Text Highlight</div>
                 </>
             )
         }
+        else if(props.importAndDropPopup){
+            // function preventDefaults (e) {
+            //     e.preventDefault()
+            //     e.stopPropagation()
+            // }
+            // let dropArea = document.getElementById('file-container-111');
+            // ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            //     dropArea.addEventListener(eventName, preventDefaults, false)
+            // })
+            // function handleDrop(e) {
+            //     let dt = e.dataTransfer
+            //     let files = dt.files
+            //     handleFileChangeOnInput(e)
+            // }
+            // dropArea.addEventListener('drop', handleDrop, false)
+            
+
+
+            return(
+                <>
+                    <div className='import-and-drop-file-heading'>
+                        {props.dialogText}
+                    </div>
+                    <div className='import-and-drop-file-stepper'>
+                        <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span>Upload Word File</span></span>
+                        <span className='stepper1'><img src={importPopupSS11} width='92.5px' height='10px'/></span>
+                        <span className='stepper1'><img src={importPopupSS9} width='23px' height='24px'/><span>Conversion</span></span>
+                        <span className='stepper1'><img src={importPopupSS11} width='92.5px' height='10px'/></span>
+                        <span className='stepper1'><img src={importPopupSS10} width='23px' height='24px'/><span>Preview</span></span>
+                    </div>
+                    {this.state.fileToBeUploaded.name ? <div className='file-description-container'>
+                        <span className='file-details-container'>
+                            <img src={importPopupSS12} width='40px' height='40px'/>
+                            <div>{this.state.fileToBeUploaded.name}</div>
+                        </span>
+                        <span onClick={()=>{this.setState({fileToBeUploaded: {}}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
+                    </div> :
+                    <div id='file-container-111' className='file-container' onDrop={(event) => this.handleFileChangeOnInput(event)}>
+                        <input type='file' accept='docx' hidden ref={this.inputRef} onChange={(event) => this.handleFileChangeOnInput(event)}/>
+                        <span><img src={importPopupSS12} width='40px' height='40px'/></span>
+                        <span className='file-container-text-1'><span className='file-container-text-link' onClick={() => this?.inputRef?.current?.click()}><u>Click to Upload</u></span> or drag and drop</span>
+                        <span className='file-container-text-2'>Microsoft Word doc or docx (max. 10MB)</span>
+                    </div>}
+                </>
+            )
+        }
         else if (props.importWordFilePopup) {
             return (
               <>
@@ -836,15 +1022,20 @@ Text Highlight</div>
         else if(props.uploadFilePopup){
             return (                
                 <div>
-                    <h4>Upload File</h4>
+                    <div className='import-and-drop-file-heading'>Import Word File</div>
                     <br/>
-                    <input
+                     <input
                     type="file"
                     onChange={(event) => this.handleFileChange(event)}
                     accept=".doc,.docx"
                   /><br/>
-                  <div style={{display: 'flex', columnGap: '10px'}}>
-                  <div id='myTextarea' style={{width: '50%'}}></div>
+                  {/* <button type='button' onClick={this.handlebutton}>Click</button>  */}
+                  <div style={{display: 'flex', columnGap: '355px', justifyContent: 'space', paddingTop: '20px', paddingBottom: '20px'}}>
+                  <div><b>Original Document</b></div>
+                <div><b>Converted-Preview</b></div>
+                </div>
+                  <div style={{display: 'flex', columnGap: '40px'}}>
+                  <div id='myTextarea' style={{width: '50%'}}> </div>
                   <div id='myTextarea2' style={{width: '50%'}}></div>
                   </div>
                 </div>
@@ -960,7 +1151,7 @@ Text Highlight</div>
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.uploadFilePopup ? 'upload-file-popup' : `modal-content ${assessmentConfirmation} ${assessmentClass}`) } id={isGlossary ? 'popup' : 'popup-visible'}>
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.uploadFilePopup ? 'upload-file-popup' : this.props.importAndDropPopup ? 'import-and-drop-file-popup': `modal-content ${assessmentConfirmation} ${assessmentClass}`) } id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}
@@ -986,7 +1177,7 @@ PopUp.defaultProps = {
     placeholder: "Type...",
     rows: "5",
     active: true,
-    saveButtonText: "Save",
+    saveButtonText: "Import",
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",

@@ -92,17 +92,18 @@ export const pastePreProcess = (data) => {
  */
 export const pastePostProcess = (data, props) => {
   console.log(data, 'postprocess');
-  if (data.node) {
+  console.log('start');
+  if (data.body) {
     // if you dont click inside the editor after pasting data first time and try to paste again by
     // pressing ctrl + v then this condition runs again so clearing the previous data of editor
-    tinyMCE.activeEditor.setContent('');
+    tinymce.get('myTextarea2').setContent('')
 
-    const childNodes = data.node.children;
+    const childNodes = data.body.children;
     const elements = [];
     createPastedElements(childNodes, elements);
     const updatedElements = []
     //preparing content that needs to be pasted
-    data.node = prepareFinalPasteContent(elements,data.node,props)
+    data.body = prepareFinalPasteContent(elements,data.body,props)
     //preparing content that needs to send in API
     filterSupportedTagAndData(elements,updatedElements)
 
@@ -118,14 +119,15 @@ export const pastePostProcess = (data, props) => {
       }
       createPastedElements(childElements, elements);
     } */
-    const parentIndex = props.index;
+    // const parentIndex = props.index;
     if (updatedElements.length) {
-      props.toggleWordPasteProceed(true)
-      focusPopupButtons();
+      // props.toggleWordPasteProceed(true)
+      // focusPopupButtons();
     }
-    props.onPowerPaste(updatedElements, parentIndex);
+    // props.onPowerPaste(updatedElements, parentIndex);
     // if valid data has been pasted in to editor once then make editor non-editable
     elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
+    console.log('end111');
   }
 }
 
@@ -149,16 +151,16 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
       isPreviousUnsupportedContent = false
       let elementOuterHtml = element?.outerHTML
       if(element?.outerHTML?.match(/<img ([\w\W]+?)>/g)) {
-        if(!props.isPowerPasteInvalidContent) {
-          props.checkInvalidPowerPasteContent(true)
-        }
+        // if(!props.isPowerPasteInvalidContent) {
+        //   props.checkInvalidPowerPasteContent(true)
+        // }
         elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
       }
       contentToPaste += elementOuterHtml
     } else if(!spacesAndNewLineFormatArray.includes(element?.data)){
-      if(!props.isPowerPasteInvalidContent) {
-        props.checkInvalidPowerPasteContent(true)
-      }
+      // if(!props.isPowerPasteInvalidContent) {
+      //   props.checkInvalidPowerPasteContent(true)
+      // }
       if(!isPreviousUnsupportedContent) {
         isPreviousUnsupportedContent = true
       contentToPaste += UnsupportedContentString
@@ -166,9 +168,10 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
     }
   }
 
-  const updatedPasteContent = document.createElement('div');
+  const updatedPasteContent = document.createElement('body');
   updatedPasteContent.innerHTML = contentToPaste;
-
+  console.log(updatedPasteContent.innerHTML, '678');
+  tinymce.get('myTextarea2').setContent(updatedPasteContent.innerHTML)
   return updatedPasteContent
 }
 
