@@ -756,6 +756,8 @@ class AssessmentSlateData extends Component {
     showFinalAssessmentSlate = (slatePlaceholder, assessmentType, assessmentSlateObj, assessmentUsageType) => {
         const oldReducerData = this.props.assessmentReducer[assessmentSlateObj.assessmentId]
         const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
+        const assessmentLatestData = this.props.assessmentReducer?.updatedAssessmentData?.assessments[0]
+        // console.log("nish assessmentLatestData", assessmentLatestData)
         let assessmentSlate = <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">

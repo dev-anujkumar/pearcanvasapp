@@ -13,7 +13,8 @@ import {
     UPDATE_ASSESSMENT_ID,
     ASSESSMENT_RELOAD_CONFIRMATION,
     ASESSMENT_UPDATE_DATA_ARRAY,
-    UPDATED_ASSESSMENTS_ARRAY
+    UPDATED_ASSESSMENTS_ARRAY,
+    UPDATE_ASSESSMENT_DATA
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -124,6 +125,11 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 updatedAssessmentArray: [...updatedAssessmentArray, action.payload]
+            }
+        case UPDATE_ASSESSMENT_DATA: 
+            return {
+                ...state,
+                updatedAssessmentData: action.payload
             }
         default:
             return state
