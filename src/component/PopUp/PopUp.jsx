@@ -12,7 +12,7 @@ import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_AUTONUM,
-        SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE, pasteElementLimit } from '../SlateWrapper/SlateWrapperConstants';
+        SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE, pasteElementLimit, PASTE_LIMIT_WARNING_1, PASTE_LIMIT_WARNING_2 } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -651,7 +651,7 @@ class PopUp extends React.Component {
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
                     {this.state.isPowerPasteInvalidContent && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
-                    {this.state.isPowerPasteLimitExceeding && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>Cannot paste more than {pasteElementLimit} elements</div>}
+                    {this.state.isPowerPasteLimitExceeding && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>{PASTE_LIMIT_WARNING_1}{pasteElementLimit}{PASTE_LIMIT_WARNING_2}</div>}
                 </>
             )
         } else if (props.LOPopup) {
