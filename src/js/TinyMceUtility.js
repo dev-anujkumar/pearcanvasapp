@@ -11,6 +11,7 @@ import ElementConstants from '../component/ElementContainer/ElementConstants';
 
 import { autoNumberFigureTypesAllowed,
         LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../constants/IFrameMessageTypes';
 const {
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
@@ -65,8 +66,7 @@ export const dataFromAlfresco = (data, editor, imageArgs, cb) => {
 /**
  * @description function will be called on image src add and fetch resources from Alfresco
  */
-export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
-
+export const handleC2MediaClick = (permissions, editor, element, props) => {
     const imageArgs = store.getState()?.alfrescoReducer?.imageArgs;
     let currentAssetId = ""
     if (imageArgs?.id) {
@@ -85,57 +85,45 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                 const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                let messageObj = {appName:'cypress', citeName: citeName,
-                    citeNodeRef: citeNodeRef,
+                let messageObj = {
+                    appName: 'cypress', rootNodeName: citeName,
+                    rootNodeId: citeNodeRef,
                     elementId: element.id,
                     editor: true,
-                    currentAsset
+                    currentAsset,
+                    defaultCategory:'image'
                 }
-                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                 const messageDataToSaveInlineImage = {
                     id: element.id,
                     editor: true,
                     citeNodeRef: citeNodeRef
                 }
-                saveSelectedAlfrescoElement(messageDataToSaveInlineImage);
+                props.saveSelectedAlfrescoElement(messageDataToSaveInlineImage);
             } else {
                 // props.accessDenied(true)
             }
         }
     } else {
         if (permissions.includes('alfresco_crud_access')) {
-            handleSiteOptionsDropdown(alfrescoPath, element.id, currentAsset);
+            const payloadObj = handleSiteOptionsDropdown(alfrescoPath, element.id, currentAsset);
+            props.alfrescoPopup(payloadObj)
+            sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': {browse: false} })
         } else {
             // props.accessDenied(true)
         }
     }
 }
 
-function handleSiteOptionsDropdown (alfrescoPath, id, currentAsset) {
-    let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-    return axios.get(url,
-        {
-            headers: {
-                'Accept': 'application/json',
-                'ApiKey': config.CMDS_APIKEY,
-                'Content-Type': 'application/json',
-                'myCloudProxySession': config.myCloudProxySession
-            }
-        })
-        .then(function (response) {
-           let payloadObj = {
-            launchAlfrescoPopup: true,
-            alfrescoPath: alfrescoPath,
-            alfrescoListOption: response.data.list.entries,
-            id,
-            editor: true,
-            currentAsset
-        }
-            sendDataToIframe({ 'type': 'openInlineAlsfrescoPopup', 'message': payloadObj })
-        })
-        .catch(function (error) {
-            console.log("Error IN SITE API", error)
-        });
+function handleSiteOptionsDropdown(alfrescoPath, id, currentAsset) {
+    let payloadObj = {
+        launchAlfrescoPopup: true,
+        alfrescoPath: alfrescoPath,
+        id,
+        editor: true,
+        currentAsset
+    }
+    return payloadObj
 }
 
 export const checkForDataIdAttribute =(defModel) => {

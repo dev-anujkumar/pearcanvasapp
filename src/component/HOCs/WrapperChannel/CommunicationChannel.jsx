@@ -19,7 +19,7 @@ import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLA
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, IMG_HTML, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
+import { fetchAlfrescoSiteDropdownList, sendSelectedSiteData } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
 function CommunicationChannel(WrappedComponent) {
@@ -333,7 +333,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
                     break;
-                case 'selectedAlfrescoAssetData' :
+                case 'selectedCatToolData' :
                     //Check if message.asset is array
                     if (message.asset && Array.isArray(message.asset) && message.asset?.length > 0) {
                         message.asset = message.asset[0]
@@ -353,9 +353,9 @@ function CommunicationChannel(WrappedComponent) {
                             if (message.site?.citeNodeRef !== projectAlfrescoNodeRef) {
                                 changedSiteUrl = true
                                 changedAlfrescoData = {
-                                    guid: message.site?.citeNodeRef,
+                                    guid: message.site?.rootNodeId,
                                     title: message.site?.title,
-                                    id: message.site?.citeName,
+                                    id: message.site?.rootNodeName,
                                     visibility: message.site?.visibility
                                 }
                             }
@@ -380,6 +380,9 @@ function CommunicationChannel(WrappedComponent) {
                     // Making condition true for triggering slate level save api
                     localStorage.setItem('isChangeInSlate', 'true');
                     this.props.saveSelectedAssetData(message)
+                    break;
+                case 'selectedSite':
+                    sendSelectedSiteData(this.props,message)
                     break;
                 case 'saveAlfrescoDataToConfig':
                     config.alfrescoMetaData = message

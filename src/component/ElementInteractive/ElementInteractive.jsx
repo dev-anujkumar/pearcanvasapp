@@ -25,7 +25,7 @@ import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, up
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resource_Type } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
-import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE, LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper';
@@ -672,28 +672,13 @@ class Interactive extends React.Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            })
-            .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true,
-                alfrescoPath: alfrescoPath,
-                alfrescoListOption: response.data.list.entries,
-                elementId: id,
-                currentAsset
-            }
-                that.props.alfrescoPopup(payloadObj)
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+        let payloadObj = {
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
+            elementId: id,
+            currentAsset
+        }
+        that.props.alfrescoPopup(payloadObj)
     }
     /**
      * @description - This function is for accessing c2_assessment library for interactive.
@@ -732,12 +717,14 @@ class Interactive extends React.Component {
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                    let messageObj = { appName:'cypress',citeName: citeName,
-                        citeNodeRef: citeNodeRef,
+                    let messageObj = {
+                        appName: 'cypress', rootNodeName: citeName,
+                        rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
-                        currentAsset
+                        currentAsset,
+                        defaultCategory:"smartlink"
                      }
-                        sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                        sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                         const messageDataToSaveSmartlink = {
                             id: this.props.elementId,
                             editor: undefined,
@@ -751,7 +738,8 @@ class Interactive extends React.Component {
         }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-               this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, currentAsset);
+                   this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, currentAsset);
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
             }
             else {
                 this.props.accessDenied(true)

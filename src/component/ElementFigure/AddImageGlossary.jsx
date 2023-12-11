@@ -6,6 +6,7 @@ import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 
 /**
 * @description - AddImageGlossary is a class based component. It is defined simply for adding image in glossary.
@@ -47,14 +48,15 @@ class AddImageGlossary extends Component {
                     const citeNodeRef= alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef;
                     let messageObj = {
                         appName:'cypress',
-                        citeName: citeName,
-                        citeNodeRef: citeNodeRef,
+                        rootNodeName: citeName,
+                        rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'GlossaryImage',
                         calledFromImageGlossaryFootnote: this.props.isImageGlossary,
-                        currentAsset: { type: "image" }
+                        currentAsset: { type: "image" },
+                        defaultCategory: "image"
                     }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                     const messageDataToSave = {
                         id: this.props.elementId,
                         editor: undefined,
@@ -74,6 +76,8 @@ class AddImageGlossary extends Component {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 let currentAsset = { type: "image" }
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isImageGlossary, currentAsset)
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
+
             } else {
                 this.props.accessDenied(true)
             }
@@ -83,30 +87,37 @@ class AddImageGlossary extends Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, isImageGlossary, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            })
-            .then(function (response) {
-               let payloadObj = {
-                launchAlfrescoPopup: true,
-                alfrescoPath: alfrescoPath,
-                alfrescoListOption: response.data.list.entries,
-                id,
-                isImageGlossary,
-                currentAsset
-            }
-                that.props.alfrescoPopup(payloadObj)
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+        let payloadObj = {
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
+            id,
+            isImageGlossary,
+            currentAsset
+        }
+        that.props.alfrescoPopup(payloadObj)
+        // return axios.get(url,
+        //     {
+        //         headers: {
+        //             'Accept': 'application/json',
+        //             'ApiKey': config.CMDS_APIKEY,
+        //             'Content-Type': 'application/json',
+        //             'myCloudProxySession': config.myCloudProxySession
+        //         }
+        //     })
+        //     .then(function (response) {
+        //        let payloadObj = {
+        //         launchAlfrescoPopup: true,
+        //         alfrescoPath: alfrescoPath,
+        //         alfrescoListOption: response.data.list.entries,
+        //         id,
+        //         isImageGlossary,
+        //         currentAsset
+        //     }
+        //         that.props.alfrescoPopup(payloadObj)
+        //     })
+        //     .catch(function (error) {
+        //         console.log("Error IN SITE API", error)
+        //     });
     }
 
 

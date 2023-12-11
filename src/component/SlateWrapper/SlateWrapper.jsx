@@ -1640,7 +1640,7 @@ class SlateWrapper extends Component {
                 {this.showWordPastePopup()}
                 {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
                 {/* **************** Alfresco Popup ************ */}
-                {this.showAlfrescoPopup()}
+                {/* {this.showAlfrescoPopup()} */}
                 {/* **************** Approved to WIP Warning Popup ************* */}
                 {/* **************** To reload slate after assessment update ************* */}
                 {this.reloadSlateAfterAssessmentUpdate()}

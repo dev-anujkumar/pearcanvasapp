@@ -40,7 +40,7 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
+import { saveSelectedAssetData, saveInlineImageData, alfrescoPopup,  saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action.js';
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
@@ -315,7 +315,14 @@ const mapStateToProps = state => {
         isSlateTagEnable: state.metadataReducer.slateTagEnable,
         getRequiredSlateData: state.appStore.getRequiredSlateData,
         assessmentReducer: state.assessmentReducer,
-        roleId:state.appStore.roleId,
+        roleId: state.appStore.roleId,
+        alfrescoPath: state.alfrescoReducer.alfrescoPath,
+        currentAsset: state.alfrescoReducer.currentAsset,
+        alfrescoElementId: state.alfrescoReducer.elementId,
+        isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen,
+        locationData: state.alfrescoReducer.locationData,
+        calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote,
+        calledFromImageGlossaryFootnote: state.alfrescoReducer.calledFromImageGlossaryFootnote,
     };
 };
 
@@ -389,6 +396,7 @@ export default connect(
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
         setTocSlateLabel,
-        saveLockDetails
+        saveLockDetails,
+        saveSelectedAlfrescoElement
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
