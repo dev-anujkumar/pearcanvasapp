@@ -1455,10 +1455,37 @@ describe("Testing methods", () => {
             }
         }));
         let citeTdxObj = {
-            slateType : "",
+            slateType : "singleSlateAssessmentInner",
             singleAssessmentID : {
                 versionUrn: "123",
                 taxonomicTypes:'123'
+            }
+        }
+        const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')
+        elementInteractiveInstance.addCiteTdxAssessment(citeTdxObj, 1)
+        expect(spyaddCiteTdxAssessment).toHaveBeenCalled()
+    })
+    it("addCiteTdxAssessment else - block ", () => {
+        axios.get = jest.fn(() => Promise.resolve({
+            data: {
+                thumbnail: {
+                    id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+                    src: {
+                        'imageId': "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+                        'path': 'path',
+                        'alttext': 'Image',
+                    },
+                    alt: 'alttext'
+                },
+                title: ''
+            }
+        }));
+        let citeTdxObj = {
+            slateType : "singleSlateAssessmentInner",
+            singleAssessmentID : {
+                versionUrn: "123",
+                taxonomicTypes:'123',
+                name:"abc"
             }
         }
         const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')
