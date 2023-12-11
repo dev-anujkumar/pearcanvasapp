@@ -477,6 +477,8 @@ function CommunicationChannel(WrappedComponent) {
                     if(message?.labels)
                     this.props.setTocSlateLabel(message.labels)
                     break;
+                case 'tocHeirarchy':
+                    this.props.currentNodeAncestorData(message.item, message.matterType);
                 case 'lockUserDetailsFromCount' :
                     this.props.saveLockDetails(message.lockInfo)
                     break;
