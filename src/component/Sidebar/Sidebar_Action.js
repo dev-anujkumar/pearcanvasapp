@@ -286,6 +286,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if(config.elementStatus[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
+    if(oldElementData.type === "element-authoredtext" || oldElementData.type === "element-blockfeature" || oldElementData.type === "element-learningobjectives" || oldElementData.type === "element-list"){
+        conversionDataToSend["output"] = 'all';
+    }
     config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), {
@@ -442,7 +445,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
-
+        console.log(res.data, 'mmm');
         let activeElementObject = {
             elementId: res.data.id,
             index: indexes.join("-"),
@@ -453,8 +456,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             toolbar: newElementData.toolbar,
             elementWipType: newElementData.elementWipType,
             altText,
-            longDesc
+            longDesc,
+            // output: res?.data?.output
         };
+        if(newElementData.elementType === "element-authoredtext" || newElementData.elementType === "element-blockfeature" || newElementData.elementType === "element-learningobjectives" || newElementData.elementType === "element-list"){
+            activeElementObject.output = res?.data?.output;
+        }
         if(newElementData.primaryOption=='primary-blockcode-equation'){
             activeElementObject.numbered= res.data.figuredata.numbered
           activeElementObject.startNumber= res.data.figuredata.startNumber

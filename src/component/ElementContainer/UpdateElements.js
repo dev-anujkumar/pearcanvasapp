@@ -828,7 +828,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType: parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" &&
                 previousElementData.type === ELEMENT_AUTHOREDTEXT) ? "AUTHORED_TEXT" : inputElementType,
-                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
+                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType,
+            }
+            if(previousElementData.id === appStore.activeElement.elementId){
+                dataToReturn.output = appStore?.activeElement?.output
             }
 
             if(type === ELEMENT_AUTHOREDTEXT){

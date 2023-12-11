@@ -21,7 +21,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import modalIcon from '../../images/Sidebar/modalIcon.svg'
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants.js';
 
@@ -62,7 +62,8 @@ class Sidebar extends Component {
             decorativePopupWarning: false,
             sidebarValue: "",
             isPlayBackDropdownOpen: false,
-            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
+            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue,
+            outputType: this.props.activeElement?.output
         };
         this.playbackModeRef = React.createRef();
         this.playbackModeLabelRef = React.createRef();
@@ -75,6 +76,7 @@ class Sidebar extends Component {
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption;
             let isPlayBackDropdownOpen = prevState.isPlayBackDropdownOpen;
+            let output = prevState.outputType;
             let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
@@ -82,6 +84,7 @@ class Sidebar extends Component {
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false;
                 isPlayBackDropdownOpen = false;
+                output = nextProps.activeElement.output;
             }
             if(nextProps?.activeElement?.secondaryOption === SECONDARY_3PI_SMARTLINK && nextProps?.activeElement?.assetIdFor3PISmartlink){
                 selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue;
@@ -103,7 +106,8 @@ class Sidebar extends Component {
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
                 selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue,
-                isPlayBackDropdownOpen: isPlayBackDropdownOpen
+                isPlayBackDropdownOpen: isPlayBackDropdownOpen,
+                outputType: output
             };
         }
 
@@ -332,10 +336,38 @@ class Sidebar extends Component {
         });
     }
 
+    handleOutputTypeValue = (e) => {
+        let value = e.target.value;
+        // if(hasReviewerRole() || this.props.projectSubscriptionDetails.isSubscribed) return
+        this.props.setBCEMetadata('output', value);
+        this.setState({
+            outputType: value
+        }, () => this.handleTextBlur());
+    }
+
     primaryOption = () => {
         const { activePrimaryOption } = this.state
         const isReadOnly =  hasReviewerRole() ? POINTER_EVENTS_NONE : ''
         let primaryOptions = '';
+        console.log(this.props.activeElement.elementType,this.state.activeElementType, "ccccc");
+        // if(this.props.activeElement.elementType === "element-authoredtext" || this.props.activeElement.elementType === "element-blockfeature" || this.props.activeElement.elementType === "element-learningobjectives" || this.props.activeElement.elementType === "element-list"){
+        if(this.props.activeElement.elementType === "element-authoredtext" && this.props.activeElement.primaryOption !== 'primaryOption'){
+            return (
+                <FormControl>
+                    <FormLabel id="demo-radio-buttons-group-label" className="radioHeading">Output Type</FormLabel>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        name="radio-buttons-group"
+                        value={this.state.outputType}
+                        onChange={this.handleOutputTypeValue}
+                    >
+                        <FormControlLabel disabled={hasReviewerRole()} value="all" control={<Radio />} label={<Typography className="radioText">All(default)</Typography>} />
+                        <FormControlLabel disabled={hasReviewerRole()} value="digital" control={<Radio />} label={<Typography className="radioText">Digital(eText, Revel)</Typography>} />
+                        <FormControlLabel disabled={hasReviewerRole()} value="print" control={<Radio />} label={<Typography className="radioText">Print(ePub, pdf, inDesign)</Typography>} />
+                    </RadioGroup>
+                </FormControl>
+            )
+        }
         if (this.state.activeElementType) {
             let className = ""
             let primaryOptionObject = elementList[this.state.activeElementType];
@@ -594,6 +626,9 @@ class Sidebar extends Component {
         let languageDropdownOptions = [];
         let enableColumn3SecondaryOption = false;
         const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE : '';
+        if(this.props.activeElement.elementType === "element-authoredtext") {
+            return;
+        }
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
@@ -959,6 +994,20 @@ class Sidebar extends Component {
         }
     }
 
+    handleTextBlur = () => {
+        let activeTextElementNode = document.getElementById(`cypress-${this.props.activeElement.index}`)
+        let activeTextElementBlockquoteNodePara1 = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        let activeTextElementBlockquoteNodePara2 = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
+        if (activeTextElementBlockquoteNodePara1 || activeTextElementBlockquoteNodePara2) {
+            activeTextElementBlockquoteNodePara1.focus()
+            activeTextElementBlockquoteNodePara1.blur()
+        }
+        else if (activeTextElementNode) {
+            activeTextElementNode.focus()
+            activeTextElementNode.blur()
+        }
+    }
+
 
     handleNumberedLineToggle = () => {
         this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
@@ -1249,8 +1298,7 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" &&
-                this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
@@ -1325,6 +1373,7 @@ const mapStateToProps = state => {
         asideTitleData: state.appStore.asideTitleData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         alfrescoAltLongDescData: state.alfrescoReducer.savedAltLongDesData,
+        projectSubscriptionDetails: state.projectInfo.projectSubscriptionDetails,
     };
 };
 

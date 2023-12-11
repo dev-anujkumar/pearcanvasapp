@@ -84,6 +84,7 @@ export const findElementType = (element, index) => {
             case ELEMENT_AUTHOREDTEXT:
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
+                elementType['output'] = element?.output || 'all';
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
                     elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
                     elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
@@ -103,6 +104,7 @@ export const findElementType = (element, index) => {
                 elementType = {
                     ...elementDataBank[element.type][element.elementdata.type]
                 }
+                elementType['output'] = element?.output || 'all';
                 break;
             case 'figure':
                 switch (element.figuretype) {
@@ -252,6 +254,7 @@ export const findElementType = (element, index) => {
                 elementType = {
                     ...elementDataBank[type][subtype]
                 }
+                elementType['output'] = element?.output || 'all';
                 break;
             }
             case 'element-learningobjectivemapping':
@@ -259,6 +262,7 @@ export const findElementType = (element, index) => {
             case 'element-learningobjectives':
             case "popup":
                 elementType = { ...elementDataBank[element.type] }
+                elementType['output'] = element?.output || 'all';
                 break;
             case 'openerelement':
                 altText = element.backgroundimage.alttext ? element.backgroundimage.alttext : ""
