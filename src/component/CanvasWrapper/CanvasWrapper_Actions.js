@@ -82,9 +82,9 @@ export const findElementType = (element, index) => {
                 }
                 break;
             case ELEMENT_AUTHOREDTEXT:
+                elementType['output'] = element?.output || 'all';
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
-                elementType['output'] = element?.output || 'all';
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
                     elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
                     elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
@@ -262,7 +262,9 @@ export const findElementType = (element, index) => {
             case 'element-learningobjectives':
             case "popup":
                 elementType = { ...elementDataBank[element.type] }
-                elementType['output'] = element?.output || 'all';
+                if(element.type === 'element-learningobjectives'){
+                    elementType['output'] = element?.output || 'all';
+                }
                 break;
             case 'openerelement':
                 altText = element.backgroundimage.alttext ? element.backgroundimage.alttext : ""

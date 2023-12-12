@@ -158,6 +158,24 @@ export const elementDataByTag = {
     }
 }
 
+export const outputTypeData = [
+    {
+        id: 1,
+        name: 'All (default)',
+        value: 'all',
+    },
+    {
+        id: 2,
+        name: 'Digital (eText, Revel)',
+        value: 'digital',
+    },
+    {
+        id: 3,
+        name: 'Print (ePub, pdf, inDesign)',
+        value: 'print',
+    },
+]
+
 export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup', 'code']
 export const allowedClassName = ['calloutone', 'callouttwo', 'calloutthree', 'calloutfour', 'markedforindex', 'pearson-component glossaryterm']
 export const UNSUPPORTED_CONTENT_ERR_MSG = "Unsupported Content found which will not be pasted."

@@ -13,7 +13,8 @@ import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
         PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE,
-        DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
+        DISABLE_PLAYBACK_MODE_VENDORS, 
+        outputTypeData} from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, ELEMENT_ASSESSMENT_LOWERCASE, POINTER_EVENTS_NONE, PRIMARY_BLOCKCODE_EQUATION, ELEMENT_ASIDE, SIDEBAR_DISABLE } from '../../constants/Element_Constants.js';
@@ -338,33 +339,42 @@ class Sidebar extends Component {
 
     handleOutputTypeValue = (e) => {
         let value = e.target.value;
+        // if(hasReviewerRole() || this.props.projectSubscriptionDetails.isSubscribed) return
         this.props.setBCEMetadata('output', value);
         this.setState({
             outputType: value
         }, () => this.handleTextBlur());
     }
 
+     // function to render the output type option inside the sidebar
+     outputTypeOption = () => {
+        const { activeElementType } = this.state;
+        const { asideData } = this.props;
+         if (activeElementType === 'element-authoredtext' && asideData?.type !== 'manifestlist') {
+             return (
+                 <FormControl>
+                     <FormLabel id="demo-radio-buttons-group-label" className="radioHeading">Output Type</FormLabel>
+                     <RadioGroup
+                         aria-labelledby="demo-radio-buttons-group-label"
+                         name="radio-buttons-group"
+                         value={this.state.outputType}
+                         onChange={this.handleOutputTypeValue}
+                     >
+                        {
+                            outputTypeData.map((obj) => {
+                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.id} disabled={hasReviewerRole()} value={obj.value} control={<Radio sx={{color: '#005A70 !important'}}/>} label={<Typography className="radioText">{obj.name}</Typography>} />
+                            })
+                        }
+                     </RadioGroup>
+                 </FormControl>
+             )
+         }
+    }
+
     primaryOption = () => {
         const { activePrimaryOption } = this.state
         const isReadOnly =  hasReviewerRole() ? POINTER_EVENTS_NONE : ''
         let primaryOptions = '';
-        if(this.props.activeElement.elementType === "element-authoredtext" && this.props.activeElement.primaryOption !== 'primaryOption'){
-            return (
-                <FormControl>
-                    <FormLabel id="demo-radio-buttons-group-label" className="radioHeading">Output Type</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        name="radio-buttons-group"
-                        value={this.state.outputType}
-                        onChange={this.handleOutputTypeValue}
-                    >
-                        <FormControlLabel disabled={hasReviewerRole()} value="all" control={<Radio />} label={<Typography className="radioText">All(default)</Typography>} />
-                        <FormControlLabel disabled={hasReviewerRole()} value="digital" control={<Radio />} label={<Typography className="radioText">Digital(eText, Revel)</Typography>} />
-                        <FormControlLabel disabled={hasReviewerRole()} value="print" control={<Radio />} label={<Typography className="radioText">Print(ePub, pdf, inDesign)</Typography>} />
-                    </RadioGroup>
-                </FormControl>
-            )
-        }
         if (this.state.activeElementType) {
             let className = ""
             let primaryOptionObject = elementList[this.state.activeElementType];
@@ -396,7 +406,7 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === ELEMENT_ASIDE &&
                     this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId &&
                     this.props.cutCopySelection?.operationType === "cut")
-                primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
+                primaryOptions = (!(["element-dialogue", "element-authoredtext"].includes(this.props.activeElement.elementType))) ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? SIDEBAR_DISABLE : ""}`}>
                     {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
                     <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
@@ -1295,9 +1305,10 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && !(this.state.activeElementType === 'element-authoredtext' && this.props?.asideData?.type === 'manifestlist') && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
+                    {this.outputTypeOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
@@ -1370,7 +1381,6 @@ const mapStateToProps = state => {
         asideTitleData: state.appStore.asideTitleData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         alfrescoAltLongDescData: state.alfrescoReducer.savedAltLongDesData,
-        projectSubscriptionDetails: state.projectInfo.projectSubscriptionDetails,
     };
 };
 

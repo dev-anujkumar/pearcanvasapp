@@ -830,8 +830,12 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 previousElementData.type === ELEMENT_AUTHOREDTEXT) ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType,
             }
-            if(previousElementData.id === appStore.activeElement.elementId){
-                dataToReturn.output = appStore?.activeElement?.output
+            if(type !== elementTypeConstant.POETRY_STANZA){
+                if (!previousElementData.hasOwnProperty('output') && appStore?.activeElement?.output === "all") {
+                    dataToReturn.output = 'all'
+                } else if(previousElementData.id === appStore?.activeElement?.elementId){
+                    dataToReturn.output = appStore?.activeElement?.output
+                }
             }
 
             if(type === ELEMENT_AUTHOREDTEXT){
