@@ -77,7 +77,6 @@ class Sidebar extends Component {
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption;
             let isPlayBackDropdownOpen = prevState.isPlayBackDropdownOpen;
-            let output = prevState.outputType;
             let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
@@ -85,7 +84,6 @@ class Sidebar extends Component {
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false;
                 isPlayBackDropdownOpen = false;
-                output = nextProps.activeElement.output;
             }
             if(nextProps?.activeElement?.secondaryOption === SECONDARY_3PI_SMARTLINK && nextProps?.activeElement?.assetIdFor3PISmartlink){
                 selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue;
@@ -108,7 +106,7 @@ class Sidebar extends Component {
                 usageType: nextProps.activeElement.usageType,
                 selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue,
                 isPlayBackDropdownOpen: isPlayBackDropdownOpen,
-                outputType: output
+                outputType: nextProps.activeElement.output,
             };
         }
 
