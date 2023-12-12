@@ -445,7 +445,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
-        console.log(res.data, 'mmm');
         let activeElementObject = {
             elementId: res.data.id,
             index: indexes.join("-"),
@@ -457,7 +456,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             elementWipType: newElementData.elementWipType,
             altText,
             longDesc,
-            // output: res?.data?.output
         };
         if(newElementData.elementType === "element-authoredtext" || newElementData.elementType === "element-blockfeature" || newElementData.elementType === "element-learningobjectives" || newElementData.elementType === "element-list"){
             activeElementObject.output = res?.data?.output;

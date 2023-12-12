@@ -338,7 +338,6 @@ class Sidebar extends Component {
 
     handleOutputTypeValue = (e) => {
         let value = e.target.value;
-        // if(hasReviewerRole() || this.props.projectSubscriptionDetails.isSubscribed) return
         this.props.setBCEMetadata('output', value);
         this.setState({
             outputType: value
@@ -349,8 +348,6 @@ class Sidebar extends Component {
         const { activePrimaryOption } = this.state
         const isReadOnly =  hasReviewerRole() ? POINTER_EVENTS_NONE : ''
         let primaryOptions = '';
-        console.log(this.props.activeElement.elementType,this.state.activeElementType, "ccccc");
-        // if(this.props.activeElement.elementType === "element-authoredtext" || this.props.activeElement.elementType === "element-blockfeature" || this.props.activeElement.elementType === "element-learningobjectives" || this.props.activeElement.elementType === "element-list"){
         if(this.props.activeElement.elementType === "element-authoredtext" && this.props.activeElement.primaryOption !== 'primaryOption'){
             return (
                 <FormControl>
