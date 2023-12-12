@@ -262,10 +262,12 @@ class SlateWrapper extends Component {
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
+        console.log(_slateData, 'malfoy');
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
+                    console.log(_slateObject, 'potter');
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}, slateLockInfo}=this.props
                     const isPopupReadOnly = _slateData?.[config.slateManifestURN]?.type === "popup" && _slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && _slateData?.[config.tempSlateManifestURN]?.status === "approved";
                     if(_slateObject==undefined){
@@ -280,6 +282,7 @@ class SlateWrapper extends Component {
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { bodymatter: _slateBodyMatter } = _slateContent
+                    console.log(_slateBodyMatter, 'granger');
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType)
                     let _context = this;
                     return (
@@ -545,7 +548,8 @@ class SlateWrapper extends Component {
 
     showImportWordFilePopup = () => {
         console.log(this.state.showImportWordFilePopup, "toraq");
-        if (this.props.importMsgCanvas) {
+        const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
+        if (this.props.importMsgCanvas && !disableImportWordWarning) {
             showBlocker();
             // showTocBlocker();
             this.props.showBlocker(true);
@@ -564,6 +568,10 @@ class SlateWrapper extends Component {
                 />
             )
         }
+        // else if(this.props.importMsgCanvas && disableImportWordWarning)
+        // {
+        //     this.setState({showImportAndDragFile: true});
+        // }
 
         return null
     }
@@ -578,9 +586,10 @@ class SlateWrapper extends Component {
                 <PopUp dialogText={dialogText}
                     togglePopup={this.togglePopupForUploadFilePopup}
                     // isCurrentSlate={isCurrentSlate}
-                    proceed={this.startImportingButtonHandling}
+                    proceed={this.handleImportButton}
                     // importWordFilePopup
-                    uploadFilePopup={true}
+                    saveButtonText='Import'
+                    previewUploadedFilePopup={true}
                     fileToBeUploaded={this.state.fileToBeUploaded}
                     // warningHeaderText={headerText}
                     // lOPopupClass="lo-warning-txt"
@@ -595,7 +604,8 @@ class SlateWrapper extends Component {
     }
 
     showImportAndDropPopup = () => {
-        if (this.state.showImportAndDragFile) {
+        const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
+        if (this.state.showImportAndDragFile || (disableImportWordWarning && this.props.importMsgCanvas)) {
             showBlocker();
             // showTocBlocker();
             this.props.showBlocker(true);
@@ -605,9 +615,10 @@ class SlateWrapper extends Component {
                 active
                     // togglePopup={this.togglePopupForUploadFilePopup}
                     // isCurrentSlate={isCurrentSlate}
-                    proceed={this.startImportingButtonHandling}
+                    // proceed={this.startImportingButtonHandling}
                     importAndDropPopup
                     toggleNextButton={this.toggleNextButton}
+                    togglePopup={this.toggleShowImportAndDropPopup}
                     // importWordFilePopup
                     // uploadFilePopup={true}
                     // warningHeaderText={headerText}
@@ -632,15 +643,24 @@ class SlateWrapper extends Component {
     }
 
     toggleNextButton = (toggleValue, event, file) => {
-        if(toggleValue!==''){
-        this.props.showBlocker(toggleValue);
-        // this.props.showSlateLockPopup(false);
-        hideBlocker()
-        this.setState({showUploadFilePopup: true})
         this.setState({showImportAndDragFile: false})
-        }
+        this.props.showBlocker(toggleValue);
+        hideBlocker();
+        this.setState({showUploadFilePopup: true})
         this.setState({fileToBeUploaded: file})
+        if(this.props.importMsgCanvas)
+        store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.prohibitPropagation(event)
+    }
+
+    toggleShowImportAndDropPopup = (toggleValue, e) => {
+        this.setState({showImportAndDragFile: false})
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        // this.setState({showUploadFilePopup: true});
+        if(this.props.importMsgCanvas)
+        store.dispatch({type: 'save-import-message', payload: toggleValue})
+        this.prohibitPropagation(e);
     }
 
     closeAudioBookDialog =()=>{
@@ -667,7 +687,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue);
         // this.props.showSlateLockPopup(false);
         hideBlocker()
-        this.setState({showUploadFilePopup: true})
+        // this.setState({showUploadFilePopup: true})
         // this.setState({showImportAndDragFile: true})
         this.prohibitPropagation(event)
         // this.props.approvedSlatePopupStatus(false)
@@ -702,27 +722,19 @@ class SlateWrapper extends Component {
         this.props.isOwnersSubscribedSlate(false);
         this.props.isSubscribersSubscribedSlate(false);
     }
-    startImportingButtonHandling = (isChecked, toggleValue, e) => {
-        // const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
-        // if(isSubscriberRole(projectSharingRole, isSubscribed)){
-            this.setState({
-                showImportWordFilePopup: toggleValue
-            })
-        // }
-        // if(isOwnerRole(projectSharingRole, isSubscribed)){
-        //     this.setState({
-        //         showOwnerSlatePopup: toggleValue
-        //     })
-        // }
+    startImportingButtonHandling = (toggleValue, e) => {
+        store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.props.showBlocker(toggleValue);
-        this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(e);
-        // if (isChecked) {
-        //     releaseOwnerPopup(isChecked, projectSharingRole, isSubscribed);
-        // }
-        // this.props.isOwnersSubscribedSlate(false);
-        // this.props.isSubscribersSubscribedSlate(false);
+        this.setState({showImportAndDragFile: true})
+    }
+
+    handleImportButton = (toggleValue, event) => {
+        this.setState({showUploadFilePopup: toggleValue})
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        this.prohibitPropagation(event)
     }
 
     handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
@@ -1111,6 +1123,7 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType) {
+        console.log(_elements, 'weasly');
         const { pageLoading, projectSubscriptionDetails } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
@@ -1157,6 +1170,7 @@ class SlateWrapper extends Component {
                                                 />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
+                                    {console.log(element, 'voldemort')}
                                     <ElementContainer
                                         userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
@@ -1728,6 +1742,7 @@ class SlateWrapper extends Component {
                     }
                 </div>
                 <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""} ${isApproved() ? 'hide-scrollbar' : ""}`} onScroll={this.handleScroll}>
+                {console.log(this.props, 'draco')}
                 <KeyboardUpDown>
                     {
                         this.renderSlate(this.props)

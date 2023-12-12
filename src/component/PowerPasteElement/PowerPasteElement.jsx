@@ -14,6 +14,7 @@ import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 import { handleImagePaste } from '../../constants/utility.js';
 import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants.js";
 
 const PowerPasteElement = (props) => {
 
@@ -127,7 +128,19 @@ export const pastePostProcess = (data, props) => {
     // props.onPowerPaste(updatedElements, parentIndex);
     // if valid data has been pasted in to editor once then make editor non-editable
     elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
-    console.log('end111');
+    let ccc=[];
+    let indexOfInsertion = 0;
+    updatedElements.forEach(pastedElement => {
+      const newElement = {
+          "html" : {
+              text: pastedElement.html
+          },
+          ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+          index: indexOfInsertion++
+      }
+      ccc.push(newElement)
+    })
+    console.log('end111', ccc);
   }
 }
 

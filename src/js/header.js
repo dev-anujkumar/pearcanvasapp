@@ -106,6 +106,7 @@ const logoutWithModernOpenAM = async () => {
                     deleteCookie('DISABLE_DELETE_WARNINGS', 'pearson.com');
                     deleteCookie('DISABLE_LIST_ELEMENT_WARNING', 'pearson.com');
                     deleteCookie('DISABLE_DI_CONVERSION_WARNING', 'pearson.com');
+                    deleteCookie('DISABLE_IMPORT_WORD_POPUP', 'pearson.com');
                     removeAllLocal();
                     redirectParent(urlToBeRedirected);
                 }

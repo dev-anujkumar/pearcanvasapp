@@ -649,18 +649,18 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  */
 export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData) => async (dispatch, getState) => {
     let data = []
-    let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
-    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    const currentSlateData = newParentData[config.slateManifestURN]
-    localStorage.setItem('newElement', 1);
-    let _requestData = {
-        "content":data
-    };
-    if (asideData?.type === SHOW_HIDE) {
-        _requestData.sectionType = asideData?.sectionType
-    }
+    // let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
+    // sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    // const parentData = getState().appStore.slateLevelData;
+    // const newParentData = JSON.parse(JSON.stringify(parentData));
+    // const currentSlateData = newParentData[config.slateManifestURN]
+    // localStorage.setItem('newElement', 1);
+    // let _requestData = {
+    //     "content":data
+    // };
+    // if (asideData?.type === SHOW_HIDE) {
+    //     _requestData.sectionType = asideData?.sectionType
+    // }
     let indexOfInsertion = index
     powerPasteData.forEach(pastedElement => {
         const newElement = {
@@ -672,6 +672,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         }
         data.push(newElement)
     });
+    console.log(data, 'zzyyuu');
 
     try {
         const url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${index}`
