@@ -40,6 +40,12 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 usageTypeListData: action.payload.usageTypeList
             }
+        case UPDATE_ASSESSMENT_DATA: 
+        console.log("nish action===>>>>", action)
+            return {
+                ...state,
+                updatedAssessmentData: action.payload
+            }
         case SET_ASSESSMENT_METADATA:
         case SET_INTERACTIVE_METADATA:
             return {
@@ -125,11 +131,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 updatedAssessmentArray: [...updatedAssessmentArray, action.payload]
-            }
-        case UPDATE_ASSESSMENT_DATA: 
-            return {
-                ...state,
-                updatedAssessmentData: action.payload
             }
         default:
             return state

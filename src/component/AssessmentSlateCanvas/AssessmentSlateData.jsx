@@ -17,7 +17,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, FULL_
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
-import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData, fetchAssessmentUpdatedData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
 import moment from 'moment';
@@ -67,6 +67,8 @@ class AssessmentSlateData extends Component {
             }
         }
         document.addEventListener("mousedown", this.handleClickOutside);
+        console.log("nish updateee Assessmentttt---->>>>>>>>>>>")
+        this.props.checkAssessmentUpdatedData();
         if(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName){
             this.handleAssessmentTypeChange(assessmentFormats[LEARNOSITY])
         }
@@ -757,7 +759,7 @@ class AssessmentSlateData extends Component {
         const oldReducerData = this.props.assessmentReducer[assessmentSlateObj.assessmentId]
         const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
         const assessmentLatestData = this.props.assessmentReducer?.updatedAssessmentData?.assessments[0]
-        // console.log("nish assessmentLatestData", assessmentLatestData)
+        console.log("nish assessmentLatestData", assessmentLatestData)
         let assessmentSlate = <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">
@@ -822,7 +824,8 @@ const mapActionToProps = {
     fetchAssessmentLatestVersion:fetchAssessmentVersions,
     fetchLearningTemplates:fetchLearningTemplates,
     setAssessmentFilterParams:setAssessmentFilterParams,
-    setElmPickerData: setElmPickerData
+    setElmPickerData: setElmPickerData,
+    checkAssessmentUpdatedData: fetchAssessmentUpdatedData
 }
 
 export default connect(

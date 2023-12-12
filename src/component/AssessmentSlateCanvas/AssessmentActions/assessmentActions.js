@@ -62,13 +62,37 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
         })
     }
 }
+
+export const fetchAssessmentUpdatedData = () => (dispatch) => {
+    console.log("nish <<<<<<<===== checkAssessmentUpdatedData =====>>>>>>>>>>>>>")
+    let apiUrl = `${config.UPDATE_ASSESSMENT_JAVA_ENDPOINT}/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=true`;
+    try {
+        axios.put(apiUrl, {}, {
+            headers: {
+                'myCloudProxySession': config.myCloudProxySession
+            }
+        }).then(res => {
+            console.log("nish ressss--->>>>", res)
+            dispatch({
+                type: UPDATE_ASSESSMENT_DATA,
+                payload: res?.data?.assessments
+            })
+        }).catch(error => {
+            console.error('Error in getting assessment data', error)
+        });
+    } catch (err) {
+        console.error('Error in getting assessment data', err)
+        return {}
+    }
+}
+
+
 /**
  * This action creator is used to fetch the assessment metadata including status
  */
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
     const workUrn = (type == 'assessment' || type == 'assessmentArray' || type == 'interactive') ? assessmentData.targetId : assessmentItemData.targetItemid;
     if(workUrn){
-        // const url = `${config.UPDATE_ASSESSMENT_JAVA_ENDPOINT}/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=true`
         const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
         return axios.get(url, {
             headers: {
@@ -77,12 +101,7 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                 'myCloudProxySession': config.myCloudProxySession
             }
         }).then(async (res) => {
-            // console.log("nish ressssssssssponseeeeeeeeeeeeeeeee", res)
             if (res && res.data && res.status) {
-                // dispatch({
-                //     type: UPDATE_ASSESSMENT_DATA,
-                //     payload: res.data
-                // })
                 switch (type) {
                     case 'assessment':
                         await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
