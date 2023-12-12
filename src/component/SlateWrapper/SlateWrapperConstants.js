@@ -223,3 +223,6 @@ export const DEFAULT_PLAYBACK_MODE = {
 }
 export const UNITY_TINY = "unitytiny"
 export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny']
+export const PASTE_LIMIT_WARNING_1 = "Cannot paste more than "
+export const PASTE_LIMIT_WARNING_2 = " elements at once."
+export const pasteElementLimit = 50;
