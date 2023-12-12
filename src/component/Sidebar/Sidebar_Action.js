@@ -27,6 +27,7 @@ import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberCon
 import ElementConstants from '../ElementContainer/ElementConstants';
 import { decoToOtherTypeConversion, fetchOldDataAfterConversion } from '../ElementContainer/ElementContainer_Actions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { allowedOutputTypes } from '../SlateWrapper/SlateWrapperConstants.js';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -286,7 +287,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if(config.elementStatus[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
-    if(oldElementData.type === "element-authoredtext" || oldElementData.type === "element-blockfeature" || oldElementData.type === "element-learningobjectives" || oldElementData.type === "element-list"){
+    if(allowedOutputTypes.includes(oldElementData.type)){
         conversionDataToSend["output"] = 'all';
     }
     config.isSavingElement = true
@@ -457,7 +458,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc,
         };
-        if(newElementData.elementType === "element-authoredtext" || newElementData.elementType === "element-blockfeature" || newElementData.elementType === "element-learningobjectives" || newElementData.elementType === "element-list"){
+        if(allowedOutputTypes.includes(newElementData.elementType)){
             activeElementObject.output = res?.data?.output;
         }
         if(newElementData.primaryOption=='primary-blockcode-equation'){

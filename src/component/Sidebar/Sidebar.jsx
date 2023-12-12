@@ -337,7 +337,6 @@ class Sidebar extends Component {
 
     handleOutputTypeValue = (e) => {
         let value = e.target.value;
-        // if(hasReviewerRole() || this.props.projectSubscriptionDetails.isSubscribed) return
         this.props.setBCEMetadata('output', value);
         this.setState({
             outputType: value
@@ -360,7 +359,7 @@ class Sidebar extends Component {
                      >
                         {
                             outputTypeData.map((obj) => {
-                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.id} disabled={hasReviewerRole()} value={obj.value} control={<Radio sx={{color: '#005A70 !important'}}/>} label={<Typography className="radioText">{obj.name}</Typography>} />
+                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.name} disabled={hasReviewerRole()} value={obj.value} control={<Radio sx={!hasReviewerRole() && {color: '#005A70 !important'}}/>} label={<Typography className="radioText">{obj.name}</Typography>} />
                             })
                         }
                      </RadioGroup>
@@ -999,10 +998,11 @@ class Sidebar extends Component {
         }
     }
 
+    //function to trigger save call on change of output type
     handleTextBlur = () => {
-        let activeTextElementNode = document.getElementById(`cypress-${this.props.activeElement.index}`)
-        let activeTextElementBlockquoteNodePara1 = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
-        let activeTextElementBlockquoteNodePara2 = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
+        const activeTextElementNode = document.getElementById(`cypress-${this.props.activeElement.index}`)
+        const activeTextElementBlockquoteNodePara1 = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        const activeTextElementBlockquoteNodePara2 = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
         if (activeTextElementBlockquoteNodePara1 || activeTextElementBlockquoteNodePara2) {
             activeTextElementBlockquoteNodePara1.focus()
             activeTextElementBlockquoteNodePara1.blur()
