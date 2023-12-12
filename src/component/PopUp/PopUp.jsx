@@ -12,7 +12,7 @@ import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_AUTONUM,
-        SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE } from '../SlateWrapper/SlateWrapperConstants';
+        SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE, pasteElementLimit, PASTE_LIMIT_WARNING_1, PASTE_LIMIT_WARNING_2 } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -32,7 +32,8 @@ class PopUp extends React.Component {
             focusedButton: this.setFocus(props),
             deleteWarningPopupCheckbox: false,
             isPowerPasteInvalidContent: false,
-            setAsDecorativePopUpCheckbox: false
+            setAsDecorativePopUpCheckbox: false,
+            isPowerPasteLimitExceeding: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -59,6 +60,9 @@ class PopUp extends React.Component {
 
     checkInvalidPowerPasteContent = (flag) => {
         this.setState({isPowerPasteInvalidContent: flag})
+    }
+    checkPowerPasteLimit = (flag) => {
+        this.setState({isPowerPasteLimitExceeding: flag})
     }
     componentDidMount() {
         const refVal = this
@@ -487,6 +491,8 @@ class PopUp extends React.Component {
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
                     checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
                     isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
+                    checkPowerPasteLimit={this.checkPowerPasteLimit}
+                    isPowerPasteLimitExceeding={this.state.isPowerPasteLimitExceeding}
                 />
             )
         } else if (props.withCheckBox) {
@@ -644,7 +650,8 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
-                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
+                    {this.state.isPowerPasteInvalidContent && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
+                    {this.state.isPowerPasteLimitExceeding && <div className={`${this.state.isPowerPasteInvalidContent && this.state.isPowerPasteLimitExceeding ? 'multiple-warning-messages' : 'unsupContent'}`}>{PASTE_LIMIT_WARNING_1}{pasteElementLimit}{PASTE_LIMIT_WARNING_2}</div>}
                 </>
             )
         } else if (props.LOPopup) {
@@ -814,7 +821,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` :
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent || this.state.isPowerPasteLimitExceeding ? 'wPasteClswithInvalidContent': ''}` :
                             this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` :
                             `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}

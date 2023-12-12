@@ -2802,4 +2802,28 @@ describe('Testing communication channel', () => {
       expect(channelInstance.handleIncommingMessages).toHaveBeenCalled();
       spysendingPermissions.mockClear();
     });
+    test('Test for refreshSlateOnAssessmentUpdate case', () => {
+        const event = {
+            data: {
+                type: "refreshSlateOnAssessmentUpdate",
+                message:{action: "approve", source: "elm", type: "assessment"}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for tocHeirarchy case', () => {
+        const event = {
+            data: {
+                type: "tocHeirarchy",
+                message:{item: {data: "test"}, matterType: "bodymatter"}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    })
 })
