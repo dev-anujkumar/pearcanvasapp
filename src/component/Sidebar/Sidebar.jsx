@@ -1147,7 +1147,7 @@ class Sidebar extends Component {
                 "slateVersionUrn": config.slateManifestURN,
                 "elementParentEntityUrn": config.slateEntityURN
             }
-            if (config.elementStatus[this.props.activeElement.elementId] === "approved") {
+               if (this.props?.activeElement?.status === "approved") {
                 config.savingInProgress = true
             }
             this.props.updateElement(data)

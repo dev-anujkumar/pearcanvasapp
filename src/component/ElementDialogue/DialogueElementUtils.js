@@ -4,7 +4,7 @@ import { STOP_EVENT } from "../../constants/Element_Constants.js";
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const createPSDataForUpdateAPI = (_props, newPSData) => {
-    if (config.elementStatus?.[newPSData.id] === "approved") {
+    if (newPSData?.status === "approved") {
         config.savingInProgress = true;
         /* After versioning, if PS inside Showhide then add sectionType in update call body */
         if(_props?.asideData?.type === ElementConstants.SHOW_HIDE) {
