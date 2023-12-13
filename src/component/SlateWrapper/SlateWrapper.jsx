@@ -619,6 +619,7 @@ class SlateWrapper extends Component {
                     importAndDropPopup
                     toggleNextButton={this.toggleNextButton}
                     togglePopup={this.toggleShowImportAndDropPopup}
+                    handleImportingTipsClick={this.handleImportingTipsClick}
                     // importWordFilePopup
                     // uploadFilePopup={true}
                     // warningHeaderText={headerText}
@@ -661,6 +662,13 @@ class SlateWrapper extends Component {
         if(this.props.importMsgCanvas)
         store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.prohibitPropagation(e);
+    }
+
+    handleImportingTipsClick = () => {
+        this.setState({showImportAndDragFile: false})
+        this.props.showBlocker(false);
+        hideBlocker()
+        store.dispatch({type: 'save-import-message', payload: true});
     }
 
     closeAudioBookDialog =()=>{

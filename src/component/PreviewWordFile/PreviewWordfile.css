@@ -1,0 +1,55 @@
+.original-text{
+    margin-bottom: 8px;
+    color: var(--text-primary, #081E27);
+font-feature-settings: 'clig' off, 'liga' off;
+
+/* typography/h6 */
+font-family: Open Sans;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 120%; /* 21.6px */
+}
+
+.converted-text{
+    margin-bottom: 8px;
+    color: var(--text-primary, #081E27);
+font-feature-settings: 'clig' off, 'liga' off;
+
+/* typography/h6 */
+font-family: Open Sans;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 120%; /* 21.6px */
+}
+
+.tox{
+    border: solid 2px red !important;
+    /* border-top: solid 8px #EFF1F3 !important;
+    border-left: solid 8px #EFF1F3 !important;
+    border-radius: 8px !important; */
+}
+.word-file-import .tox-tinymce {
+    border-radius: 20px !important;
+    border-left: solid 8px #EFF1F3 !important;
+    border-top: solid 8px #EFF1F3 !important;
+    border-bottom: none;
+}
+
+.word-file::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    border-radius: 14px;
+    background-color: transparent !important;
+}
+
+.word-file::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+.word-file::-webkit-scrollbar-thumb {
+    border-radius: 21px !important;
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    background-color: #4e4e4e !important;
+}

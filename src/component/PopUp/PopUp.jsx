@@ -13,11 +13,14 @@ import importPopupSS6 from './Assets/importPopup-ss-6.svg';
 import importPopupSS7 from './Assets/importPopup-ss-7.svg';
 import importPopupSS8 from './Assets/importPopup-ss-8.svg';
 import importPopupSS9 from './Assets/importPopup-ss-9.svg';
-import importPopupSS10 from './Assets/importPopup-ss-10.svg';
 import importPopupSS11 from './Assets/importPopup-ss-11.svg';
 import importPopupSS12 from './Assets/importPopup-ss-12.svg';
 import importPopupSS13 from './Assets/importPopup-ss-13.svg';
 import importPopupSS14 from './Assets/importPopup-ss-14.svg';
+import importPopupSS15 from './Assets/importPopup-ss-15.svg';
+import importPopupSS16 from './Assets/importPopup-ss-16.svg';
+import importPopupSS17 from './Assets/importPopup-ss-17.svg';
+import importPopupSS18 from './Assets/importPopup-ss-18.svg';
 import CloseIcon from './Assets/CloseIcon.svg';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
@@ -496,7 +499,7 @@ class PopUp extends React.Component {
             <div className={disableImportWordWarning ? 'dialog-buttons' : `dialog-buttons-upload-file`}>
                 {!disableImportWordWarning && <div className='importing-tip-container'>
                     <img src={importPopupSS14} height='20px' width='20px' />
-                    <span className='importing-tip-text'>Importing Tips</span>
+                    <span onClick={props.handleImportingTipsClick} className='importing-tip-text'>Importing Tips</span>
                 </div>}
                 <div>
                     <button type='button' id='nextButtonForImport' option={PRIMARY_BUTTON} className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>Next<ArrowForwardIosIcon className='forward-arrow'/></button>
@@ -508,7 +511,7 @@ class PopUp extends React.Component {
         else if(props.previewUploadedFilePopup){
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={PRIMARY_BUTTON} className="save-button" onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}</span>
+                    <span option={PRIMARY_BUTTON} className="import-button-import-word" onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
@@ -804,23 +807,6 @@ Text Highlight</div>
             )
         }
         else if(props.importAndDropPopup){
-            // function preventDefaults (e) {
-            //     e.preventDefault()
-            //     e.stopPropagation()
-            // }
-            // let dropArea = document.getElementById('file-container-111');
-            // ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            //     dropArea.addEventListener(eventName, preventDefaults, false)
-            // })
-            // function handleDrop(e) {
-            //     let dt = e.dataTransfer
-            //     let files = dt.files
-            //     handleFileChangeOnInput(e)
-            // }
-            // dropArea.addEventListener('drop', handleDrop, false)
-            
-
-
             return(
                 <>
                     <div className='import-and-drop-file-heading'>
@@ -828,10 +814,8 @@ Text Highlight</div>
                     </div>
                     <div className='import-and-drop-file-stepper'>
                         <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span>Upload Word File</span></span>
-                        <span className='stepper1'><img src={importPopupSS11} width='75px' height='10px'/></span>
-                        <span className='stepper1'><img src={importPopupSS9} width='23px' height='24px'/><span>Conversion</span></span>
-                        <span className='stepper1'><img src={importPopupSS11} width='75px' height='10px'/></span>
-                        <span className='stepper1'><img src={importPopupSS10} width='23px' height='24px'/><span>Preview</span></span>
+                        <span className='stepper1'><img src={importPopupSS11} width='290px' height='6px'/></span>
+                        <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span>Preview</span></span>
                     </div>
                     {this.state.fileToBeUploaded.name ? <div className='file-description-container'>
                         <span className='file-details-container'>
@@ -907,9 +891,14 @@ Text Highlight</div>
                 <div>
                     <div className='import-and-drop-file-heading'>Import Word File</div>
                     <br/>
-                  <div style={{display: 'flex', columnGap: '355px', justifyContent: 'space', paddingTop: '20px', paddingBottom: '20px'}}>
-                  <div><b>Original Document</b></div>
-                <div><b>Converted-Preview</b></div>
+                    <div className='import-and-drop-file-stepper-preview'>
+                        <span className='stepper1'><img src={importPopupSS15} width='23px' height='24px'/><span>Upload Word File</span></span>
+                        <span className='stepper1'><img src={importPopupSS11} width='239px' height='10px'/></span>
+                        <span className='stepper1'><img src={importPopupSS17} width='23px' height='24px'/><span>Preview</span></span>
+                    </div>
+                <div style={{display: 'flex', columnGap: '355px', justifyContent: 'space', paddingTop: '20px', paddingBottom: '20px'}}>
+                    {/* <div><b>Original - {this?.props?.fileToBeUploaded?.name}</b></div> */}
+                    {/* <div><b>Converted-Preview</b></div> */}
                 </div>
                   <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} /> 
                 </div>
@@ -1025,7 +1014,7 @@ Text Highlight</div>
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.previewUploadedFilePopup ? 'upload-file-popup' : this.props.importAndDropPopup ? 'import-and-drop-file-popup': `modal-content ${assessmentConfirmation} ${assessmentClass}`) } id={isGlossary ? 'popup' : 'popup-visible'}>
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.previewUploadedFilePopup ? 'preview-file-popup' : this.props.importAndDropPopup ? 'import-and-drop-file-popup': `modal-content ${assessmentConfirmation} ${assessmentClass}`) } id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}

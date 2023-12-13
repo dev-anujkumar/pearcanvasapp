@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import mammoth from "mammoth";
 import { pastePostProcess } from "../PowerPasteElement/PowerPasteElement.jsx";
+import './PreviewWordfile.css';
 
 const PreviewWordFile = (props) => {
 
@@ -89,7 +90,7 @@ const PreviewWordFile = (props) => {
                     };
                     mammoth.convertToHtml({arrayBuffer: props.fileToBeUploaded}, options)
                     .then((result) => {
-                        // console.log(result, 'fffttt');
+                        console.log(result, 'fffttt');
                         var html = result.value; // The generated HTML
                         // this.setState({docContent: html});
                         const parser = new DOMParser();
@@ -98,7 +99,7 @@ const PreviewWordFile = (props) => {
                         editor.setContent(html);
                         editor.getBody().setAttribute('contenteditable', false);
                         // tinymce.get('myTextarea2').setContent(html);
-                        pastePostProcess(doc);
+                        pastePostProcess(doc, '', 'importWord');
                     })
                 }
             })
@@ -115,9 +116,15 @@ const PreviewWordFile = (props) => {
       }, [])
 
     return(
-        <div style={{display: 'flex', columnGap: '40px'}}>
-            <p ref={editorRefOrig} id='myTextarea' style={{width: '50%'}} > </p>
-            <p ref={editorRefConverted} id='myTextarea2' style={{width: '50%'}} ></p>
+        <div className="word-file-import" style={{display: 'flex', columnGap: '40px'}}>
+            <div style={{width: '50%'}}>
+                <div className="original-text">Original - {props?.fileToBeUploaded?.name}</div>
+                <p ref={editorRefOrig} id='myTextarea' style={{width: '100%'}} > </p>
+            </div>
+            <div style={{width: '50%'}}>
+                <div className="converted-text">Converted-Preview</div>
+                <p ref={editorRefConverted} id='myTextarea2' style={{width: '100%'}} ></p>
+            </div>
         </div>
     )
 }
