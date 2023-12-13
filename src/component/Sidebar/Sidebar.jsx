@@ -345,6 +345,7 @@ class Sidebar extends Component {
 
      // function to render the output type option inside the sidebar
      outputTypeOption = () => {
+        const isReadOnly =  hasReviewerRole();
         const { activeElementType } = this.state;
         const { asideData } = this.props;
          if (activeElementType === 'element-authoredtext' && asideData?.type !== 'manifestlist') {
@@ -359,7 +360,7 @@ class Sidebar extends Component {
                      >
                         {
                             outputTypeData.map((obj) => {
-                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.name} disabled={hasReviewerRole()} value={obj.value} control={<Radio sx={!hasReviewerRole() && {color: '#005A70 !important'}}/>} label={<Typography className="radioText">{obj.name}</Typography>} />
+                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.name} disabled={isReadOnly} value={obj.value} control={<Radio sx={!isReadOnly && {color: '#005A70 !important'}}/>} label={<Typography className="radioText">{obj.name}</Typography>} />
                             })
                         }
                      </RadioGroup>
@@ -1379,6 +1380,7 @@ const mapStateToProps = state => {
         asideTitleData: state.appStore.asideTitleData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         alfrescoAltLongDescData: state.alfrescoReducer.savedAltLongDesData,
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
     };
 };
 

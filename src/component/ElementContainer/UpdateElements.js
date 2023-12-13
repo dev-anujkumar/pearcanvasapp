@@ -830,7 +830,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 previousElementData.type === ELEMENT_AUTHOREDTEXT) ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType,
             }
-            if(type !== elementTypeConstant.POETRY_STANZA){
+            if(type !== elementTypeConstant.POETRY_STANZA && parentElement.type !== "popup" && parentElement.type !== "citations" && parentElement.type !== "poetry" && asideData?.type !== 'manifestlist'){
                 if (!previousElementData.hasOwnProperty('output') && appStore?.activeElement?.output === "all") {
                     dataToReturn.output = 'all'
                 } else if(previousElementData.id === appStore?.activeElement?.elementId){
