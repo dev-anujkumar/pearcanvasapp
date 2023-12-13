@@ -990,17 +990,9 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
             elementParentEntityUrn: config.slateEntityURN
         }
     }
-        console.log("cccc",dataToReturn);
-//     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {
-//         console.log("popupp");
-//         config.savingInProgress = true
-//     }
-//     return dataToReturn;
-// }
-        if (dataToReturn?.status === "approved") {
-            console.log("popupp");
-            config.savingInProgress = true
-        }
+    if (dataToReturn?.status === "approved") {
+        config.savingInProgress = true
+    }
         return dataToReturn;
     }
 export const handleBlankLineDom = (html,replaceText)=>{
