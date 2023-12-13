@@ -971,6 +971,7 @@ export function updateShowhideElements(element, updatedData, indexs, {isAutoNumb
                 showHideElement.html = updatedData.html; /* For figure/Text */
                 if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
                     showHideElement.elementdata.text = updatedData.elementdata.text;
+                    showHideElement.output = updatedData.output
                 } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
                     /** Updation of AutoNumbered Elements */
                     if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(showHideElement?.figuretype) &&
