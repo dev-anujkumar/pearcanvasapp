@@ -140,53 +140,54 @@ export const pastePostProcess = (data, props, processType) => {
         ccc.push(newElement)
       })
       console.log('end111', ccc);
+      props.onImport(updatedElements, props.fileToBeUploaded.name);
     }
   }
-  // else{
-  //   if (data.node) {
-  //     // if you dont click inside the editor after pasting data first time and try to paste again by
-  //     // pressing ctrl + v then this condition runs again so clearing the previous data of editor
-  //     tinyMCE.activeEditor.setContent('');
+  else{
+    if (data.node) {
+      // if you dont click inside the editor after pasting data first time and try to paste again by
+      // pressing ctrl + v then this condition runs again so clearing the previous data of editor
+      tinyMCE.activeEditor.setContent('');
   
-  //     const childNodes = data.node.children;
-  //     const elements = [];
-  //     createPastedElements(childNodes, elements);
-  //     const updatedElements = []
-  //     let limitedElements, tooManyElements = false
-  //     if (elements.length > pasteElementLimit) {
-  //       limitedElements = elements.slice(0, pasteElementLimit)
-  //       tooManyElements = true
-  //     }
-  //     else {
-  //       limitedElements = elements
-  //     }
-  //     // preparing content that needs to be pasted
-  //     data.node = prepareFinalPasteContent(limitedElements, data.node, props, tooManyElements)
-  //     // preparing content that needs to send in API
-  //     filterSupportedTagAndData(limitedElements, updatedElements)
+      const childNodes = data.node.children;
+      const elements = [];
+      createPastedElements(childNodes, elements);
+      const updatedElements = []
+      let limitedElements, tooManyElements = false
+      if (elements.length > pasteElementLimit) {
+        limitedElements = elements.slice(0, pasteElementLimit)
+        tooManyElements = true
+      }
+      else {
+        limitedElements = elements
+      }
+      // preparing content that needs to be pasted
+      data.node = prepareFinalPasteContent(limitedElements, data.node, props, tooManyElements)
+      // preparing content that needs to send in API
+      filterSupportedTagAndData(limitedElements, updatedElements)
   
-  //     /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
-  //     const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
-  //     createPastedElements(childElements, elements);
-  //   } else if (childNodes.length >= 1) {
-  //     let childElements;
-  //     if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
-  //       childElements = childNodes[0].children;
-  //     } else {
-  //       childElements = childNodes;
-  //     }
-  //     createPastedElements(childElements, elements);
-  //    } */
-  //     const parentIndex = props.index;
-  //     if (updatedElements.length) {
-  //       props.toggleWordPasteProceed(true)
-  //       focusPopupButtons();
-  //     }
-  //     props.onPowerPaste(updatedElements, parentIndex);
-  //     // if valid data has been pasted in to editor once then make editor non-editable
-  //     limitedElements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
-  //   }
-  // }
+      /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
+      const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
+      createPastedElements(childElements, elements);
+    } else if (childNodes.length >= 1) {
+      let childElements;
+      if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
+        childElements = childNodes[0].children;
+      } else {
+        childElements = childNodes;
+      }
+      createPastedElements(childElements, elements);
+     } */
+      const parentIndex = props.index;
+      if (updatedElements.length) {
+        props.toggleWordPasteProceed(true)
+        focusPopupButtons();
+      }
+      props.onPowerPaste(updatedElements, parentIndex);
+      // if valid data has been pasted in to editor once then make editor non-editable
+      limitedElements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
+    }
+  }
 }
 
 /**

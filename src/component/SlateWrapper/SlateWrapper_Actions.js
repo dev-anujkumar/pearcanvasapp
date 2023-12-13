@@ -647,7 +647,7 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  * @param {Array} powerPasteData Elements to be pasted
  * @param {Number} index index of insertion
  */
-export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData) => async (dispatch, getState) => {
+export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData, processType) => async (dispatch, getState) => {
     let data = []
     // let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -760,6 +760,22 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     }
 
+}
+
+export const createPayloadForWordImport = (powerPasteData, index) => {
+    let indexOfInsertion = index;
+    let data = [];
+    powerPasteData.forEach(pastedElement => {
+        const newElement = {
+            "html" : {
+                text: pastedElement.html
+            },
+            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            index: indexOfInsertion++
+        }
+        data.push(newElement)
+    });
+    return data;
 }
 
 

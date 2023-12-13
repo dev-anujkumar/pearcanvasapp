@@ -24,12 +24,6 @@ font-weight: 600;
 line-height: 120%; /* 21.6px */
 }
 
-.tox{
-    border: solid 2px red !important;
-    /* border-top: solid 8px #EFF1F3 !important;
-    border-left: solid 8px #EFF1F3 !important;
-    border-radius: 8px !important; */
-}
 .word-file-import .tox-tinymce {
     border-radius: 20px !important;
     border-left: solid 8px #EFF1F3 !important;

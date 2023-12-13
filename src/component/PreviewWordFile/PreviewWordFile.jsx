@@ -92,14 +92,14 @@ const PreviewWordFile = (props) => {
                     .then((result) => {
                         console.log(result, 'fffttt');
                         var html = result.value; // The generated HTML
-                        // this.setState({docContent: html});
+                        // html = (html).replace(/color="/g, 'style="color:#');
                         const parser = new DOMParser();
                         var doc = parser.parseFromString(html, "text/html")
                         // console.log('Testing array', doc.body.children)
                         editor.setContent(html);
                         editor.getBody().setAttribute('contenteditable', false);
                         // tinymce.get('myTextarea2').setContent(html);
-                        pastePostProcess(doc, '', 'importWord');
+                        pastePostProcess(doc,props, 'importWord');
                     })
                 }
             })

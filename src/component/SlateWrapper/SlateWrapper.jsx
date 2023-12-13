@@ -11,7 +11,7 @@ import { LargeLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, createPayloadForWordImport } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown, SlateLockStatus } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -79,6 +79,7 @@ class SlateWrapper extends Component {
             updateAssessment: false,
             showSubscriberSlatePopup: false,
             fileToBeUploaded: {},
+            importData: [],
         }
         this.isDefaultElementInProgress = false;
     }
@@ -590,6 +591,7 @@ class SlateWrapper extends Component {
                     // importWordFilePopup
                     saveButtonText='Import'
                     previewUploadedFilePopup={true}
+                    onImport={this.onImport}
                     fileToBeUploaded={this.state.fileToBeUploaded}
                     // warningHeaderText={headerText}
                     // lOPopupClass="lo-warning-txt"
@@ -708,6 +710,12 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    onImport = (importData, filename) => {
+        console.log(importData, 'ytr', filename);
+        this.setState({
+            importData: importData,
+        })
+    }
     proceedButtonHandling = (isChecked, toggleValue, e) => {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         if(isSubscriberRole(projectSharingRole, isSubscribed)){
@@ -739,10 +747,16 @@ class SlateWrapper extends Component {
     }
 
     handleImportButton = (toggleValue, event) => {
+        console.log('import button pressed');
+        const {parentUrn} = this.state;
         this.setState({showUploadFilePopup: toggleValue})
         this.props.showBlocker(toggleValue);
         hideBlocker()
-        this.prohibitPropagation(event)
+        this.prohibitPropagation(event);
+        const res = createPayloadForWordImport(this.state.importData, 0)
+        console.log(res, 'bnmz');
+        sendDataToIframe({type: 'proceed for import word file', message: {data: res}})
+        store.dispatch({type: 'save-import-message', payload: toggleValue})
     }
 
     handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {

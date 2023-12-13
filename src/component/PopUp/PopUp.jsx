@@ -822,7 +822,7 @@ Text Highlight</div>
                             <img src={importPopupSS12} width='40px' height='40px'/>
                             <div>{this.state.fileToBeUploaded.name}</div>
                         </span>
-                        <span onClick={()=>{this.setState({fileToBeUploaded: {}}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
+                        <span onClick={()=>{this.setState({fileToBeUploaded: {}, errorFileSize: false, errorFileType: false}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
                     </div> :
                     <div id='file-container-111' className={this.state.errorFileType || this.state.errorFileSize ? 'file-container-error-file-type':'file-container'} onDrop={(event) => this.handleFiledrop(event)} onDragOver={(event) => this.handleDragOver(event)}>
                         <input type='file' accept='.docx' hidden ref={this.inputRef} onChange={(event) => this.handleFileChangeOnInput(event)}/>
@@ -900,7 +900,7 @@ Text Highlight</div>
                     {/* <div><b>Original - {this?.props?.fileToBeUploaded?.name}</b></div> */}
                     {/* <div><b>Converted-Preview</b></div> */}
                 </div>
-                  <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} /> 
+                  <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} onImport={this.props.onImport}/> 
                 </div>
             )
         }
