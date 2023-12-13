@@ -846,18 +846,6 @@ export const getDesignType = (classList) => {
     }
 }
 
-/**Function to retun class to apply based on selectedOption & focused Button for AlfrescoPopup Component 'Select' button*/
-export const getPrimaryButtonClass = (selectedOption, focusedButton) => {
-    if(selectedOption !== '' && focusedButton === PRIMARY_BUTTON) {
-        return "active-button-class primary";
-    } else if(selectedOption !== '' && focusedButton !== PRIMARY_BUTTON) {
-        return "active-button-class";
-    } else if(selectedOption === '' && focusedButton === PRIMARY_BUTTON) {
-        return "primary";
-    } else {
-        return null;
-    }
-}
 
 // function to get cookie value by key name
 export const getCookieByName = (name) => {
