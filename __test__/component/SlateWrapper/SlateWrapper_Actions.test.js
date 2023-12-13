@@ -48,7 +48,7 @@ describe('Tests Slate Wrapper Actions', () => {
             appStore: {
                 slateLevelData: createstoreWithFigure.slateLevelData,
                 // elementsTag: {},
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -86,7 +86,7 @@ describe('Tests Slate Wrapper Actions', () => {
         initialState2 = {
             appStore: {
                 slateLevelData: createstoreWithFigure.slateLevelData,
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -106,7 +106,7 @@ describe('Tests Slate Wrapper Actions', () => {
             appStore: {
                 slateLevelData: SlatetDataOpenerDefault,
                 // elementsTag: {},
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {}
             },
@@ -146,7 +146,7 @@ describe('Tests Slate Wrapper Actions', () => {
             appStore: {
                 slateLevelData: SlatetDataOpenerDefault,
                 // elementsTag: {},
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {}
             },
@@ -762,7 +762,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 appStore: {
                     slateLevelData: createstoreWithFigure.slateLevelData,
                     // elementsTag: {},
-                    activeElement: {},
+                    activeElement: {output: 'all'},
                     splittedElementIndex: 0,
                     pageNumberData: [{
                         id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6er"
@@ -800,7 +800,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 appStore: {
                     slateLevelData: createstoreWithFigure.slateLevelData,
                     // elementsTag: {},
-                    activeElement: {},
+                    activeElement: {output: 'all'},
                     splittedElementIndex: 0,
                     pageNumberData: {}
                 }
@@ -828,7 +828,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 appStore: {
                     slateLevelData: slateLevelData1,
                     // elementsTag: {},
-                    activeElement: {},
+                    activeElement: {output: 'all'},
                     splittedElementIndex: 0,
                     pageNumberData: [{ id: "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7" }]
                 }
@@ -856,7 +856,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 appStore: {
                     slateLevelData: slateLevelData1,
                     // elementsTag: {},
-                    activeElement: {},
+                    activeElement: {output: 'all'},
                     splittedElementIndex: 0,
                     pageNumberData: {}
                 }
@@ -891,6 +891,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
                     }
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -915,6 +916,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
                     }
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -939,6 +941,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
                     }
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -963,6 +966,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
                     }
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -977,6 +981,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -998,6 +1003,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1019,6 +1025,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1040,6 +1047,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1068,6 +1076,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1096,6 +1105,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1124,6 +1134,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1152,6 +1163,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1178,6 +1190,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1205,6 +1218,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1232,6 +1246,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1259,6 +1274,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1286,6 +1302,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1307,6 +1324,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1328,6 +1346,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1354,6 +1373,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1375,6 +1395,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1396,6 +1417,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1417,6 +1439,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1445,6 +1468,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1473,6 +1497,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1501,6 +1526,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1529,6 +1555,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1556,6 +1583,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1583,6 +1611,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1610,6 +1639,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1631,6 +1661,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1656,6 +1687,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1679,6 +1711,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1700,6 +1733,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1728,6 +1762,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1756,6 +1791,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1783,6 +1819,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1810,6 +1847,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1837,6 +1875,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1864,6 +1903,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1885,6 +1925,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -1906,6 +1947,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -2027,6 +2069,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -2148,6 +2191,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -2269,6 +2313,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -2390,6 +2435,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -2651,6 +2697,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -2912,6 +2959,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -3033,6 +3081,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -3154,6 +3203,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -3275,6 +3325,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -3396,6 +3447,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -3657,6 +3709,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -3918,6 +3971,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -4039,6 +4093,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -4160,6 +4215,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -4281,6 +4337,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -4542,6 +4599,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -4806,7 +4864,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 appStore: {
                     slateLevelData: slateLevelData2,
                     // elementsTag: {},
-                    activeElement: {},
+                    activeElement: {output: 'all'},
                     splittedElementIndex: 0,
                     pageNumberData: {}
                 }
@@ -4896,7 +4954,7 @@ describe('Tests Slate Wrapper Actions', () => {
         initialState = {
             appStore: {
                 slateLevelData: slateLevelData2,
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: [],
                 allElemPageData: []
@@ -4919,7 +4977,7 @@ describe('Tests Slate Wrapper Actions', () => {
         initialState = {
             appStore: {
                 slateLevelData: slateLevelData2,
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: [],
                 allElemPageData: []
@@ -5018,7 +5076,7 @@ describe('Tests Slate Wrapper Actions', () => {
         initialState3 = {
             appStore: {
                 slateLevelData: slateMockData,
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -5060,7 +5118,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         status: 'wip'
                     }
                 },
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -5098,7 +5156,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         status: 'wip'
                     }
                 },
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -5139,7 +5197,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         status: 'wip'
                     }
                 },
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -5180,7 +5238,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         status: 'wip'
                     }
                 },
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -5220,7 +5278,7 @@ describe('Tests Slate Wrapper Actions', () => {
                         status: 'wip'
                     }
                 },
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {},
                 popupSlateData: {
@@ -5289,7 +5347,7 @@ describe('Tests Slate Wrapper Actions', () => {
         initialState3 = {
             appStore: {
                 slateLevelData: slateMockData,
-                activeElement: {},
+                activeElement: {output: 'all'},
                 splittedElementIndex: 0,
                 pageNumberData: {
                     'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f': {
@@ -5318,6 +5376,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5343,6 +5402,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5372,6 +5432,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5399,6 +5460,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5428,6 +5490,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5456,6 +5519,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5484,6 +5548,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5523,6 +5588,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5583,6 +5649,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5648,6 +5715,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: { isAutoNumberingEnabled: true }
@@ -5701,6 +5769,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: { isAutoNumberingEnabled: true }
@@ -5748,6 +5817,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: { isAutoNumberingEnabled: true }
@@ -5791,6 +5861,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: { isAutoNumberingEnabled: true },
@@ -5838,6 +5909,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: { isAutoNumberingEnabled: true },
@@ -5884,6 +5956,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: { isAutoNumberingEnabled: true },
@@ -5914,6 +5987,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5935,6 +6009,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -5970,6 +6045,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -6005,6 +6081,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -6044,6 +6121,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -6068,6 +6146,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
@@ -6087,6 +6166,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: { isAutoNumberingEnabled: true }
         }
@@ -6115,6 +6195,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
         }
@@ -6143,6 +6224,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
         }
@@ -6171,6 +6253,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
         }
@@ -6199,6 +6282,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty
         }
@@ -6227,6 +6311,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty
         }
@@ -6266,6 +6351,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
             tcmReducer: { tcmSnapshot: ["78", "9"] },
@@ -6316,6 +6402,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6373,6 +6460,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6426,6 +6514,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6474,6 +6563,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {},
@@ -6510,6 +6600,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6565,6 +6656,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6624,6 +6716,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6680,6 +6773,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6736,6 +6830,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6792,6 +6887,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -6848,6 +6944,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -6892,6 +6989,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -6938,6 +7036,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -6985,6 +7084,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -7039,6 +7139,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -7088,6 +7189,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -7144,6 +7246,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -7194,6 +7297,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -7223,6 +7327,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7253,6 +7358,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7283,6 +7389,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7322,6 +7429,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7360,6 +7468,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7390,6 +7499,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7420,6 +7530,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7450,6 +7561,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7480,6 +7592,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
         }
         store3 = mockStore(() => initialState3);
@@ -7524,6 +7637,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
             tcmReducer: { tcmSnapshot: ["78", "9"] }
@@ -7560,6 +7674,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             selectionReducer: {},
             tcmReducer: { tcmSnapshot: ["78", "9"] },
@@ -7593,6 +7708,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
@@ -7646,6 +7762,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
@@ -7694,6 +7811,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 },
+                activeElement: {output: 'all'}
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
         }
