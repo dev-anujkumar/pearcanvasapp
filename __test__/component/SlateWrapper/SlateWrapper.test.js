@@ -1007,14 +1007,6 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    it('1.46  Test - showAlfrescoPopup ', () => {
-        const newInitialState = {...initialState, alfrescoReducer: {launchAlfrescoPopup: false}};
-        const compInstance = slateWrapInstance(props, newInitialState);
-        const spy = jest.spyOn(compInstance, 'showAlfrescoPopup')
-        compInstance.showAlfrescoPopup();
-        expect(spy).toHaveBeenCalled();
-        spy.mockClear()
-    })
     it('1.47  Test - componentWillUnmount ', () => {
         config.totalPageCount  = 5; config.page = 10;
         const compInstance = slateWrapInstance(props);

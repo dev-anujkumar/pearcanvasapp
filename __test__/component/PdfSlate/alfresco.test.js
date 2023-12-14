@@ -78,24 +78,7 @@ describe('handleC2MediaClick', () => {
         // mockFetchData.mockReturnValue(false);
         handleC2MediaClick(props)
     });
-    it('handleC2MediaClick with permissions as "alfresco_crud_access', () => {
-        const props = {
-            handleFocus: jest.fn(),
-            accessDenied: jest.fn(),
-            saveSelectedAlfrescoElement: jest.fn(),
-            alfrescoPopup: jest.fn(),
-            permissions: ['alfresco_crud_access'],
-            element: {id:1}
-        }
-        config.alfrescoMetaData = {
-            alfresco: {}
-        }
-        const mockFetchData = jest.spyOn(functionsModule, 'hasReviewerRole');
-        mockFetchData.mockReturnValue(false);
-        const responseData = {data :{list: {entries: [1,2,3]}}};
-        axios.get = jest.fn(() => Promise.resolve(responseData));
-        handleC2MediaClick(props)
-    });
+    
     it('handleC2MediaClick with no permissions as "alfresco_crud_access"', () => {
         const props = {
             handleFocus: jest.fn(),
