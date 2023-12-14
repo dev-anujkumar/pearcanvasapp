@@ -135,9 +135,7 @@ const _Toolbar = props => {
         }
         const slateLabel = props.slateTocLabel[config.slateType] ?? SLATES_DEFAULT_LABEL[config.slateType]
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        console.log('projectSubscriptionDetails.projectSharingRole', props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed);
         const isOwnerSubscribedSlate = isOwnerRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
-        console.log('isOwnerSubscribedSlate', isOwnerSubscribedSlate)
         const approveToWipStatus = await props.slateVersioning(updateRCSlate, isOwnerSubscribedSlate)
         if(approveToWipStatus) {
         showNotificationOnCanvas(`${slateLabel} ${MOVED_TO_WIP}`)

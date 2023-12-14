@@ -1827,7 +1827,6 @@ export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (d
             // if projectrole is Owner and container is subscriber, the delay the
             // versioning flow for 5 sec to retain visual cue in TOC and Canvas
             if (isOwnerSubscribedContainer) {
-                console.log('=++++++')
                 setTimeout(() => {
                     triggerVersioningFlow()
                 }, 5000);
