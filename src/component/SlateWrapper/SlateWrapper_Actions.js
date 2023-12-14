@@ -1811,7 +1811,7 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
     });
 }
 
-export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
+export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (dispatch, getState) => {
     // Api to change container status from approved to WIP
     const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?isRCEnabled=${updateRCSlate}`;
     return axios.post(versioningStatus, null, {
@@ -1824,9 +1824,16 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
             // Making condition true for triggering slate level save api
             localStorage.setItem('isChangeInSlate', 'true');
             localStorage.setItem('slateNewVersion', 'true');
-
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
+            // if projectrole is Owner and container is subscriber, the delay the
+            // versioning flow for 5 sec to retain visual cue in TOC and Canvas
+            if (isOwnerSubscribedContainer) {
+                console.log('=++++++')
+                setTimeout(() => {
+                    triggerVersioningFlow()
+                }, 5000);
+            } else {
+                triggerVersioningFlow()
+            }
             return true
         }
     }).catch(error => {
@@ -1834,4 +1841,9 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
         console.log("error", error)
         return false
     })
+}
+
+const triggerVersioningFlow = () => {
+    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
+    sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
 }

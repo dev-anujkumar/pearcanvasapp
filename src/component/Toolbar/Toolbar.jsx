@@ -12,7 +12,7 @@ import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, 
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
-import { hasReviewerRole, isSlateLocked, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
+import { hasReviewerRole, isOwnerRole, isSlateLocked, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LockIcon from '@mui/icons-material/Lock';
@@ -135,7 +135,10 @@ const _Toolbar = props => {
         }
         const slateLabel = props.slateTocLabel[config.slateType] ?? SLATES_DEFAULT_LABEL[config.slateType]
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        const approveToWipStatus = await props.slateVersioning(updateRCSlate)
+        console.log('projectSubscriptionDetails.projectSharingRole', props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed);
+        const isOwnerSubscribedSlate = isOwnerRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
+        console.log('isOwnerSubscribedSlate', isOwnerSubscribedSlate)
+        const approveToWipStatus = await props.slateVersioning(updateRCSlate, isOwnerSubscribedSlate)
         if(approveToWipStatus) {
         showNotificationOnCanvas(`${slateLabel} ${MOVED_TO_WIP}`)
         changeAudioNarration()
@@ -298,8 +301,8 @@ const mapActionToProps = (dispatch) =>{
         checkSlateLock: (payloadObj) => {
             dispatch(checkSlateLock(payloadObj))
         },
-        slateVersioning: (payloadObj) => {
-            dispatch(slateVersioning(payloadObj))
+        slateVersioning: (payloadObj, isOwnerSubscribedContainer) => {
+            dispatch(slateVersioning(payloadObj, isOwnerSubscribedContainer))
         },
         toggleUnlockSlateAction: (payloadObj) => {
             dispatch(toggleUnlockSlateAction(payloadObj))
