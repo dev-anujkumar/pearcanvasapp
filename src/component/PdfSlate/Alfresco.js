@@ -59,7 +59,6 @@ const handleSiteOptionsDropdown = (alfrescoPath, id, props, currentAsset) => {
     let payloadObj = {
         launchAlfrescoPopup: true,
         alfrescoPath: alfrescoPath,
-        alfrescoListOption: response.data.list.entries,
         id,
         currentAsset
     }
