@@ -26,7 +26,7 @@ class AssetPopoverSearch extends React.Component {
     /**
      * Close the popup
      */
-    apoSearchClose = () => {
+    apoSearchClose = (e, calledFromSave=false) => {
         let originalText, assetPopoverSpan
         assetPopoverSpan = document.getElementById(ASSET_POPOVER_ATTACHER);
         if (assetPopoverSpan) {
@@ -37,6 +37,9 @@ class AssetPopoverSearch extends React.Component {
         sendDataToIframe({ 'type': 'enableToc', 'message': {} });
         this.props.showBlocker(false);
         disableHeader(false);
+        if(!calledFromSave){
+            customEvent.trigger('assetPopoverCancel');
+        }
     }
 
     /**
@@ -63,7 +66,7 @@ class AssetPopoverSearch extends React.Component {
             assetPopoverDomId = apoObject.assetId;
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' +
                                 elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
-            this.apoSearchClose();
+            this.apoSearchClose({}, true);
             setTimeout(() => {
                 let currentElem = document.getElementById(tinymce.activeEditor.id);
                 if (tinymce.$(currentElem).find('blockquote').length) {
@@ -86,7 +89,7 @@ class AssetPopoverSearch extends React.Component {
                         domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' +
                                             assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     });
-                    this.apoSearchClose();
+                    this.apoSearchClose({}, true);
                     setTimeout(() => {
                         customEvent.trigger('assetPopoverSave');
                     }, 100);
