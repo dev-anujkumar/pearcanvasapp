@@ -263,8 +263,10 @@ function CommunicationChannel(WrappedComponent) {
                 case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
-                    if (messageType === 'projectPreview') {
-                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION)
+                    if (messageType === 'slatePreview') {
+                        triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
+                    } else {
+                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION);
                     }
                     if (!config.savingInProgress) {
                         this.props.publishContent(messageType);
