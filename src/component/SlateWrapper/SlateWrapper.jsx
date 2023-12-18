@@ -52,6 +52,7 @@ import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helpe
 import { approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 import { toggleUnlockSlateAction } from '../Toolbar/Toolbar_Actions'
+import { Alert, AlertTitle, Snackbar } from '@mui/material';
 
 let random = guid();
 
@@ -79,7 +80,7 @@ class SlateWrapper extends Component {
             updateAssessment: false,
             showSubscriberSlatePopup: false,
             fileToBeUploaded: {},
-            importData: [],
+            importData: {},
         }
         this.isDefaultElementInProgress = false;
     }
@@ -605,6 +606,25 @@ class SlateWrapper extends Component {
         return null
     }
 
+    // showImportAlertMessage = () => {
+    //     if(this?.props?.importedWordFileDetails && this?.props?.importedWordFileDetails?.importStatus)
+    //     {
+    //         return (
+    //             <Snackbar open={this?.props?.importedWordFileDetails?.importStatus === 'in-progress' ? true : false}
+    //                 autoHideDuration={3000} onClose={() => this.handleSnackclose()} className='import-alert'
+    //                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+    //                     <Alert severity="error" className='alert'>
+    //                         <AlertTitle ><strong>Word file import in progress...</strong></AlertTitle>
+    //                         <div className='alert-message-content'>
+    //                             {this?.props?.slateData[config?.slateManifestURN]?.importData?.processedElement} of {this?.props?.slateData[config?.slateManifestURN]?.importData?.totalElementCount} elements converted</div>
+    //                     </Alert>
+    //             </Snackbar>
+    //         )
+    //     }
+
+    //     return null
+    // }
+
     showImportAndDropPopup = () => {
         const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
         if (this.state.showImportAndDragFile || (disableImportWordWarning && this.props.importMsgCanvas)) {
@@ -657,9 +677,9 @@ class SlateWrapper extends Component {
     }
 
     toggleShowImportAndDropPopup = (toggleValue, e) => {
-        this.setState({showImportAndDragFile: false})
         this.props.showBlocker(toggleValue);
         hideBlocker()
+        this.setState({showImportAndDragFile: false})
         // this.setState({showUploadFilePopup: true});
         if(this.props.importMsgCanvas)
         store.dispatch({type: 'save-import-message', payload: toggleValue})
@@ -704,18 +724,23 @@ class SlateWrapper extends Component {
     }
 
     togglePopupForUploadFilePopup = (toggleValue, event) => {
-        this.setState({showUploadFilePopup: toggleValue})
         this.props.showBlocker(toggleValue);
-        hideBlocker()
-        this.prohibitPropagation(event)
+        hideBlocker();
+        this.setState({showUploadFilePopup: toggleValue});
+        event && this.prohibitPropagation(event)
     }
 
     onImport = (importData, filename) => {
         console.log(importData, 'ytr', filename);
+        const res = createPayloadForWordImport(importData, 0)
         this.setState({
-            importData: importData,
+            importData: {
+                data: res,
+                filename: filename.substring(0, filename.lastIndexOf('.docx'))
+            },
         })
     }
+
     proceedButtonHandling = (isChecked, toggleValue, e) => {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         if(isSubscriberRole(projectSharingRole, isSubscribed)){
@@ -748,17 +773,29 @@ class SlateWrapper extends Component {
 
     handleImportButton = (toggleValue, event) => {
         console.log('import button pressed');
-        const {parentUrn} = this.state;
-        this.setState({showUploadFilePopup: toggleValue})
+        // const {parentUrn} = this.state;
         this.props.showBlocker(toggleValue);
         hideBlocker()
         this.prohibitPropagation(event);
-        const res = createPayloadForWordImport(this.state.importData, 0)
-        console.log(res, 'bnmz');
-        sendDataToIframe({type: 'proceed for import word file', message: {data: res}})
+        this.setState({showUploadFilePopup: toggleValue})
+        // const res = createPayloadForWordImport(this.state.importData.data, 0)
+        // console.log(res, 'bnmz');
+        sendDataToIframe({type: 'proceed for import word file', message: this.state.importData})
         store.dispatch({type: 'save-import-message', payload: toggleValue})
     }
 
+    // handleSnackclose = () => {
+    //     let interval;
+    //     console.log("qqqqqmmmm");
+    //     // if(this?.props?.importedWordFileDetails?.importStatus === 'in-progress'){
+    //         interval = setInterval(()=> {
+    //             this.props.fetchSlateData(config?.slateManifestURN, config?.slateEntityURN, config?.page, '', "");
+    //         }, 3 * 1000)
+    //     // }      
+    //     if(this?.props?.importedWordFileDetails?.importStatus === 'completed'){
+    //         clearInterval(interval)
+    //     }
+    // }
     handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
         this.props.showBlocker(wordPastePopup);
         if (wordPastePopup) {
@@ -1809,7 +1846,8 @@ class SlateWrapper extends Component {
                 {this.showImportWordFilePopup()}
                 {this.showUploadFilePopup()}
                 {this.showImportAndDropPopup()}
-                {console.log(this.props.importMsgCanvas, 'zzxx')}
+                {console.log(this.props.slateData[config.slateManifestURN], 'tavern')}
+                {/* {this.showImportAlertMessage()} */}
             </React.Fragment>
         );
     }
@@ -1872,7 +1910,8 @@ const mapStateToProps = state => {
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
-        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle
+        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
+        importedWordFileDetails: state.appStore.importedWordFileDetails
     };
 };
 

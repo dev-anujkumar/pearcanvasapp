@@ -58,6 +58,7 @@ class PopUp extends React.Component {
             errorFileType: false,
             errorFileSize: false,
             importwordFileCheckbox: false,
+            enableImport: false,
         };
         this.handleChange = this.handleChange.bind(this);
         // this.handleFileChange = this.handleFileChange.bind(this);
@@ -511,7 +512,7 @@ class PopUp extends React.Component {
         else if(props.previewUploadedFilePopup){
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={PRIMARY_BUTTON} className="import-button-import-word" onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
+                    <span option={PRIMARY_BUTTON} className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
@@ -570,13 +571,12 @@ class PopUp extends React.Component {
     }
 
     checkValidation = (file) => {
-        console.log('qwertz', file, Math.round((file.size / 1024)));
         if(!file.name.endsWith(".docx"))
         {
             this.setState({errorFileType: true});
             return;
         }
-        if( (Math.round((file.size / 1024))) > 10*1024)
+        if( (Math.round((file.size / 1048576)).toFixed(2)) > 10)
         {
             this.setState({errorFileSize: true});
             return;
@@ -633,6 +633,9 @@ class PopUp extends React.Component {
     * @param {event}
     */
 
+    enableImportButton = () => {
+        this.setState({enableImport: true});
+    }
     renderDialogText = (props) => {
         const {docContent} = this.state;
         if(props.alfrescoExpansionPopup){
@@ -818,17 +821,24 @@ Text Highlight</div>
                         <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span>Preview</span></span>
                     </div>
                     {this.state.fileToBeUploaded.name ? <div className='file-description-container'>
-                        <span className='file-details-container'>
-                            <img src={importPopupSS12} width='40px' height='40px'/>
-                            <div>{this.state.fileToBeUploaded.name}</div>
-                        </span>
-                        <span onClick={()=>{this.setState({fileToBeUploaded: {}, errorFileSize: false, errorFileType: false}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
+                        <div className='file-description-sub-container'>
+                            <span className='file-details-container'>
+                                <img src={importPopupSS12} width='40px' height='40px'/>
+                                <div>{this.state.fileToBeUploaded.name}</div>
+                            </span>
+                            <span onClick={()=>{this.setState({fileToBeUploaded: {}, errorFileSize: false, errorFileType: false}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
+                        </div>
+                        <div className='file-metadata-container'>
+                            <span>{this.state?.fileToBeUploaded?.size}KB</span>
+                            {/* <span>.</span> */}
+                            <span>Completed</span>
+                        </div>
                     </div> :
                     <div id='file-container-111' className={this.state.errorFileType || this.state.errorFileSize ? 'file-container-error-file-type':'file-container'} onDrop={(event) => this.handleFiledrop(event)} onDragOver={(event) => this.handleDragOver(event)}>
                         <input type='file' accept='.docx' hidden ref={this.inputRef} onChange={(event) => this.handleFileChangeOnInput(event)}/>
                         <span>{this.state.errorFileSize || this.state.errorFileType ? <img src={importPopupSS13} width='40px' height='40px'/> : <img src={importPopupSS12} width='40px' height='40px'/>}</span>
                         <span className='file-container-text-1'><span className={this.state.errorFileType || this.state.errorFileSize ? 'file-container-text-link-error' :'file-container-text-link'} onClick={() => this?.inputRef?.current?.click()}><u>Click to Upload</u></span> or drag and drop</span>
-                        {this.state.errorFileSize ? <span className='file-container-text-2-error'>File size exceeds 10 MB limit.</span> : (this.state.errorFileType ? <span className='file-container-text-2-error'>Unsupported file.</span> : <span className='file-container-text-2'>Microsoft Word doc or docx (max. 10MB)</span>)}
+                        {this.state.errorFileSize ? <span className='file-container-text-2-error'>File size exceeds 10 MB limit.</span> : (this.state.errorFileType ? <span className='file-container-text-2-error'>Unsupported file.</span> : <span className='file-container-text-2'>Microsoft Word docx (max. 10MB)</span>)}
                     </div>}
                 </>
             )
@@ -900,7 +910,7 @@ Text Highlight</div>
                     {/* <div><b>Original - {this?.props?.fileToBeUploaded?.name}</b></div> */}
                     {/* <div><b>Converted-Preview</b></div> */}
                 </div>
-                  <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} onImport={this.props.onImport}/> 
+                  <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} onImport={this.props.onImport} enableImportButton={this.enableImportButton} togglePopup={props.togglePopup}/> 
                 </div>
             )
         }

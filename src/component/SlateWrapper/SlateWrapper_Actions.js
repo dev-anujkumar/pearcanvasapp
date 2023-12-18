@@ -649,18 +649,18 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  */
 export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData, processType) => async (dispatch, getState) => {
     let data = []
-    // let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
-    // sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-    // const parentData = getState().appStore.slateLevelData;
-    // const newParentData = JSON.parse(JSON.stringify(parentData));
-    // const currentSlateData = newParentData[config.slateManifestURN]
-    // localStorage.setItem('newElement', 1);
-    // let _requestData = {
-    //     "content":data
-    // };
-    // if (asideData?.type === SHOW_HIDE) {
-    //     _requestData.sectionType = asideData?.sectionType
-    // }
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    const currentSlateData = newParentData[config.slateManifestURN]
+    localStorage.setItem('newElement', 1);
+    let _requestData = {
+        "content":data
+    };
+    if (asideData?.type === SHOW_HIDE) {
+        _requestData.sectionType = asideData?.sectionType
+    }
     let indexOfInsertion = index
     powerPasteData.forEach(pastedElement => {
         const newElement = {
