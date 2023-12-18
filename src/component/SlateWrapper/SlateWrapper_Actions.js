@@ -1824,12 +1824,12 @@ export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (d
             // Making condition true for triggering slate level save api
             localStorage.setItem('isChangeInSlate', 'true');
             localStorage.setItem('slateNewVersion', 'true');
-            // if projectrole is Owner and container is subscriber, the delay the
+            // if projectrole is Owner and container is subscribed, then delay the
             // versioning flow for 5 sec to retain visual cue in TOC and Canvas
             if (isOwnerSubscribedContainer) {
                 setTimeout(() => {
                     triggerVersioningFlow()
-                }, 5000);
+                }, config.VERSIONING_DELAY_INTERVAL);
             } else {
                 triggerVersioningFlow()
             }
