@@ -10,13 +10,15 @@ describe('createPSDataForUpdateAPI', () => {
             inputSubType: "NA",
             subtype: "workedexample",
             index: "0-0-0",
+            status: "approved"
         }
         let result = Utils.createPSDataForUpdateAPI(container);
         expect(result);
     });
 it('Testing createPSDataForUpdateAPI function IF case', () => {
     let elementDiscussion = {
-        id: "1"
+        id: "1",
+        status:"approved"
     }
     config.elementStatus= {[elementDiscussion.id]: "approved"}
     let props = {
@@ -39,7 +41,9 @@ it('Testing createPSDataForUpdateAPI function IF case', () => {
         "index": "", 
         "inputSubType": "NA", 
         "inputType": "ELEMENT_DIALOGUE", 
+        "sectionType": undefined,
         "slateVersionUrn": undefined,
+        "status": "approved"
     }
     let finalData = Utils.createPSDataForUpdateAPI(props, elementDiscussion);
     expect(finalData).toEqual(result)

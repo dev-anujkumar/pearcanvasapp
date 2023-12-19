@@ -51,7 +51,8 @@ describe('Testing Element Discussion Utils functions ', () => {
     })
     it('Testing createDiscussionForUpdateAPI function -- else case', () => {
         let elementDiscussion = {
-            id: "1"
+            id: "1",
+            status: "approved"
         }
         config.elementStatus= {[elementDiscussion.id]: "approved"}
         let props = {
@@ -70,7 +71,8 @@ describe('Testing Element Discussion Utils functions ', () => {
             "index": "", 
             "inputSubType": "NA", 
             "inputType": "DISCUSSION", 
-            "slateVersionUrn": undefined
+            "slateVersionUrn": undefined,
+            "status":"approved"
         }
         let format = createDiscussionForUpdateAPI(props, elementDiscussion);
         expect(format).toEqual(result)

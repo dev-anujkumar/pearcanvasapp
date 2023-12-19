@@ -16,7 +16,7 @@ import PopUp from '../PopUp';
 import OpenerElement from '../OpenerElement';
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus,
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit,
          updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
          prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle, getAlfrescoMetadataForAsset } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
@@ -154,34 +154,7 @@ class ElementContainer extends Component {
         })
     }
 
-    getElementVersionStatus = (element, elementStatus) => {
-        if (element && element?.id && element.id.match(/work/g) && elementStatus && !elementStatus.hasOwnProperty(element.id)) {
-            // call element status API
-            this.props.getElementStatus(element.id, this.props.index)
-        }
-        else if (element && element.type === "popup") {
-            if (element.popupdata.hasOwnProperty(FORMATTED_TITLE)) {
-                !elementStatus[element.popupdata[FORMATTED_TITLE].id] && this.props.getElementStatus(element.popupdata[FORMATTED_TITLE].id, this.props.index)
-            }
-            if (element.popupdata.hasOwnProperty(FORMATTED_SUBTITLE)) {
-                !elementStatus[element.popupdata[FORMATTED_SUBTITLE].id] && this.props.getElementStatus(element.popupdata[FORMATTED_SUBTITLE].id, this.props.index)
-            }
-            if (element.popupdata.hasOwnProperty("postertextobject")) {
-                !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
-            }
-        }
-        else if (element && (element.type === "poetry" || element.type === "citations")) {
-            if (element.contents && element.contents.hasOwnProperty(FORMATTED_TITLE)) {
-                !elementStatus[element.contents[FORMATTED_TITLE].id] && this.props.getElementStatus(element.contents[FORMATTED_TITLE].id, this.props.index)
-            }
-            if (element.contents && element.contents.hasOwnProperty("creditsarray")) {
-                !elementStatus[element.contents["creditsarray"][0].id] && this.props.getElementStatus(element.contents["creditsarray"][0].id, this.props.index)
-            }
-        }
-    }
-
     componentDidMount() {
-        this.getElementVersionStatus(this.props.element, config.elementStatus)
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
@@ -2386,7 +2359,6 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         openAssetPopoverPopUp={this.openAssetPopoverPopUp}
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
-                        getElementStatus={this.props.getElementStatus}
                         userRole={this.props.userRole}
                         elementSepratorProps={elementSepratorProps}
                         onClickCapture={this.props.onClickCapture}
@@ -3440,9 +3412,6 @@ const mapDispatchToProps = (dispatch) => {
         },
         handleTCMData: () => {
             dispatch(handleTCMData())
-        },
-        getElementStatus: (elementWorkId, index) => {
-            dispatch(getElementStatus(elementWorkId, index))
         },
         openElmAssessmentPortal: (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
