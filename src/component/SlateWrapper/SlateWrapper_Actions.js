@@ -1842,6 +1842,9 @@ export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (d
     })
 }
 
+/**
+ * Refresh TOC and Canvas when creating newversion of a container
+ */
 const triggerVersioningFlow = () => {
     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
     sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
