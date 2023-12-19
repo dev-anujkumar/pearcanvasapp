@@ -956,7 +956,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     }
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
-    // WE is approved and user focuses on another sub-element immediately updating a sub-element    
+    // WE is approved and user focuses on another sub-element immediately updating a sub-element
     if (dataToReturn?.status === "approved" && asideData?.element?.subtype === 'workedexample' && index) {
         const iList = index?.toString()?.split("-") || [];
         // index length is 2 then it will be direct child of WE otherwise child of SB
