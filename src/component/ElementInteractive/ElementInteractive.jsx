@@ -811,7 +811,7 @@ class Interactive extends React.Component {
                         interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
                         interactiveData['path'] = responseData['data']["thumbnail"]['src'];
                         interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
-                        interactiveData['title'] = responseData['data']["title"];
+                        interactiveData['title'] = responseData['data']["title"] || citeTdxObj?.singleAssessmentID?.name
                     }
                 })
             // }
@@ -836,7 +836,7 @@ class Interactive extends React.Component {
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
                 itemParentID:citeTdxObj.id,
-                interactiveTitle:citeTdxObj.title
+                interactiveTitle: interactiveData['title'] || citeTdxObj?.title,
                })
 
                that.props.updateFigureData(figureData, that.props.index, that.props.elementId, this.props.asideData, ()=>{

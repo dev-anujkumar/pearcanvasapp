@@ -263,8 +263,10 @@ function CommunicationChannel(WrappedComponent) {
                 case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
-                    if (messageType === 'projectPreview') {
-                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION)
+                    if (messageType === 'slatePreview') {
+                        triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
+                    } else {
+                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION);
                     }
                     if (!config.savingInProgress) {
                         this.props.publishContent(messageType);
@@ -480,6 +482,8 @@ function CommunicationChannel(WrappedComponent) {
                     if(message?.labels)
                     this.props.setTocSlateLabel(message.labels)
                     break;
+                case 'tocHeirarchy':
+                    this.props.currentNodeAncestorData(message.item, message.matterType);
                 case 'lockUserDetailsFromCount' :
                     this.props.saveLockDetails(message.lockInfo)
                     break;

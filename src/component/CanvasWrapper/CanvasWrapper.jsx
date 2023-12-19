@@ -35,7 +35,7 @@ import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
-import {getAllSlatesData} from '../../js/getAllSlatesData'
+import {getAllSlatesData, currentNodeAncestorData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
@@ -397,6 +397,7 @@ export default connect(
         isSubscribersSubscribedSlate,
         setTocSlateLabel,
         saveLockDetails,
-        saveSelectedAlfrescoElement
+        saveSelectedAlfrescoElement,
+        currentNodeAncestorData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

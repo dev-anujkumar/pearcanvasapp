@@ -411,4 +411,28 @@ describe('Testing FigureUserInterface component', () => {
         let result = prepareFinalPasteContent(elementsData,pasteElementNodeData,props);
         // expect(result).toBe(undefined);
     })
+    it('Test-17.1 prepareFinalPasteContent function', () => {
+        let props = {
+            index: 1,
+            onPowerPaste: jest.fn(),
+            toggleWordPasteProceed: jest.fn(),
+            isPowerPasteInvalidContent: true,
+            checkInvalidPowerPasteContent: jest.fn(),
+            isPowerPasteLimitExceeding: false,
+            checkPowerPasteLimit: jest.fn()
+        }
+        prepareFinalPasteContent(elementsData,pasteElementNodeData,props,true);
+    })
+    it('Test-17.2 prepareFinalPasteContent function', () => {
+        let props = {
+            index: 1,
+            onPowerPaste: jest.fn(),
+            toggleWordPasteProceed: jest.fn(),
+            isPowerPasteInvalidContent: true,
+            checkInvalidPowerPasteContent: jest.fn(),
+            isPowerPasteLimitExceeding: true,
+            checkPowerPasteLimit: jest.fn()
+        }
+        prepareFinalPasteContent(elementsData,pasteElementNodeData,props,true);
+    })
 });

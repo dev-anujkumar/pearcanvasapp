@@ -1125,9 +1125,9 @@ export class TinyMceEditor extends Component {
                             (abbrElm.attributes['id'] && abbrElm.attributes['id'].nodeValue) || abbrElm.parentNode.attributes['id'].nodeValue;
                 let elementId = this.props.element && this.props.element.id
                 let pageId = (abbrElm.attributes['data-uri'] && abbrElm.attributes['data-uri'].nodeValue) || abbrElm.parentNode.attributes['data-uri'].nodeValue;
-
-                sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId,
-                                 page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
+                let parentSlate = {};
+                parentSlate = this.props.popupParentSlateData?.isPopupSlate ? { manifestUrn: this.props.popupParentSlateData?.parentSlateId, entityUrn: this.props.popupParentSlateData?.parentSlateEntityUrn } : { manifestUrn: config.slateManifestURN, entityUrn: config.slateEntityURN };
+                sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole(), parentSlate: parentSlate } });
             }
         }
         else if (e.target.className === "blockquoteTextCredit" || e.target?.className?.includes('blockquoteTextCredit')) {
@@ -3556,9 +3556,9 @@ export class TinyMceEditor extends Component {
         } else {
             selection.parentNode.removeChild(selection);
         }
-
-        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new',
-        element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
+        let parentSlate = {};
+        parentSlate = this.props.popupParentSlateData?.isPopupSlate ? { manifestUrn: this.props.popupParentSlateData?.parentSlateId, entityUrn: this.props.popupParentSlateData?.parentSlateEntityUrn } : { manifestUrn: config.slateManifestURN, entityUrn: config.slateEntityURN };
+        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true, parentSlate: parentSlate } });
     }
 
 
@@ -4841,7 +4841,8 @@ const mapStateToProps = (state) => {
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
         spellCheckToggle: state.toolbarReducer.spellCheckToggle,
-        caretPosition: state.appStore.caretPosition
+        caretPosition: state.appStore.caretPosition,
+        popupParentSlateData: state.autoNumberReducer?.popupParentSlateData
     }
 }
 

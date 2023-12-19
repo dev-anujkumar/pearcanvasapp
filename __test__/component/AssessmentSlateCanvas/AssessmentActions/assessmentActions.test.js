@@ -1059,6 +1059,36 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
+        it('Test-7.7---updateAssessmentId', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentId');
+            let result = assessment_Actions.updateAssessmentId({data:"test"});
+            expect(result.type).toEqual('UPDATE_ASSESSMENT_ID');
+            expect(result.payload).toEqual({data:"test"});
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-7.8---assessmentReloadConfirmation', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'assessmentReloadConfirmation');
+            let result = assessment_Actions.assessmentReloadConfirmation({data:"test"});
+            expect(result.type).toEqual('ASSESSMENT_RELOAD_CONFIRMATION');
+            expect(result.payload).toEqual({data:"test"});
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-7.9---saveUpdatedAssessmentArray', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'saveUpdatedAssessmentArray');
+            let result = assessment_Actions.saveUpdatedAssessmentArray({data:"test"});
+            expect(result.type).toEqual('ASESSMENT_UPDATE_DATA_ARRAY');
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-7.10---saveAutoUpdateData', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'saveAutoUpdateData');
+            let result = assessment_Actions.saveAutoUpdateData({data:"test"});
+            expect(result.type).toEqual('SAVE_AUTO_UPDATE_ID');
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
     })
     describe('Test-8, Elm - Action', () => {
         it('Test-8.1, Test action for saving item data to reducer', () => {
