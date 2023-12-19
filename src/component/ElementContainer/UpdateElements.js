@@ -993,8 +993,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
     if (dataToReturn?.status === "approved") {
         config.savingInProgress = true
     }
-        return dataToReturn;
-    }
+    return dataToReturn;
+}
 export const handleBlankLineDom = (html,replaceText)=>{
     if(typeof html === 'string' && typeof replaceText === 'string') {
         if(replaceText){
