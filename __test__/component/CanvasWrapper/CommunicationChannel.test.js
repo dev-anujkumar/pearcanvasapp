@@ -1549,7 +1549,7 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        it('Test for selectedAlfrescoAssetData case - isEditor - if block', () => {
+        it('Test for selectedCatToolData case - isEditor - if block', () => {
             let initialState3 = {
                 ...initialState,
                 alfrescoReducer: {
@@ -1561,7 +1561,7 @@ describe('Testing communication channel', () => {
             let channelInstance = wrapper.find('CommunicationWrapper').instance();
             let event = {
                 data: {
-                    type: "selectedAlfrescoAssetData",
+                    type: "selectedCatToolData",
                     message: {
                         isEditor: true,
                     }
@@ -1572,10 +1572,10 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        it('Test for selectedAlfrescoAssetData case - NarrativeAudio - if block', () => {
+        it('Test for selectedCatToolData case - NarrativeAudio - if block', () => {
             let event = {
                 data: {
-                    type: "selectedAlfrescoAssetData",
+                    type: "selectedCatToolData",
                     message: {
                         calledFrom: "NarrativeAudio",
                         asset: [{
@@ -1594,10 +1594,10 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        it('Test for selectedAlfrescoAssetData case - NarrativeAudio - handleAudioData - else block', () => {
+        it('Test for selectedCatToolData case - NarrativeAudio - handleAudioData - else block', () => {
             let event = {
                 data: {
-                    type: "selectedAlfrescoAssetData",
+                    type: "selectedCatToolData",
                     message: {
                         isEditor:true,
                         calledFrom: "NarrativeAudio",
@@ -1626,10 +1626,10 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        it('Test for selectedAlfrescoAssetData case - GlossaryImage - if block', () => {
+        it('Test for selectedCatToolData case - GlossaryImage - if block', () => {
             let event = {
                 data: {
-                    type: "selectedAlfrescoAssetData",
+                    type: "selectedCatToolData",
                     message: {
                         calledFrom: "GlossaryImage",
                         asset: {
@@ -1658,10 +1658,10 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        it('Test for selectedAlfrescoAssetData case - GlossaryImage - handleImageData - else block', () => {
+        it('Test for selectedCatToolData case - GlossaryImage - handleImageData - else block', () => {
             let event = {
                 data: {
-                    type: "selectedAlfrescoAssetData",
+                    type: "selectedCatToolData",
                     message: {
                         calledFrom: "GlossaryImage",
                         asset: {
@@ -2253,10 +2253,10 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
-    it('Test for selectedAlfrescoAssetData case - NarrativeAudio - smartLinkType', () => {
+    it('Test for selectedCatToolData case - NarrativeAudio - smartLinkType', () => {
         let event = {
             data: {
-                type: "selectedAlfrescoAssetData",
+                type: "selectedCatToolData",
                 message: {
                     calledFrom: "NarrativeAudio",
                     asset: {
