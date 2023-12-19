@@ -60,6 +60,7 @@ export const REFRESH_MESSAGE='refresh on Cypress from Cypress_plus'
 export const DISABLE_DELETE_WARNINGS = 'disableDeleteWarnings';
 export const DISABLE_LIST_ELEMENT_WARNING = 'disableListElementWarning';
 export const DISABLE_DI_CONVERSION_WARNING = 'disableDIConversionWarning';
+export const DISABLE_IMPORT_WORD_POPUP = 'disableImportWordWarning';
 
 //set learnosity data
 export const SET_LEARNOSITY_CONTENT = 'setLearnosityContent'

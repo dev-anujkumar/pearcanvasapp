@@ -219,7 +219,7 @@ export class CanvasWrapper extends Component {
                                         navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement}
                                         tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker}
                                         isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked}
-                                        closeUndoTimer = {this.props.closeUndoTimer}/>
+                                        closeUndoTimer = {this.props.closeUndoTimer} importWordFilePopup={this.props.importWordFilePopup} showCanvasBlocker={this.props.showCanvasBlocker}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}

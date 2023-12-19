@@ -345,3 +345,23 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 .ownerSlateBackGround{
     background-color: #E7F7F6 !important;
 }
+
+.alert{
+    color: #4D003C !important;
+    background-color: #FFEBFC !important;
+    width: 320px;
+    box-sizing: border-box;
+}
+
+.alert .MuiTypography-body1{
+    color: #4D003C !important;  
+    font-size: 16px !important;  
+}
+
+.import-alert .MuiAlert-icon{
+    color:  #9C007C !important;
+}
+
+.alert-message-content{
+    font-size: 14px;
+}

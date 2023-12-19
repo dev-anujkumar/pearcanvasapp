@@ -4,10 +4,28 @@
 
 import React from 'react';
 import '../../styles/PopUp/PopUp.css';
+import importPopupSS1 from './Assets/importPopup-ss-1.svg';
+import importPopupSS2 from './Assets/importPopup-ss-2.svg';
+import importPopupSS3 from './Assets/importPopup-ss-3.svg';
+import importPopupSS4 from './Assets/importPopup-ss-4.svg';
+import importPopupSS5 from './Assets/importPopup-ss-5.svg';
+import importPopupSS6 from './Assets/importPopup-ss-6.svg';
+import importPopupSS7 from './Assets/importPopup-ss-7.svg';
+import importPopupSS8 from './Assets/importPopup-ss-8.svg';
+import importPopupSS9 from './Assets/importPopup-ss-9.svg';
+import importPopupSS11 from './Assets/importPopup-ss-11.svg';
+import importPopupSS12 from './Assets/importPopup-ss-12.svg';
+import importPopupSS13 from './Assets/importPopup-ss-13.svg';
+import importPopupSS14 from './Assets/importPopup-ss-14.svg';
+import importPopupSS15 from './Assets/importPopup-ss-15.svg';
+import importPopupSS16 from './Assets/importPopup-ss-16.svg';
+import importPopupSS17 from './Assets/importPopup-ss-17.svg';
+import importPopupSS18 from './Assets/importPopup-ss-18.svg';
+import CloseIcon from './Assets/CloseIcon.svg';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
-import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
+import PowerPasteElement, { pastePostProcess, pastePreProcess } from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
@@ -15,10 +33,13 @@ import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_
         SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE, pasteElementLimit, PASTE_LIMIT_WARNING_1, PASTE_LIMIT_WARNING_2 } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
-import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe, getCookieByName } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
-import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
-
+import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING, DISABLE_IMPORT_WORD_POPUP } from '../../constants/IFrameMessageTypes';
+import mammoth from 'mammoth';
+import tinymce from 'tinymce';
+import PreviewWordFile from '../PreviewWordFile/PreviewWordFile.jsx';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -27,17 +48,27 @@ class PopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            docContent: '',
             wordPasteProceed: false,
             isChecked: false,
             focusedButton: this.setFocus(props),
             deleteWarningPopupCheckbox: false,
             isPowerPasteInvalidContent: false,
             setAsDecorativePopUpCheckbox: false,
-            isPowerPasteLimitExceeding: false
+            isPowerPasteLimitExceeding: false,
+            fileToBeUploaded: this.props.fileToBeUploaded || {},
+            errorFileType: false,
+            errorFileSize: false,
+            importwordFileCheckbox: false,
+            enableImport: false,
         };
         this.handleChange = this.handleChange.bind(this);
+        // this.handleFileChange = this.handleFileChange.bind(this);
+        this.handleFileChangeOnInput = this.handleFileChangeOnInput.bind(this);
+        this.handlebutton = this.handlebutton.bind(this);
         this.modelRef = React.createRef();
         this.contentRef = React.createRef();
+        this.inputRef = React.createRef();
         this.wordPastePopupTextAreaRef = React.createRef();
         this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
     }
@@ -86,6 +117,9 @@ class PopUp extends React.Component {
         if (this.props.WordPastePopup) {
             document.addEventListener('mousedown', this.handleClickOutside);
         }
+        // if (this.props.importWordFilePopup) {
+        //     document.addEventListener('mousedown', this.handleClickOutside);
+        // }
     }
 
     componentWillUnmount() {
@@ -261,10 +295,20 @@ class PopUp extends React.Component {
         if (this.state.setAsDecorativePopUpCheckbox) sendDataToIframe({ 'type': DISABLE_DI_CONVERSION_WARNING, 'message': { disableDIConversionWarning: true } });
     }
 
+    handleCheckBoxOnStartImporting = () => {
+        if (this.state.importwordFileCheckbox) sendDataToIframe({ 'type': DISABLE_IMPORT_WORD_POPUP, 'message': { disableImportWordWarning: true } });
+    }
+
     // When "Don't ask me again" checkbox of decorative popup is checked
     handleSetAsDecorativeWarningPopupCheckbox = (event) => {
         this.setState({
             setAsDecorativePopUpCheckbox: event?.target?.checked
+        });
+    }
+
+    handleImportWordFilePopupCheckbox = (event) => {
+        this.setState({
+            importwordFileCheckbox: event?.target?.checked
         });
     }
 
@@ -456,7 +500,42 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-
+        if(props.importWordFilePopup){
+            return(
+            <div className='import-word-checkbox-message'>
+                <div className='checkbox-and-text'>
+                    <input className='import-popup-checkbox' type="checkbox" value={this.state.importwordFileCheckbox} checked={this.state.importwordFileCheckbox} onChange={(event) => this.handleImportWordFilePopupCheckbox(event)} />
+                    <p className='import-warning-checkbox-message'>Don’t show me again</p>
+                </div>
+                <div className={`dialog-buttons`}>
+                    <span option={PRIMARY_BUTTON} className="start-import-button" onClick={(e) => {props.proceed(false, e);this.handleCheckBoxOnStartImporting();}}>Start Importing</span>
+                </div>
+            </div>
+            )
+        }
+        if(props.importAndDropPopup){
+            const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
+            return(
+            <div className={disableImportWordWarning ? 'dialog-buttons' : `dialog-buttons-upload-file`}>
+                {!disableImportWordWarning && <div className='importing-tip-container'>
+                    <img src={importPopupSS14} height='20px' width='20px' />
+                    <span onClick={props.handleImportingTipsClick} className='importing-tip-text'>Importing Tips</span>
+                </div>}
+                <div>
+                    <button type='button' id='nextButtonForImport' option={PRIMARY_BUTTON} className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>Next<ArrowForwardIosIcon className='forward-arrow'/></button>
+                    <span className="cancel-button-import" onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                </div>
+            </div>
+            )
+        }
+        else if(props.previewUploadedFilePopup){
+            return (
+                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                    <span option={PRIMARY_BUTTON} className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -475,7 +554,8 @@ class PopUp extends React.Component {
             props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation ||
             props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup ||
             props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup ||
-            props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle) {
+            props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle || props.importWordFilePopup || 
+            props.previewUploadedFilePopup || props.importAndDropPopup) {
             return null
         }
         else if (props.assessmentAndInteractive) {
@@ -517,12 +597,48 @@ class PopUp extends React.Component {
         event.stopPropagation();
     }
 
+    checkValidation = (file) => {
+        if(!file.name.endsWith(".docx"))
+        {
+            this.setState({errorFileType: true});
+            return;
+        }
+        if( (Math.round((file.size / 1048576)).toFixed(2)) > 10)
+        {
+            this.setState({errorFileSize: true});
+            return;
+        }
+        this.setState({fileToBeUploaded: file});
+    }
+
+    handleFiledrop = (event) => {
+        event.preventDefault();
+        if(event.dataTransfer.files[0]){
+            const file = event.dataTransfer.files[0];
+            this.checkValidation(file);
+        }
+       
+    }
+
+    handleDragOver = (event) => {
+        event.preventDefault();
+    }
+
+    handleFileChangeOnInput = (event) => {
+        console.log('qwerty1');
+        const file = event.target.files[0];
+        if (file) {
+            this.setState({errorFileSize: false, errorFileType: false});
+            this.checkValidation(file);
+        };
+        }
+
     renderCloseSymbol = (props) => {
         if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation ||
             props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup ||
             props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate ||
             props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex ||
-            props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle) {
+            props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle|| props.importAndDropPopup || props.previewUploadedFilePopup) {
             return null
         }
         else {
@@ -532,12 +648,27 @@ class PopUp extends React.Component {
         }
     }
 
+    handlebutton = () => {
+        // console.log(tinymce.getContent(), '111aaa');
+        console.log(tinymce.get('myTextarea2').getContent(), '222bbb');
+        // console.log(tinymce.get('myTextarea2').BeforeSetContent(), '222ccc');
+        // console.log(tinymce.get('myTextarea2').befores(), '222ddd');
+        console.log('ppplll', tinymce?.execCommand('mceInsertContent', false, 'aaaaa'));
+        console.log('ppplll', tinymce?.execCommand('Paste', false, 'lllllllllll'));
+        // const lok = document?.getElementById('tinymce').children
+        console.log(lok, 'loku');
+        // tinymce.get('myTextarea').editorCommands.commands.exec.paste()
+    }
     /**
     * @description - This function is responsible for rendering the Dialog text in the popup.
     * @param {event}
     */
 
+    enableImportButton = () => {
+        this.setState({enableImport: true});
+    }
     renderDialogText = (props) => {
+        const {docContent} = this.state;
         if(props.alfrescoExpansionPopup){
             let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
                   <div className='imageContainer'>
@@ -700,6 +831,111 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if(props.importAndDropPopup){
+            return(
+                <>
+                    <div className='import-and-drop-file-heading'>
+                        {props.dialogText}
+                    </div>
+                    <div className='import-and-drop-file-stepper'>
+                        <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span>Upload Word File</span></span>
+                        <span className='stepper1'><img src={importPopupSS11} width='290px' height='6px'/></span>
+                        <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span>Preview</span></span>
+                    </div>
+                    {this.state.fileToBeUploaded.name ? <div className='file-description-container'>
+                        <div className='file-description-sub-container'>
+                            <span className='file-details-container'>
+                                <img src={importPopupSS12} width='40px' height='40px'/>
+                                <div>{this.state.fileToBeUploaded.name}</div>
+                            </span>
+                            <span onClick={()=>{this.setState({fileToBeUploaded: {}, errorFileSize: false, errorFileType: false}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
+                        </div>
+                        <div className='file-metadata-container'>
+                            <span>{this.state?.fileToBeUploaded?.size}KB</span>
+                            {/* <span>.</span> */}
+                            <span>Completed</span>
+                        </div>
+                    </div> :
+                    <div id='file-container-111' className={this.state.errorFileType || this.state.errorFileSize ? 'file-container-error-file-type':'file-container'} onDrop={(event) => this.handleFiledrop(event)} onDragOver={(event) => this.handleDragOver(event)}>
+                        <input type='file' accept='.docx' hidden ref={this.inputRef} onChange={(event) => this.handleFileChangeOnInput(event)}/>
+                        <span>{this.state.errorFileSize || this.state.errorFileType ? <img src={importPopupSS13} width='40px' height='40px'/> : <img src={importPopupSS12} width='40px' height='40px'/>}</span>
+                        <span className='file-container-text-1'><span className={this.state.errorFileType || this.state.errorFileSize ? 'file-container-text-link-error' :'file-container-text-link'} onClick={() => this?.inputRef?.current?.click()}><u>Click to Upload</u></span> or drag and drop</span>
+                        {this.state.errorFileSize ? <span className='file-container-text-2-error'>File size exceeds 10 MB limit.</span> : (this.state.errorFileType ? <span className='file-container-text-2-error'>Unsupported file.</span> : <span className='file-container-text-2'>Microsoft Word docx (max. 10MB)</span>)}
+                    </div>}
+                </>
+            )
+        }
+        else if (props.importWordFilePopup) {
+            return (
+              <>
+                {/* <div className='loPopupHeader'>{`${props.dialogText}`}</div> */}
+                <div className="import-wordpopup-heading">
+                  {props.dialogText}
+                  <br />
+                  <br />
+                </div>
+                <div className="import-wordpopup-content">
+                  <div className='import-wordpopup-content-description'>
+                            Make your Word file imports into Cypress a breeze by following these simple tips. Proper preparation ensures your document maintains its formatting and structure.
+                        </div>
+                        <div className='import-wordpopup-content-title'>
+                            <strong>Choose Word Format</strong>: We support Word documents in .doc and .docx.
+                        </div>
+                        <div className='import-wordpopup-content-title-2'>
+                            <strong>Style with Text Formatting</strong>: Consistently apply text styles, such as headings and Normal, for accurate import results.
+                        </div>
+                        <div className='import-wordpopup-content-title-3'>
+                            <img src={importPopupSS1} width='70px' height='47px' />
+                            <img src={importPopupSS2} width='70px' height='47px' />
+                            <img src={importPopupSS3} width='70px' height='47px' />
+                            <img src={importPopupSS4} width='70px' height='47px' />
+                        </div>
+                        <div className='import-wordpopup-content-title-4'>
+                            <strong>Simplicity is Key:</strong> Remember that Cypress doesn't support complex elements like images, charts, smart art, shapes, or nested tables. Stick to supported elements for smooth imports.
+                        </div>
+                        <div className='import-wordpopup-content-title-3'>
+                            <img src={importPopupSS5} width='48px' height='62px' />
+                            <img src={importPopupSS6} width='68px' height='62px' />
+                            <img src={importPopupSS7} width='84px' height='62px' />
+                        </div>
+                  {/* <h4>DOCX File Reader</h4>
+                  <input
+                    type="file"
+                    onChange={(event) => this.handleFileChange(event)}
+                    accept=".doc,.docx"
+                  />
+                  <div
+                    style={{
+                    //   height: "300px",
+                      border: "solid red 1px",
+                      overflowY: "auto",
+                    }}
+                    dangerouslySetInnerHTML={{ __html: this?.state?.docContent }}
+                  ></div> */}
+                  {/* <div id='myTextarea'></div> */}
+                </div>
+              </>
+            );
+        }
+        else if(props.previewUploadedFilePopup){
+            console.log(props, 'azkaban');
+            return (                
+                <div>
+                    <div className='import-and-drop-file-heading'>Import Word File</div>
+                    <br/>
+                    <div className='import-and-drop-file-stepper-preview'>
+                        <span className='stepper1'><img src={importPopupSS15} width='23px' height='24px'/><span>Upload Word File</span></span>
+                        <span className='stepper1'><img src={importPopupSS11} width='239px' height='10px'/></span>
+                        <span className='stepper1'><img src={importPopupSS17} width='23px' height='24px'/><span>Preview</span></span>
+                    </div>
+                <div style={{display: 'flex', columnGap: '355px', justifyContent: 'space', paddingTop: '20px', paddingBottom: '20px'}}>
+                    {/* <div><b>Original - {this?.props?.fileToBeUploaded?.name}</b></div> */}
+                    {/* <div><b>Converted-Preview</b></div> */}
+                </div>
+                  <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} onImport={this.props.onImport} enableImportButton={this.enableImportButton} togglePopup={props.togglePopup}/> 
+                </div>
+            )
+        }
         else if (props.isCurrentSlate === 'subscriber') {
             return (
                 <>
@@ -746,7 +982,8 @@ class PopUp extends React.Component {
         if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive ||
             props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation ||
             props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate ||
-            props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.unlockSlateToggle) {
+            props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.unlockSlateToggle || 
+            props.importWordFilePopup) {
             return null
         }
         else {
@@ -823,7 +1060,7 @@ class PopUp extends React.Component {
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
                             <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent || this.state.isPowerPasteLimitExceeding ? 'wPasteClswithInvalidContent': ''}` :
                             this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` :
-                            `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
+                            `modal-content alfresco-short-popup`  : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.previewUploadedFilePopup ? 'preview-file-popup' : this.props.importAndDropPopup ? 'import-and-drop-file-popup': `modal-content ${assessmentConfirmation} ${assessmentClass}`)} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}
@@ -850,7 +1087,7 @@ PopUp.defaultProps = {
     placeholder: "Type...",
     rows: "5",
     active: true,
-    saveButtonText: "Save",
+    saveButtonText: "Import",
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",

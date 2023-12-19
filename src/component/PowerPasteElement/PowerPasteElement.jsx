@@ -13,8 +13,9 @@ import "tinymce/plugins/powerpaste/js/wordimport.js"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 import { handleImagePaste } from '../../constants/utility.js';
-import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
+import { UnsupportedContentString, UnsupportedContentStringForImportWordFile } from '../../constants/ToolTip_Constant.js';
 import { pasteElementLimit } from '../SlateWrapper/SlateWrapperConstants.js';
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants.js";
 
 const PowerPasteElement = (props) => {
 
@@ -80,6 +81,7 @@ export default PowerPasteElement
  * @param {*} data Raw Clipboard data
  */
 export const pastePreProcess = (data) => {
+  console.log(data, 'gggxxx');
   if (!["msoffice"].includes(data.source)) {
     data.content = ""
   }
@@ -90,8 +92,61 @@ export const pastePreProcess = (data) => {
  * @param {Object} data processed Clipboard data
  * @param {Object} props Powerpaste component props
  */
-export const pastePostProcess = (data, props) => {
+export const pastePostProcess = (data, props, processType) => {
+  if(processType==='importWord'){
+    if (data.body) {
+      // if you dont click inside the editor after pasting data first time and try to paste again by
+      // pressing ctrl + v then this condition runs again so clearing the previous data of editor
+      tinymce.get('myTextarea2').setContent('')
+  
+      const childNodes = data.body.children;
+      const elements = [];
+      createPastedElements(childNodes, elements);
+      const updatedElements = []
+      //preparing content that needs to be pasted
+      data.body = prepareFinalPasteContent(elements, data.body, props, '', processType)
+      //preparing content that needs to send in API
+      filterSupportedTagAndData(elements,updatedElements)
+  
+       /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
+        const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
+        createPastedElements(childElements, elements);
+      } else if (childNodes.length >= 1) {
+        let childElements;
+        if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
+          childElements = childNodes[0].children;
+        } else {
+          childElements = childNodes;
+        }
+        createPastedElements(childElements, elements);
+      } */
+      // const parentIndex = props.index;
+      if (updatedElements.length) {
+        // props.toggleWordPasteProceed(true)
+        // focusPopupButtons();
+      }
+      // props.onPowerPaste(updatedElements, parentIndex);
+      // if valid data has been pasted in to editor once then make editor non-editable
+      elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
+      let ccc=[];
+      let indexOfInsertion = 0;
+      updatedElements.forEach(pastedElement => {
+        const newElement = {
+            "html" : {
+                text: pastedElement.html
+            },
+            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            index: indexOfInsertion++
+        }
+        ccc.push(newElement)
+      })
+      console.log('end111', ccc);
+      props.onImport(updatedElements, props.fileToBeUploaded.name);
+    }
+  }
+  else{
   if (data.node) {
+    
     // if you dont click inside the editor after pasting data first time and try to paste again by
     // pressing ctrl + v then this condition runs again so clearing the previous data of editor
     tinyMCE.activeEditor.setContent('');
@@ -134,6 +189,7 @@ export const pastePostProcess = (data, props) => {
     // if valid data has been pasted in to editor once then make editor non-editable
     limitedElements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
+  }
 }
 
 /**
@@ -144,7 +200,7 @@ export const pastePostProcess = (data, props) => {
  * @param {Object} props
  * @returns Content that needs to be pasted on text-editor
  */
-export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements) => {
+export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements,processType) => {
   let isPreviousUnsupportedContent = false
   const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
   const allSupUnsupChildNodes = nodeData.childNodes
@@ -161,26 +217,47 @@ export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements
       isPreviousUnsupportedContent = false
       let elementOuterHtml = element?.outerHTML
       if(element?.outerHTML?.match(/<img ([\w\W]+?)>/g)) {
+        if(!processType){
+          if(!props.isPowerPasteInvalidContent) {
+            props.checkInvalidPowerPasteContent(true)
+          }
+        elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
+        }
+        else{
+          elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentStringForImportWordFile)
+        }
+      }
+      contentToPaste += elementOuterHtml
+    }
+    else if(!spacesAndNewLineFormatArray.includes(element?.data) && processType) {
+      // if(!processType){
+      //   if(!props.isPowerPasteInvalidContent) {
+      //     props.checkInvalidPowerPasteContent(true)
+      //   }
+      // }
+      if(!isPreviousUnsupportedContent) {
+        isPreviousUnsupportedContent = true
+        contentToPaste += UnsupportedContentStringForImportWordFile
+      }
+    } 
+    else if(!spacesAndNewLineFormatArray.includes(element?.data) && !tooManyElements) {
         if(!props.isPowerPasteInvalidContent) {
           props.checkInvalidPowerPasteContent(true)
         }
-        elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
-      }
-      contentToPaste += elementOuterHtml
-    } else if(!spacesAndNewLineFormatArray.includes(element?.data) && !tooManyElements) {
-      if(!props.isPowerPasteInvalidContent) {
-        props.checkInvalidPowerPasteContent(true)
-      }
       if(!isPreviousUnsupportedContent) {
         isPreviousUnsupportedContent = true
-      contentToPaste += UnsupportedContentString
+        contentToPaste += UnsupportedContentString
       }
     }
   }
-
-  const updatedPasteContent = document.createElement('div');
+  let updatedPasteContent;
+  if(!processType)
+    updatedPasteContent = document.createElement('div');
+  else
+    updatedPasteContent = document.createElement('body');
   updatedPasteContent.innerHTML = contentToPaste;
-
+  if(processType)
+  tinymce?.get('myTextarea2')?.setContent(updatedPasteContent.innerHTML)
   return updatedPasteContent
 }
 

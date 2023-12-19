@@ -72,6 +72,7 @@ import {
  */
 
 const INITIAL_STATE = {
+    importMsgCanvas: false,
     slateLevelData: {},
     // elementsTag: {},
     activeElement: {},
@@ -137,7 +138,8 @@ const INITIAL_STATE = {
     getRequiredSlateData: {},
     approvedSlatePopupstatus: false,
     decoToOtherTypes: false,
-    conversionData: {}
+    conversionData: {},
+    importedWordFileDetails: {}
 };
 
 const INITIAL_ACTION = {
@@ -456,6 +458,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 conversionData: action.payload
+            }
+        case 'save-import-message':
+            return {
+                ...state,
+                importMsgCanvas: action.payload
+            }
+        case 'SET_IMPORTED_WORD FILE_DETAILS':
+            return {
+                ...state,
+                importedWordFileDetails: action.payload
             }
         default:
             return state;

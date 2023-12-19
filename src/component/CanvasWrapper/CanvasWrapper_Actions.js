@@ -638,6 +638,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
+        console.log(slateData.data[manifestURN], 'dobby');
+        // if(slateData?.data[manifestURN]?.importData && slateData?.data[manifestURN]?.importData?.importStatus==='in-progress')
+        // dispatch({
+        //     type: 'SET_IMPORTED_WORD FILE_DETAILS',
+        //     payload: slateData?.data[manifestURN]?.importData})
         // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
          /* Slate tag issue */
