@@ -1052,7 +1052,7 @@ PopUp.defaultProps = {
     placeholder: "Type...",
     rows: "5",
     active: true,
-    saveButtonText: "Import",
+    saveButtonText: "Save",
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",
