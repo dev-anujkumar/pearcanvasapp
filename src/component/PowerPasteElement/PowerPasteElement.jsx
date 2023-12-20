@@ -93,17 +93,17 @@ export const pastePreProcess = (data) => {
  */
 export const pastePostProcess = (data, props, processType) => {
   if(processType==='importWord'){
-    if (data.body) {
+    if (data?.body) {
       // if you dont click inside the editor after pasting data first time and try to paste again by
       // pressing ctrl + v then this condition runs again so clearing the previous data of editor
-      tinymce.get('myTextarea2').setContent('')
+      tinymce?.get('myTextarea2')?.setContent('')
   
-      const childNodes = data.body.children;
+      const childNodes = data?.body?.children;
       const elements = [];
       createPastedElements(childNodes, elements);
       const updatedElements = []
       //preparing content that needs to be pasted
-      data.body = prepareFinalPasteContent(elements, data.body, props, '', processType)
+      data.body = prepareFinalPasteContent(elements, data?.body, props, '', processType)
       //preparing content that needs to send in API
       filterSupportedTagAndData(elements,updatedElements)
   
@@ -119,28 +119,22 @@ export const pastePostProcess = (data, props, processType) => {
         }
         createPastedElements(childElements, elements);
       } */
-      // const parentIndex = props.index;
-      if (updatedElements.length) {
-        // props.toggleWordPasteProceed(true)
-        // focusPopupButtons();
-      }
-      // props.onPowerPaste(updatedElements, parentIndex);
+
       // if valid data has been pasted in to editor once then make editor non-editable
-      elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
+      elements?.length ? tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', false) : tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', true);
       let ccc=[];
       let indexOfInsertion = 0;
-      updatedElements.forEach(pastedElement => {
+      updatedElements?.forEach(pastedElement => {
         const newElement = {
             "html" : {
-                text: pastedElement.html
+                text: pastedElement?.html
             },
-            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            ...slateWrapperConstants?.elementDataByTag[pastedElement?.tagName],
             index: indexOfInsertion++
         }
         ccc.push(newElement)
       })
-      console.log('end111', ccc);
-      props.onImport(updatedElements, props.fileToBeUploaded.name);
+      props.onImport(updatedElements, props?.fileToBeUploaded?.name);
     }
   }
   else{
