@@ -32,7 +32,7 @@ import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_
         SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE, pasteElementLimit, PASTE_LIMIT_WARNING_1, PASTE_LIMIT_WARNING_2 } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
-import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe, getCookieByName } from '../../../src/constants/utility.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
 import PreviewWordFile from '../PreviewWordFile/PreviewWordFile.jsx';
@@ -824,7 +824,7 @@ class PopUp extends React.Component {
                             <span>{COMPLETED_TEXT}</span>
                         </div>
                     </div> :
-                    <div id='file-container-111' className={this.state.errorFileType || this.state.errorFileSize || this.state.errorFileEmpty ? 'file-container-error-file-type':'file-container'} onDrop={(event) => this.handleFiledrop(event)} onDragOver={(event) => this.handleDragOver(event)}>
+                    <div className={this.state.errorFileType || this.state.errorFileSize || this.state.errorFileEmpty ? 'file-container-error-file-type':'file-container'} onDrop={(event) => this.handleFiledrop(event)} onDragOver={(event) => this.handleDragOver(event)}>
                         <input type='file' accept='.docx' hidden ref={this.inputRef} onChange={(event) => this.handleFileChangeOnInput(event)}/>
                         <span>{this.state.errorFileSize || this.state.errorFileType || this.state.errorFileEmpty ? <img src={importPopupSS13} width='40px' height='40px'/> : <img src={importPopupSS12} width='40px' height='40px'/>}</span>
                         <span className='file-container-text-1'><span className={this.state.errorFileType || this.state.errorFileSize || this.state.errorFileEmpty ? 'file-container-text-link-error' :'file-container-text-link'} onClick={() => this?.inputRef?.current?.click()}><u>{UPLOAD_CONTAINER_TEXT}</u></span>{UPLOAD_CONTAINER_TEXT_SECOND_HALF}</span>

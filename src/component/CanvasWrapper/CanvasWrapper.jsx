@@ -22,7 +22,7 @@ import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopu
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs,
      setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus,
-      isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
+      isSubscribersSubscribedSlate,setTocSlateLabel, setImportMessageForWordImport } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -390,6 +390,7 @@ export default connect(
         isSubscribersSubscribedSlate,
         setTocSlateLabel,
         currentNodeAncestorData,
-        saveLockDetails
+        saveLockDetails,
+        setImportMessageForWordImport
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

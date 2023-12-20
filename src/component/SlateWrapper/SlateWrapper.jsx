@@ -603,6 +603,7 @@ class SlateWrapper extends Component {
         )
     }
 
+    // Displays upload file popup for word import
     showImportAndDropPopup = () => {
         const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
         if (this.state.showImportAndDragFile || (disableImportWordWarning && this.props.importMsgCanvas)) {
@@ -632,6 +633,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    // Next button handling for upload file popup
     toggleNextButton = (toggleValue, event, file) => {
         this.setState({showImportAndDragFile: false})
         this.props.showBlocker(toggleValue);
@@ -643,6 +645,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    // Toggles upload file popup
     toggleShowImportAndDropPopup = (toggleValue, e) => {
         this.props.showBlocker(toggleValue);
         hideBlocker()
@@ -652,6 +655,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(e);
     }
 
+    // Handle importing tips click in upload file popup
     handleImportingTipsClick = () => {
         this.setState({showImportAndDragFile: false})
         this.props.showBlocker(false);
@@ -678,6 +682,7 @@ class SlateWrapper extends Component {
         this.props.approvedSlatePopupStatus(false)
     }
 
+    //Toggle Importing tips popup 
     togglePopupForImportWordFile = (toggleValue, event) => {
         store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.props.showBlocker(toggleValue);
@@ -685,6 +690,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    //Toggle preview file popup
     togglePopupForUploadFilePopup = (toggleValue, event) => {
         this.props.showBlocker(toggleValue);
         hideBlocker();
@@ -692,6 +698,7 @@ class SlateWrapper extends Component {
         event && this.prohibitPropagation(event)
     }
 
+    // Create payload for the import word api call
     onImport = (importData, filename) => {
         const res = createPayloadForWordImport(importData, 0)
         this.setState({
@@ -725,6 +732,7 @@ class SlateWrapper extends Component {
         this.props.isSubscribersSubscribedSlate(false);
     }
 
+    //Closes Importing tips popup and toggles upload file popup
     startImportingButtonHandling = (toggleValue, e) => {
         store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.props.showBlocker(toggleValue);
@@ -733,6 +741,7 @@ class SlateWrapper extends Component {
         this.setState({showImportAndDragFile: true})
     }
 
+    // Handles Import button handling on preview file popup
     handleImportButton = (toggleValue, event) => {
         this.setState({showUploadFilePopup: toggleValue})
         sendDataToIframe({type: 'proceed for import word file', message: this.state.importData})
@@ -1861,7 +1870,7 @@ const mapStateToProps = state => {
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
-        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
+        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle
     };
 };
 

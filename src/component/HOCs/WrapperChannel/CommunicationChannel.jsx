@@ -328,7 +328,7 @@ function CommunicationChannel(WrappedComponent) {
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
                 case 'importpopupmessage':
-                    this.setImportMessageForWordImport()
+                    this.props.setImportMessageForWordImport()
                     break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
@@ -893,9 +893,6 @@ function CommunicationChannel(WrappedComponent) {
                 newAlignment[slateUrn] = message.lastAlignedExternalLO
                 localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
-        }
-        setImportMessageForWordImport = () => {
-            store.dispatch({ type: 'save-import-message', payload: true })
         }
         handleLOData = (message) => {
             if (message.statusForSave) {
