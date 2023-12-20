@@ -16,7 +16,7 @@ import searchIcon from './asset_popover_search_icon.svg';
 import closeIcon from './icon-close.svg';
 import { customEvent } from '../../js/utils';
 import { disableHeader,hideToc} from '../../js/toggleLoader';
-import { ASSET_POPOVER_ATTACHER, BLOCKQUOTE_PARAGRAPH_NUMMEREINS } from '../../constants/Element_Constants.js';
+import { ASSET_POPOVER_ATTACHER, BLOCKQUOTE_PARAGRAPH_NUMMEREINS, SAVE_AND_UPDATE } from '../../constants/Element_Constants.js';
 
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
@@ -26,7 +26,7 @@ class AssetPopoverSearch extends React.Component {
     /**
      * Close the popup
      */
-    apoSearchClose = (e, calledFromSave=false) => {
+    apoSearchClose = (e, calledFrom) => {
         let originalText, assetPopoverSpan
         assetPopoverSpan = document.getElementById(ASSET_POPOVER_ATTACHER);
         if (assetPopoverSpan) {
@@ -37,7 +37,7 @@ class AssetPopoverSearch extends React.Component {
         sendDataToIframe({ 'type': 'enableToc', 'message': {} });
         this.props.showBlocker(false);
         disableHeader(false);
-        if(!calledFromSave){
+        if(calledFrom !== SAVE_AND_UPDATE){
             customEvent.trigger('assetPopoverCancel');
         }
     }
@@ -66,7 +66,7 @@ class AssetPopoverSearch extends React.Component {
             assetPopoverDomId = apoObject.assetId;
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' +
                                 elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
-            this.apoSearchClose({}, true);
+            this.apoSearchClose({}, SAVE_AND_UPDATE);
             setTimeout(() => {
                 let currentElem = document.getElementById(tinymce.activeEditor.id);
                 if (tinymce.$(currentElem).find('blockquote').length) {
@@ -89,7 +89,7 @@ class AssetPopoverSearch extends React.Component {
                         domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' +
                                             assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     });
-                    this.apoSearchClose({}, true);
+                    this.apoSearchClose({}, SAVE_AND_UPDATE);
                     setTimeout(() => {
                         customEvent.trigger('assetPopoverSave');
                     }, 100);
