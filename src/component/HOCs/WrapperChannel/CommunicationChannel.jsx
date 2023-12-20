@@ -22,7 +22,6 @@ import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../Assessment
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
-import store from '../../../appstore/store.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
