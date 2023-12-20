@@ -1865,3 +1865,7 @@ const triggerVersioningFlow = () => {
     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
     sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
 }
+
+export const setImportWordFileMessageInCanvas = (value) => (dispatch) => {
+    dispatch({type: 'save-import-message', payload: value})
+}

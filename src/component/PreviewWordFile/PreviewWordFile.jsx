@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import { CircularProgress } from "@mui/material";
 import mammoth from "mammoth";
 import { pastePostProcess } from "../PowerPasteElement/PowerPasteElement.jsx";
 import './PreviewWordfile.css';
-import { CircularProgress } from "@mui/material";
 /***
  * PreviewWordFile is used to display the preview of the imported word file using tinymce
  */
@@ -28,14 +28,14 @@ const PreviewWordFile = (props) => {
         powerpaste_html_import: 'clean',
         smart_paste: false,
         setup: (editor) => {
-            editor.on('init', ()=>{
-                if(props.fileToBeUploaded){
+            editor?.on('init', ()=>{
+                if(props?.fileToBeUploaded){
                     setBackdropOrig(true);
-                    var options = {
-                        convertImage: mammoth.images.imgElement((image) => {
-                            return image.read('base64').then((imageBuffer) => {
+                    const options = {
+                        convertImage: mammoth?.images?.imgElement((image) => {
+                            return image?.read('base64').then((imageBuffer) => {
                                 return {
-                                    src: 'data:' + image.contentType + ';base64,' + imageBuffer,
+                                    src: 'data:' + image?.contentType + ';base64,' + imageBuffer,
                                     style: 'max-width: 100%',
                                 };
                             });
@@ -46,16 +46,16 @@ const PreviewWordFile = (props) => {
                             "u => u",
                         ]
                     };
-                    mammoth.convertToHtml({arrayBuffer: props.fileToBeUploaded}, options)
+                    mammoth?.convertToHtml({arrayBuffer: props?.fileToBeUploaded}, options)
                     .then((result) => {
-                        var html = result.value; // The generated HTML
-                        editor.setContent(html);
-                        editor.getBody().setAttribute('contenteditable', false);
+                        const html = result?.value; // The generated HTML
+                        editor?.setContent(html);
+                        editor?.getBody()?.setAttribute('contenteditable', false);
                         setBackdropOrig(false);
                     })
                     .catch(function(error) {
                         console.error(error);
-                        props.togglePopup(false);
+                        props?.togglePopup(false);
                     });            
                 }
             })
@@ -78,30 +78,30 @@ const PreviewWordFile = (props) => {
         powerpaste_html_import: 'clean',
         smart_paste: false,
         setup: (editor) => {
-            editor.on('init', ()=>{
-                if(props.fileToBeUploaded){
+            editor?.on('init', ()=>{
+                if(props?.fileToBeUploaded){
                     setBackdropConv(true);
-                    var options = {
+                    const options = {
                         styleMap: [
                             "p[style-name='Section Title'] => h1:fresh",
                             "p[style-name='Subsection Title'] => h2:fresh",
                             "u => u",
                         ]
                     };
-                    mammoth.convertToHtml({arrayBuffer: props.fileToBeUploaded}, options)
+                    mammoth?.convertToHtml({arrayBuffer: props?.fileToBeUploaded}, options)
                     .then((result) => {
-                        var html = result.value; // The generated HTML
+                        const html = result?.value; // The generated HTML
                         const parser = new DOMParser();
-                        var doc = parser.parseFromString(html, "text/html")
-                        editor.setContent(html);
-                        editor.getBody().setAttribute('contenteditable', false);
+                        const doc = parser?.parseFromString(html, "text/html")
+                        editor?.setContent(html);
+                        editor?.getBody()?.setAttribute('contenteditable', false);
                         pastePostProcess(doc,props, 'importWord');
                         setBackdropConv(false);
-                        props.enableImportButton()
+                        props?.enableImportButton()
                     })
                     .catch(function(error) {
                         console.error(error);
-                        props.togglePopup(false);
+                        props?.togglePopup(false);
                     });
                 }
             })

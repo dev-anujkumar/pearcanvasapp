@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
+import { Alert, AlertTitle, Snackbar } from '@mui/material';
 
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
@@ -11,7 +12,7 @@ import { LargeLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, createPayloadForWordImport } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, createPayloadForWordImport, setImportWordFileMessageInCanvas } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName,
          hasReviewerRole, isApproved, showNotificationOnCanvas } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown, SlateLockStatus } from '../../constants/IFrameMessageTypes.js';
@@ -54,7 +55,6 @@ import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helpe
 import { approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 import { toggleUnlockSlateAction } from '../Toolbar/Toolbar_Actions'
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
 
 let random = guid();
 
@@ -100,7 +100,10 @@ class SlateWrapper extends Component {
 
     componentDidUpdate(prevProps) {
         if(prevProps?.slateData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.slateData[config?.slateManifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS)
-        showNotificationOnCanvas(WORD_FILE_IMPORTED_TOAST_MESSAGE, 'metadataUpdated');
+        {
+            console.log("didupdate called in slatewrapper line 104");
+            showNotificationOnCanvas(WORD_FILE_IMPORTED_TOAST_MESSAGE, 'metadataUpdated');
+        }
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
@@ -591,6 +594,7 @@ class SlateWrapper extends Component {
     //This function is used to display the import elements progress alert
     showImportAlertMessage = () => {
         const showSnackbar = this.props.slateData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
+        console.log(this.props.slateData[config?.slateManifestURN]?.importData, 'check scroll bug');
             return (
                 <Snackbar open={showSnackbar} className='import-alert'
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
@@ -605,8 +609,7 @@ class SlateWrapper extends Component {
 
     // Displays upload file popup for word import
     showImportAndDropPopup = () => {
-        const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
-        if (this.state.showImportAndDragFile || (disableImportWordWarning && this.props.importMsgCanvas)) {
+        if (this.state.showImportAndDragFile) {
             showBlocker();
             this.props.showBlocker(true);
             return (
@@ -635,13 +638,9 @@ class SlateWrapper extends Component {
 
     // Next button handling for upload file popup
     toggleNextButton = (toggleValue, event, file) => {
-        this.setState({showImportAndDragFile: false})
+        this.setState({showImportAndDragFile: false, showUploadFilePopup: true, fileToBeUploaded: file})
         this.props.showBlocker(toggleValue);
         hideBlocker();
-        this.setState({showUploadFilePopup: true})
-        this.setState({fileToBeUploaded: file})
-        if(this.props.importMsgCanvas)
-        store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.prohibitPropagation(event)
     }
 
@@ -650,8 +649,6 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue);
         hideBlocker()
         this.setState({showImportAndDragFile: false})
-        if(this.props.importMsgCanvas)
-        store.dispatch({type: 'save-import-message', payload: toggleValue})
         this.prohibitPropagation(e);
     }
 
@@ -660,7 +657,7 @@ class SlateWrapper extends Component {
         this.setState({showImportAndDragFile: false})
         this.props.showBlocker(false);
         hideBlocker()
-        store.dispatch({type: 'save-import-message', payload: true});
+        this.props.setImportWordFileMessageInCanvas(true)
     }
 
     closeAudioBookDialog =()=>{
@@ -684,7 +681,7 @@ class SlateWrapper extends Component {
 
     //Toggle Importing tips popup 
     togglePopupForImportWordFile = (toggleValue, event) => {
-        store.dispatch({type: 'save-import-message', payload: toggleValue})
+        this.props.setImportWordFileMessageInCanvas(toggleValue)
         this.props.showBlocker(toggleValue);
         hideBlocker()
         this.prohibitPropagation(event)
@@ -734,7 +731,7 @@ class SlateWrapper extends Component {
 
     //Closes Importing tips popup and toggles upload file popup
     startImportingButtonHandling = (toggleValue, e) => {
-        store.dispatch({type: 'save-import-message', payload: toggleValue})
+        this.props.setImportWordFileMessageInCanvas(toggleValue)
         this.props.showBlocker(toggleValue);
         hideBlocker()
         this.prohibitPropagation(e);
@@ -748,7 +745,6 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue);
         hideBlocker()
         this.prohibitPropagation(event);
-        store.dispatch({type: 'save-import-message', payload: toggleValue})
     }
 
     handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
@@ -1913,6 +1909,7 @@ export default connect(
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
         assessmentReloadConfirmation,
-        toggleUnlockSlateAction
+        toggleUnlockSlateAction,
+        setImportWordFileMessageInCanvas
     }
 )(SlateWrapper);

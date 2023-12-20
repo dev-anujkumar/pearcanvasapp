@@ -4,6 +4,7 @@
 
 import React from 'react';
 import '../../styles/PopUp/PopUp.css';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import importPopupSS1 from './Assets/importPopup-ss-1.svg';
 import importPopupSS2 from './Assets/importPopup-ss-2.svg';
 import importPopupSS3 from './Assets/importPopup-ss-3.svg';
@@ -25,6 +26,7 @@ import PropTypes from 'prop-types'
 import { COMPLETED_TEXT, EMPTY_FILE_ERROR_MESSAGE, FILE_SIZE_ERROR_MESSAGE, IMPORTING_TIPS_CONTENT_TEXT_FIFTH, IMPORTING_TIPS_CONTENT_TEXT_FIRST, IMPORTING_TIPS_CONTENT_TEXT_FOURTH, IMPORTING_TIPS_CONTENT_TEXT_SECOND, IMPORTING_TIPS_CONTENT_TEXT_SEVENTH, IMPORTING_TIPS_CONTENT_TEXT_SIXTH, IMPORTING_TIPS_CONTENT_TEXT_THIRD, IMPORTING_TIPS_TEXT, NEXT_BUTTON_TEXT, PREVIEW_POPUP_HEADING, PREVIEW_POPUP_STEPPER_TEXT_FIRST, PREVIEW_POPUP_STEPPER_TEXT_SECOND, SECTION_BREAK_DELETE_TEXT, START_IMPORTING_BUTTON_TEXT, STEPPER_TEXT_PREVIEW, STEPPER_TEXT_UPLOAD_WORD_FILE, SUPPORTED_FILE_MESSAGE, UNSUPPORTED_FILE_ERROR_MESSAGE, UPLOAD_CONTAINER_TEXT, UPLOAD_CONTAINER_TEXT_SECOND_HALF, WARNING_TEXT_FOR_IMPORT_WORD_FILE, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
+import PreviewWordFile from '../PreviewWordFile/PreviewWordFile.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
@@ -35,8 +37,6 @@ import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
-import PreviewWordFile from '../PreviewWordFile/PreviewWordFile.jsx';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -494,9 +494,9 @@ class PopUp extends React.Component {
         if(props.importAndDropPopup){
             return(
             <div className='dialog-buttons-upload-file'>
-                <div className='importing-tip-container'>
+                <div className='importing-tip-container' onClick={props?.handleImportingTipsClick}>
                     <img src={importPopupSS14} height='20px' width='20px' />
-                    <span onClick={props.handleImportingTipsClick} className='importing-tip-text'>{IMPORTING_TIPS_TEXT}</span>
+                    <span className='importing-tip-text'>{IMPORTING_TIPS_TEXT}</span>
                 </div>
                 <div>
                     <button type='button' id='nextButtonForImport' option={PRIMARY_BUTTON} className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>{NEXT_BUTTON_TEXT}<ArrowForwardIosIcon className='forward-arrow'/></button>

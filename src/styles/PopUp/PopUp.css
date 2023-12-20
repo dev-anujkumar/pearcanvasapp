@@ -380,12 +380,12 @@
 .importing-tip-container{
   display: flex;
   align-items: center;
-  color: var(--primary-main, #005A70);
-/* components/button-medium */
-font-family: Open Sans;
-font-size: 16px;
-font-style: normal;
-font-weight: 600;
+  color: #005A70;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .importing-tip-text{

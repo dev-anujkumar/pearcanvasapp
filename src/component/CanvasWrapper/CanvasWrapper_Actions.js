@@ -642,7 +642,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         {
                 setTimeout(async () =>{
                     dispatch(await fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'',""))
-                }, 20000)
+                }, 15000)
         }
         // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
