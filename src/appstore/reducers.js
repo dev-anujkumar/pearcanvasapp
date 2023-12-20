@@ -73,7 +73,6 @@ import {
  */
 
 const INITIAL_STATE = {
-    importMsgCanvas: false,
     slateLevelData: {},
     // elementsTag: {},
     activeElement: {},
@@ -140,6 +139,7 @@ const INITIAL_STATE = {
     approvedSlatePopupstatus: false,
     decoToOtherTypes: false,
     conversionData: {},
+    importMsgCanvas: false
 };
 
 const INITIAL_ACTION = {

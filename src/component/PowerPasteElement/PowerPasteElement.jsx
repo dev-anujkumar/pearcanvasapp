@@ -90,39 +90,22 @@ export const pastePreProcess = (data) => {
  * Will be called after Powerpaste filtering is done
  * @param {Object} data processed Clipboard data
  * @param {Object} props Powerpaste component props
+ * @param {Object} processType checks Powerpaste or Import word file
  */
 export const pastePostProcess = (data, props, processType) => {
   if(processType==='importWord'){
     if (data?.body) {
-      // if you dont click inside the editor after pasting data first time and try to paste again by
-      // pressing ctrl + v then this condition runs again so clearing the previous data of editor
       tinymce?.get('myTextarea2')?.setContent('')
-  
       const childNodes = data?.body?.children;
       const elements = [];
       createPastedElements(childNodes, elements);
       const updatedElements = []
-      //preparing content that needs to be pasted
+      //preparing content that needs to be preview and import
       data.body = prepareFinalPasteContent(elements, data?.body, props, '', processType)
-      //preparing content that needs to send in API
+      //filtering supported and unsupported contents
       filterSupportedTagAndData(elements,updatedElements)
-  
-       /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
-        const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
-        createPastedElements(childElements, elements);
-      } else if (childNodes.length >= 1) {
-        let childElements;
-        if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
-          childElements = childNodes[0].children;
-        } else {
-          childElements = childNodes;
-        }
-        createPastedElements(childElements, elements);
-      } */
-
-      // if valid data has been pasted in to editor once then make editor non-editable
-      elements?.length ? tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', false) : tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', true);
-      let ccc=[];
+      // elements?.length ? tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', false) : tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', true);
+      let importedElements=[];
       let indexOfInsertion = 0;
       updatedElements?.forEach(pastedElement => {
         const newElement = {
@@ -132,9 +115,9 @@ export const pastePostProcess = (data, props, processType) => {
             ...slateWrapperConstants?.elementDataByTag[pastedElement?.tagName],
             index: indexOfInsertion++
         }
-        ccc.push(newElement)
+        importedElements.push(newElement)
       })
-      props.onImport(updatedElements, props?.fileToBeUploaded?.name);
+      props.onImport(updatedElements, props?.fileToBeUploaded?.name);    //used to send final created elements to Slatewrapper for preview and API call
     }
   }
   else{

@@ -808,7 +808,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
     }
 
 }
-
+//Used to create payload for the imported elements
 export const createPayloadForWordImport = (importData, index) => {
     let indexOfInsertion = index;
     let data = [];

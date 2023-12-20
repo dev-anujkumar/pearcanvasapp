@@ -1587,7 +1587,7 @@ ol li.listItemNumeroUnoLowerRoman {
 .import-word-checkbox-message {
   display: flex ;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: end;
   width: 100%;
 }
 

@@ -125,6 +125,10 @@ export const isSlateLocked = () =>{
     return checkSlateLock(slateLockInfo);
 }
 
+/**
+ * This function checks if the slate has pending imported elements and is currently importing elements
+ * @returns true when import is in-progress
+ */
 export const isImporting = () => {
     const authStore = store.getState();
     const {appStore} = authStore;

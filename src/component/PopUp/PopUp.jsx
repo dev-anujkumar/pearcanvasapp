@@ -34,7 +34,7 @@ import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe, getCookieByName } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
-import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING, DISABLE_IMPORT_WORD_POPUP } from '../../constants/IFrameMessageTypes';
+import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
 import PreviewWordFile from '../PreviewWordFile/PreviewWordFile.jsx';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 /**
@@ -63,9 +63,9 @@ class PopUp extends React.Component {
         this.handleFileChangeOnInput = this.handleFileChangeOnInput.bind(this);
         this.modelRef = React.createRef();
         this.contentRef = React.createRef();
-        this.inputRef = React.createRef();
         this.wordPastePopupTextAreaRef = React.createRef();
         this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
+        this.inputRef = React.createRef();
     }
 
     /**
@@ -287,20 +287,10 @@ class PopUp extends React.Component {
         if (this.state.setAsDecorativePopUpCheckbox) sendDataToIframe({ 'type': DISABLE_DI_CONVERSION_WARNING, 'message': { disableDIConversionWarning: true } });
     }
 
-    handleCheckBoxOnStartImporting = () => {
-        if (this.state.importwordFileCheckbox) sendDataToIframe({ 'type': DISABLE_IMPORT_WORD_POPUP, 'message': { disableImportWordWarning: true } });
-    }
-
     // When "Don't ask me again" checkbox of decorative popup is checked
     handleSetAsDecorativeWarningPopupCheckbox = (event) => {
         this.setState({
             setAsDecorativePopUpCheckbox: event?.target?.checked
-        });
-    }
-
-    handleImportWordFilePopupCheckbox = (event) => {
-        this.setState({
-            importwordFileCheckbox: event?.target?.checked
         });
     }
 
@@ -495,24 +485,19 @@ class PopUp extends React.Component {
         if(props.importWordFilePopup){
             return(
             <div className='import-word-checkbox-message'>
-                <div className='checkbox-and-text'>
-                    <input className='import-popup-checkbox' type="checkbox" value={this.state.importwordFileCheckbox} checked={this.state.importwordFileCheckbox} onChange={(event) => this.handleImportWordFilePopupCheckbox(event)} />
-                    <p className='import-warning-checkbox-message'>{WARNING_TEXT_FOR_IMPORT_WORD_FILE}</p>
-                </div>
                 <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className="start-import-button" onClick={(e) => {props.proceed(false, e);this.handleCheckBoxOnStartImporting();}}>{START_IMPORTING_BUTTON_TEXT}</span>
+                    <span option={PRIMARY_BUTTON} className="start-import-button" onClick={(e) => {props.proceed(false, e)}}>{START_IMPORTING_BUTTON_TEXT}</span>
                 </div>
             </div>
             )
         }
         if(props.importAndDropPopup){
-            const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
             return(
-            <div className={disableImportWordWarning ? 'dialog-buttons' : `dialog-buttons-upload-file`}>
-                {!disableImportWordWarning && <div className='importing-tip-container'>
+            <div className='dialog-buttons-upload-file'>
+                <div className='importing-tip-container'>
                     <img src={importPopupSS14} height='20px' width='20px' />
                     <span onClick={props.handleImportingTipsClick} className='importing-tip-text'>{IMPORTING_TIPS_TEXT}</span>
-                </div>}
+                </div>
                 <div>
                     <button type='button' id='nextButtonForImport' option={PRIMARY_BUTTON} className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>{NEXT_BUTTON_TEXT}<ArrowForwardIosIcon className='forward-arrow'/></button>
                     <span className="cancel-button-import" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>

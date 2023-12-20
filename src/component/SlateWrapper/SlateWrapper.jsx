@@ -551,10 +551,9 @@ class SlateWrapper extends Component {
             return null
         }
     }
-
+    //To display the importing tips popup
     showImportWordFilePopup = () => {
-        const disableImportWordWarning = getCookieByName("DISABLE_IMPORT_WORD_POPUP");
-        if (this.props.importMsgCanvas && !disableImportWordWarning) {
+        if (this.props.importMsgCanvas) {
             showBlocker();
             this.props.showBlocker(true);
             return (
@@ -569,7 +568,7 @@ class SlateWrapper extends Component {
 
         return null
     }
-
+    //To display the preview imported word file popup
     showUploadFilePopup = () => {
         if (this.state.showUploadFilePopup) {
             showBlocker();
@@ -589,7 +588,7 @@ class SlateWrapper extends Component {
 
         return null
     }
-
+    //This function is used to display the import elements progress alert
     showImportAlertMessage = () => {
         const showSnackbar = this.props.slateData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
             return (
@@ -1792,9 +1791,13 @@ class SlateWrapper extends Component {
                 {/* **************** To reload slate after assessment update ************* */}
                 {this.reloadSlateAfterAssessmentUpdate()}
                 {this.showUnlockSlatePopup()}
-                {this.showImportWordFilePopup()}
+                {/* **************** To display importing tips popup ************* */}
+                {this.showImportWordFilePopup()}    
+                {/* **************** To display preview file popup ************* */}
                 {this.showUploadFilePopup()}
+                {/* **************** To display upload file popup ************* */}
                 {this.showImportAndDropPopup()}
+                {/* **************** To display import elements progress alert ************* */}
                 {this.showImportAlertMessage()}
             </React.Fragment>
         );
