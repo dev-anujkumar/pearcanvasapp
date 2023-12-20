@@ -109,7 +109,16 @@ export const pastePostProcess = (data, props) => {
       limitedElements = elements
     }
     // preparing content that needs to be pasted
-    data.node = prepareFinalPasteContent(limitedElements, data.node, props, tooManyElements)
+    if (tooManyElements) {
+      let updatedDataNode = document.createElement('div');
+      for (let i = 0; i < pasteElementLimit && i < childNodes.length; i++) {
+        updatedDataNode.appendChild(childNodes[i].cloneNode(true));
+      }
+      data.node = prepareFinalPasteContent(limitedElements, updatedDataNode, props, tooManyElements)
+    }
+    else {
+      data.node = prepareFinalPasteContent(limitedElements, data.node, props, tooManyElements)
+    }
     // preparing content that needs to send in API
     filterSupportedTagAndData(limitedElements, updatedElements)
 
