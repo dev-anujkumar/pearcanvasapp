@@ -812,15 +812,15 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
 export const createPayloadForWordImport = (importData, index) => {
     let indexOfInsertion = index;
     let data = [];
-    importData.forEach(importedElement => {
+    importData?.forEach(importedElement => {
         const newElement = {
             "html" : {
-                text: importedElement.html
+                text: importedElement?.html
             },
-            ...slateWrapperConstants.elementDataByTag[importedElement.tagName],
+            ...slateWrapperConstants?.elementDataByTag[importedElement?.tagName],
             index: indexOfInsertion++
         }
-        data.push(newElement)
+        data?.push(newElement)
     });
     return data;
 }
