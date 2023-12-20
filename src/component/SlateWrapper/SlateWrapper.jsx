@@ -694,7 +694,6 @@ class SlateWrapper extends Component {
     }
 
     onImport = (importData, filename) => {
-        console.log(importData, 'ytr', filename);
         const res = createPayloadForWordImport(importData, 0)
         this.setState({
             importData: {
@@ -736,7 +735,6 @@ class SlateWrapper extends Component {
     }
 
     handleImportButton = (toggleValue, event) => {
-        console.log('import button pressed');
         this.setState({showUploadFilePopup: toggleValue})
         sendDataToIframe({type: 'proceed for import word file', message: this.state.importData})
         this.props.showBlocker(toggleValue);
@@ -1861,7 +1859,6 @@ const mapStateToProps = state => {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
         unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
-        importedWordFileDetails: state.appStore.importedWordFileDetails
     };
 };
 

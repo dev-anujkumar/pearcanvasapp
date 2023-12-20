@@ -63,7 +63,8 @@ import {
     SET_REQUIRED_SLATE_DATA,
     APPROVED_SLATE_POPUP_STATUS,
     DECO_TO_OTHER_IMG_TYPES,
-    FETCH_CONVERSION_DATA
+    FETCH_CONVERSION_DATA,
+    SAVE_IMPORT_MESSAGE
 } from '../constants/Action_Constants';
 
 /**
@@ -139,7 +140,6 @@ const INITIAL_STATE = {
     approvedSlatePopupstatus: false,
     decoToOtherTypes: false,
     conversionData: {},
-    importedWordFileDetails: {}
 };
 
 const INITIAL_ACTION = {
@@ -459,15 +459,10 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 conversionData: action.payload
             }
-        case 'save-import-message':
+        case SAVE_IMPORT_MESSAGE:
             return {
                 ...state,
                 importMsgCanvas: action.payload
-            }
-        case 'SET_IMPORTED_WORD FILE_DETAILS':
-            return {
-                ...state,
-                importedWordFileDetails: action.payload
             }
         default:
             return state;
