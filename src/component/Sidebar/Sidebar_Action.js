@@ -283,7 +283,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
-    if(config.elementStatus[conversionDataToSend.id] === "approved"){
+        if(conversionDataToSend?.status === "approved"){
         config.savingInProgress = true
     }
     config.isSavingElement = true

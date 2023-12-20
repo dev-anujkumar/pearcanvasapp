@@ -1180,7 +1180,7 @@ class SlateWrapper extends Component {
                                         userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
-                                        element={(element?.type === 'openerelement' && isSubscribedSlate) ? JSON.parse(JSON.stringify(element)) : element}
+                                        element={(element?.type === 'openerelement' && hasReviewerRole()) ? JSON.parse(JSON.stringify(element)) : element}
                                         index={index}
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         elementSepratorProps={this.elementSepratorProps}
