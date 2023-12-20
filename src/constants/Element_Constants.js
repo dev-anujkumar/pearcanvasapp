@@ -478,3 +478,4 @@ export const PREVIEW_POPUP_HEADING = 'Import Word File'
 export const PREVIEW_POPUP_STEPPER_TEXT_FIRST = 'Upload Word File'
 export const PREVIEW_POPUP_STEPPER_TEXT_SECOND = "Preview"
 export const EMPTY_FILE_ERROR_MESSAGE = "Empty File"
+export const SAVE_AND_UPDATE = 'SAVE_AND_UPDATE'
