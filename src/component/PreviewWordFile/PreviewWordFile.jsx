@@ -3,7 +3,9 @@ import mammoth from "mammoth";
 import { pastePostProcess } from "../PowerPasteElement/PowerPasteElement.jsx";
 import './PreviewWordfile.css';
 import { CircularProgress } from "@mui/material";
-
+/***
+ * PreviewWordFile is used to display the preview of the imported word file using tinymce
+ */
 const PreviewWordFile = (props) => {
 
     const editorRefOrig = useRef(null);
@@ -25,9 +27,7 @@ const PreviewWordFile = (props) => {
         powerpaste_word_import: 'clean',
         powerpaste_html_import: 'clean',
         smart_paste: false,
-        paste_preprocess: (plugin, data) => pastePreProcess(data),
         setup: (editor) => {
-            console.log(editor, 'edittt');
             editor.on('init', ()=>{
                 if(props.fileToBeUploaded){
                     setBackdropOrig(true);
@@ -77,7 +77,6 @@ const PreviewWordFile = (props) => {
         powerpaste_word_import: 'clean',
         powerpaste_html_import: 'clean',
         smart_paste: false,
-        paste_postprocess: (plugin, data) => pastePostProcess(data),
         setup: (editor) => {
             editor.on('init', ()=>{
                 if(props.fileToBeUploaded){
@@ -120,15 +119,19 @@ const PreviewWordFile = (props) => {
 
     return(
         <div className="word-file-import">
-            <div className="original-file-preview">
-                {backdropOrig && <CircularProgress sx={{position: 'absolute', zIndex: '999', top: '48%', left: '46%'}}/>}
+            <div className="sub-heading-container">
                 <div className="original-text">Original - {props?.fileToBeUploaded?.name}</div>
-                <p ref={editorRefOrig} id='myTextarea' style={{width: '100%'}} > </p>
-            </div>
-            <div className='converted-file-preview'>
-            {backdropConv && <CircularProgress sx={{position: 'absolute', top: '49%', left: '48%', zIndex: '999'}}/>}
                 <div className="converted-text">Converted-Preview</div>
-                <p ref={editorRefConverted} id='myTextarea2' style={{width: '100%'}} ></p>
+            </div>
+            <div className="preview-editor-container">
+                <div className="original-file-preview">
+                    {backdropOrig && <CircularProgress sx={{position: 'absolute', zIndex: '999', top: '48%', left: '46%'}}/>}
+                    <p ref={editorRefOrig} id='myTextarea' style={{width: '100%'}} > </p>
+                </div>
+                <div className='converted-file-preview'>
+                    {backdropConv && <CircularProgress sx={{position: 'absolute', top: '49%', left: '48%', zIndex: '999'}}/>}
+                    <p ref={editorRefConverted} id='myTextarea2' style={{width: '100%'}} ></p>
+                </div>
             </div>
         </div>
     )

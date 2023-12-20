@@ -81,7 +81,6 @@ export default PowerPasteElement
  * @param {*} data Raw Clipboard data
  */
 export const pastePreProcess = (data) => {
-  console.log(data, 'gggxxx');
   if (!["msoffice"].includes(data.source)) {
     data.content = ""
   }
@@ -230,11 +229,6 @@ export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements
       contentToPaste += elementOuterHtml
     }
     else if(!spacesAndNewLineFormatArray.includes(element?.data) && processType) {
-      // if(!processType){
-      //   if(!props.isPowerPasteInvalidContent) {
-      //     props.checkInvalidPowerPasteContent(true)
-      //   }
-      // }
       if(!isPreviousUnsupportedContent) {
         isPreviousUnsupportedContent = true
         contentToPaste += UnsupportedContentStringForImportWordFile

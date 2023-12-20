@@ -62,7 +62,7 @@ import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnc
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 import TcmConstants from '../TcmSnapshots/TcmConstants';
 import { closeTcmPopup } from './TCM_Canvas_Popup_Integrations';
-import { DEFAULT_PLAYBACK_MODE } from '../SlateWrapper/SlateWrapperConstants';
+import { DEFAULT_PLAYBACK_MODE, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -638,11 +638,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
-        console.log(slateData.data[manifestURN], 'dobby');
-        // if(slateData?.data[manifestURN]?.importData && slateData?.data[manifestURN]?.importData?.importStatus==='in-progress')
-        // dispatch({
-        //     type: 'SET_IMPORTED_WORD FILE_DETAILS',
-        //     payload: slateData?.data[manifestURN]?.importData})
+        if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
+        {
+                setTimeout(async () =>{
+                    dispatch(await fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'',""))
+                }, 20000)
+        }
         // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
          /* Slate tag issue */

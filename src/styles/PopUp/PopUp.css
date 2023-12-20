@@ -1690,3 +1690,15 @@ padding-left: 9px;
 .mce-content-body p img{
   width: 50%;
 }
+
+.preview-container{
+  display: 'flex';
+  column-gap: '355px';
+  justify-content: 'space';
+  padding-top: '20px';
+  padding-bottom: '20px';
+}
+
+.close-icon-file-container{
+  cursor: pointer;
+}

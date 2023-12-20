@@ -695,7 +695,7 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  * @param {Array} powerPasteData Elements to be pasted
  * @param {Number} index index of insertion
  */
-export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData, processType) => async (dispatch, getState) => {
+export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData) => async (dispatch, getState) => {
     let data = []
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -720,7 +720,6 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         }
         data.push(newElement)
     });
-    console.log(data, 'zzyyuu');
 
     try {
         const url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${index}`
@@ -810,15 +809,15 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
 
 }
 
-export const createPayloadForWordImport = (powerPasteData, index) => {
+export const createPayloadForWordImport = (importData, index) => {
     let indexOfInsertion = index;
     let data = [];
-    powerPasteData.forEach(pastedElement => {
+    importData.forEach(importedElement => {
         const newElement = {
             "html" : {
-                text: pastedElement.html
+                text: importedElement.html
             },
-            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            ...slateWrapperConstants.elementDataByTag[importedElement.tagName],
             index: indexOfInsertion++
         }
         data.push(newElement)

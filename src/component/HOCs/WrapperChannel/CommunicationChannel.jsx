@@ -28,7 +28,6 @@ function CommunicationChannel(WrappedComponent) {
         constructor(props) {
             super(props);
             this.state = {
-                importWordFilePopup: false,
                 project_urn: "",
                 isTableLaunched: false,
                 showBlocker: false,
@@ -329,8 +328,6 @@ function CommunicationChannel(WrappedComponent) {
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
                 case 'importpopupmessage':
-                    console.log('message received on canvas');
-                    this.setState({ importWordFilePopup: true })
                     store.dispatch({
                         type: 'save-import-message',
                         payload: true
@@ -1316,7 +1313,7 @@ function CommunicationChannel(WrappedComponent) {
             return (
                 <React.Fragment>
                     <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker}
-                    tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer} importWordFilePopup={this.state.importWordFilePopup}/>
+                    tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )
