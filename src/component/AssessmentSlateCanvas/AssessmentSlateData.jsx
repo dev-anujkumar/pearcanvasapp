@@ -525,10 +525,10 @@ class AssessmentSlateData extends Component {
     /*** @description - This function is to render the Assessment Slate Element*/
     renderAssessmentSlate = () => {
         this.setSlateTagIcon();
-        const elmAssessments = this.state.activeAssessmentType === PUF || this.state.activeAssessmentType === LEARNOSITY
         const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
         const { activeAssessmentType, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
+        const elmAssessments = activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY
         let assessmentSlateJSX;
         if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
             return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()}

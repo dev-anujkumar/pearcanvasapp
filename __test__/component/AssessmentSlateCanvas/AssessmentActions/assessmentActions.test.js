@@ -952,21 +952,6 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             spyFunction.mockClear();
         });
     });
-    describe('Test-5----------------- updateAssessmentVersion-----------------', () => {
-        it('Test-5.2---updateAssessmentVersion-Then-2', () => {
-            let oldWorkUrn = "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af"
-            let updatedWorkUrn = "urn:pearson:work:9db703b9-4e21-4dac-968e-baf9323467af"
-            let response = {
-                data: { status: "200" },
-                status: 200
-            }
-            const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentVersion');
-            axios.post = jest.fn(() => Promise.reject(response));
-            assessment_Actions.updateAssessmentVersion(oldWorkUrn, updatedWorkUrn);
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
-    });
     describe('Test-6----------------- checkEntityUrn-----------------', () => {
         let expectedResponse = {
             "versionUrn": "urn:pearson:work:a5cdf7e1-d65c-4be0-9827-1f396e631beb",
@@ -1072,13 +1057,6 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             let result = assessment_Actions.assessmentReloadConfirmation({data:"test"});
             expect(result.type).toEqual('ASSESSMENT_RELOAD_CONFIRMATION');
             expect(result.payload).toEqual({data:"test"});
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
-        it('Test-7.9---saveUpdatedAssessmentArray', () => {
-            const spyFunction = jest.spyOn(assessment_Actions, 'saveUpdatedAssessmentArray');
-            let result = assessment_Actions.saveUpdatedAssessmentArray({data:"test"});
-            expect(result.type).toEqual('ASESSMENT_UPDATE_DATA_ARRAY');
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
