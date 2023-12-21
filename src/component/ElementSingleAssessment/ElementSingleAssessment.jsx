@@ -19,7 +19,7 @@ import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js'
 import { PUF, LEARNOSITY, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { checkEntityUrn, setElmPickerData, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
-import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
+import { ELM_CREATE_IN_PLACE, OPEN_ELM_PICKER, SAVE_ELM_DATA, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import moment from 'moment';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -81,11 +81,11 @@ class ElementSingleAssessment extends Component {
                 this.updateAssessment(elmAssessmentData[0]) // function to update the item if update available
             }
         } else if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
-            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.elmUrl && dataFromElm.usageType) {
+            if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl && dataFromElm.usageType) {
                 window.open(dataFromElm.elmUrl);
                 handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT_ITEM, 'add', 'fromCreate');
                 this.props.setElmPickerData({});
-            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.pufObj) {
+            } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
                 this.addPufAssessment(dataFromElm.pufObj);
                 this.props.setElmPickerData({});
             }
