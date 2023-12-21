@@ -71,7 +71,7 @@ class ElementSingleAssessment extends Component {
         if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentReducer)){
             const { dataFromElm } = assessmentReducer;
             const { assessmentid, assessmentitemid, assessmenttitle, assessmentitemtitle } = model?.figuredata?.elementdata
-            const assessmentItemUpdate = ((assessmentId === null ? '' : assessmentId) !== assessmentid || (assessmentItemId === null ? '' : assessmentItemId) !== assessmentitemid || (assessmentTitle === null ? '' : assessmentTitle) !== assessmenttitle || (assessmentItemTitle === null ? '' : assessmentItemTitle) !== assessmentitemtitle)
+            const assessmentItemUpdate = ((assessmentId ? assessmentId : '') !== assessmentid || (assessmentItemId ? assessmentItemId : '') !== assessmentitemid || (assessmentTitle ? assessmentTitle : '') !== assessmenttitle || (assessmentItemTitle ? assessmentItemTitle : '') !== assessmentitemtitle)
             if(!assessmentReducer.dataFromElm && assessmentReducer?.updatedAssessmentData?.length && assessmentItemUpdate) {
                 this.saveAssessment(); // triggering the saving call if there is any update in assessment item data
             } else if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
