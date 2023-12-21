@@ -99,7 +99,7 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps?.slateData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.slateData[config?.slateManifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS)
+        if(prevProps?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.importDataFromResponse?.importStatus === COMPLETED_IMPORT_STATUS)
         {
             console.log("didupdate called in slatewrapper line 104");
             showNotificationOnCanvas(WORD_FILE_IMPORTED_TOAST_MESSAGE, 'metadataUpdated');
@@ -593,7 +593,7 @@ class SlateWrapper extends Component {
     }
     //This function is used to display the import elements progress alert
     showImportAlertMessage = () => {
-        const showSnackbar = this.props.slateData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
+        const showSnackbar = this.props?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
         console.log(this.props.slateData[config?.slateManifestURN]?.importData, 'check scroll bug');
             return (
                 <Snackbar open={showSnackbar} className='import-alert'
@@ -601,7 +601,7 @@ class SlateWrapper extends Component {
                         <Alert severity="error" className='alert'>
                             <AlertTitle ><strong>Word file import in progress...</strong></AlertTitle>
                             <div className='alert-message-content'>
-                                {this?.props?.slateData[config?.slateManifestURN]?.importData?.processedElement} of {this?.props?.slateData[config?.slateManifestURN]?.importData?.totalElementCount} elements converted</div>
+                                {this?.props?.importDataFromResponse?.processedElement} of {this?.props?.importDataFromResponse?.totalElementCount} elements converted</div>
                         </Alert>
                 </Snackbar>
         )
@@ -1866,7 +1866,8 @@ const mapStateToProps = state => {
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
-        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle
+        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
+        importDataFromResponse: state.appStore.importDataFromResponse
     };
 };
 

@@ -34,7 +34,8 @@ import {
     NO_DISCUSSION_ITEMS,
     BANNER_IS_VISIBLE,
     SUBSCRIBERS_SUBSCRIBED_SLATE,
-    SET_TOC_SLATE_LABEL
+    SET_TOC_SLATE_LABEL,
+    SET_IMPORT_DETAILS_ACTION
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -638,6 +639,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
+        dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
         {
                 setTimeout(async () =>{

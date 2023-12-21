@@ -105,18 +105,6 @@ export const pastePostProcess = (data, props, processType) => {
       //filtering supported and unsupported contents
       filterSupportedTagAndData(elements,updatedElements)
       // elements?.length ? tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', false) : tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', true);
-      let importedElements=[];
-      let indexOfInsertion = 0;
-      updatedElements?.forEach(pastedElement => {
-        const newElement = {
-            "html" : {
-                text: pastedElement?.html
-            },
-            ...slateWrapperConstants?.elementDataByTag[pastedElement?.tagName],
-            index: indexOfInsertion++
-        }
-        importedElements.push(newElement)
-      })
       props.onImport(updatedElements, props?.fileToBeUploaded?.name);    //used to send final created elements to Slatewrapper for preview and API call
     }
   }

@@ -64,7 +64,8 @@ import {
     APPROVED_SLATE_POPUP_STATUS,
     DECO_TO_OTHER_IMG_TYPES,
     FETCH_CONVERSION_DATA,
-    SAVE_IMPORT_MESSAGE
+    SAVE_IMPORT_MESSAGE,
+    SET_IMPORT_DETAILS_ACTION
 } from '../constants/Action_Constants';
 
 /**
@@ -139,7 +140,8 @@ const INITIAL_STATE = {
     approvedSlatePopupstatus: false,
     decoToOtherTypes: false,
     conversionData: {},
-    importMsgCanvas: false
+    importMsgCanvas: false,
+    importDataFromResponse: {}
 };
 
 const INITIAL_ACTION = {
@@ -463,6 +465,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 importMsgCanvas: action.payload
+            }
+        case SET_IMPORT_DETAILS_ACTION:
+            return {
+                ...state,
+                importDataFromResponse: action.payload
             }
         default:
             return state;

@@ -133,12 +133,12 @@ export const isImporting = () => {
     const authStore = store.getState();
     const {appStore} = authStore;
     
-    if(appStore?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus && 
-        appStore?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
+    if(appStore?.importDataFromResponse?.importStatus && 
+        appStore?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS)
         return true;
 
-    if(!appStore?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus || 
-        appStore?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS )
+    if(!appStore?.importDataFromResponse?.importStatus || 
+        appStore?.importDataFromResponse?.importStatus === COMPLETED_IMPORT_STATUS )
         return false;
 }
 
