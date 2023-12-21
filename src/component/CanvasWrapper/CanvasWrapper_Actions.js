@@ -678,15 +678,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 }
             }
         }
-        const slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
-        // check if assessment item is added on slate or not
-        const elmAssessmentData = slateBodymatter?.some((item) => {
-            return (item?.figuretype === FIGURE_ASSESSMENT && item?.figuredata?.elementdata?.assessmentid !== "");
-        })
-        // calling Assessment API to fetch the latest assessment item data
-        if(elmAssessmentData && !store.getState()?.assessmentReducer?.updatedAssessmentData?.length) {
-            dispatch(fetchAssessmentUpdatedData());
-        }
         /** ---- Check if current slate is Double Spread PDF ---- */
         const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
         if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
