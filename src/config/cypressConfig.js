@@ -12,7 +12,6 @@ let cypressConfig = {
     TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tinymce-srvr/ephox-spelling/',
     CYPRESS_API_ENDPOINT : `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/`,
     CYPRESS_TOC_JAVA_ENDPOINT : `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/toc-srvr/app/toc-javaapp/`,
-    UPDATE_ASSESSMENT_JAVA_ENDPOINT: `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1`,
     prodUrl : 'https://structuredauthoring.pearson.com',
     toolBarList : ['undo', 'redo','insertMedia','formatSelector','casechange', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript',
                 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist',

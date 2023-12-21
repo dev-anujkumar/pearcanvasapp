@@ -61,9 +61,12 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
     }
 }
 
+/**
+ * This action creator is used to fetch the latest assessment details
+ */
 export const fetchAssessmentUpdatedData = () => (dispatch) => {
     const subscribercheck = hasReviewerSubscriberRole()
-    const apiUrl = `${config.UPDATE_ASSESSMENT_JAVA_ENDPOINT}/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=${subscribercheck ? "false" : "true"}`;
+    const apiUrl = `${config.CYPRESS_API_ENDPOINT}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=${subscribercheck ? "false" : "true"}`;
     try {
         axios.put(apiUrl, {}, {
             headers: {
