@@ -81,7 +81,6 @@ export const fetchAssessmentUpdatedData = () => (dispatch) => {
         });
     } catch (err) {
         console.error('Error in getting assessment data', err)
-        return {}
     }
 }
 

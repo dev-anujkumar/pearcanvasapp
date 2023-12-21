@@ -276,7 +276,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             store.dispatch(fetchAssessmentUpdatedData())
         }
         // calling the assessment API to fetch the latest assessment item data after the saving call
-        if(assessmentItemUpdateCheck && assessmentTypeCheck && updatedData?.figuredata?.type === ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
+        if((!elmAssessmentData || assessmentItemUpdateCheck) && assessmentTypeCheck && updatedData?.figuredata?.type === ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
             store.dispatch(fetchAssessmentUpdatedData())
         }
         if (updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE) {
