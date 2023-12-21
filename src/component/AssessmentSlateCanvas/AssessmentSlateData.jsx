@@ -820,7 +820,7 @@ const mapActionToProps = {
     openLTFunction: openLTFunction,
     fetchLearningTemplates:fetchLearningTemplates,
     setAssessmentFilterParams:setAssessmentFilterParams,
-    setElmPickerData: setElmPickerData,
+    setElmPickerData: setElmPickerData
 }
 
 export default connect(

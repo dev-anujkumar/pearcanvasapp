@@ -99,7 +99,7 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                 'myCloudProxySession': config.myCloudProxySession
             }
         }).then(async (res) => {
-            if (res && res.data && res.status) {
+            if (res && res.data && res.data.status) {
                 switch (type) {
                     case 'assessment':
                         await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
