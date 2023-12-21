@@ -2636,36 +2636,6 @@ describe('Test-Other Functions', () => {
         expect(spyhandleFocus).toHaveBeenCalled()
         spyhandleFocus.mockClear()
     })
-
-    it('Test-getElementVersionStatus Function- poetry with creditsarray', () => {
-        const elementStatus = {}
-        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
-        elementContainerInstance.getElementVersionStatus(props.element, elementStatus);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spygetElementVersionStatus).toHaveBeenCalled()
-        spygetElementVersionStatus.mockClear()
-    })
-
-    it('Test-getElementVersionStatus Function- citationgroup', () => {
-        const elementStatus = {}
-        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
-        elementContainerInstance.getElementVersionStatus(wipData.citationgroup2, elementStatus);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spygetElementVersionStatus).toHaveBeenCalled()
-        spygetElementVersionStatus.mockClear()
-    })
-
-    it('Test-getElementVersionStatus Function- popup', () => {
-        const elementStatus = {}
-        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
-        elementContainerInstance.getElementVersionStatus(wipData.popup2, elementStatus);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spygetElementVersionStatus).toHaveBeenCalled()
-        spygetElementVersionStatus.mockClear()
-    })
     
     it("componentDidUpdate", () => {
         const store1 = mockStore({

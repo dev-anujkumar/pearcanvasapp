@@ -226,3 +226,6 @@ export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny']
 export const PASTE_LIMIT_WARNING_1 = "Cannot paste more than "
 export const PASTE_LIMIT_WARNING_2 = " elements at once."
 export const pasteElementLimit = 50;
+export const WORD_FILE_IMPORTED_TOAST_MESSAGE = 'Word file has been Imported'
+export const IN_PROGRESS_IMPORT_STATUS = 'in-progress'
+export const COMPLETED_IMPORT_STATUS = 'completed'

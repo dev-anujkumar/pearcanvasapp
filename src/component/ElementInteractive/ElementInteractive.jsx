@@ -563,6 +563,7 @@ class Interactive extends React.Component {
                 const { SMARTLINK_ALFRESCO_TYPES, INTERACTIVE_EXTERNAL_LINK } = elementTypeConstant;
                 const { interactiveSubtypeConstants: { THIRD_PARTY, EXTERNAL_WEBSITE_LINK, PDF, TABLE, LEGACY_WEB_LINK } } = TcmConstants;
                 const ctaSmartLinks = [PDF, EXTERNAL_WEBSITE_LINK, LEGACY_WEB_LINK]
+                const interactiveDataTypes = [EXTERNAL_WEBSITE_LINK,THIRD_PARTY, TABLE, LEGACY_WEB_LINK ]
                 let interactivetype = THIRD_PARTY;
                 switch (smartLinkType.toLowerCase()) {
                     case SMARTLINK_ALFRESCO_TYPES[0]:
@@ -598,15 +599,18 @@ class Interactive extends React.Component {
                     interactiveformat: INTERACTIVE_EXTERNAL_LINK,
                     interactivetitle: smartLinkTitle,
                     vendor: vendorName,
-                    posterimage: {
-                        "imageid": uniqueIDInteractive,
-                        "path": epsURL
-                    },
                     "path": smartLinkPath
+                }
+                const posterimage = {
+                    "imageid": uniqueIDInteractive,
+                    "path": epsURL
                 }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
                     figuredata.alttext = altText
                     figuredata.longdescription = longDescription
+                }
+                if(interactiveDataTypes?.includes(interactivetype)) {
+                    figuredata.posterimage = posterimage
                 }
                 if (ctaSmartLinks.indexOf(interactivetype) > -1) {
                     let pdfPosterTextDOM = document.getElementById(`cypress-${this.props.index}-2`);

@@ -1,0 +1,56 @@
+.original-text{
+    margin-bottom: 8px;
+    color: var(--text-primary, #081E27);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Open Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    width: 48%;
+}
+
+.converted-text{
+    margin-bottom: 8px;
+    color: var(--text-primary, #081E27);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Open Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    width: 48%;
+}
+
+.word-file-import{
+    display: flex;
+    column-gap: 40px;
+    flex-direction: column;
+}
+
+.original-file-preview{
+    width: 50%;
+    position: relative;
+}
+
+.converted-file-preview{
+    width: 50%; 
+    position: relative;
+}
+
+.word-file-import .tox-tinymce {
+    border-radius: 20px 20px 0px 0px!important;
+    border-left: solid 8px #EFF1F3 !important;
+    border-top: solid 8px #EFF1F3 !important;
+    border-bottom: none;
+}
+
+.sub-heading-container{
+    display: flex;
+    column-gap: 40px;
+}
+
+.preview-editor-container{
+    display: flex;
+    column-gap: 40px;
+}
