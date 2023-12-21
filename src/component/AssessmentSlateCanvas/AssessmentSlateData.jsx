@@ -85,11 +85,7 @@ class AssessmentSlateData extends Component {
         const dataToSend = {
             format: updatedAssessmentData?.format,
             id: updatedAssessmentData?.versionUrn,
-            itemID: "",
-            learningsystem: undefined,
-            templateid: undefined,
             templatelabel: updatedAssessmentData?.assessmenttitle,
-            templatetype: undefined,
             title: updatedAssessmentData?.assessmenttitle,
             usageType: activeAssessmentUsageType,
         }
@@ -753,19 +749,19 @@ class AssessmentSlateData extends Component {
     * @param assessmentUsageType Usage type
     */
     showFinalElmAssessmentSlate = (assessmentType, assessmentUsageType) => {
-        const updatedAssessmentDetails = this.state.updatedAssessmentData
-        const assessmentTypeValue = updatedAssessmentDetails?.type === "assessment" && "Assessment";
-        const approveText = updatedAssessmentDetails?.status?.includes('final') ? "Approved" : "Unapproved"
-        const approveIconClass = updatedAssessmentDetails?.status?.includes('final') ? "enable" : "disable"
-        const assessmentCreatedDate = updatedAssessmentDetails?.dateModified ? updatedAssessmentDetails?.dateModified : ''
+        const { updatedAssessmentData } = this.state
+        const assessmentTypeValue = updatedAssessmentData?.type === "assessment" && "Assessment";
+        const approveText = updatedAssessmentData?.status?.includes('final') ? "Approved" : "Unapproved"
+        const approveIconClass = updatedAssessmentData?.status?.includes('final') ? "enable" : "disable"
+        const assessmentCreatedDate = updatedAssessmentData?.dateModified ? updatedAssessmentData?.dateModified : ''
         return <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">
                     <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                     <div className="slate_assessment_data_details">
-                        <div className="slate_assessment_data_title">{updatedAssessmentDetails.assessmenttitle}</div>
-                        <div className="slate_assessment_data_id">ID: {updatedAssessmentDetails.versionUrn}</div>
-                        <div className="slate_assessment_data_id_lo">{updatedAssessmentDetails.versionUrn}</div>
+                        <div className="slate_assessment_data_title">{updatedAssessmentData.assessmenttitle}</div>
+                        <div className="slate_assessment_data_id">ID: {updatedAssessmentData.versionUrn}</div>
+                        <div className="slate_assessment_data_id_lo">{updatedAssessmentData.versionUrn}</div>
                         {assessmentCreatedDate && <div className="assessment-dateModified">
                             <div className="last-updated-time">Last Updated:</div>
                             <div className="last-updated-time-format">{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
