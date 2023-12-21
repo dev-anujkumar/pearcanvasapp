@@ -11,8 +11,6 @@ import {
     ELM_NEW_ITEM_DATA,
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
-    ASSESSMENT_RELOAD_CONFIRMATION,
-    ASESSMENT_UPDATE_DATA_ARRAY,
     UPDATE_ASSESSMENT_DATA
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG } from '../AssessmentSlateConstants.js';
@@ -310,15 +308,5 @@ export const assessmentReloadConfirmation = (data) => {
     return {
         type: ASSESSMENT_RELOAD_CONFIRMATION,
         payload: data
-    }
-}
-
-export const saveUpdatedAssessmentArray = (oldAssessmentId, newAssessmentId) => {
-    return {
-        type: ASESSMENT_UPDATE_DATA_ARRAY,
-        payload: {
-            oldAssessmentId: oldAssessmentId,
-            newAssessmentId: newAssessmentId
-        }
     }
 }

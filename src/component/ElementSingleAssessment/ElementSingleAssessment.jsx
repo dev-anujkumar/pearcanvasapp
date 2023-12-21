@@ -17,8 +17,7 @@ import { setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStat
 import PopUp from '../PopUp';
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAssessmentMetadata, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions,
-        setElmPickerData, setNewItemFromElm, saveUpdatedAssessmentArray } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { setElmPickerData, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
@@ -127,7 +126,7 @@ class ElementSingleAssessment extends Component {
         const elmAssessmentData = nextProps.assessmentReducer?.updatedAssessmentData?.filter((item) => {
             return item?.versionUrn == nextProps?.model?.id;
         })
-        const elmAssessmentItems = elmAssessmentData?.length ? prevState?.elementType === PUF || prevState?.elementType === LEARNOSITY : null
+        const elmAssessmentItems = elmAssessmentData?.length ? nextProps?.model?.figuredata?.elementdata?.assessmentformat === PUF || nextProps?.model?.figuredata?.elementdata?.assessmentformat === LEARNOSITY : null
         if (elmAssessmentItems) {
             // updating state for the elm assessment item = puf and learnosity
             if ('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata &&
@@ -156,7 +155,8 @@ class ElementSingleAssessment extends Component {
                         nextProps.model.figuredata.elementdata.assessmentitemid : "",
                     assessmentTitle: title,
                     elementType: nextProps.model.figuredata.elementdata.assessmentformat || "",
-                    assessmentItemTitle: setAssessmentItemTitle(nextProps.model)
+                    assessmentItemTitle: setAssessmentItemTitle(nextProps.model),
+                    dateModified: ''
                 };
             }
         }
@@ -574,9 +574,7 @@ class ElementSingleAssessment extends Component {
         const assessmentKeys = setAssessmentProperties(elementType)
         const approveText = assessmentItemStatus?.includes('final') ? "Approved" : "Unapproved"
         const approveIconClass = assessmentItemStatus?.includes('final') ? "enable" : "disable"
-        const { assessmentid } = model.figuredata.elementdata;
-        const oldReducerData = this.props.assessmentReducer[assessmentid]
-        const assessmentCreatedDate = dateModified ? dateModified : oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
+        const assessmentCreatedDate = dateModified ? dateModified : ''
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
             <figure className="figureAssessment figureAssessmentItem">
@@ -682,12 +680,8 @@ const mapActionToProps = {
     setCurrentCiteTdx,
     setCurrentInnerCiteTdx,
     assessmentSorting,
-    fetchAssessmentMetadata,
-    saveAutoUpdateData,
-    fetchAssessmentVersions,
     setElmPickerData,
     setNewItemFromElm,
-    saveUpdatedAssessmentArray
 }
 
 export default connect(
