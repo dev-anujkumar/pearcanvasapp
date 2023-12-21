@@ -12,17 +12,15 @@ import {
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
     ASSESSMENT_RELOAD_CONFIRMATION,
-    UPDATED_ASSESSMENTS_ARRAY,
     ASESSMENT_UPDATE_DATA_ARRAY,
     UPDATE_ASSESSMENT_DATA
 } from "../../../constants/Action_Constants";
-import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
+import { ELM_PORTAL_ERROR_MSG } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
 import config from '../../../config/config';
 import store from '../../../appstore/store.js';
 import assessmentApiHandlers from './assessmentApiHandlers.js';
-import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
-import { hideBlocker} from '../../../js/toggleLoader';
+import { hasReviewerSubscriberRole } from '../../../constants/utility.js';
 const {
     dispatchUsageTypeList,
     prepareUsageTypeData,
@@ -64,15 +62,14 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
 }
 
 export const fetchAssessmentUpdatedData = () => (dispatch) => {
-    console.log("nish <<<<<<<===== checkAssessmentUpdatedData =====>>>>>>>>>>>>>")
-    let apiUrl = `${config.UPDATE_ASSESSMENT_JAVA_ENDPOINT}/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=true`;
+    const subscribercheck = hasReviewerSubscriberRole()
+    const apiUrl = `${config.UPDATE_ASSESSMENT_JAVA_ENDPOINT}/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=${subscribercheck ? "false" : "true"}`;
     try {
         axios.put(apiUrl, {}, {
             headers: {
                 'myCloudProxySession': config.myCloudProxySession
             }
         }).then(res => {
-            console.log("nish ressss--->>>>", res)
             dispatch({
                 type: UPDATE_ASSESSMENT_DATA,
                 payload: res?.data?.assessments
@@ -225,43 +222,6 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
     }
 }
 
-/**
- * This Function is used to update all the assessments with the given workUrn present in the project with the latest workUrn
- * @param oldWorkUrn current workURN of the assessment
- * @param updatedWorkUrn latest workURN of the assessment
- */
-export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
-    let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
-    dispatch(saveAutoUpdateData("",""));
-    // dispatching updatedWorkUrn of the assessment item after VCS API call
-    dispatch({
-        type: UPDATED_ASSESSMENTS_ARRAY,
-        payload: updatedWorkUrn
-    })
-    return axios.post(url, {}, {
-        headers: {
-            "Cache-Control": "no-cache",
-            'myCloudProxySession': config.myCloudProxySession
-        }
-    }).then((res) => {
-        if (res.status == 202) {
-            dispatch(assessmentReloadConfirmation(true))
-        }
-    }).catch(() => {
-        dispatch({
-            type: ELM_PORTAL_API_ERROR,
-            payload: {
-                show: true,
-                errorMessage: AUTO_UPDATE_FAIL_ERROR,
-                isElmApiError: 'elm-api-error'
-            }
-        })
-        hideBlocker();
-        // handleRefreshSlate(dispatch);
-        console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
-    })
-}
-
 export const resetAssessmentStore = () => {
     return {
         type: RESET_ASSESSMENT_STORE,
@@ -280,9 +240,6 @@ export const checkEntityUrn = (assessmentID) => async (dispatch) => {
         let entityUrn = await dispatch(fetchAssessmentMetadata('assessmentArray', 'fromCheckEntityUrn', { targetId: item, errorMessage: errorMsg }, {}))
         entityUrn && workIds.push(entityUrn);
     }))
-    if (workIds.length > 0 && workIds[0] === workIds[1]) {
-        dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1]))
-    }
 }
 
 export const saveAutoUpdateData = (oldAssessmentId, newAssessmentId) => {

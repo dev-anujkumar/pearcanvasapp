@@ -20,8 +20,7 @@ import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA, INSTITUTION_
 import interactiveTypeData from './interactiveTypes.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion,
-         setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resource_Type } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
@@ -934,7 +933,6 @@ const mapActionToProps = (dispatch) => {
         fetchAssessmentVersions: (entityUrn, type, createdDate, assessmentData, assessmentItemData) => {
             dispatch(fetchAssessmentVersions(entityUrn, type, createdDate, assessmentData, assessmentItemData))
         },
-        updateAssessmentVersion: updateAssessmentVersion,
         setElmPickerData: (payloadObj) => {
             dispatch(setElmPickerData(payloadObj))
         },

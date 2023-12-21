@@ -41,7 +41,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 usageTypeListData: action.payload.usageTypeList
             }
         case UPDATE_ASSESSMENT_DATA: 
-        console.log("nish action===>>>>", action)
             return {
                 ...state,
                 updatedAssessmentData: action.payload

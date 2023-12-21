@@ -189,17 +189,6 @@ class ElementContainer extends Component {
         })
         /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
         let { element } = this.props
-        let embeddedAssessment = checkEmbeddedElmAssessment(element);
-        if (this.props.element && embeddedAssessment === true) {
-            const assessmentID = element.figuredata.elementdata.assessmentid;
-            const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
-            const itemData = {
-                itemId: assessmentItemID,
-                parentId: assessmentID,
-                targetItemid: assessmentItemID
-            }
-            this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
-        }
         const elmInteractiveElem = checkInteractive(element)
         if (element && elmInteractiveElem === true) {
             const interactiveData = {
@@ -256,18 +245,7 @@ class ElementContainer extends Component {
         }
         if (this.props.element !== prevProps.element) {
             let { element } = this.props
-            let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const elmInteractiveElem = checkInteractive(element)
-            if (this.props.element && embeddedAssessment === true) {
-                const assessmentID = element.figuredata.elementdata.assessmentid;
-                const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
-                const itemData = {
-                    itemId: assessmentItemID,
-                    parentId: assessmentID,
-                    targetItemid: assessmentItemID
-                }
-                this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
-            }
             /* Updating the interactive data inside the store after the store reset */
             if (element && elmInteractiveElem) {
                 const interactiveData = {
