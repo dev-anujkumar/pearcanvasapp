@@ -11,9 +11,11 @@ import {
     SET_USAGE_TYPE,
     SET_INTERACTIVE_METADATA
 } from "../../../constants/Action_Constants";
+import { sendDataToIframe } from '../../../constants/utility.js';
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
 import { hideBlocker} from '../../../js/toggleLoader';
+import { ELM_ASSESSMENT } from '../../../constants/Element_Constants.js';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
     prepareUsageTypeData: (res) => {
@@ -33,6 +35,7 @@ const AssessmentAPIHandlers = {
                 usageTypeData.push({ usagetype: usageType.usagetype, label: usageType.label.en })
             })
         }
+        sendDataToIframe({ 'type': 'saveUsageTypeListData', 'message': { usageTypeListData: usageTypeData } });
         dispatch({
             type: SET_USAGE_TYPE,
             payload: {
@@ -83,7 +86,8 @@ const AssessmentAPIHandlers = {
         let createDate = new Date(nextData.dateCreated);
         const checkVersionIsClean = AssessmentAPIHandlers.checkElmVersionIsClean(nextData);
         // || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)
-        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
+        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) ||
+            (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
             return true /*Update*/
         }
         return false    /*Approved*/
@@ -146,7 +150,8 @@ const AssessmentAPIHandlers = {
     /** @description This function handles assessment-metadata API response for Assessment */
     assessmentMetadataHandler: async (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
         const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
-        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment';
+        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ?
+        specialCharacterDecode(responseData.defaultTitle) : ELM_ASSESSMENT;
         let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
         if (calledFrom == 'fromNextVersion') {  /* APPROVED | UPDATE */
             dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
@@ -336,7 +341,7 @@ const AssessmentAPIHandlers = {
     interactiveMetadataUpdateHandler: (responseData, assessmentData, dispatch) => {
         const latestVersion = {
             id: responseData.versionUrn,
-            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment',
+            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : ELM_ASSESSMENT,
             latestCleanVersion: AssessmentAPIHandlers.checkElmVersionIsClean(responseData),
             status: AssessmentAPIHandlers.setAssessmentStatus(responseData.status)
         }
@@ -350,7 +355,7 @@ const AssessmentAPIHandlers = {
     assessmentMetadataUpdateHandler: (responseData, assessmentData, assessmentItemData, dispatch) => {
         const latestVersion = {
             id: responseData.versionUrn,
-            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment',
+            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : ELM_ASSESSMENT,
             latestCleanVersion: AssessmentAPIHandlers.checkElmVersionIsClean(responseData),
             status: AssessmentAPIHandlers.setAssessmentStatus(responseData.status)
         }

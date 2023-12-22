@@ -7,7 +7,8 @@ let pool
 const poolFunc = (wUrn) => {
   pool = setInterval(async () => {
     const conversionStatus = await pdfConversionStatus()
-    if (conversionStatus === undefined || conversionStatus?.data?.status === COMPLETED || conversionStatus?.data?.status === ABORTED||conversionStatus?.status === 404 || conversionStatus?.data?.status === FAILED) {
+    if (conversionStatus === undefined || conversionStatus?.data?.status === COMPLETED ||
+      conversionStatus?.data?.status === ABORTED||conversionStatus?.status === 404 || conversionStatus?.data?.status === FAILED) {
       clearPool()
       if (conversionStatus?.data?.status === COMPLETED) {
         reloadSlate()
@@ -38,7 +39,8 @@ const startPdfConversion = async (wUrn) => {
 
 const pdfConversionStatus = async () => {
   try {
-    const res = await axios.get(`${config.REACT_APP_API_URL}v1/cypress-plus-api/conversion-status/project/${config.projectUrn}/manifest/${config.slateManifestURN}/entity/${config.slateEntityURN}`, {
+    const res = await axios.get(`${config.REACT_APP_API_URL}v1/cypress-plus-api/conversion-status/project/
+                ${config.projectUrn}/manifest/${config.slateManifestURN}/entity/${config.slateEntityURN}`, {
       headers: {
         "Content-Type": "application/json",
         'myCloudProxySession': config.myCloudProxySession

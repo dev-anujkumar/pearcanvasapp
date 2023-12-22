@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 import TextField from "@mui/material/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn,
+        getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING, TRANSITION_NONE, FLOATING_LABEL, FLOATING_NUMBER } from '../../constants/Element_Constants';
 import { MATH_ML, BLOCK_CODE } from '../../component/ElementFigure/ElementFigure_Constants'
 
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -52,7 +53,8 @@ function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown)
 }
 
 export const FigureHeader = (props) => {
-    const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
+    const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+        AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedlabel ?? props.model?.manualoverride?.overridelabelvalue ?? '');
     const [figureLabelData, setFigureLabelData] = useState([]);
@@ -79,10 +81,14 @@ export const FigureHeader = (props) => {
         const figureCustom = props.figureDropdownData.imageCustom ? [ ...props.figureDropdownData.image, ...props.figureDropdownData.imageCustom] : props.figureDropdownData.image;
         const audioCustom = props.figureDropdownData.audioCustom ? [ ...props.figureDropdownData.audio, ...props.figureDropdownData.audioCustom] : props.figureDropdownData.audio;
         const videoCustom = props.figureDropdownData.videoCustom ? [ ...props.figureDropdownData.video, ...props.figureDropdownData.videoCustom] : props.figureDropdownData.video;
-        const interactiveCustom = props.figureDropdownData.interactiveCustom ? [ ...props.figureDropdownData.interactive, ...props.figureDropdownData.interactiveCustom] : props.figureDropdownData.interactive;
-        const tableasmarkupCustom = props.figureDropdownData.tableasmarkupCustom ? [...props.figureDropdownData.tableasmarkup, ...props.figureDropdownData.tableasmarkupCustom] : props.figureDropdownData.tableasmarkup;
-        const mathmlCustom = props.figureDropdownData.mathmlCustom ? [...props.figureDropdownData.mathml, ...props.figureDropdownData.mathmlCustom] : props.figureDropdownData.mathml;
-        const preformattedtextCustom = props.figureDropdownData.preformattedtextCustom ? [...props.figureDropdownData.preformattedtext, ...props.figureDropdownData.preformattedtextCustom] : props.figureDropdownData.preformattedtext;
+        const interactiveCustom = props.figureDropdownData.interactiveCustom ? [ ...props.figureDropdownData.interactive, ...props.figureDropdownData.interactiveCustom] :
+                                  props.figureDropdownData.interactive;
+        const tableasmarkupCustom = props.figureDropdownData.tableasmarkupCustom ? [...props.figureDropdownData.tableasmarkup, ...props.figureDropdownData.tableasmarkupCustom] :
+                                  props.figureDropdownData.tableasmarkup;
+        const mathmlCustom = props.figureDropdownData.mathmlCustom ? [...props.figureDropdownData.mathml, ...props.figureDropdownData.mathmlCustom] :
+                             props.figureDropdownData.mathml;
+        const preformattedtextCustom = props.figureDropdownData.preformattedtextCustom ?
+                                    [...props.figureDropdownData.preformattedtext, ...props.figureDropdownData.preformattedtextCustom] : props.figureDropdownData.preformattedtext;
 
         switch (props.model.figuretype) {
             case AUDIO:
@@ -197,7 +203,8 @@ export const FigureHeader = (props) => {
             }
             if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER || oldSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 updateDropdownOptions();
-                let label = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.figuretype);
+                let label = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue :
+                getValueOfLabel(props?.model?.figuretype);
                 setFigureLabelValue(label);
             }
         }
@@ -286,17 +293,17 @@ export const FigureHeader = (props) => {
     const onFigureHeaderFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
         let lastIndex = id && id.toString().split('-');
-        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE))) { // BG-5075
+            labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
             if (lastIndex[lastIndex.length - 1] == '0') {
-                labelElement?.nextElementSibling?.classList?.remove('floating-label');
+                labelElement?.nextElementSibling?.classList?.remove(FLOATING_LABEL);
             } else if (lastIndex[lastIndex.length - 1] == '1') {
-                labelElement?.nextElementSibling?.classList?.remove('floating-number');
+                labelElement?.nextElementSibling?.classList?.remove(FLOATING_NUMBER);
             }
         } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
+            labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
         }
         const imagetypes = ["image", "table", "mathImage", "tableasmarkup", "authoredtext", "codelisting"];
         if (imagetypes.indexOf(props?.model?.figuretype) > -1) {
@@ -316,11 +323,11 @@ export const FigureHeader = (props) => {
         }
         let lastIndex = id && id.toString().split('-');
         if (labelHtmlData.includes(labelElement?.innerHTML)) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+            labelElement?.nextElementSibling?.classList?.remove(TRANSITION_NONE);
             if (lastIndex[lastIndex.length - 1] == '0') {
-                labelElement?.nextElementSibling?.classList?.add('floating-label');
+                labelElement?.nextElementSibling?.classList?.add(FLOATING_LABEL);
             } else if (lastIndex[lastIndex.length - 1] == '1') {
-                labelElement?.nextElementSibling?.classList?.add('floating-number');
+                labelElement?.nextElementSibling?.classList?.add(FLOATING_NUMBER);
             }
         }
     }
@@ -351,7 +358,8 @@ export const FigureHeader = (props) => {
     let imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting);
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     imgNumberValue = props?.model?.manualoverride?.hasOwnProperty('overridenumbervalue') && labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER ? '' : imgNumberValue;
-    const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber:containerNumber, currentLabelValue,labelNumberSetting, currentNumberValue })
+    const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber:containerNumber,
+                        currentLabelValue,labelNumberSetting, currentNumberValue })
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
@@ -373,7 +381,8 @@ export const FigureHeader = (props) => {
                             }
                         }
                     }}>
-                    <div id={'autonumberSetting'} className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-number-highlight" : "figure-label-number"} onClick={!hasReviewerRole() && handleSettingsDropdown}>
+                    <div id={'autonumberSetting'} className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ?
+                        "figure-label-number-highlight" : "figure-label-number"} onClick={!hasReviewerRole() && handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                     </div>
@@ -406,7 +415,8 @@ export const FigureHeader = (props) => {
                             }
                         }
                     }}>
-                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-label-1` ? "figure-label-highlight" : "figure-label"} onClick={!hasReviewerRole() && handleLabelDropdown}>
+                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-label-1` ? "figure-label-highlight" :
+                    "figure-label"} onClick={!hasReviewerRole() && handleLabelDropdown}>
                         <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
@@ -429,31 +439,51 @@ export const FigureHeader = (props) => {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
                     <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>
                         <div className='image-label'>
-                            <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label</label>
+                                <TinyMceEditor onFigureLabelChange={handleFigureLabelChange}
+                                    onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur}
+                                    permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model}
+                                    handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "}
+                                    model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? TRANSITION_NONE : FLOATING_LABEL}>Label</label>
                         </div> </KeyboardWrapper>
                         :
                         <div className='image-label hide-field'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label</label>
+                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? TRANSITION_NONE : FLOATING_LABEL}>Label</label>
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
                     <KeyboardWrapper enable={labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? false : isEnableKeyboard()} index={`${props.index}-1`}>
-                    <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={ !hasReviewerRole() && (labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT)} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+                    <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting}
+                    contenteditable={ !hasReviewerRole() && (labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT)} onFigureImageFieldFocus={onFigureHeaderFieldFocus}
+                    onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
+                    element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number"
+                    tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo}
+                    glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId}
+                    parentElement={props.parentElement} showHideType={props.showHideType} />
                     </KeyboardWrapper>
-                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>
+                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? TRANSITION_NONE : FLOATING_NUMBER}>Number</label>
                 </div>}
 
             </header>
             <div className="preview">
-                <label className={"transition-none"}>Preview</label>
+                <label className={TRANSITION_NONE}>Preview</label>
                 <TextField disabled id="filled-disabled" className={"figure-preview"} variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
             <KeyboardWrapper enable={isEnableKeyboard()} index={`${props.index}-2`}>
                 <div className="floating-title-group">
-                    <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                    <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus}
+                        onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions}
+                        openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model}
+                        handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur}
+                        index={`${props.index}-2`} placeholder="Title" tagName={'h4'}
+                        className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo}
+                        glossaryFootnoteValue={props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId}
+                        parentElement={props.parentElement}
+                        showHideType={props.showHideType} />
+                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? TRANSITION_NONE : "floating-title"}>Title</label>
                 </div>
             </KeyboardWrapper>
         </>

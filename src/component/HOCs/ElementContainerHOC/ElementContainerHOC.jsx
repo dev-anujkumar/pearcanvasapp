@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TinyMceEditor from "../../tinyMceEditor"
 import { getTitleSubtitleModel } from "../../../constants/utility.js"
 import KeyboardWrapper from '../../Keyboard/KeyboardWrapper.jsx';
+import { FORMATTED_TITLE } from '../../../constants/Element_Constants';
 /**
 * @description - ElementContainerHOC is a HOC. It is defined simply
 * to make a HOC skeleton of the Poetry alike Element.
@@ -20,12 +21,12 @@ const ElementContainerHOC = (WrappedComponent) => {
             // figCaptionClass= 'figcaptionImageTextWidth',
             figCreditClass= 'paragraphImageTextWidthCredit'
             let formattedSubtitle, formattedTitle
-            if(model.contents.hasOwnProperty('formatted-title')){
+            if(model.contents.hasOwnProperty(FORMATTED_TITLE)){
                 /**
                  * New format
                  */
-                formattedTitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title").replace(/&nbsp;/g, "")
-                formattedSubtitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-subtitle")
+                formattedTitle = getTitleSubtitleModel(model.contents[FORMATTED_TITLE].html.text, FORMATTED_TITLE).replace(/&nbsp;/g, "")
+                formattedSubtitle = getTitleSubtitleModel(model.contents[FORMATTED_TITLE].html.text, "formatted-subtitle")
             }
             else{
                 formattedSubtitle = `<p class="paragraphNumeroUno"><br/></p>`
@@ -34,7 +35,7 @@ const ElementContainerHOC = (WrappedComponent) => {
 
             let formattedCredit = model.contents.hasOwnProperty('creditsarray') && model.contents['creditsarray'].length ?
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p><br/></p>";
-            let subTitle
+            let subTitle = element.contents && element.contents['formatted-title'];
             let credit = element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0]
 
             let poetryElem = <div className={divClass}>

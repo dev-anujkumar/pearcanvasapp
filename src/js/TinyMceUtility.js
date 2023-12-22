@@ -9,7 +9,8 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING, MU
 import store from '../appstore/store';
 import ElementConstants from '../component/ElementContainer/ElementConstants';
 
-import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed,
+        LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
 const {
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
@@ -19,9 +20,10 @@ const {
   * @param {*} data selected asset data
   * @param {*} editor tinymce editor
   */
- export const dataFromAlfresco = (data, editor, imageArgs, cb) => {
+export const dataFromAlfresco = (data, editor, imageArgs, cb) => {
     let imageData = data;
-    let epsURL = imageData?.epsUrl ? imageData?.epsUrl : imageData.hasOwnProperty('institution-urls') ? (imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "") :"" ;
+    let epsURL = imageData?.epsUrl ? imageData?.epsUrl : imageData.hasOwnProperty('institution-urls') ?
+    (imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "") :"" ;
     let uniqID = imageData.id ? imageData.id : "";
     let figureType = data?.content?.mimeType?.split('/')[0]
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
@@ -186,7 +188,8 @@ export const checkBlockListElement = (data, keypressed) => {
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             let indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
-            if (((parentElement?.type === "showhide" || parentElement?.type === "element-aside" || parentElement?.type === "groupedcontent" || config.isPopupSlate) && data?.asideData?.type === "manifestlist")) {
+            if (((parentElement?.type === "showhide" || parentElement?.type === "element-aside" || parentElement?.type === "groupedcontent" ||
+                config.isPopupSlate) && data?.asideData?.type === "manifestlist")) {
                 let indexToinsert = null;
                 let parentData = {};
                 if (keypressed === "TAB") {
@@ -206,7 +209,8 @@ export const checkBlockListElement = (data, keypressed) => {
                     parentData: parentData
                 }
             }
-            if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
+            if (indexes && indexes.length && contents?.bodymatter[indexes[0]] &&
+                'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 elementData = {
                     indexToinsert: Number(indexes[indexes.length - 1]) + 1,
                     parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - BLOCK_LIST_ELEMENT_EVENT_MAPPING[keypressed], indexes)
@@ -222,7 +226,8 @@ export const checkBlockListElement = (data, keypressed) => {
 
 export const isNestingLimitReached = (index,asideData,parentElement) => {
     let BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
-    if (asideData.parent && (asideData.parent.type === "showhide" || asideData.parent.type === "groupedcontent") || parentElement?.type === "element-aside") BLOCK_LIST_NESTING_LIMIT = 5;
+    if (asideData.parent && (asideData.parent.type === "showhide" || asideData.parent.type === "groupedcontent") ||
+        parentElement?.type === "element-aside") BLOCK_LIST_NESTING_LIMIT = 5;
     BLOCK_LIST_NESTING_LIMIT = asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB ? 6 : BLOCK_LIST_NESTING_LIMIT;
     if(typeof index === 'string' && index.includes('-') && index.split("-").length < BLOCK_LIST_NESTING_LIMIT * 2){
         return false;
@@ -246,11 +251,14 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
 
             if ((parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "showhide")) {
                 return true;
-            }if((contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist') || (config.isPopupSlate && parentElement?.type === 'element-aside'))
+            }if((contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist') ||
+                (config.isPopupSlate && parentElement?.type === 'element-aside'))
                 return true
-            if ((parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "groupedcontent"))
+            if ((parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList) ||
+                (config.isPopupSlate && parentElement?.type === "groupedcontent"))
                 return true;
-            if ((indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) ||  (config.isPopupSlate && data?.asideData?.type === MANIFEST_LIST)) {
+            if ((indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] &&
+                contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) ||  (config.isPopupSlate && data?.asideData?.type === MANIFEST_LIST)) {
                 return true;
             }
         }
@@ -280,7 +288,8 @@ export const setInstanceToolbar = (element,placeholder,showHideType, labelNumber
     let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
     if (element?.type === 'popup' && placeholder === 'Enter call to action...') {
         toolbar = config.popupCallToActionToolbar
-    } else if ((element?.type === 'figure' && figureTypes.includes(element?.figuretype)) || (element?.figuretype === 'interactive' && config.smartlinkContexts.includes(element?.figuredata?.interactivetype))) {
+    } else if ((element?.type === 'figure' && figureTypes.includes(element?.figuretype)) || (element?.figuretype === 'interactive' &&
+        config.smartlinkContexts.includes(element?.figuredata?.interactivetype))) {
         toolbar = setFigureToolbar(placeholder,labelNumberSetting, element);
     }else if(element?.type === 'element-aside'){
         toolbar = setAsideNumberingToolbar(placeholder);
@@ -288,7 +297,8 @@ export const setInstanceToolbar = (element,placeholder,showHideType, labelNumber
         toolbar = config.figureNumberToolbar;
     }
     else if (["Enter Label...", "Enter call to action..."].includes(placeholder) || (element && element.subtype == 'mathml' && placeholder === "Type something...")) {
-        toolbar = (element && (element.type === 'poetry' || element.type === 'popup' || placeholder === 'Enter call to action...' )) ? config.poetryLabelToolbar : config.labelToolbar;
+        toolbar = (element && (element.type === 'poetry' || element.type === 'popup' || placeholder === 'Enter call to action...' )) ?
+        config.poetryLabelToolbar : config.labelToolbar;
     }
     else if (placeholder === "Enter Caption..." || placeholder === "Enter Credit...") {
             toolbar = (element && element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
@@ -340,7 +350,8 @@ export const setFigureToolbar = (placeholder,labelNumberSetting, element) => {
     switch (placeholder) {
         case "Number":
             if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(element?.figuretype)) {
-                toolbar =  (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ) ? config.labelToolbarAutonumberMode : config.numberToolbarAutonumberMode;
+                toolbar =  (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER ||
+                            labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ) ? config.labelToolbarAutonumberMode : config.numberToolbarAutonumberMode;
             } else {
                 toolbar = config.figureNumberToolbar;
             }

@@ -48,7 +48,8 @@ export const slateData = {
                         "text": ""
                     },
                     "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">It definitely went through an evolution, but regardless of its phase, all parsers had a similar output — which is an AST. Once we have an AST representation of the JSX code, interpretation is extremely easy.<br></p>"
+                        "text": `<p class=\"paragraphNumeroUno\">It definitely went through an evolution, but regardless of its phase,
+                                all parsers had a similar output — which is an AST. Once we have an AST representation of the JSX code, interpretation is extremely easy.<br></p>`
                     },
                     "comments": false,
                     "tcm": true,
@@ -65,7 +66,9 @@ export const slateData = {
                         "text": ""
                     },
                     "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">Today we’re gonna understand how a JSX parser thinks by implementing one of our own. Unlike Babel, rather than compiling, we’re gonna evaluate the nodes in the AST according to their types, which means that we will be able to use JSX during runtime.<br></p>"
+                        "text": `<p class=\"paragraphNumeroUno\">Today we’re gonna understand how a JSX parser thinks by implementing one of our own. Unlike Babel,
+                         rather than compiling, we’re gonna evaluate the nodes in the AST according to their types, which means that we will be able to use JSX
+                         during runtime.<br></p>`
                     },
                     "comments": false,
                     "tcm": true,
@@ -82,7 +85,8 @@ export const slateData = {
                         "text": ""
                     },
                     "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">A basic Visual Studio Code plugin that converts html text to JSX string. You can select your html text and use the shortcut ctrl+alt+x.There are many things to do<br></p>"
+                        "text": `<p class=\"paragraphNumeroUno\">A basic Visual Studio Code plugin that converts html
+                        text to JSX string. You can select your html text and use the shortcut ctrl+alt+x.There are many things to do<br></p>`
                     },
                     "comments": false,
                     "tcm": true,
@@ -99,7 +103,15 @@ export const slateData = {
                         "text": ""
                     },
                     "html": {
-                        "text": '<p class=\"paragraphNumeroUno\"><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">A basic Visual Studio Code plugin that converts html text to JSX string</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">You can select your html text and use the shortcut ctrl+alt+x</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);"><strong>There are many things to do</strong></p><br></p>'
+                        "text": `<p class=\"paragraphNumeroUno\"><p style="color: rgb(51, 51, 51);
+                        font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont,
+                        Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">A basic Visual Studio
+                        Code plugin that converts html text to JSX string</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe
+                        UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto,
+                        &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">You can select your html text and use
+                        the shortcut ctrl+alt+x</p><p style="color: rgb(51, 51, 51); font-family: &quot;
+                        Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif;
+                        background-color: rgb(255, 255, 255);"><strong>There are many things to do</strong></p><br></p>`
                     },
                     "comments": false,
                     "tcm": true,
@@ -116,7 +128,8 @@ export const slateData = {
                         "text": ""
                     },
                     "html": {
-                        "text": "<p class=\"paragraphNumeroUno\"><ul> <li>Add functionality to validate html code</li> <li>Add support to format the resulting string</li><li>Add support to convert javascript strings to html code</li></ul><br></p>"
+                        "text": `<p class=\"paragraphNumeroUno\"><ul> <li>Add functionality to validate html code</li>
+                        <li>Add support to format the resulting string</li><li>Add support to convert javascript strings to html code</li></ul><br></p>`
                     },
                     "comments": false,
                     "tcm": true,
@@ -133,7 +146,8 @@ export const slateData = {
                         "text": ""
                     },
                     "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">There could be 1000s of good reasons to learn Javascript Programming. But one thing for sure, to learn any programming language, not only Javascript, you just need to code, and code and finally code until you become expert.<br></p>"
+                        "text": `<p class=\"paragraphNumeroUno\">There could be 1000s of good reasons to learn Javascript Programming. But one thing for sure,
+                        to learn any programming language, not only Javascript, you just need to code, and code and finally code until you become expert.<br></p>`
                     },
                     "comments": false,
                     "tcm": true,
@@ -503,7 +517,7 @@ const slateRenderData = mockStore({
     appStore: { slateLevelData: {},activeElement:{elementId:""} },
     toolbarReducer: { elemBorderToggle: "true" },
     commentsPanelReducer: {},
-    slateLockReducer:{slateLockInfo:false}   
+    slateLockReducer:{slateLockInfo:false}
 });
 
 storiesOf('Composites|Slate Wrapper', module)

@@ -3829,12 +3829,22 @@ describe('Test-Other Functions', () => {
         const elementContainerInstance1 = elementContainer1.find('ElementContainer').instance();
         const elementDetails = {
             element: {
-                type: 'element-blockfeature',
+                type: 'image',
                 html: {
                     text: ''
                 },
                 elementdata: {
                     type: ''
+                },
+                figuretype:"image",
+                alfrescoPletformMetadata:{
+                    "nodeRef": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+                    "repositoryName": "AWS US",
+                    "repositoryFolder": "001_C5 Media POC",
+                    "repositoryUrl": "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                    "visibility": "MODERATED",
+                    "siteId": "001_C5 Media POC",
+                    "currentAsset": {}
                 }
             }
         }
@@ -3875,6 +3885,52 @@ describe('Test-Other Functions', () => {
         }
         elementContainerInstance2.setElementDetails(elementDetails);
     });
+    it('setElementDetails method - with parentUrn and element type groupedcontent', () => {
+        let props4 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                groupeddata: {
+                    bodymatter: [{}]
+                },
+                type: 'groupedcontent',
+                figuretype:'image'
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: {
+                contentUrn: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319z'
+            }
+        };
+        let elementContainer2 = mount(<Provider store={store}><ElementContainer {...props4} /></Provider>);
+        const elementContainerInstance2 = elementContainer2.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: "figure",
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                },
+                figuretype:"image",
+                alfrescoPletformMetadata:{
+                    "nodeRef": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+                    "repositoryName": "AWS US",
+                    "repositoryFolder": "001_C5 Media POC",
+                    "repositoryUrl": "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                    "visibility": "MODERATED",
+                    "siteId": "001_C5 Media POC",
+                    "currentAsset": {}
+                }
+            },
+            operationType: 'cut'
+        }
+        elementContainerInstance2.setElementDetails(elementDetails);
+    });
+
 
     it('setElementDetails method - with parentUrn and element type groupedcontent -- else', () => {
         let props4 = {

@@ -8,6 +8,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { checkImageForMetadata, checkOpenerElement, checkSmartLinkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility';
 import { showNotificationOnCanvas } from '../../constants/utility';
+import { CPLG_ALT, CPLG_LONGDESCRIPTION } from '../../constants/Element_Constants';
 import { checkMetadataIdentical } from '../ElementContainer/ElementContainerUpdate_helpers';
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -62,17 +63,20 @@ class MetaDataPopUp extends React.Component {
 					fetchedLongDesc: avsStringData.linkLongDesc,
 					longDescription: avsStringData.linkLongDesc,
 					disableTextFields: true,
-					disableUpdateButton: checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, avsStringData?.imageAltText, avsStringData?.linkLongDesc) ? false : true
+					disableUpdateButton: checkMetadataIdentical(this?.props?.element?.figuredata?.alttext,
+						 this?.props?.element?.figuredata?.longdescription, avsStringData?.imageAltText, avsStringData?.linkLongDesc) ? false : true
 				})}
 			else{
 				this.setState({
 					metaData: properties,
-					fetchedAltText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-					fetchedLongDesc: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
-					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+					fetchedAltText: properties.hasOwnProperty(CPLG_ALT) ? properties[CPLG_ALT] : "",
+					fetchedLongDesc: properties.hasOwnProperty(CPLG_LONGDESCRIPTION) ? properties[CPLG_LONGDESCRIPTION] : "",
+					altText: properties.hasOwnProperty(CPLG_ALT) ? properties[CPLG_ALT] : "",
+					longDescription: properties.hasOwnProperty(CPLG_LONGDESCRIPTION) ? properties[CPLG_LONGDESCRIPTION] : "",
 					disableTextFields:  true,
-					disableUpdateButton: checkOpenerElement(this.props.element) ? (checkMetadataIdentical(this?.props?.element?.backgroundimage?.alttext, this?.props?.element?.backgroundimage?.longdescription, properties["cplg:altText"], properties["cplg:longDescription"]) ? false : true) :  checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, properties["cplg:altText"], properties['cplg:longDescription']) ? false : true
+					disableUpdateButton: checkOpenerElement(this.props.element) ?
+						(checkMetadataIdentical(this?.props?.element?.backgroundimage?.alttext, this?.props?.element?.backgroundimage?.longdescription, properties[CPLG_ALT], properties[CPLG_LONGDESCRIPTION]) ? false : true) :
+						checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, properties[CPLG_ALT], properties[CPLG_LONGDESCRIPTION]) ? false : true
 				})
 			}
 			}).catch(error => {
@@ -171,9 +175,13 @@ class MetaDataPopUp extends React.Component {
 				<div tabIndex="0" className="model-popup">
 					<div className="figure-popup">
 						<div className="dialog-button">
-						    <div className="edit-metadata">{checkImageForMetadata(this.props.element) ? 'Image Metadata' : checkSmartLinkInteractive(this.props.element) ? 'Smart Link Metadata' : 'Opener Element Metadata'}</div>
+						    <div className="edit-metadata">{checkImageForMetadata(this.props.element) ? 'Image Metadata' :
+							 checkSmartLinkInteractive(this.props.element) ? 'Smart Link Metadata' : 'Opener Element Metadata'}</div>
 							<div className='edit-metadata-sub-heading'>
-								Editing the Alt Text and Long Description will update the {checkImageForMetadata(this.props.element) ? 'Image' : checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} Metadata. This will impact all instances of this {checkImageForMetadata(this.props.element) ? 'image' : checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} in your team's Projects.
+								Editing the Alt Text and Long Description will update the {checkImageForMetadata(this.props.element) ? 'Image' :
+								checkSmartLinkInteractive(this.props.element) ? 'Smart Link' :
+								'Opener Element'} Metadata. This will impact all instances of this {checkImageForMetadata(this.props.element) ? 'image' :
+								checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} in your team's Projects.
 							</div>
 						</div>
 						<div className="figuremetadata-field">
@@ -205,7 +213,8 @@ class MetaDataPopUp extends React.Component {
 							</div>
 						</div>
 						<div className="metadata-button">
-						   <span className={`metadata-import-button ${this.state.disableUpdateButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Update Metadata</span>
+						   <span className={`metadata-import-button ${this.state.disableUpdateButton ? '' : "disabled"}`}
+							onClick={(e) => this.sendAlfrescoMetadata(e)}>Update Metadata</span>
 						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
 						</div>
 					</div>

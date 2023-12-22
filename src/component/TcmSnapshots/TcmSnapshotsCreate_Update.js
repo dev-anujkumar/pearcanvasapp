@@ -63,7 +63,8 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     let tempIndex = elementIndex && typeof (elementIndex) !== 'number' && elementIndex.split('-');
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
-        wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
+        wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ?
+        parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
     } else
     /**
     * @description For SHOWHIDE Element - prepare parent element data
@@ -100,7 +101,8 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData?.subtitle,
                     captions: wipData?.captions,
                     credits: wipData?.credits,
-                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData?.figuredata
+                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ?
+                    elementUpdateData.figureData : wipData?.figuredata
                 }
                 if( elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0){
                     dispatch(storeOldAssetForTCM({}))
@@ -269,7 +271,8 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 } else if(eleIndex.length == 4 && bodymatter[eleIndex[0]]?.type === MULTI_COLUMN){
                     wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]?.elementdata?.bodymatter[eleIndex[3]]
                 } else if(eleIndex.length == 5 && bodymatter[eleIndex[0]]?.type === MULTI_COLUMN){
-                    wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]?.elementdata?.bodymatter[eleIndex[3]]?.contents?.bodymatter[eleIndex[4]]
+                    wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]?.elementdata?.bodymatter[eleIndex[3]]?.contents
+                    ?.bodymatter[eleIndex[4]]
                 } else if ((eleIndex.length == 4 || eleIndex.length == 5) && bodymatter[eleIndex[0]]?.type === SHOWHIDE && containerElement?.asideData?.parent?.showHideType) {
                     let sectionType = containerElement?.asideData?.parent?.showHideType;
                     if (eleIndex.length == 5) {
@@ -456,7 +459,8 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
 export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData, actionType, deleteElementType) => {
     /** latest version for WE/CE/PE/AS*/
     if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved" && containerElement?.asideData?.parent?.type !== SHOWHIDE) {
-        let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
+        let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ?
+        containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
         if (contentUrn) {
             let newManifestData = await getLatestVersion(contentUrn);
             if (newManifestData) {
@@ -489,7 +493,8 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
     }
     if (versionStatus && versionStatus.showHideStatus && versionStatus.showHideStatus === "approved") {
-        let updatedPopupUrn = containerElement && containerElement.showHideObj && containerElement.showHideObj.element && containerElement.showHideObj.element.type == SHOWHIDE && containerElement.showHideObj.element.contentUrn ? containerElement.showHideObj.element.contentUrn : "";
+        let updatedPopupUrn = containerElement && containerElement.showHideObj && containerElement.showHideObj.element &&
+        containerElement.showHideObj.element.type == SHOWHIDE && containerElement.showHideObj.element.contentUrn ? containerElement.showHideObj.element.contentUrn : "";
         if (updatedPopupUrn) {
             let newPopupManifestUrn = await getLatestVersion(updatedPopupUrn);
             if(containerElement.parentElement && containerElement.parentElement.type == SHOWHIDE){
@@ -518,7 +523,8 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             }
         }
     }
-    if (containerElement?.asideData?.parent?.type === SHOWHIDE && (containerElement?.asideData?.element?.type === CITATION_GROUP || containerElement?.asideData?.element?.type === ELEMENT_ASIDE)) {
+    if (containerElement?.asideData?.parent?.type === SHOWHIDE && (containerElement?.asideData?.element?.type === CITATION_GROUP ||
+        containerElement?.asideData?.element?.type === ELEMENT_ASIDE)) {
         if (versionStatus?.parentStatus === "approved") {
             let newShUrn = await getLatestVersion(containerElement?.asideData?.parent?.contentUrn);
             containerElement.asideData.parent.id = newShUrn;
@@ -536,7 +542,8 @@ export const checkContainerElementVersion = async (containerElement, versionStat
 
     }
     // poetry inside show hide versioning
-    if ((containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.parent?.type === SHOWHIDE) || (containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.element?.grandParent?.asideData?.type === SHOWHIDE)) {
+    if ((containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.parent?.type === SHOWHIDE) ||
+        (containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.element?.grandParent?.asideData?.type === SHOWHIDE)) {
         if (versionStatus?.parentStatus === "approved") {
             const grandParent = containerElement?.poetryData?.parent ? containerElement?.poetryData?.parent : containerElement?.poetryData?.element?.grandParent?.asideData
             let newShUrn = await getLatestVersion(grandParent?.contentUrn);

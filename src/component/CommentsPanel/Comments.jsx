@@ -234,7 +234,8 @@ class Comments extends React.Component {
         let deleteCommentPermission = false;
         const { comment ,permissions} = this.props
         const deletePermissionSameUser = (config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting')
-        const deletePermissionDifferentUser = (config.fullName !== comment.commentCreator && config.userId !== comment.commentCreator) && permissions.includes('notes_delete_others_comment')
+        const deletePermissionDifferentUser = (config.fullName !== comment.commentCreator && config.userId !== comment.commentCreator) &&
+                                             permissions.includes('notes_delete_others_comment')
         if (deletePermissionSameUser || deletePermissionDifferentUser) {
             deleteCommentPermission = true;
         }
@@ -242,7 +243,8 @@ class Comments extends React.Component {
         return (
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
-                {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') &&
+                                     <li onClick={this.editComment}>Edit</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Assigned Role</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}

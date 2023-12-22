@@ -7,14 +7,16 @@ import TinyMceEditor from "../tinyMceEditor";
 import './../../styles/ElementFigure/ElementFigure.css';
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
-    DEFAULT_IMAGE_SOURCE
+    DEFAULT_IMAGE_SOURCE,
+    EXIF_PIXELXDIMENSION,
+    EXIF_PIXELYDIMENSION
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import axios from 'axios';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
-import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js'
+import { handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 
@@ -41,14 +43,14 @@ class ElementFigure extends Component {
     }
 
     componentDidMount() {
+        const { alfrescoPlatformMetadata } = this.props.model
         const figureImageTypes = ["image", "mathImage", "table"]
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
-          getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData:{...response}
+                alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                              alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
+                alfrescoSiteData: { ...alfrescoPlatformMetadata }
             })
-          })
         }
     }
 
@@ -83,8 +85,8 @@ class ElementFigure extends Component {
         let epsURL = imageData.epsUrl? imageData.epsUrl : "";
         let figureType = data?.content?.mimeType?.split('/')[0]
         //commented lines will be used to update the element data
-        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
-        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let width = imageData.properties[EXIF_PIXELXDIMENSION] ? imageData.properties[EXIF_PIXELXDIMENSION] : "";
+        let height = imageData.properties[EXIF_PIXELYDIMENSION] ? imageData.properties[EXIF_PIXELYDIMENSION] : "";
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
@@ -98,12 +100,15 @@ class ElementFigure extends Component {
             }
 
             let scaleMarkerData = {};
-            Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
+            Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ?
+            { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
                 (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
                 (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
                 (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
-                (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
+                (data && data.scalemarker && data.properties) ? 
+                { "height": data.properties[EXIF_PIXELYDIMENSION] || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties &&
+                data.properties[EXIF_PIXELXDIMENSION]) ? { "width": data.properties[EXIF_PIXELXDIMENSION] || null } : null,
             );
             let setFigureData = {
                 path: epsURL,
@@ -335,24 +340,50 @@ class ElementFigure extends Component {
                 <figure className={figureClass} resource="">
                     <header>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur}
+                        index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "}
+                        model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Number..." tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`}
+                        placeholder="Enter Number..." tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber}
+                        slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}
+                        showHideType = {this.props?.showHideType}/>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`}
+                        placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle}
+                        slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
                     </header>
                     <div data-type={dataType}>
 
-                        <TinyMceEditor permissions={this.props.permissions} element={model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={posterText} type={type} slateLockInfo={slateLockInfo} elementId={this.props.elementId} glossaryFootnoteValue={this.props.glossaryFootnoteValue} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} element={model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`}
+                        placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={posterText} type={type}
+                        slateLockInfo={slateLockInfo} elementId={this.props.elementId} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        parentElement={this.props?.parentElement}showHideType = {this.props?.showHideType}/>
 
                     </div>
                     <figcaption className={figCaptionClass} >
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`}
+                        placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
                     </figcaption>
                 </figure>
                 <div>
-                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-5`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                    element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-5`}
+                    placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo}
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                    parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
                 </div>
             </div>
         } else if (model && model.figuretype === 'codelisting') {
@@ -369,24 +400,47 @@ class ElementFigure extends Component {
                 <figure className={figureClass} >
                     <header>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`}
+                        placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel}
+                        slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Number..." tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`}
+                        placeholder="Enter Number..." tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber}
+                        slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`}
+                        placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle}
+                        slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
                     </header>
                     <div className="pearson-component blockcode codeSnippet blockCodeDiv" data-type={dataType} >
                         <pre className="code-listing" >
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`} placeholder="Enter block code..." tagName={'code'} className="codeNoHighlightLineWrapper" model={processedText} slateLockInfo={slateLockInfo} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                            element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`}
+                            placeholder="Enter block code..." tagName={'code'} className="codeNoHighlightLineWrapper" model={processedText} slateLockInfo={slateLockInfo}
+                            elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
                         </pre>
                     </div>
                     <figcaption >
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                        handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Caption..." tagName={'p'}
+                        className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
                     </figcaption>
                 </figure>
                 <div>
-                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-5`} placeholder="Enter Credit..." tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                    handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-5`} placeholder="Enter Credit..." tagName={'figureCredit'}
+                    className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}
+                    showHideType = {this.props?.showHideType}/>
                 </div>
 
             </div>
@@ -396,26 +450,46 @@ class ElementFigure extends Component {
                 <figure className={figureClass} resource="">
                     <header className="figure-header">
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                        handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'}
+                        className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Number..." tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                        handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Number..." tagName={'h4'}
+                        className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                        handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Enter Title..." tagName={'h4'}
+                        className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
 
                     </header>{
                         model && model.figuretype !== 'tableasmarkup' && <div className="figure-wrapper">
-                            <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {model.figuredata && model.figuredata.imageid ? model.figuredata.imageid : ""} </span> </div>
-                            <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "")}</span> </div>
-                            <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{model.figuredata && model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
+                            <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'>
+                                {model.figuredata && model.figuredata.imageid ? model.figuredata.imageid : ""} </span> </div>
+                            <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'>
+                                {this.state.imgSrc ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ?
+                                model.figuredata.path : "")}</span> </div>
+                            <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>
+                                {model.figuredata && model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                         </div>
                     }
 
-                    <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} onClick={this.addFigureResource} >
-                        {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
+                    <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType}
+                        onClick={this.addFigureResource} >
+                        {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" ||
+                        this.props.model.figuredata.tableasHTML !== undefined)) ?
                             <div id={`${index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
                             :
-                            <img src={this.state.imgSrc && this.props.model.figuretype != "tableasmarkup" ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
-                                data-src={this.state.imgSrc && this.props.model.figuretype != "tableasmarkup" ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== "" || model.figuredata.path !== undefined) ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
+                            <img src={this.state.imgSrc && this.props.model.figuretype != "tableasmarkup" ? this.state.imgSrc :
+                            (model.figuredata.path && model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
+                                data-src={this.state.imgSrc && this.props.model.figuretype != "tableasmarkup" ? this.state.imgSrc :
+                                (model.figuredata.path && model.figuredata.path !== "" || model.figuredata.path !== undefined) ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
                                 title=""
                                 alt=""
                                 className={imageDimension + ' lazyload'}
@@ -423,10 +497,18 @@ class ElementFigure extends Component {
                         }
                     </div>
                     <figcaption >
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                        handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'}
+                        className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
                     </figcaption>
                     <figcredit >
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                        handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'figureCredit'}
+                        className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                        parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>
                     </figcredit>
                 </figure>
 

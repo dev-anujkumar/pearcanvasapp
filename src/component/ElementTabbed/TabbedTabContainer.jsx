@@ -92,7 +92,8 @@ export const TabbedTabContainer = (props) => {
                 tbId: props?.parentElement?.id /* Will be used in tcm snapshot -TB->Tab */
             }
             return (
-                <div className={`container-multi-column-group-3c ${constants.setClassByElementType(column)} column-${columnIndex}`} data-id={_columnId} container-type={_columnType}>
+                <div className={`container-multi-column-group-3c ${constants.setClassByElementType(column)} column-${columnIndex}`}
+                data-id={_columnId} container-type={_columnType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,

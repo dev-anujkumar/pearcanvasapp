@@ -1,7 +1,8 @@
+import { ELEMENT_AUTHOREDTEXT, PRIMARY_ASIDE_ASIDE, PRIMARY_BLOCKQUOTE, PRIMARY_LIST, PRIMARY_SMARTLINK, SECONDARY_IMAGE_FIGURE_HALF } from '../../constants/Element_Constants'
 const elementDataBank = {
 
     "element-authoredtext" : {
-        "elementType" : "element-authoredtext",
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-paragraph",
         "secondaryOption" : "secondary-paragraph"
     },
@@ -11,36 +12,36 @@ const elementDataBank = {
         "secondaryOption" : "secondary-column-1"
     },
     "element-authoredtext-heading" : {
-        "elementType" : "element-authoredtext",
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-heading",
         // "secondaryOption" : "secondary-heading-{number}"
     },
     "element-authoredtext-handwriting" : {
-        "elementType" : "element-authoredtext",
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-handwriting",
         "secondaryOption" : "subtype-handwriting"
     },
 
     "element-blockfeature" : {
         "pullquote" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-blockquote",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_BLOCKQUOTE,
             "secondaryOption" : "secondary-pullquote"
         },
         "blockquote" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-blockquote",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_BLOCKQUOTE,
             "secondaryOption" : "secondary-marginalia"
         },
         "marginalia" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-blockquote",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_BLOCKQUOTE,
             "secondaryOption" : "secondary-marginalia-attribution"
         }
     },
 
     "element-learningobjectives" : {
-        "elementType" : "element-authoredtext",
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-learning-objective",
         "secondaryOption" : "secondary-learning-objective"
     },
@@ -68,38 +69,38 @@ const elementDataBank = {
 
     "element-list" : {
         "disc" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-1"
         },
         "decimal" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-2"
         },
         "upper-alpha" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-3"
         },
         "lower-alpha" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-4"
         },
         "upper-roman" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-5"
         },
         "lower-roman" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-6"
         },
         "none" : {
-            "elementType" : "element-authoredtext",
-            "primaryOption" : "primary-list",
+            "elementType" : ELEMENT_AUTHOREDTEXT,
+            "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-7"
         }
     },
@@ -109,10 +110,10 @@ const elementDataBank = {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
             "informalfigure" : {
-                "secondaryOption" : "secondary-image-figure-half"
+                "secondaryOption" : SECONDARY_IMAGE_FIGURE_HALF
             },
             "image50Text" : {
-                "secondaryOption" : "secondary-image-figure-half"
+                "secondaryOption" : SECONDARY_IMAGE_FIGURE_HALF
             },
             "imageTextWidth" : {
                 "secondaryOption" : "secondary-image-figure-width"
@@ -137,10 +138,10 @@ const elementDataBank = {
             "elementType" : "figure",
             "primaryOption" : "primary-image-decorative",
             "informalfigure" : {
-                "secondaryOption" : "secondary-image-figure-half"
+                "secondaryOption" : SECONDARY_IMAGE_FIGURE_HALF
             },
             "image50Text" : {
-                "secondaryOption" : "secondary-image-figure-half"
+                "secondaryOption" : SECONDARY_IMAGE_FIGURE_HALF
             },
             "imageTextWidth" : {
                 "secondaryOption" : "secondary-image-figure-width"
@@ -254,27 +255,27 @@ const elementDataBank = {
             },
             "3rd-party": {
                 "tag": "SL",
-                "primaryOption": "primary-smartlink",
+                "primaryOption": PRIMARY_SMARTLINK,
                 "secondaryOption": "secondary-interactive-smartlink-third"
             },
             "pdf": {
                 "tag": "SL",
-                "primaryOption": "primary-smartlink",
+                "primaryOption": PRIMARY_SMARTLINK,
                 "secondaryOption": "secondary-interactive-smartlink-pdf"
             },
             "web-link": {
                 "tag": "SL",
-                "primaryOption": "primary-smartlink",
+                "primaryOption": PRIMARY_SMARTLINK,
                 "secondaryOption": "secondary-interactive-smartlink-web"
             },
             "pop-up-web-link": {
                 "tag": "SL",
-                "primaryOption": "primary-smartlink",
+                "primaryOption": PRIMARY_SMARTLINK,
                 "secondaryOption": "secondary-interactive-smartlink-pop-up-web-link"
             },
             "table": {
                 "tag": "SL",
-                "primaryOption": "primary-smartlink",
+                "primaryOption": PRIMARY_SMARTLINK,
                 "secondaryOption": "secondary-interactive-smartlink-tab"
             }
         },
@@ -300,23 +301,23 @@ const elementDataBank = {
         "sidebar" : {
             "elementType" : "element-aside",
             "asideSidebar01" : {
-                "primaryOption" : "primary-aside-aside",
+                "primaryOption" : PRIMARY_ASIDE_ASIDE,
                 "secondaryOption" : "secondary-aside-sb1"
             },
             "asideSidebar02" : {
-                "primaryOption" : "primary-aside-aside",
+                "primaryOption" : PRIMARY_ASIDE_ASIDE,
                 "secondaryOption" : "secondary-aside-sb2"
             },
             "asideSidebar03" : {
-                "primaryOption" : "primary-aside-aside",
+                "primaryOption" : PRIMARY_ASIDE_ASIDE,
                 "secondaryOption" : "secondary-aside-sb3"
             },
             "asideSidebar04" : {
-                "primaryOption" : "primary-aside-aside",
+                "primaryOption" : PRIMARY_ASIDE_ASIDE,
                 "secondaryOption" : "secondary-aside-sb4"
             },
             "asideSidebar05" : {
-                "primaryOption" : "primary-aside-aside",
+                "primaryOption" : PRIMARY_ASIDE_ASIDE,
                 "secondaryOption" : "secondary-aside-sb5"
             },
             "asideSidebarFeature" : {

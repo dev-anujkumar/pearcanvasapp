@@ -14,6 +14,7 @@ import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 import { handleImagePaste } from '../../constants/utility.js';
 import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
+import { pasteElementLimit } from '../SlateWrapper/SlateWrapperConstants.js';
 
 const PowerPasteElement = (props) => {
 
@@ -99,23 +100,40 @@ export const pastePostProcess = (data, props) => {
     const elements = [];
     createPastedElements(childNodes, elements);
     const updatedElements = []
-    //preparing content that needs to be pasted
-    data.node = prepareFinalPasteContent(elements,data.node,props)
-    //preparing content that needs to send in API
-    filterSupportedTagAndData(elements,updatedElements)
-
-     /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
-      const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
-      createPastedElements(childElements, elements);
-    } else if (childNodes.length >= 1) {
-      let childElements;
-      if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
-        childElements = childNodes[0].children;
-      } else {
-        childElements = childNodes;
+    let limitedElements, tooManyElements = false
+    if (elements.length > pasteElementLimit) {
+      limitedElements = elements.slice(0, pasteElementLimit)
+      tooManyElements = true
+    }
+    else {
+      limitedElements = elements
+    }
+    // preparing content that needs to be pasted
+    if (tooManyElements) {
+      let updatedDataNode = document.createElement('div');
+      for (let i = 0; i < pasteElementLimit && i < childNodes.length; i++) {
+        updatedDataNode.appendChild(childNodes[i].cloneNode(true));
       }
-      createPastedElements(childElements, elements);
-    } */
+      data.node = prepareFinalPasteContent(limitedElements, updatedDataNode, props, tooManyElements)
+    }
+    else {
+      data.node = prepareFinalPasteContent(limitedElements, data.node, props, tooManyElements)
+    }
+    // preparing content that needs to send in API
+    filterSupportedTagAndData(limitedElements, updatedElements)
+
+    /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
+     const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
+     createPastedElements(childElements, elements);
+   } else if (childNodes.length >= 1) {
+     let childElements;
+     if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
+       childElements = childNodes[0].children;
+     } else {
+       childElements = childNodes;
+     }
+     createPastedElements(childElements, elements);
+   } */
     const parentIndex = props.index;
     if (updatedElements.length) {
       props.toggleWordPasteProceed(true)
@@ -123,7 +141,7 @@ export const pastePostProcess = (data, props) => {
     }
     props.onPowerPaste(updatedElements, parentIndex);
     // if valid data has been pasted in to editor once then make editor non-editable
-    elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
+    limitedElements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
 }
 
@@ -135,7 +153,7 @@ export const pastePostProcess = (data, props) => {
  * @param {Object} props
  * @returns Content that needs to be pasted on text-editor
  */
-export const prepareFinalPasteContent = (elements,nodeData,props) => {
+export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements) => {
   let isPreviousUnsupportedContent = false
   const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
   const allSupUnsupChildNodes = nodeData.childNodes
@@ -143,6 +161,11 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
   const elementsHtml = elements.map(item => {return item.html})
   for (let index = 0; index < allSupUnsupChildNodes.length; index++) {
     const element = allSupUnsupChildNodes[index];
+    if (tooManyElements) {
+      if (!props.isPowerPasteLimitExceeding) {
+        props.checkPowerPasteLimit(true)
+      }
+    }
     if(elementsHtml.includes(element.outerHTML)) {
       isPreviousUnsupportedContent = false
       let elementOuterHtml = element?.outerHTML
@@ -153,7 +176,7 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
         elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
       }
       contentToPaste += elementOuterHtml
-    } else if(!spacesAndNewLineFormatArray.includes(element?.data)){
+    } else if(!spacesAndNewLineFormatArray.includes(element?.data) && !tooManyElements) {
       if(!props.isPowerPasteInvalidContent) {
         props.checkInvalidPowerPasteContent(true)
       }

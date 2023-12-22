@@ -19,7 +19,8 @@ const {
 }
     = TcmConstants;
 
-export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, index, isPopupSlate, operationType = null, popupCutCopyParentData = null, deletedElementVersionUrn="") => {
+export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, index, isPopupSlate, operationType = null,
+    popupCutCopyParentData = null, deletedElementVersionUrn="") => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
@@ -52,7 +53,8 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsMultiColumn(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType);
     }
     else {
-        let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, undefined, {}, actionStatus, popupCutCopyParentData);
+        let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate,
+        undefined, {}, actionStatus, popupCutCopyParentData);
         // This is the case of deleting an element after versioning without update it
         if((actionStatus.action.toLowerCase() === "delete") && (deletedElementVersionUrn !== "") && (deletedElementVersionUrn !== elementDetails.elementUrn)){
             wipData.id = deletedElementVersionUrn;
@@ -84,7 +86,8 @@ export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPo
                 if (elementType.indexOf(ele.type) !== -1) {
                     elementId.childId = ele.id;
                     tag.childTag = fetchElementsTag(ele);
-                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,slateManifestVersioning,isPopupSlate, parentObj, containerElement,actionStatus,popupCutCopyParentData);
+                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,
+                    slateManifestVersioning,isPopupSlate, parentObj, containerElement,actionStatus,popupCutCopyParentData);
                     prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
                 }
                else if (ele.type === SHOWHIDE || ele.type === POETRY_ELEMENT) {
@@ -98,7 +101,8 @@ export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPo
         else if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement,actionStatus,popupCutCopyParentData);
+            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",
+            undefined,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement,actionStatus,popupCutCopyParentData);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE || item.type === POETRY_ELEMENT) {
@@ -251,7 +255,8 @@ export const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, is
                 tag.childTag = (SHType === 'postertextobject') ? "CTA" : fetchElementsTag(item);
                 /** @param {String} isHead - If SH is inside the WE/AS */
                 const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-                elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
+                elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer,
+                slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
                 prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
             } else if (item?.type === ELEMENT_ASIDE) {
                 containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
@@ -282,7 +287,8 @@ export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPo
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item);
-        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
+        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined,
+        popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }
@@ -307,7 +313,8 @@ export const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, 
             if (asideData?.parent?.type === SHOWHIDE) {
                 const parentElement = asideData ?? {}
 
-                elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
+                elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id, undefined, popupInContainer, slateManifestVersioning,
+                isPopupSlate, parentElement, { asideData, parentUrn });
             }
             else{
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id,undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
@@ -328,7 +335,7 @@ export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defa
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     let isHead = "", parentUrnToSend={};
     let parentObj = {};
-    if (containerElement?.showHideObj?.currentElement?.type === 'element-aside' || containerElement?.showHideObj?.currentElement?.type === 'citations') {
+    if (containerElement?.showHideObj?.currentElement?.type === ELEMENT_ASIDE || containerElement?.showHideObj?.currentElement?.type === 'citations') {
         parentObj = {
             parent: containerElement?.showHideObj?.element,
             sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType
@@ -347,7 +354,8 @@ export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defa
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item);
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead,parentUrnToSend,-1,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement, actionStatus, popupCutCopyParentData);
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead,parentUrnToSend,-1,popupInContainer,slateManifestVersioning, isPopupSlate,
+            parentObj, containerElement, actionStatus, popupCutCopyParentData);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }
@@ -425,9 +433,12 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
         isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn?.manifestUrn == asideData?.id ? "HEAD" : "BODY" : "";
     }
     if (isCgInSh) {
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, containerElement);
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ?
+            parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, containerElement);
     } else {
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ?
+            parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement,
+            { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
     }
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
@@ -483,7 +494,7 @@ export const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultK
             if(ele?.type === SHOWHIDE || ele?.type === POETRY_ELEMENT) {
                tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType);
             } else
-            if(ele?.type === "element-aside") {
+            if(ele?.type === ELEMENT_ASIDE) {
                tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType)
             } else if(ele?.type === 'manifestlist') {
                 return false;
@@ -533,7 +544,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     if (isChildElement == true) {
         if (showHideObj) {
             parentData.showHideObj = { ...showHideObj }
-            if (!(asideData?.type === 'element-aside' && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3)) {
+            if (!(asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3)) {
                 const { parentElement } = setParentUrn(bodymatter, tempIndex);
                 parentData.parentUrn = {
                     manifestUrn: parentElement?.id,
@@ -554,7 +565,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
                 parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
             }
         }
-        if (showHideObj && ((asideData?.type === 'element-aside' && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3))) {
+        if (showHideObj && ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3))) {
             parentData.showHideObj = { ...showHideObj }
             parentData.parentUrn = { ...parentUrn }
             parentData.asideData = { ...asideData }
@@ -646,7 +657,8 @@ export const setParentUrn = (bodymatter, tempIndex, isFigure, asideData = {}) =>
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
         }
     } else if(isFigure && tempIndex.length === 5 ) {
-        parentElement = bodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]]
+        parentElement = bodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents
+        .bodymatter[tempIndex[4]]
     }
     /**Showhide inside WE body/manifest */
     else if (tempIndex.length === 5) {

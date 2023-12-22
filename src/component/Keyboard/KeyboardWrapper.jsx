@@ -104,7 +104,9 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (firstTextNode === node) {
             return tinymceOffset === 0;
         }
-        else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR) && tinymceNode?.parentNode?.parentNode?.className !== 'blockquoteMarginalia' && !(tinymceNode.className?.includes('figureCaption') || tinymceNode.className?.includes('figureTitle'))) { //since blockquote title and caption is directly wrapped into p therefore added the condition
+        else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR) && tinymceNode?.parentNode?.parentNode?.className !== 'blockquoteMarginalia' &&
+        !(tinymceNode.className?.includes('figureCaption') || tinymceNode.className?.includes('figureTitle')))
+        { //since blockquote title and caption is directly wrapped into p therefore added the condition
 
             if(firstTextNode?.nodeName === 'IMG') {
                 return tinymceOffset === 0;
@@ -269,7 +271,9 @@ const isKWChild = (node, index = 0) => {
 const isParentFootnote = (node) => {
     const nodeParent = node?.parentNode;
     if(nodeParent) {
-        return ((nodeParent?.nodeName === 'A' && nodeParent?.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid")) || ((node.parentNode?.className?.includes('figureCaption') || node.parentNode?.parentNode?.className?.includes('figureCaption') || node.parentNode?.className?.includes('figureTitle')) && node.nextSibling?.id == 'f-e-s')) ; // for caption field in case of footnotes in the last
+        return ((nodeParent?.nodeName === 'A' && nodeParent?.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid")) ||
+        ((node.parentNode?.className?.includes('figureCaption') || node.parentNode?.parentNode?.className?.includes('figureCaption') ||
+        node.parentNode?.className?.includes('figureTitle')) && node.nextSibling?.id == 'f-e-s')) ; // for caption field in case of footnotes in the last
     }
     else {
         return false;

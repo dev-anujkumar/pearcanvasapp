@@ -9,6 +9,7 @@ import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 import { checkSlateLock } from '../js/slateLockUtility';
+import { DATA_MCE_SELECTED } from './Element_Constants';
 // DECLARATION - const or variables
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
@@ -16,8 +17,13 @@ export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
-export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
-export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>',
+                                                 '</sup>', '</em>', '<i>','<img']
+export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"',
+                                'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"',
+                                'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"',
+                                'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"',
+                                 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
 export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature','element-list']
 export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
 export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content", "Enter Button Label"]
@@ -28,6 +34,7 @@ export const allowedFormattings = ['bold','italic','underline','strikethrough','
 export const validFirstNodeTags = ['span','dfn'];
 export const withoutCursorInitailizedElements = ['figure', 'element-aside'];
 export const ALLOWED_ENVIRONMENT_NAMES = ['dev', 'test', 'qa', 'staging', 'perf', 'prf', 'stg', 'smk'];
+export const ALLOWED_FORMATTING_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
 
 // function to get the environment name based on host
 export const requestConfigURI = () => {
@@ -98,7 +105,8 @@ export const isApprovedOrSubscribed = (authStore) => {
     const {appStore, projectInfo} = authStore;
     const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
-    const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
+    const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" &&
+                            config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
     return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber || isSlateLocked());
 }
 /**
@@ -329,7 +337,8 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
      let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive', 'tableasmarkup'];
      if ((figureObj.figuretype == 'audio' || figureObj.figuretype == 'video') && figureObj.type == 'figure') {
         if (figureObj.hasOwnProperty('title') && figureObj.hasOwnProperty('subtitle')) {
-            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
+            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle
+            .replace("<p>", '').replace("</p>", ''));
         } else if (figureObj.hasOwnProperty('subtitle')) {
             figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
@@ -337,7 +346,8 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
             delete figureObj.subtitle;
         }
      } else if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
-             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
+             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '')
+             .replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
              if (figureObj.hasOwnProperty('subtitle')) {
                 delete figureObj.subtitle;
             }
@@ -690,7 +700,8 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
     const currentTarget = document.getElementById(currentTargetId)
     let tempFirstContainerHtml = currentTarget && currentTarget.innerHTML
     if (typeof tempFirstContainerHtml === "string") {
-        tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+        .replace(/\sWirisformula/g, ' temp_Wirisformula');
         try {
             currentTarget.innerHTML = tempFirstContainerHtml
         }
@@ -741,7 +752,8 @@ export const replaceUnwantedtags = (html) => {
     let tempDiv = document.createElement('div');
     // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
     html = removeSpellCheckDOMAttributes(html);
-    html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
+    html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula')
+            .replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
     html = html.trim();
     tempDiv.innerHTML = html;
     tinyMCE.$(tempDiv).find('br').remove();
@@ -754,9 +766,9 @@ export const replaceUnwantedtags = (html) => {
     tinyMCE.$(tempDiv).find('img').removeAttr('style');
     tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
     tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
-    tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
-    tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
-    tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('blockquote').removeAttr(DATA_MCE_SELECTED);
+    tinyMCE.$(tempDiv).find('code').removeAttr(DATA_MCE_SELECTED);
+    tinyMCE.$(tempDiv).find('img').removeAttr(DATA_MCE_SELECTED);
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('height');
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('width');
     tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
@@ -764,7 +776,7 @@ export const replaceUnwantedtags = (html) => {
     tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
     tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
     tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
-    tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('a').removeAttr(DATA_MCE_SELECTED);
     tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
     tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
@@ -913,7 +925,8 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
     convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag
     let updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
 
-    if (props?.element?.elementdata?.headers || props?.element?.elementdata?.type === "pullquote" || (props?.element?.type === 'element-blockfeature' && props?.placeholder !== 'Attribution Text')) {
+    if (props?.element?.elementdata?.headers || props?.element?.elementdata?.type === "pullquote" || (props?.element?.type === 'element-blockfeature'
+        && props?.placeholder !== 'Attribution Text')) {
         updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
         updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
         updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
@@ -1091,12 +1104,16 @@ export const showNotificationOnCanvas = (message, type) => {
 
 // This function is use to handle Indentation for the Element
 export const isElementIndent = (stanzaClassList) => {
-    return (stanzaClassList?.contains('poetryLineLevel1') || stanzaClassList?.contains('poetryLineLevel2') || stanzaClassList?.contains('poetryLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
+    return (stanzaClassList?.contains('poetryLineLevel1') || stanzaClassList?.contains('poetryLineLevel2') || stanzaClassList?.contains('poetryLineLevel3')
+    || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')
+    || stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
 }
 
 // This function is use to handle Indentation for Playscript
 export const isDialogueIndent = (stanzaClassList) => {
-    return (stanzaClassList?.contains('SDLineLevel1') || stanzaClassList?.contains('SDLineLevel2') || stanzaClassList?.contains('SDLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
+    return (stanzaClassList?.contains('SDLineLevel1') || stanzaClassList?.contains('SDLineLevel2') || stanzaClassList?.contains('SDLineLevel3')
+    || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')
+    || stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
 }
 
 // This function is use to return Playscript character class

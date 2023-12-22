@@ -11,10 +11,12 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE, DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
+        PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE,
+        DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, ELEMENT_ASSESSMENT_LOWERCASE, POINTER_EVENTS_NONE, PRIMARY_BLOCKCODE_EQUATION, ELEMENT_ASIDE, SIDEBAR_DISABLE } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
@@ -109,7 +111,9 @@ class Sidebar extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.playbackModeRef && this?.playbackModeRef?.current && this.playbackModeLabelRef && this?.playbackModeLabelRef?.current && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
+        if (this.playbackModeRef && this?.playbackModeRef?.current && this.playbackModeLabelRef &&
+            this?.playbackModeLabelRef?.current && !this.playbackModeRef?.current?.contains(event.target) &&
+            !this.playbackModeLabelRef?.current?.contains(event.target)) {
             this.setState({
                 isPlayBackDropdownOpen: false
             })
@@ -166,7 +170,9 @@ class Sidebar extends Component {
       captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
 
     // showing set to decorative image popup only if image element fields have any values in them
-      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
+      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') ||
+      (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT))
+        && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
@@ -177,7 +183,7 @@ class Sidebar extends Component {
         podOption: false,
       });
       const {asideData} = this.props;
-      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== ELEMENT_ASSESSMENT_LOWERCASE) {
         if (this.props.activeElement.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
             blockListData: {
@@ -273,7 +279,7 @@ class Sidebar extends Component {
         activebulletIcon: iconColorValue,
       });
       const {asideData} = this.props;
-      if (this.props.activeElement.elementId !== "" &&this.props.activeElement?.elementWipType !== "element-assessment") {
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement?.elementWipType !== ELEMENT_ASSESSMENT_LOWERCASE) {
         if (this.props.activeElement?.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
             blockListData: {
@@ -328,7 +334,7 @@ class Sidebar extends Component {
 
     primaryOption = () => {
         const { activePrimaryOption } = this.state
-        const isReadOnly =  hasReviewerRole() ? 'pointer-events-none' : ''
+        const isReadOnly =  hasReviewerRole() ? POINTER_EVENTS_NONE : ''
         let primaryOptions = '';
         if (this.state.activeElementType) {
             let className = ""
@@ -336,15 +342,18 @@ class Sidebar extends Component {
             let primaryOptionList = Object.keys(primaryOptionObject);
             const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE: '';
             if (primaryOptionList.length > 0) {
-                if (this.state.activeElementType === 'element-assessment') {
+                if (this.state.activeElementType === ELEMENT_ASSESSMENT_LOWERCASE) {
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOptions = ["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
+                let disabledPrimaryOptions = ["primary-mathml-equation",
+                    PRIMARY_BLOCKCODE_EQUATION, "primary-editor-table-equation",
+                    "primary-elm-interactive", "primary-mmi", "primary-smartlink",
+                    "primary-showhide", "primary-popup"];
                 if (disabledPrimaryOptions.indexOf(activePrimaryOption) > -1) {
                     className = "disabled"
                 }
                 primaryOptions = primaryOptionList.map(item => {
-                    if (item !== 'enumType' && item !== 'primary-mathml-equation' && item !== 'primary-blockcode-equation' && item !== 'primary-editor-table-equation') {
+                    if (item !== 'enumType' && item !== 'primary-mathml-equation' && item !== PRIMARY_BLOCKCODE_EQUATION && item !== 'primary-editor-table-equation') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
                             {primaryOptionObject[item].text}
                         </li>;
@@ -355,9 +364,11 @@ class Sidebar extends Component {
                 if (this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
+                const sidebarDisableCondition = (this.props.activeElement?.elementType === ELEMENT_ASIDE &&
+                    this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId &&
+                    this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
-                    className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
+                    className={`element-dropdown ${sidebarDisableCondition ? SIDEBAR_DISABLE : ""}`}>
                     {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
                     <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
@@ -374,7 +385,8 @@ class Sidebar extends Component {
         else if (this.props.activeElement.elementWipType == "element-learningobjectivemapping") {
             primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
                 <div className="element-dropdown">
-                    <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
+                    <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow"
+                    viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
                 </div>
             </div>
 
@@ -384,7 +396,8 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                 <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                 <p>Show Module Name</p>
-                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
+                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName}
+                disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
             </div>;
             return primaryOptions;
         }
@@ -421,10 +434,11 @@ class Sidebar extends Component {
         if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
         }
-        const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
+        const sidebarDisableCondition = (this.props.activeElement?.elementType === ELEMENT_ASIDE &&
+        this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
 
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
-            className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
+            className={`element-dropdown ${sidebarDisableCondition ? SIDEBAR_DISABLE : ""}`}>
             <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
                 {fontBulletOptionObject[dataValue]?.text}
                 {disabledPrimaryOption.indexOf(dataValue) > -1 ? null : dropdownArrow}
@@ -564,7 +578,7 @@ class Sidebar extends Component {
             isPlayBackDropdownOpen: false
         });
 
-        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
+        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== ELEMENT_ASSESSMENT_LOWERCASE) {
             this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -586,7 +600,7 @@ class Sidebar extends Component {
             let secondaryOptionList = Object.keys(secondaryOptionObject);
             let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
             let showLearnosityDropdown = false;
-            if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
+            if (this.state.activePrimaryOption === PRIMARY_BLOCKCODE_EQUATION && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
                 secondaryOptionList.splice(0, 1)
             }
             // checking active element and primary option to allow column 3 secondary option
@@ -624,15 +638,20 @@ class Sidebar extends Component {
                 }
                 //Removing Select option from dropdown values
                 if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
-                const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) ||
+                    (this.props.activeElement?.elementType === ELEMENT_ASIDE &&
+                    this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId &&
+                    this.props.cutCopySelection?.operationType === "cut"))
+                const disableClass = hasReviewerRole() ? POINTER_EVENTS_NONE : ''
                 secondaryOptions = <div
-                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
+                    className={`element-dropdown ${display} ${sidebarDisableCondition ? SIDEBAR_DISABLE: ""} `}>
                     {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>}
-                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`}
+                    data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
-                    </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                        </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ?
+                         null : this.toggleElementDropdown}>
                         <Autocomplete
                             disablePortal
                             disableClearable
@@ -640,7 +659,8 @@ class Sidebar extends Component {
                             noOptionsText={'No result found'}
                             style={{ width: 210 }}
                             ListboxProps={{ style: { maxHeight: "270px" } }}
-                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} : secondaryOptionObject[this.state.activeSecondaryOption]}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} :
+                                    secondaryOptionObject[this.state.activeSecondaryOption]}
                             options={languageDropdownOptions}
                             onChange={(e,value)=>{this.handleSecondaryLanguageChange(e,value)}}
                             getOptionLabel={(option) => option.text}
@@ -735,12 +755,13 @@ class Sidebar extends Component {
             if (this.state.isPlayBackDropdownOpen) {
                 active = 'active';
             }
-            let disableClass = hasReviewerRole()  ? "pointer-events-none" : '';
+            let disableClass = hasReviewerRole()  ? POINTER_EVENTS_NONE : '';
             disableClass = `${disableClass} ${disablePlaybackMode ? "disablePlaybackMode" : ""}`
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
-                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
+                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary"
+                onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
                     {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
                     <span> {dropdownArrow} </span>
                 </div>
@@ -779,7 +800,7 @@ class Sidebar extends Component {
 
     attributions = () => {
         let toggleAsideNumber = false;
-        if (this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") {
+        if (this.props.activeElement.elementType === ELEMENT_ASIDE || this.props.activeElement.elementType === "element-workedexample") {
             toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
         }
         let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
@@ -820,9 +841,11 @@ class Sidebar extends Component {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable)
                     if (this.props?.activeElement?.elementType === "openerelement") {
                         if (item === "alt_text") {
-                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("altText") ? this.props?.alfrescoAltLongDescData?.altText : this.props?.activeElement?.altText ? this.props?.activeElement?.altText : ""
+                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("altText") ?
+                            this.props?.alfrescoAltLongDescData?.altText : this.props?.activeElement?.altText ? this.props?.activeElement?.altText : ""
                         } else if (item === "long_description") {
-                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("longDesc") ? this.props?.alfrescoAltLongDescData?.longDesc : this.props?.activeElement?.longDesc ? this.props?.activeElement?.longDesc : ""
+                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("longDesc") ? this.props?.alfrescoAltLongDescData?.longDesc :
+                            this.props?.activeElement?.longDesc ? this.props?.activeElement?.longDesc : ""
                         }
                     } else {
                         if (item === "alt_text") {
@@ -834,28 +857,32 @@ class Sidebar extends Component {
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" onBlur={this.handleBQAttributionBlur} disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" onBlur={this.handleBQAttributionBlur} disabled={isDisable}
+                        name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
-            if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId) {
+            if (this.state.activePrimaryOption === PRIMARY_BLOCKCODE_EQUATION && this.props.activeElement.elementId) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
                 if (attrNode) {
                     attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
                     attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
-                    attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
+                    attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue ||
+                    this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
                 }
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleBceToggle} />
-                            <span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox"
+                        checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true}
+                        onClick={!hasReviewerRole() && !config.savingInProgress && this.handleBceToggle} /><span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur} />
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber}
+                        value={this.state.bceNumberStartFrom} disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) ||
+                        hasReviewerRole()} onBlur={this.handleBceBlur} />
                     </div>
                 </div>
                 return attributions;
@@ -865,13 +892,15 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
-                            <span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ?
+                        this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
+                        <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber} value={this.state.bceNumberStartFrom}
-                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleDialogueBlur} />
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber}
+                        value={this.state.bceNumberStartFrom} disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) ||
+                        hasReviewerRole()} onBlur={this.handleDialogueBlur} />
                     </div>
                 </div>
                 return attributions;
@@ -887,18 +916,20 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleNumberedLineToggle} />
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ?
+                            this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleNumberedLineToggle} />
                             <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.setStartLineNumber} value={this.state.bceNumberStartFrom}
-                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.saveElementAttributes} />
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.setStartLineNumber}
+                        value={this.state.bceNumberStartFrom} disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) ||
+                        hasReviewerRole()} onBlur={this.saveElementAttributes} />
                     </div>
                 </div>
                 return attributions;
             }
-            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample")) {
+            if ((this.props.activeElement.elementType === ELEMENT_ASIDE || this.props.activeElement.elementType === "element-workedexample")) {
                attributions = <div className="asideNumberHeading">
                     <div className="toggleAsideNumber">Label, Number, Title</div>
                     <div className="setting-value" onClick={() => this.handleAsideNumber(toggleAsideNumber)}>
@@ -1054,7 +1085,8 @@ class Sidebar extends Component {
     }
 
     handleSyntaxHighlightingToggle = () => {
-        let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
+        let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ?
+        this.state.syntaxHighlightingToggleValue : true);
         if (currentToggleValue) {
             this.handleSyntaxHighlightingPopup(true);
         }
@@ -1128,7 +1160,8 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ?
+                    this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
@@ -1187,7 +1220,7 @@ class Sidebar extends Component {
             if (attrNode) {
                 attrNode.setAttribute("podwidth", showPodValue)
             }
-            const hasReviewerClass = hasReviewerRole() ? 'pointer-events-none' : ''
+            const hasReviewerClass = hasReviewerRole() ? POINTER_EVENTS_NONE : ''
 
             return (
                 <div className='printOnDemand'>
@@ -1216,7 +1249,8 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" &&
+                this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
@@ -1225,7 +1259,8 @@ class Sidebar extends Component {
                     {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
                     {!isDecorativeImage && this.attributions()}
                     {this.podOption()}
-                    {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
+                    {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove}
+                    togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>
                     <div className="canvas-sidebar-font-bullet-type">Font Type</div>
                     {this.fontBulletOption("fontStyle")}

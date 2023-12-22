@@ -20,7 +20,9 @@ import { getSlateLockStatus, releaseSlateLock, saveLockDetails } from './SlateLo
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs,
+     setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus,
+      isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -33,7 +35,7 @@ import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
-import {getAllSlatesData} from '../../js/getAllSlatesData'
+import {getAllSlatesData, currentNodeAncestorData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
@@ -165,7 +167,10 @@ export class CanvasWrapper extends Component {
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
         // Filter search icon for popup
         let popupFilter = '';
-        let isToolBarBlocked = isSubscriberRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked && isOwnerRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) ? 'hideToolbar' : ''
+        let isToolBarBlocked = isSubscriberRole(this.props.projectSubscriptionDetails.projectSharingRole,
+             this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked &&
+              isOwnerRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) ?
+               'hideToolbar' : ''
         if(config.isPopupSlate) {
             popupFilter = 'popup';
         }
@@ -186,7 +191,8 @@ export class CanvasWrapper extends Component {
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
                     {/* editor tool goes here */}
-                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker} isToolBarBlocked={isToolBarBlocked} projectSubscriptionDetails= {this.props.projectSubscriptionDetails}/>
+                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker} isToolBarBlocked={isToolBarBlocked}
+                                                 projectSubscriptionDetails= {this.props.projectSubscriptionDetails}/>
                     {/* custom list editor component */}
                 </div>
 
@@ -195,7 +201,8 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div className="artboard-parent">
                                 {/*Prev Button */}
-                                {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
+                                {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' &&
+                                 <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content' id = "previous-slate-button">
                                         <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'>{prevIcon}</div>
@@ -208,7 +215,11 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked} closeUndoTimer = {this.props.closeUndoTimer}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData}
+                                        navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement}
+                                        tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker}
+                                        isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked}
+                                        closeUndoTimer = {this.props.closeUndoTimer}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -218,7 +229,8 @@ export class CanvasWrapper extends Component {
                                         <p>{this.state.toastMsgText}</p>
                                     </div>
                                 }
-                                 {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
+                                 {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' &&
+                                  <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' id = "next-slate-button" >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'>{nextIcon}</div>
@@ -243,10 +255,17 @@ export class CanvasWrapper extends Component {
                                     () => {
                                         const markIndexpopUpStatus =  this.props.markedIndexValue?.popUpStatus || this.props.markedIndexGlossary?.popUpStatus;
                                         if (this.props.glossaryFootnoteValue.popUpStatus && !markIndexpopUpStatus) {
-                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
+                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                                    showGlossaaryFootnote={this.props.glossaaryFootnotePopup}
+                                                    glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}
+                                                    audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData}
+                                                    markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
                                         }
                                         if(markIndexpopUpStatus){
-                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage} showBlocker = {this.props.showCanvasBlocker}/>
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup}
+                                            markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue}
+                                            isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}
+                                            showBlocker = {this.props.showCanvasBlocker}/>
 
                                         }
                                         else {
@@ -370,6 +389,7 @@ export default connect(
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
         setTocSlateLabel,
+        currentNodeAncestorData,
         saveLockDetails
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

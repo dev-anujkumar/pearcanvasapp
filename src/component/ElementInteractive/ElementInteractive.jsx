@@ -16,18 +16,19 @@ import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssess
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 import { sendDataToIframe, getCookieByName } from './../../constants/utility.js';
-import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
+import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA, INSTITUTION_URLS, CM_DESCRIPTION } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion, setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion,
+         setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resource_Type } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action';
-import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper';
 import { updateSmartLinkDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -43,7 +44,8 @@ class Interactive extends React.Component {
         this.state = {
             itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
             posterImage : null,
-            imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
+            imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ?
+            this.props.model.figuredata.posterimage.path : "",
             showAssesmentpopup: false,
             elementType: this.props.model.figuredata.interactivetype || "",
             projectMetadata: false,
@@ -66,21 +68,18 @@ class Interactive extends React.Component {
     }
 
     componentDidMount(){
+        const { alfrescoPlatformMetadata } = this.props.model
         if(this.props.model && this.props.model.figuredata){
             this.setState({
                 itemID : this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
                 posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
                 itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-
+                alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                              alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
+                alfrescoSiteData: { ...alfrescoPlatformMetadata }
             })
         }
-        getAlfrescositeResponse(this.props.elementId, (response) => {
-            this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData: { ...response }
-            })
-        })
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -88,7 +87,8 @@ class Interactive extends React.Component {
             return {
                 itemID: nextProps.model.figuredata && nextProps.model.figuredata.interactiveid ? nextProps.model.figuredata.interactiveid : "",
                 posterImage: null,
-                imagePath : nextProps.model.figuredata && nextProps.model.figuredata.posterimage && nextProps.model.figuredata.posterimage.path ? nextProps.model.figuredata.posterimage.path : "",
+                imagePath : nextProps.model.figuredata && nextProps.model.figuredata.posterimage && nextProps.model.figuredata.posterimage.path ?
+                nextProps.model.figuredata.posterimage.path : "",
                 elementType: nextProps.model.figuredata.interactivetype || "",
                 itemParentID:nextProps.model.figuredata && nextProps.model.figuredata.interactiveparentid ? nextProps.model.figuredata.interactiveparentid : "",
                 interactiveTitle: nextProps.model.figuredata && nextProps.model.figuredata.interactivetitle? nextProps.model.figuredata.interactivetitle : "",
@@ -346,7 +346,14 @@ class Interactive extends React.Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(element);
 
-            return <FigureUserInterface model={this.props.model} interactiveformat={this.props.model.figuredata.interactiveformat} deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} updateElm={() => this.updateElm()}/>
+            return <FigureUserInterface model={this.props.model} interactiveformat={this.props.model.figuredata.interactiveformat}
+            deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId}
+            alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)}
+            permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+            handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo}
+            glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+            id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
+            updateElm={() => this.updateElm()}/>
     }
 
     /**
@@ -507,6 +514,11 @@ class Interactive extends React.Component {
         posterImage['imageid'] = interactiveData['imageId'] ?? '';
         posterImage['path'] = interactiveData['path'] ?? '';
         const alttext = interactiveData['alttext'] ?? '';
+        if(!posterImage['imageid'] && !posterImage['path']){
+            return {
+                alttext
+            }
+        }
         return {
             posterImage,
             alttext
@@ -523,11 +535,13 @@ class Interactive extends React.Component {
         disableHeader(false);
         this.props.showBlocker(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] && imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.[INSTITUTION_URLS] &&
+            imageData?.[INSTITUTION_URLS][0]?.publicationUrl ? imageData?.[INSTITUTION_URLS][0]?.publicationUrl : "";
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkPath = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
-        let smartLinkString = (imageData.properties["cm:description"] && imageData.properties["cm:description"].toLowerCase() !== "eps media") ? imageData.properties["cm:description"] : "{}";
+        let smartLinkString = (imageData.properties[CM_DESCRIPTION] && imageData.properties[CM_DESCRIPTION].toLowerCase() !== "eps media") ?
+            imageData.properties[CM_DESCRIPTION] : "{}";
         let isSmartLinkAsset = smartLinkString !== "{}" && (smartLinkString.includes("smartLinkType") || !(imageData.hasOwnProperty('content'))) ? true :  false
         let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
         let smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;
@@ -809,7 +823,7 @@ class Interactive extends React.Component {
                         interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
                         interactiveData['path'] = responseData['data']["thumbnail"]['src'];
                         interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
-                        interactiveData['title'] = responseData['data']["title"];
+                        interactiveData['title'] = responseData['data']["title"] || citeTdxObj?.singleAssessmentID?.name
                     }
                 })
             // }
@@ -827,12 +841,14 @@ class Interactive extends React.Component {
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-                figureData.posterimage = posterImage;
+               if(posterImage['imageid'] || posterImage['path']){
+                    figureData.posterimage = posterImage;
+                }
                 figureData.alttext = alttext;
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
                 itemParentID:citeTdxObj.id,
-                interactiveTitle:citeTdxObj.title
+                interactiveTitle: interactiveData['title'] || citeTdxObj?.title,
                })
 
                that.props.updateFigureData(figureData, that.props.index, that.props.elementId, this.props.asideData, ()=>{
@@ -852,11 +868,20 @@ class Interactive extends React.Component {
         try {
             return (
                     <>
-                        <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? `figureElement` : `interactive-element`} onClick = {this.handleClickElement}>
+                        <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? `figureElement` : `interactive-element`}
+                        onClick = {this.handleClickElement}>
                             {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                            {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
-                            {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
+                            {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'}
+                            closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment}
+                            usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage}
+                            isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle}
+                            filterUUID={this.state.filterUUID} />:""}
+                            {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment}
+                            activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'}
+                            closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType}
+                            addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType}
+                            assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
                         </div>
                         {this.state.showUpdatePopup && this.showCustomPopup()}
                     </>

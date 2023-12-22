@@ -67,9 +67,11 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
 
         case BLOCKFEATURE:
             glossarySnap = [];
-            footnoteWipList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
+            footnoteWipList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ?
+            element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList)
-            assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
+            assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ?
+            element.elementdata.authoredtext.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList,index,actionStatus)
             break;
         case FIGURE:
@@ -232,7 +234,8 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
         if (assetsList && assetsList.length) {
             await Promise.all(assetsList.map(async (assetsItem, index) => {
                 let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr[data-uri="' + assetsItem.linkid + '"]');
-                let assetId = assetIdAll && assetIdAll[0] && assetIdAll[0].getAttribute('asset-id') ? assetIdAll[0].getAttribute('asset-id') : actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
+                let assetId = assetIdAll && assetIdAll[0] && assetIdAll[0].getAttribute('asset-id') ? assetIdAll[0].getAttribute('asset-id') :
+                actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
                 let data = {
                     assetid: assetId,
                     type: assetsItem && assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
@@ -265,11 +268,13 @@ export const fetchElementsTag = (element,metadataField) => {
     const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element?.elementType;
-    eleType = eleType === 'groupedcontent' ? element.groupeddata ? `groupedcontent-${element?.groupeddata?.bodymatter?.length}` : `groupedcontent-${element.element?.groupeddata?.bodymatter?.length}` : eleType;
+    eleType = eleType === 'groupedcontent' ? element.groupeddata ? `groupedcontent-${element?.groupeddata?.bodymatter?.length}` :
+    `groupedcontent-${element.element?.groupeddata?.bodymatter?.length}` : eleType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:
-            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : element?.elementdata?.designtype === 'handwritingstyle' ? HAND_WRITING : PARAGRAPH;
+            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level :
+            element?.elementdata?.designtype === 'handwritingstyle' ? HAND_WRITING : PARAGRAPH;
             break;
         case ELEMENT_ASIDE:
             eleSubType = element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE;

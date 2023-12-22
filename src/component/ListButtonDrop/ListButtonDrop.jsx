@@ -37,8 +37,11 @@ const ListButtonDrop = (props) => {
                 <div className="topText">Start with</div>
                 <div>
                     <div id="listInputCover" className="">
-                        <input ref={props.inputRef} id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} onKeyUp={(e) => { handleInputSubmit(e, props) }} />
-                        <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" title="submit" className={`fr-command fr-btn fr-btn-font_awesome ${!props.startValue && 'disabledListBtn' || ''} `} data-cmd="popupGoBtn" onClick={(e) => { handleInputSubmit(e, props, true) }}>
+                        <input ref={props.inputRef} id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*"
+                        className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV}
+                        onKeyUp={(e) => { handleInputSubmit(e, props) }} />
+                        <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" title="submit" className={`fr-command fr-btn fr-btn-font_awesome
+                        ${!props.startValue && 'disabledListBtn' || ''} `} data-cmd="popupGoBtn" onClick={(e) => { handleInputSubmit(e, props, true) }}>
                             <img src={listCheck}/>
                             <span className="fr-sr-only">submit</span>
                         </button>
@@ -75,7 +78,8 @@ const onListOptionSelect = (type, props) => {
 const DecimalListIconBox = (props) => {
     const _listFor = 'decimal';
     return (
-        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
+        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`}
+        onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <img className={"list-img"} src={numbersList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
@@ -88,7 +92,8 @@ const DecimalListIconBox = (props) => {
 const UpperAlphaListIconBox = (props) => {
     const _listFor = 'upper-alpha';
     return (
-        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
+        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`}
+        onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
            <img className={"list-img"} src={alphabetsCapitalList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
@@ -101,7 +106,8 @@ const UpperAlphaListIconBox = (props) => {
 const LowerAlphaListIconBox = (props) => {
     const _listFor = 'lower-alpha';
     return (
-        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
+        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`}
+        onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <img className={"list-img"} src={alphabetsSmallList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
@@ -114,7 +120,8 @@ const LowerAlphaListIconBox = (props) => {
 const UpperRomanListIconBox = (props) => {
     const _listFor = 'upper-roman';
     return (
-        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
+        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`}
+        onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <img className={"list-img"} src={romansCapitalList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
@@ -127,7 +134,8 @@ const UpperRomanListIconBox = (props) => {
 const LowerRomanListIconBox = (props) => {
     const _listFor = 'lower-roman';
     return (
-        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
+        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`}
+        onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <img className={"list-img"} src={romansSmallList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
@@ -140,7 +148,8 @@ const LowerRomanListIconBox = (props) => {
 const NoStyleListIconBox = (props) => {
     const _listFor = 'none';
     return (
-        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
+        <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`}
+        onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <img className={"list-img-none"} src={noneList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>

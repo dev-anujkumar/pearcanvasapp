@@ -3179,7 +3179,8 @@ export const usageTypeAPI_Data =[
     }
 ]
 
-export const MockUsageTypeList_Data1 = ["Concept Check", "Diagnostic", "Homework", "Journal", "Non Scored", "Practice", "Quiz", "Remediation", "Shared Writing", "Study Tools", "Test"]
+export const MockUsageTypeList_Data1 = ["Concept Check", "Diagnostic", "Homework", "Journal", "Non Scored", "Practice", "Quiz", "Remediation",
+                                        "Shared Writing", "Study Tools", "Test"]
 
 export const MockUsageTypeList_Data2 = [
     {

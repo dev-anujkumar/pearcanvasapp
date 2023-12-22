@@ -13,7 +13,7 @@ import { guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
-import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
+import { ASIDE_SOURCE, ELEMENT_LABEL_CLASS, IGNORE_FOR_DRAG_CLASS, labelHtmlData, LAZYLOAD_WRAPPER_CLASS, TRANSITION_NONE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
@@ -125,12 +125,12 @@ class ElementAsideContainer extends Component {
                                     fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                                     scrollSpeed: 10,
-                                    handle: '.element-label', //Drag only by element tag name button
+                                    handle: ELEMENT_LABEL_CLASS, //Drag only by element tag name button
                                     dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
-                                    filter: ".ignore-for-drag",
+                                    filter: IGNORE_FOR_DRAG_CLASS,
                                     preventOnFilter: false,
-                                    draggable: ".lazyload-wrapper",
+                                    draggable: LAZYLOAD_WRAPPER_CLASS,
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd
@@ -153,7 +153,8 @@ class ElementAsideContainer extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
                                             elementIndex: this.props.index,
-                                            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
+                                            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype,
+                                                             showHideType: this.props?.showHideType }
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -267,12 +268,12 @@ class ElementAsideContainer extends Component {
                         fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                         scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                         scrollSpeed: 10,
-                        handle: '.element-label', //Drag only by element tag name button
+                        handle: ELEMENT_LABEL_CLASS, //Drag only by element tag name button
                         dataIdAttr: 'data-id',
                         scroll: true, // or HTMLElement
-                        filter: ".ignore-for-drag",
+                        filter: IGNORE_FOR_DRAG_CLASS,
                         preventOnFilter: false,
-                        draggable: ".lazyload-wrapper",
+                        draggable: LAZYLOAD_WRAPPER_CLASS,
                         forceFallback: true,
                         onStart: function (/**Event*/) {
                             // same properties as onEnd
@@ -348,11 +349,11 @@ class ElementAsideContainer extends Component {
                         fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                         scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                         scrollSpeed: 10,
-                        handle: '.element-label', //Drag only by element tag name button
+                        handle: ELEMENT_LABEL_CLASS, //Drag only by element tag name button
                         dataIdAttr: 'data-id',
                         scroll: true, // or HTMLElement
-                        filter: ".ignore-for-drag",
-                        draggable: ".lazyload-wrapper",
+                        filter: IGNORE_FOR_DRAG_CLASS,
+                        draggable: LAZYLOAD_WRAPPER_CLASS,
                         preventOnFilter: false,
                         forceFallback: true,
                         onStart: function (/**Event*/) {
@@ -402,7 +403,8 @@ class ElementAsideContainer extends Component {
         const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
         const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
-        asideData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
+        asideData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...asideData, parent: { id, type, columnId,
+                     columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
         /* Adding parent id, type and contentUrn update redux store while creating new element inside S/H->Aside->New */
         asideData = (type === ElementConstants.SHOW_HIDE) ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
         /* Adding parent id and type to update redux store while creating new element inside TB->Tab->Aside->New */
@@ -566,17 +568,60 @@ class ElementAsideContainer extends Component {
                 <div className={`asideHeader ${hasReviewerRole() ? "pointer-events-none" : ""}`}>
                     <header className="figure-header new-figure-image-header">
                         <div className="image-label">
-                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? "transition-none" : "floating-label"}>Label</label>
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus}
+                                onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                permissions={this.props.permissions}
+                                openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                element={this.props.element}
+                                handleEditorFocus={this.props.handleFocus}
+                                handleBlur={this.props.handleBlur}
+                                index={`${this.props.index}-t1`} placeholder="Label"
+                                tagName={'h4'} className={" figureLabel "}
+                                model={asideHtmlData?.formattedLabel}
+                                slateLockInfo={this.props.slateLockInfo}
+                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                elementId={this.props.elementId} id={this.props.id}
+                                parentElement={this.props.parentElement}
+                                showHideType={this.props.showHideType} />
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? TRANSITION_NONE : "floating-label"}>Label</label>
                         </div>
                         <div className="floating-number-group">
-                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t2`} placeholder="Number" tagName={'h4'} className={" figureNumber "} model={asideHtmlData?.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus}
+                                onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                permissions={this.props.permissions}
+                                openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                element={this.props.element}
+                                handleEditorFocus={this.props.handleFocus}
+                                handleBlur={this.props.handleBlur} index={`${this.props.index}-t2`} placeholder="Number"
+                                tagName={'h4'} className={" figureNumber "}
+                                model={asideHtmlData?.formattedNumber}
+                                slateLockInfo={this.props.slateLockInfo}
+                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                elementId={this.props.elementId} id={this.props.id}
+                                parentElement={this.props.parentElement}
+                                showHideType={this.props.showHideType} />
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedNumber) ? TRANSITION_NONE : "floating-number"}>Number</label>
                         </div>
                     </header>
                     <div className="floating-title-group">
-                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t3`} placeholder="Title" tagName={'h4'} className={" figureTitle "} model={asideHtmlData?.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                        <label className={checkHTMLdataInsideString(asideHtmlData?.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus}
+                            onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                            permissions={this.props.permissions}
+                            openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element}
+                            handleEditorFocus={this.props.handleFocus}
+                            handleBlur={this.props.handleBlur}
+                            index={`${this.props.index}-t3`} placeholder="Title"
+                            tagName={'h4'} className={" figureTitle "}
+                            model={asideHtmlData?.formattedTitle}
+                            slateLockInfo={this.props.slateLockInfo}
+                            glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                            glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                            elementId={this.props.elementId}
+                            id={this.props.id}
+                            parentElement={this.props.parentElement}
+                            showHideType={this.props.showHideType} />
+                        <label className={checkHTMLdataInsideString(asideHtmlData?.formattedTitle) ? TRANSITION_NONE : "floating-title"}>Title</label>
                     </div>
                 </div>
             )
@@ -585,10 +630,10 @@ class ElementAsideContainer extends Component {
 
     onFigureElementFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
-        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE))) {
+            labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
         }
     }
 
@@ -654,8 +699,8 @@ class ElementAsideContainer extends Component {
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
         }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
+            labelElement?.nextElementSibling?.classList?.remove(TRANSITION_NONE);
         }
     }
 

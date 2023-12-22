@@ -1,6 +1,7 @@
 import config from '../../config/config';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
+import { autoNumber_ElementTypeKey, containerElementTypes, containerElements,
+         autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
 import { getImagesInsideSlates, getAsideElementsWrtKey, getAutoNumberedElementsOnSlate } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -88,7 +89,8 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
                 const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
                 const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
                 if (autoNumberContainerTypeForDelete.includes(autoNumberedElements[labelType][parentIndex][0].type)) {
-                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
+                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter,
+                                    containerElements.ASIDE, slateElements);
                 } else {
                     let slateLevelData = getState().appStore.slateLevelData;
                     slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[slateManifestUrn], { dispatch });
@@ -124,7 +126,8 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
 }
 
 export const deleteElementByLabelFromStore = (numberedElements, element, parentIndex) => {
-    if (numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]]?.hasOwnProperty(parentIndex) && numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex].length > 0) {
+    if (numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]]?.hasOwnProperty(parentIndex) &&
+        numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex].length > 0) {
         let index = numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex]?.findIndex(    ele => ele.contentUrn === element.contentUrn);
         if (index > -1) {
             numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex].splice(index, 1);
@@ -161,7 +164,8 @@ export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, para
             });
         }
         if (containerElements.indexOf(swappedElementData?.type) > -1) {
-            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, bodyMatter, autoNumber_ElementTypeKey })
+            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements,
+            slateFigures, slateAncestors, bodyMatter, autoNumber_ElementTypeKey })
         }
         else if (swappedElementData?.type === 'figure') {
             updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
@@ -201,7 +205,8 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                 const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
                 const labelType = autoNumber_ElementTypeKey[swappedElementData.displayedlabel]
                 if (figureParentEntityUrn && numberedElements) {
-                    numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
+                    numberedElements[labelType][figureParentEntityUrn] =
+                    numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
                 if (referenceFigure) {
                     const refImageIndex = numberedElements[labelType][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === referenceFigure);

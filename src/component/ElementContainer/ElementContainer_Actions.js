@@ -3,11 +3,11 @@ import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel, hasReviewerSubscriberRole } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
-import {
-    fetchSlateData
-} from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, 
-         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from "./../../constants/Action_Constants";
+import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO,
+         UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
+         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS,
+         DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
@@ -24,6 +24,7 @@ import { updateAutoNumberedElement } from './UpdateElements';
 import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import store from '../../appstore/store';
 import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { CONTENT_TYPE, CPLG_ALT, CPLG_LONGDESCRIPTION, ELEMENT_ASSESSMENT_LOWERCASE } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
 const {
@@ -55,7 +56,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
     return axios.post(url, newComment,
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 ApiKey: config.STRUCTURE_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -114,7 +115,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -160,10 +161,13 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement,
+    poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
     if (hasReviewerRole()) {
         // condition to work on approved slate for Auto update on Assessment slate and items
-        if (((updatedData?.type !== 'element-assessment' ? updatedData?.figuredata?.type !== 'element-assessment' : false) && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
+        if (((updatedData?.type !== ELEMENT_ASSESSMENT_LOWERCASE ?
+            updatedData?.figuredata?.type !== ELEMENT_ASSESSMENT_LOWERCASE : false)
+            && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return;
         }
@@ -234,7 +238,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         updatedData1,
             {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
@@ -258,7 +262,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         // Making condition true for triggering slate level save api
         localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
-        if (updatedData.type == "element-assessment") {
+        if (updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE) {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
             store.dispatch(updateAssessmentId(response?.data?.id));
@@ -306,7 +310,8 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 }
             }
             /* Update figure inside Aside/WE in S/H */
-        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) {
+        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE ||
+            asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) {
             let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
             let figure;
             if (sectionType) {
@@ -382,13 +387,16 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
             } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) {
                 switch (indexesLen) {
                     case 4: // TB->Tab->Figure
-                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]];
                         break;
                     case 5: // TB->Tab->AS/WE->HEAD->Figure
-                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
                         break;
                     case 6: // TB->Tab->AS/WE->BODY->Figure
-                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
                         break;
                 }
                 if (condition.versionUrn === elementId) {
@@ -399,7 +407,8 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 if (indexesLen == 4) {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 } else if (indexesLen == 5) {
-                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    .elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 }
                 if (condition.versionUrn === elementId) {
                     dataToSend = condition?.figuredata
@@ -433,7 +442,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -443,7 +452,8 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         const sectionType = getState()?.appStore?.asideData?.sectionType || getState()?.appStore?.asideData?.parent?.showHideType;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
-            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
+            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId],
+            newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -519,7 +529,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -609,7 +619,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
                 const labelType = createdElemData?.data?.displayedlabel;
                 elementsList = autoNumberedElementsObj[listType];
-                handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
+                handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData,
+                autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
             }
         }
         if(cb){
@@ -642,7 +653,7 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
     const resp = await fetch(apiUrl, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': CONTENT_TYPE,
             'ApiKey': config.APO_API_KEY,
             'myCloudProxySession': config.myCloudProxySession
         }
@@ -822,7 +833,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
             delete updatedElement['displayedlabel']
         }
-        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel,
+                            manualoverride: updatedElement?.manualoverride })
         updatedElement = { ...dataToReturn }
     }
     const updateParams = {
@@ -880,7 +892,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
@@ -966,7 +978,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
@@ -1038,16 +1050,16 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
         let response = await axios.get(url,
             {
                 headers: {
-                    'Accept': 'application/json',
+                    'Accept': CONTENT_TYPE,
                     'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
+                    'Content-Type': CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             });
         const {properties} = response.data.entry;
         return {
-            altText : properties["cplg:altText"] ?? "",
-            longdescription: properties["cplg:longDescription"] ?? ""
+            altText : properties[CPLG_ALT] ?? "",
+            longdescription: properties[CPLG_LONGDESCRIPTION] ?? ""
         }
     } catch(error){
         return {
@@ -1158,7 +1170,7 @@ export const saveTEMetadata = async (editedImageList) => {
                 }
                 const response = axios.put(url, body, {
                     headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": CONTENT_TYPE,
                         "apikey": config.CMDS_APIKEY,
                         'myCloudProxySession': config.myCloudProxySession
                     }
@@ -1276,7 +1288,7 @@ export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
     try{
         const response = await axios.get(url, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 "apikey": config.CMDS_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -1292,8 +1304,8 @@ export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
             }}
             else{
                 return {
-                    altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-                    longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+                    altText: properties.hasOwnProperty(CPLG_ALT) ? properties[CPLG_ALT] : "",
+                    longDescription: properties.hasOwnProperty(CPLG_LONGDESCRIPTION) ? properties[CPLG_LONGDESCRIPTION] : "",
                 }
             }
         }

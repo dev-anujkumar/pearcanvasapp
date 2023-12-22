@@ -9,7 +9,7 @@ import  { getMCQGuidedData}  from '../../../src/component/AssessmentSlateCanvas/
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
-    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm } from '../../../fixtures/ElementInteractiveTesting.js'
+    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm, InteractiveAlfresco } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
 import * as utils from '../../../src/constants/utility';
 const middlewares = [thunk];
@@ -546,6 +546,33 @@ describe('Testing Interactive element component', () => {
             showBlocker: jest.fn(),
 
         };
+        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
+        let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+        const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
+            const e = {
+                target:{
+                    classList: {contains: ()=>{return true}    } ,
+                tagName: "p"           },
+                stopPropagation() { }
+            }
+            elementInteractiveInstance.togglePopup(e,true);
+            elementInteractiveInstance.forceUpdate();
+            elementInteractive.update();
+            expect(spytogglePopup).toHaveBeenCalledWith(e,true)
+            spytogglePopup.mockClear()
+        })
+        it('Test Function-togglePopup -if - if - case', () => {
+            let type = "interactive";
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            model: InteractiveAlfresco,
+            handleFocus: jest.fn(),
+            showBlocker: jest.fn(),
+        };
+
         const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
         const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
@@ -1428,10 +1455,37 @@ describe("Testing methods", () => {
             }
         }));
         let citeTdxObj = {
-            slateType : "",
+            slateType : "singleSlateAssessmentInner",
             singleAssessmentID : {
                 versionUrn: "123",
                 taxonomicTypes:'123'
+            }
+        }
+        const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')
+        elementInteractiveInstance.addCiteTdxAssessment(citeTdxObj, 1)
+        expect(spyaddCiteTdxAssessment).toHaveBeenCalled()
+    })
+    it("addCiteTdxAssessment else - block ", () => {
+        axios.get = jest.fn(() => Promise.resolve({
+            data: {
+                thumbnail: {
+                    id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+                    src: {
+                        'imageId': "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+                        'path': 'path',
+                        'alttext': 'Image',
+                    },
+                    alt: 'alttext'
+                },
+                title: ''
+            }
+        }));
+        let citeTdxObj = {
+            slateType : "singleSlateAssessmentInner",
+            singleAssessmentID : {
+                versionUrn: "123",
+                taxonomicTypes:'123',
+                name:"abc"
             }
         }
         const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')

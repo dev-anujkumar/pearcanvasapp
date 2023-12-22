@@ -134,11 +134,16 @@ export const SHOW_HIDE = "SHOWHIDE";
 export const TABBED_SOURCE = "TABBED_2_COLUMN"
 export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
-    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN', 'TABBED_2_COLUMN'] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST',
+                    'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN', 'TABBED_2_COLUMN'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP','TAB_ELEMENT', 'TABBED_2_COLUMN'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP','TAB_ELEMENT',
+                    'TABBED_2_COLUMN'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION','TAB_ELEMENT'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4', 'DECORATIVE'], 'notSupport': [] },
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA',
+                    'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK',
+                    'ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1',
+                    'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4', 'DECORATIVE'], 'notSupport': [] },
     [TABBED_SOURCE]: { 'support': ['TAB_ELEMENT'], 'notSupport': [] },
 };
 const SHOWHIDE = "SHOW_HIDE";
@@ -315,7 +320,8 @@ export const MULTI_COLUMN_2C = {
     // "ELEMENT_PROPORTION": "33-33-33"
 }
 
-export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<p><br></p>', '<span class="codeNoHighlightLine"><br></span>', '<span class="codeNoHighlightLine"></span>'];
+export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<p><br></p>', '<span class="codeNoHighlightLine"><br></span>',
+                            '<span class="codeNoHighlightLine"></span>'];
 
 /** Block List constants */
 export const MANIFEST_LIST = 'manifestlist';
@@ -353,3 +359,99 @@ export const DECORATIVE_IMAGE = "primary-image-decorative"
 
 /* Unlock Slate Button */
 export const UNLOCKSLATEWARNING = 'Content may be lost if the locked user is still active and working on an element. This slate will now get locked in your name.'
+
+export const ELM_ASSESSMENT = 'Elm assessment'
+export const APPROVED_BUTTON = 'approved-button'
+export const CONTENT_TYPE = 'application/json'
+export const ASSET_POPOVER_ATTACHER = 'asset-popover-attacher'
+export const BLOCKQUOTE_PARAGRAPH_NUMMEREINS = 'blockquote p.paragraphNummerEins'
+export const CM_DESCRIPTION = 'cm:description'
+export const ELEMENT_ASIDE = 'element-aside'
+export const PRESS_SHIFT_TAB = 'Press Shift+Tab to move out'
+export const TYPE_SOMETHING = 'Type something...'
+export const ELEMENT_AUTHOREDTEXT = 'element-authoredtext'
+export const FORMATTED_TITLE = 'formatted-title'
+export const PRIMARY_BLOCKQUOTE = 'primary-blockquote'
+export const PRIMARY_LIST = 'primary-list'
+export const SECONDARY_IMAGE_FIGURE_HALF = 'secondary-image-figure-half'
+export const PRIMARY_SMARTLINK = 'primary-smartlink'
+export const PRIMARY_ASIDE_ASIDE = 'primary-aside-aside'
+export const ASIGNEE_SELECTED = 'asignee-selected'
+export const TRANSITION_NONE = 'transition-none'
+export const FLOATING_LABEL = 'floating-label'
+export const FLOATING_NUMBER = 'floating-number'
+export const ELEMENT_LABEL_CLASS = '.element-label'
+export const IGNORE_FOR_DRAG_CLASS = '.ignore-for-drag'
+export const LAZYLOAD_WRAPPER_CLASS = '.lazyload-wrapper'
+export const INSTITUTION_URLS = 'institution-urls'
+export const AVS_JSONSTRING = 'avs:jsonString'
+export const FORMATTED_SUBTITLE = 'formatted-subtitle'
+export const URN_PEARSON_ALFRESCO = 'urn:pearson:alfresco:'
+export const DATA_MCE_STYLE = 'data-mce-style'
+export const DATA_MCE_SELECTED = 'data-mce-selected'
+export const IMG_WIRIS_FORMULA_CLASS = 'img.Wirisformula, img.temp_Wirisformula'
+export const POP_UP_WEB_LINK = 'pop-up-web-link'
+export const PREVIOUS_SLATE_BUTTON = 'previous-slate-button'
+export const STOP_EVENT = 'stop-event'
+export const NEXT_SLATE_BUTTON = 'next-slate-button'
+export const MULTIPLE_ELEMENT_CLASSES = '.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label'
+export const ELEMENT_ASSESSMENT_LOWERCASE = 'element-assessment'
+export const CPLG_ALT = 'cplg:altText'
+export const CPLG_LONGDESCRIPTION = 'cplg:longDescription'
+export const ELEMENT_CONTAINER_DELETE_HELPERS_FILE_PATH = './ElementContainerDelete_helpers.js'
+export const SCHEMA_URL = 'http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext'
+export const BLOCK_TEXT_BUTTON = 'block-text-button'
+export const EXIF_PIXELXDIMENSION = 'exif:pixelXDimension'
+export const EXIF_PIXELYDIMENSION = 'exif:pixelYDimension'
+export const IMAGE_SCHEMA_URL = 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image'
+export const HIDE_FIELD = 'hide-field'
+export const DISABLE_BUTTTON = 'disable-buttton'
+export const SPAN_MCE_CARET = 'span#_mce_caret'
+export const TEMP_WIRISFORMULA_CLASS = 'img.temp_Wirisformula'
+export const ELEMENT_BLOCKFEATURE = 'element-blockfeature'
+export const ELEMENT_DIALOGUE = 'element-dialogue'
+export const IMG_HTML = "<img src='$1'></img>"
+export const FRONT_MATTER = 'Front Matter'
+export const BACK_MATTER = 'Back Matter'
+export const ELEMENT_LEARNING_OBJECTIVE_MAPPING = 'element-learningobjectivemapping'
+export const ELEMENT_LIST = 'element-list'
+export const SHF_TAB_EVNT_CLASS = 'li.shfTabEvnt'
+export const LOWER_ALPHA = 'lower-alpha'
+export const LOWER_ROMAN = 'lower-roman'
+export const UPPER_ALPHA = 'upper-alpha'
+export const TOX_TBTN_ENABLED_CLASS = 'tox-tbtn--enabled'
+export const SHOW_CROSS_REF_LABEL_CLASS = 'show-cross-ref-label'
+export const HIDE_CROSS_REF_LABEL_CLASS = 'hide-cross-ref-label'
+export const NAME_ATTR_SELECT = "[name='alt_text']"
+export const NAME_ATTR_SELECT_LONGDESC = "[name='long_description']"
+export const POINTER_EVENTS_NONE = 'pointer-events-none'
+export const PRIMARY_BLOCKCODE_EQUATION = 'primary-blockcode-equation'
+export const SIDEBAR_DISABLE = 'sidebar-disable'
+export const IMAGE_TEXT_WIDTH = 'IMAGE_TEXT_WIDTH'
+export const IMAGE_ACTUAL_SIZE = 'IMAGE_ACTUAL_SIZE'
+export const IMAGE_50 = 'IMAGE_50_TEXT'
+export const IMAGE_WIDER = 'IMAGE_WIDER'
+export const IMAGE_FULL = 'IMAGE_FULL'
+export const LONG_DESCRIPTION = 'Long Description'
+export const IMAGE_ELEM = 'image-elem'
+export const ASSESSMENT_ELEM = 'assessment-elem'
+export const WORKED_EXP_ELEM = 'worked-exp-elem'
+export const SECTION_BREAK_ELEM = 'section-break-elem'
+export const PARAGRAPH_NUMEROUNO_CLASS = ' class="paragraphNumeroUno"'
+export const PARAGRAPH_HTML = "<p><br></p>"
+export const ENTER_BUTTON_LABEL = 'Enter Button Label'
+export const SPAN_SELECTOR_BOOKMARK = 'span[data-mce-type="bookmark"]'
+export const WIRIS_FORMULA_CLASS = '.Wirisformula'
+export const IMAGE_ASSET_CONTENT_CLASS = 'class="imageAssetContent'
+export const CYPRESS_EDITABLE_CLASS = '.cypress-editable'
+export const CLASS_WIRISFORMULA = 'class="Wirisformula'
+export const CLASS_TEMP_WIRISFORMULA = 'class="temp_Wirisformula'
+export const CLASS_ANSWER_LINE_CONTENT = 'class="answerLineContent'
+export const PLACE_HOLDER = 'place-holder'
+export const POETRY_LINE_CLASS = '.poetryLine'
+export const ENTER_CHARACTER_NAME = 'Enter Character Name...'
+export const PEARSON_DOMAIN = 'pearson.com'
+export const EXTERNAL_LINK = 'external-link'
+export const MARKEDINDEX_CROSS_REFERENCE_ID = 'markedindex-cross-reference'
+export const MARKEDINDEX_0_ID = 'markedindex-0'
+export const DATA_MATHML = 'data-mathml'

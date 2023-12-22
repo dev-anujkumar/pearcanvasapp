@@ -26,7 +26,8 @@ const LatestTransactionsDataMapper = {
     } = data;
 
     if (acceptedElementType !== pendingElementType) {
-      result.prevElementType = elementChangeType === 'delete' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : acceptedElementType && TCMUtils.getElementType(acceptedElementType);
+      result.prevElementType = elementChangeType === 'delete' ? pendingElementType && TCMUtils.getElementType(pendingElementType) :
+      acceptedElementType && TCMUtils.getElementType(acceptedElementType);
     } else {
       result.prevElementType = elementChangeType === 'delete' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : '';
     }

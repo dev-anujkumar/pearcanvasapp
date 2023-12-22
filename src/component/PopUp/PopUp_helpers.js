@@ -6,14 +6,16 @@ export const SECONDARY_BUTTON = 'secondary';
 export const isPrimaryButtonFocused = () => {
     const primaryButton = document.querySelector(`[option=${PRIMARY_BUTTON}]`) ? document.querySelector(`[option=${PRIMARY_BUTTON}]`) : null;
     const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`) ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : null;
-    return (primaryButton && primaryButton.classList && primaryButton.classList.contains(PRIMARY_BUTTON) && secondaryButton && secondaryButton.classList && !secondaryButton.classList.contains(SECONDARY_BUTTON))
+    return (primaryButton && primaryButton.classList && primaryButton.classList.contains(PRIMARY_BUTTON) && secondaryButton && secondaryButton.classList &&
+    !secondaryButton.classList.contains(SECONDARY_BUTTON))
 }
 
 //Check if Secondary Button is Focused
 export const isSecondaryButtonFocused = () => {
     const primaryButton = document.querySelector(`[option=${PRIMARY_BUTTON}]`) ? document.querySelector(`[option=${PRIMARY_BUTTON}]`) : null;
     const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`) ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : null;
-    return (primaryButton && primaryButton.classList && !primaryButton.classList.contains(PRIMARY_BUTTON) && secondaryButton && secondaryButton.classList && secondaryButton.classList.contains(SECONDARY_BUTTON))
+    return (primaryButton && primaryButton.classList && !primaryButton.classList.contains(PRIMARY_BUTTON) && secondaryButton && secondaryButton.classList &&
+    secondaryButton.classList.contains(SECONDARY_BUTTON))
 }
 
 /**Function to focus element by adding class to elements class list */

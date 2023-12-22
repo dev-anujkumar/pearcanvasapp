@@ -1,3 +1,5 @@
+import { IMAGE_50, IMAGE_ACTUAL_SIZE, IMAGE_FULL, IMAGE_TEXT_WIDTH, IMAGE_WIDER, LONG_DESCRIPTION } from "../../constants/Element_Constants";
+
 export default {
     'element-authoredtext': {
         'primary-paragraph': {
@@ -27,7 +29,8 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag','IndexEntry'],//PCAT-6725 fixed
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary',
+            'crossLinkingIcon','assetpopover','slatetag','IndexEntry'],//PCAT-6725 fixed
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',
@@ -63,7 +66,8 @@ export default {
         },
         'primary-learning-objective': {
             text: 'Learning Objective Item',
-            toolbar: ['bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','footnote', 'glossary','crossLinkingIcon','assetpopover','alignment','IndexEntry'],
+            toolbar: ['bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent',
+            'footnote', 'glossary','crossLinkingIcon','assetpopover','alignment','IndexEntry'],
             enum: 'LEARNING_OBJECTIVE',
             subtype: {
                 'secondary-learning-objective': {
@@ -156,12 +160,12 @@ export default {
                 'secondary-image-figure-width': {
                     text: 'Text Width',
                     labelText: 'Fg',
-                    enum: 'IMAGE_TEXT_WIDTH'
+                    enum: IMAGE_TEXT_WIDTH
                 },
                 'secondary-image-figure-actual': {
                     text: 'Actual Size',
                     labelText: 'Fg',
-                    enum: 'IMAGE_ACTUAL_SIZE'
+                    enum: IMAGE_ACTUAL_SIZE
                 },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
@@ -171,7 +175,7 @@ export default {
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'Fg',
-                    enum: 'IMAGE_50_TEXT'
+                    enum: IMAGE_50
                 },
                 'secondary-image-figure-three-quarter': {
                     text: '75% Text Width',
@@ -181,12 +185,12 @@ export default {
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
-                    enum: 'IMAGE_WIDER'
+                    enum: IMAGE_WIDER
                 },
                 'secondary-image-figure-full': {
                     text: 'Full Screen',
                     labelText: 'Fg',
-                    enum: 'IMAGE_FULL'
+                    enum: IMAGE_FULL
                 }
             },
             attributes: {
@@ -195,7 +199,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description',
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -237,7 +241,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description',
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -279,7 +283,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description',
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -292,12 +296,12 @@ export default {
                 'secondary-image-figure-width': {
                     text: 'Text Width',
                     labelText: 'DI',
-                    enum: 'IMAGE_TEXT_WIDTH'
+                    enum: IMAGE_TEXT_WIDTH
                 },
                 'secondary-image-figure-actual': {
                     text: 'Actual Size',
                     labelText: 'DI',
-                    enum: 'IMAGE_ACTUAL_SIZE'
+                    enum: IMAGE_ACTUAL_SIZE
                 },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
@@ -307,7 +311,7 @@ export default {
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'DI',
-                    enum: 'IMAGE_50_TEXT'
+                    enum: IMAGE_50
                 },
                 'secondary-image-figure-three-quarter': {
                     text: '75% Text Width',
@@ -317,12 +321,12 @@ export default {
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'DI',
-                    enum: 'IMAGE_WIDER'
+                    enum: IMAGE_WIDER
                 },
                 'secondary-image-figure-full': {
                     text: 'Full Screen',
                     labelText: 'DI',
-                    enum: 'IMAGE_FULL'
+                    enum: IMAGE_FULL
                 }
             }
         },
@@ -635,7 +639,9 @@ export default {
     'element-aside': {
         'primary-aside-aside': {
             text: 'Aside',
-            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent',
+            'footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor',
+            'undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
             enum: 'ASIDE',
             subtype: {
                 'secondary-aside-sb1': {
@@ -667,7 +673,9 @@ export default {
         },
         'primary-aside-feature': {
             text: 'Feature',
-            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary',
+            'orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon',
+            'assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
             enum: 'FEATURE',
             subtype: {
                 'secondary-aside-feature': {
@@ -679,7 +687,9 @@ export default {
         },
         'primary-aside-activity': {
             text: 'Activity',
-            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon','IndexEntry'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent',
+            'footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor',
+            'undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon','IndexEntry'],
             enum: 'ACTIVITY',
             subtype: {
                 'secondary-aside-activity': {
@@ -691,7 +701,9 @@ export default {
         },
         'primary-aside-tactic': {
             text: 'Tactic Box',
-            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon','IndexEntry'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent',
+            'decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript',
+            'subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon','IndexEntry'],
             enum: 'TACTIC_BOX',
             subtype: {
                 'secondary-aside-tactic': {
@@ -703,7 +715,9 @@ export default {
         },
         'primary-aside-lol': {
             text: 'Learning Objective List',
-            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent',
+            'footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor',
+            'undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
             enum: 'LEARNING_OBJECTIVE_LIST',
             subtype: {
                 'secondary-aside-lol': {
@@ -718,7 +732,9 @@ export default {
     'element-workedexample': {
         'primary-workedexample-we1': {
             text: 'Worked Example 1',
-            toolbar:['insertMedia','formatSelector','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar:['insertMedia','formatSelector','bold','italic','underline','strikethrough','clearformatting',
+            'increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml',
+            'inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we1': {
@@ -730,7 +746,9 @@ export default {
         },
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
-            toolbar:['insertMedia','formatSelector', 'bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar:['insertMedia','formatSelector', 'bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent',
+            'footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo',
+            'redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we2': {
@@ -745,7 +763,9 @@ export default {
 	'element-assessment': {
         'primary-single-assessment': {
             text: 'Single Assessment',
-            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote',
+            'glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo',
+            'crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
             enum: 'SINGLE_ASSESSMENT',
             subtype: {
                 'secondary-single-assessment-puf': {
@@ -808,7 +828,8 @@ export default {
      'element-interactive': {
         'primary-elm-interactive': {
             text: 'Elm Interactive',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry','decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry',
+            'decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
             enum: 'MMI_ELM',
             subtype: {
                 'secondary-elm-interactive': {
@@ -821,7 +842,8 @@ export default {
         },
         'primary-mmi': {
             text: 'Quad Interactive',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry','decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry',
+            'decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
@@ -848,7 +870,7 @@ export default {
                             isEditable: false
                         },
                         long_description: {
-                            text: 'Long Description',
+                            text: LONG_DESCRIPTION,
                             isEditable: false
                         }
                     }
@@ -870,7 +892,7 @@ export default {
                             isEditable: false
                         },
                         long_description: {
-                            text: 'Long Description',
+                            text: LONG_DESCRIPTION,
                             isEditable: false
                         }
                     }
@@ -894,7 +916,8 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','increaseindent','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist',
+            'increaseindent','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
             dropdownDisabled: true,
             enum:'POP_UP',
             subtype: {
@@ -938,7 +961,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description',
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -948,7 +971,8 @@ export default {
         'primary-citations-group': {
             text: 'Citation Group',
             enum: 'CITATION',
-            toolbar: ['insertMedia','formatSelector','footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','footnote', 'increaseindent', 'decreaseindent', 'glossary',
+            'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist','alignment', 'calloutIcon', 'IndexEntry'],
             subtype: {
                 'secondary-citations-group': {
                     text: 'Citation Group',
@@ -962,7 +986,8 @@ export default {
         'primary-element-citation': {
             text: 'Citation',
             enum: 'ELEMENT_CITATION',
-            toolbar: ['insertMedia','formatSelector','footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon',
+            'assetpopover', 'orderedlist', 'unorderedlist','alignment', 'calloutIcon', 'IndexEntry'],
             subtype: {
                 'secondary-element-citation': {
                     text: 'Citation element',
@@ -976,7 +1001,8 @@ export default {
         "primary-poetry": {
             text: 'Block Poetry',
             enum: 'POETRY',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','increaseindent','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent',
+            'increaseindent','alignment', 'calloutIcon', 'IndexEntry'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {
