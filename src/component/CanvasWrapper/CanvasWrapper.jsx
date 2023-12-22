@@ -140,9 +140,12 @@ export class CanvasWrapper extends Component {
     }
 
     loadMorePages = () => {
-        config.page++;
-        if(config.totalPageCount <= config.page) return false;
-        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
+        if(config.isSlateElementCompleted===false)   // check for preventing scrolling when import elements are not generated
+        {
+            config.page++;
+            if(config.totalPageCount <= config.page) return false;
+            this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
+        }
     }
 
     ReleaseErrorPopup = () => {

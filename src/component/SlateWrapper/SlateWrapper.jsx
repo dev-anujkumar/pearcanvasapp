@@ -101,7 +101,7 @@ class SlateWrapper extends Component {
     componentDidUpdate(prevProps) {
         if(prevProps?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.importDataFromResponse?.importStatus === COMPLETED_IMPORT_STATUS)
         {
-            console.log("didupdate called in slatewrapper line 104");
+            config.scrolling = true;
             showNotificationOnCanvas(WORD_FILE_IMPORTED_TOAST_MESSAGE, 'metadataUpdated');
         }
         let divObj = 0;
@@ -593,8 +593,7 @@ class SlateWrapper extends Component {
     }
     //This function is used to display the import elements progress alert
     showImportAlertMessage = () => {
-        const showSnackbar = this.props?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
-        console.log(this.props.slateData[config?.slateManifestURN]?.importData, 'check scroll bug');
+        const showSnackbar = this.props.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
             return (
                 <Snackbar open={showSnackbar} className='import-alert'
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
@@ -1867,7 +1866,8 @@ const mapStateToProps = state => {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
         unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
-        importDataFromResponse: state.appStore.importDataFromResponse
+        importDataFromResponse: state.appStore.importDataFromResponse,
+        slateLevelData: state.appStore.slateLevelData
     };
 };
 

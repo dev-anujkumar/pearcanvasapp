@@ -574,6 +574,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload, isFetchAnySlate) => (dispatch, getState) => {
     /** [TK-3289]- Fetch Data for All Slates */
+    config.isSlateElementCompleted = false;   // for fixing scrolling issue when import is in progress
     const startTime = performance.now();
     dispatch(closeTcmPopup());
     dispatch(fetchAllSlatesData());
@@ -639,12 +640,14 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
+        config.isSlateElementCompleted = false;
         dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
         {
+            config.isSlateElementCompleted = true;
                 setTimeout(async () =>{
                     dispatch(await fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'',""))
-                }, 15000)
+                }, 10000)
         }
         // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
