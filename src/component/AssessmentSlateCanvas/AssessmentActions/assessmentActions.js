@@ -65,7 +65,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  */
 export const fetchAssessmentUpdatedData = () => (dispatch) => {
     const subscribercheck = hasReviewerSubscriberRole()
-    const apiUrl = `${config.CYPRESS_API_ENDPOINT}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=${subscribercheck ? "false" : "true"}`;
+    const apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=${subscribercheck ? "false" : "true"}`;
     try {
         axios.put(apiUrl, {}, {
             headers: {
