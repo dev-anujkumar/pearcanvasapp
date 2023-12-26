@@ -486,7 +486,7 @@ class PopUp extends React.Component {
             return(
             <div className='import-word-checkbox-message'>
                 <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className="start-import-button" onClick={(e) => {props.proceed(false, e)}}>{START_IMPORTING_BUTTON_TEXT}</span>
+                    <span className="start-import-button" onClick={(e) => {props.proceed(false, e)}}>{START_IMPORTING_BUTTON_TEXT}</span>
                 </div>
             </div>
             )
@@ -499,7 +499,7 @@ class PopUp extends React.Component {
                     <span className='importing-tip-text'>{IMPORTING_TIPS_TEXT}</span>
                 </div>
                 <div>
-                    <button type='button' id='nextButtonForImport' option={PRIMARY_BUTTON} className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>{NEXT_BUTTON_TEXT}<ArrowForwardIosIcon className='forward-arrow'/></button>
+                    <button type='button' id='nextButtonForImport' className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>{NEXT_BUTTON_TEXT}<ArrowForwardIosIcon className='forward-arrow'/></button>
                     <span className="cancel-button-import" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             </div>
@@ -508,8 +508,8 @@ class PopUp extends React.Component {
         else if(props.previewUploadedFilePopup){
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={PRIMARY_BUTTON} className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
-                    <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
+                    <span className="cancel-button-import" id='close-container-preview' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
