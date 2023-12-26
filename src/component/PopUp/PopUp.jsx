@@ -580,7 +580,7 @@ class PopUp extends React.Component {
             this.setState({errorFileType: true});
             return;
         }
-        if( (Math.round((file.size / 1048576)).toFixed(2)) > 10)
+        if( Number((file.size / (1024 * 1024)).toFixed(2)) > 10.00)
         {
             this.setState({errorFileSize: true});
             return;
