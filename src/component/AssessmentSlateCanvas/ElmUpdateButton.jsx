@@ -7,13 +7,12 @@ import React from 'react'
 import { useEffect } from 'react';
 /** ----- Import - Dependencies ----- */
 import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
-import { hasReviewerSubscriberRole } from '../../constants/utility.js';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
 import { APPROVED_BUTTON } from '../../constants/Element_Constants.js';
 
 const ElmUpdateButton = (props) => {
-    const { elmAssessment, embeddedElmClass, elementType } = props;
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType } = props;
 
 
     const setUpdateDiv = (assessment) => {

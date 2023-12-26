@@ -11,7 +11,8 @@ import {
     ELM_ASSESSMENT_EDIT_ID,
     ELM_NEW_ITEM_DATA,
     ASSESSMENT_RELOAD_CONFIRMATION,
-    UPDATED_ASSESSMENTS_ARRAY
+    UPDATED_ASSESSMENTS_ARRAY,
+    UPDATE_ASSESSMENT_DATA
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -343,6 +344,23 @@ describe('Test AssessmentReducer', () => {
         }
         expect(reducer(INITIAL_STATE, {
             type: ASSESSMENT_RELOAD_CONFIRMATION,
+            payload: payload
+        })).toEqual({ usageTypeListData: {}, ...expectedState })
+    })
+    it('UPDATE_ASSESSMENT_DATA', () => {
+        const payload = {
+            updatedAssessmentData: {}
+        }
+        const expectedState = {
+            usageTypeListData: {},
+            currentEditAssessment: {},
+            itemUpdateEvent: false,
+            updatedAssessmentData: {
+                updatedAssessmentData: {}
+            }
+        }
+        expect(reducer(INITIAL_STATE, {
+            type: UPDATE_ASSESSMENT_DATA,
             payload: payload
         })).toEqual({ usageTypeListData: {}, ...expectedState })
     })
