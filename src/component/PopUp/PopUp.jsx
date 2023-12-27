@@ -485,9 +485,7 @@ class PopUp extends React.Component {
         if(props.importWordFilePopup){
             return(
             <div className='import-word-checkbox-message'>
-                <div className={`dialog-buttons`}>
-                    <span className="start-import-button" onClick={(e) => {props.proceed(false, e)}}>{START_IMPORTING_BUTTON_TEXT}</span>
-                </div>
+                <span className="start-import-button" onClick={(e) => {props.proceed(false, e)}}>{START_IMPORTING_BUTTON_TEXT}</span>
             </div>
             )
         }
@@ -807,27 +805,27 @@ class PopUp extends React.Component {
                         {props.dialogText}
                     </div>
                     <div className='import-and-drop-file-stepper'>
-                        <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span>{STEPPER_TEXT_UPLOAD_WORD_FILE}</span></span>
+                        <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span className='stepper-text-upload'>{STEPPER_TEXT_UPLOAD_WORD_FILE}</span></span>
                         <span className='stepper1'><img src={importPopupSS11} width='290px' height='6px'/></span>
-                        <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span></span>{STEPPER_TEXT_PREVIEW}</span>
+                        <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span className='stepper-text-upload'>{STEPPER_TEXT_PREVIEW}</span></span>
                     </div>
                     {this.state.fileToBeUploaded.name ? <div className='file-description-container'>
                         <div className='file-description-sub-container'>
                             <span className='file-details-container'>
                                 <img src={importPopupSS12} width='40px' height='40px'/>
-                                <div>{this.state.fileToBeUploaded.name}</div>
+                                <div className='stepper-text-upload'>{this.state.fileToBeUploaded.name}</div>
                             </span>
                             <span className='close-icon-file-container' onClick={()=>{this.setState({fileToBeUploaded: {}, errorFileSize: false, errorFileType: false, errorFileEmpty: false}); }}><img src={CloseIcon} width='48px' height='48px'/></span>
                         </div>
                         <div className='file-metadata-container'>
-                            <span>{this.state?.fileToBeUploaded?.size <= 102400 ? (this.state?.fileToBeUploaded?.size/1000).toFixed(2) : (this.state?.fileToBeUploaded?.size/1048576).toFixed(2)}{this.state?.fileToBeUploaded?.size <= 102400 ? 'KB' : 'MB'}</span>
-                            <span>{COMPLETED_TEXT}</span>
+                            <span className='completed-text-for-file-upload'>{this.state?.fileToBeUploaded?.size <= 102400 ? (this.state?.fileToBeUploaded?.size/1000).toFixed(2) : (this.state?.fileToBeUploaded?.size/1048576).toFixed(2)}{this.state?.fileToBeUploaded?.size <= 102400 ? 'KB' : 'MB'}</span>
+                            <span className='completed-text-for-file-upload'>{COMPLETED_TEXT}</span>
                         </div>
                     </div> :
                     <div className={this.state.errorFileType || this.state.errorFileSize || this.state.errorFileEmpty ? 'file-container-error-file-type':'file-container'} onDrop={(event) => this.handleFiledrop(event)} onDragOver={(event) => this.handleDragOver(event)}>
                         <input type='file' accept='.docx' hidden ref={this.inputRef} onChange={(event) => this.handleFileChangeOnInput(event)}/>
                         <span>{this.state.errorFileSize || this.state.errorFileType || this.state.errorFileEmpty ? <img src={importPopupSS13} width='40px' height='40px'/> : <img src={importPopupSS12} width='40px' height='40px'/>}</span>
-                        <span className='file-container-text-1'><span className={this.state.errorFileType || this.state.errorFileSize || this.state.errorFileEmpty ? 'file-container-text-link-error' :'file-container-text-link'} onClick={() => this?.inputRef?.current?.click()}><u>{UPLOAD_CONTAINER_TEXT}</u></span>{UPLOAD_CONTAINER_TEXT_SECOND_HALF}</span>
+                        <span className='file-container-text-1'><span className={this.state.errorFileType || this.state.errorFileSize || this.state.errorFileEmpty ? 'file-container-text-link-error' :'file-container-text-link'} onClick={() => this?.inputRef?.current?.click()}><u>{UPLOAD_CONTAINER_TEXT}</u></span><span className='stepper-text-upload'>{UPLOAD_CONTAINER_TEXT_SECOND_HALF}</span></span>
                         {this.state.errorFileSize ? <span className='file-container-text-2-error'>{FILE_SIZE_ERROR_MESSAGE}</span> : (this.state.errorFileType ? <span className='file-container-text-2-error'>{UNSUPPORTED_FILE_ERROR_MESSAGE}</span> : this.state.errorFileEmpty ? <span className='file-container-text-2-error'>{EMPTY_FILE_ERROR_MESSAGE}</span> : <span className='file-container-text-2'>{SUPPORTED_FILE_MESSAGE}</span>)}
                     </div>}
                 </>
@@ -853,18 +851,18 @@ class PopUp extends React.Component {
                             <strong>{IMPORTING_TIPS_CONTENT_TEXT_FOURTH}</strong>{IMPORTING_TIPS_CONTENT_TEXT_FIFTH}
                         </div>
                         <div className='import-wordpopup-content-title-3'>
-                            <img src={importPopupSS1} width='70px' height='47px' />
-                            <img src={importPopupSS2} width='70px' height='47px' />
-                            <img src={importPopupSS3} width='70px' height='47px' />
-                            <img src={importPopupSS4} width='70px' height='47px' />
+                            <img src={importPopupSS1} width='44px' height='30px' />
+                            <img src={importPopupSS2} width='44px' height='30px' />
+                            <img src={importPopupSS3} width='44px' height='30px' />
+                            <img src={importPopupSS4} width='44px' height='30px' />
                         </div>
                         <div className='import-wordpopup-content-title-4'>
                             <strong>{IMPORTING_TIPS_CONTENT_TEXT_SIXTH}</strong>{IMPORTING_TIPS_CONTENT_TEXT_SEVENTH}
                         </div>
                         <div className='import-wordpopup-content-title-3'>
-                            <img src={importPopupSS5} width='48px' height='62px' />
-                            <img src={importPopupSS6} width='68px' height='62px' />
-                            <img src={importPopupSS7} width='84px' height='62px' />
+                            <img src={importPopupSS5} width='35px' height='55px' />
+                            <img src={importPopupSS6} width='49px' height='55px' />
+                            <img src={importPopupSS7} width='61px' height='55px' />
                         </div>
                 </div>
             </>
@@ -1019,7 +1017,7 @@ class PopUp extends React.Component {
                                     `dialog-input-poc ${this.state.wordPasteProceed && 'enable-scrolling'}` : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
-                                {!isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
+                                {this.props.importWordFilePopup ? null : !isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
                                 {this.renderCommentPanelInput(this.props)}
                                 {this.renderButtons(this.props)}
                             </div>

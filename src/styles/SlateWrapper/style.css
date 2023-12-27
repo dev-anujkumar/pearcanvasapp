@@ -365,3 +365,34 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 .alert-message-content{
     font-size: 14px;
 }
+
+@media only screen and (min-width:1200px) {
+    .preview-file-popup{
+        width: 618px;
+        top: 229px;
+    }
+    .word-file-import .tox-tinymce{
+        height: 270px !important;
+    }
+}
+
+@media only screen and (min-width:1300px) {
+    .preview-file-popup{
+        width: 756px;
+        top: 256px;
+    }
+    .word-file-import .tox-tinymce{
+        height: 325px !important;
+    }
+}
+
+@media only screen and (min-width:1600px) {
+    .preview-file-popup{
+        width: 940px;
+        top: 296px;
+    }
+    .word-file-import .tox-tinymce{
+        height: 400px !important;
+    }
+}
+

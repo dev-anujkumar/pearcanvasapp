@@ -159,6 +159,7 @@
     margin-left: 39px;
     display: flex;
     column-gap: 16px;
+    color: #354A53;
   }
   .upload-icon-image{
     padding-left: 16px;
@@ -169,12 +170,11 @@
     border-radius: 4px;
     float: right;
     height: 36px;
-    /* margin: 0 0 0 16px; */
     font-family: inherit;
     background: #005A70;
     color: #FFFFFF;
     padding: 6px 16px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: normal;
@@ -212,10 +212,9 @@
   font-feature-settings: 'clig' off, 'liga' off;
   /* typography/h5 */
   font-family: Open Sans;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
-  line-height: 100%; /* 24px */
   }
 
   .import-wordpopup-content-description {
@@ -231,29 +230,22 @@
 
 
   .import-wordpopup-content-title {
-  margin-top: 16px;
+  margin-top: 12px;
   color: var(--text-primary, #081e27);
   font-feature-settings: "clig" off, "liga" off;
-
-  /* typography/body1B */
   font-family: Open Sans;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
-  /* font-weight: 600; */
-  line-height: 160%; /* 25.6px */
 }
 
   .import-wordpopup-content-title-2 {
-  margin-top: 24px;
+  margin-top: 14px;
   color: var(--text-primary, #081e27);
   font-feature-settings: "clig" off, "liga" off;
-
-  /* typography/body1B */
   font-family: Open Sans;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
-  /* font-weight: 600; */
-  line-height: 160%; /* 25.6px */
+  line-height: 135%;
 }
 
 .import-wordpopup-content-title-3{
@@ -263,15 +255,14 @@
 }
 
 .import-wordpopup-content-title-4{
-  margin-top: 24px;
+  margin-top: 14px;
   color: var(--text-primary, #081E27);
   font-feature-settings: 'clig' off, 'liga' off;
-  /* typography/body1 */
   font-family: Open Sans;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 160%;
+  line-height: 135%;
 }
 
   .cancel-button:hover,.lo-save-button:hover{
@@ -611,7 +602,7 @@ font-size: 14px;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   font-family: "Open Sans", sans-serif;
   color: #000;
-  padding: 24px;
+  padding: 12px 24px;
   position: relative;
   margin: 0 auto;
   max-width: 100%;
@@ -620,7 +611,7 @@ font-size: 14px;
   font-size: 16px;
   line-height: 16px;
   background-color: #ffffff;
-  top: 279px;    
+  top: 194px;    
   transform: translateY(-50%);
   animation-duration: 0.8s;
   border-radius: 4px;
@@ -632,7 +623,7 @@ font-size: 14px;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   font-family: "Open Sans", sans-serif;
   color: #000;
-  padding: 24px;
+  padding: 12px 24px;
   position: relative;
   margin: 0 auto;
   max-width: 100%;
@@ -641,7 +632,7 @@ font-size: 14px;
   font-size: 16px;
   line-height: 16px;
   background-color: #ffffff;
-  top: 349px;    
+  top: 194px;    
   transform: translateY(-50%);
   animation-duration: 0.8s;
   border-radius: 4px;
@@ -653,7 +644,7 @@ font-size: 14px;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   font-family: "Open Sans", sans-serif;
   color: #000;
-  padding: 24px;
+  padding: 12px 24px;
   position: relative;
   margin: 0 auto;
   max-width: 100%;
@@ -662,7 +653,7 @@ font-size: 14px;
   font-size: 16px;
   line-height: 16px;
   background-color: #ffffff;
-  top: 279px;    
+  top: 185px;    
   transform: translateY(-50%);
   animation-duration: 0.8s;
   border-radius: 4px;
@@ -765,11 +756,11 @@ letter-spacing: 0.17px;
   justify-content: space-between;
 }
 .import-and-drop-file-stepper-preview{
-  margin-top: 16px;
+  margin-top: -14px;
   display: flex;
   column-gap: 8px;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 14px;
 }
 
 .stepper1{
@@ -1700,4 +1691,12 @@ padding-left: 9px;
 
 .close-icon-file-container{
   cursor: pointer;
+}
+
+.stepper-text-upload{
+  color: #081E27;
+}
+
+.completed-text-for-file-upload{
+  color: #354A53;
 }
