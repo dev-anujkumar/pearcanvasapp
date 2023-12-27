@@ -14,7 +14,7 @@ const PreviewWordFile = (props) => {
     const [backdropConv, setBackdropConv] = useState(false);
     const editorConfig = {
         selector: "#myTextarea",
-        height: 200,
+        height: 400,
         plugins: [
           'advlist lists',
          'powerpaste'
@@ -64,7 +64,7 @@ const PreviewWordFile = (props) => {
 
     const editorConfig2 = {
         selector: "#myTextarea2",
-        height: 200,
+        height: 400,
         plugins: [
             'advlist lists',
             'powerpaste'

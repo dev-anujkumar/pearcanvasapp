@@ -505,7 +505,7 @@ class PopUp extends React.Component {
         }
         else if(props.previewUploadedFilePopup){
             return (
-                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                <div className='dialog-buttons-preview'>
                     <span className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
                     <span className="cancel-button-import" id='close-container-preview' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
@@ -805,9 +805,9 @@ class PopUp extends React.Component {
                         {props.dialogText}
                     </div>
                     <div className='import-and-drop-file-stepper'>
-                        <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span className='stepper-text-upload'>{STEPPER_TEXT_UPLOAD_WORD_FILE}</span></span>
+                        <span className='stepper1'><img src={importPopupSS8} width='23px' height='24px'/><span className='stepper-text-upload-text-upload'>{STEPPER_TEXT_UPLOAD_WORD_FILE}</span></span>
                         <span className='stepper1'><img src={importPopupSS11} width='290px' height='6px'/></span>
-                        <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span className='stepper-text-upload'>{STEPPER_TEXT_PREVIEW}</span></span>
+                        <span className='stepper1'><img src={importPopupSS16} width='23px' height='24px'/><span className='stepper-text-upload-text-upload'>{STEPPER_TEXT_PREVIEW}</span></span>
                     </div>
                     {this.state.fileToBeUploaded.name ? <div className='file-description-container'>
                         <div className='file-description-sub-container'>
@@ -874,9 +874,9 @@ class PopUp extends React.Component {
                     <div className='import-and-drop-file-heading'>{PREVIEW_POPUP_HEADING}</div>
                     <br/>
                     <div className='import-and-drop-file-stepper-preview'>
-                        <span className='stepper1'><img src={importPopupSS15} width='23px' height='24px'/><span>{PREVIEW_POPUP_STEPPER_TEXT_FIRST}</span></span>
+                        <span className='stepper1'><img src={importPopupSS15} width='16px' height='16px'/><span className='stepper-text-upload-text'>{PREVIEW_POPUP_STEPPER_TEXT_FIRST}</span></span>
                         <span className='stepper1'><img src={importPopupSS11} width='239px' height='10px'/></span>
-                        <span className='stepper1'><img src={importPopupSS17} width='23px' height='24px'/><span>{PREVIEW_POPUP_STEPPER_TEXT_SECOND}</span></span>
+                        <span className='stepper1'><img src={importPopupSS17} width='16px' height='16px'/><span className='stepper-text-upload-text'>{PREVIEW_POPUP_STEPPER_TEXT_SECOND}</span></span>
                     </div>
                 <div className='preview-container'>
                 </div>
