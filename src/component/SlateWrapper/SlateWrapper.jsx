@@ -22,7 +22,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, RELEASE_SLATE_LOCK_ACTION, WORD_FILE_IMPORTED_TOAST_MESSAGE, IN_PROGRESS_IMPORT_STATUS, COMPLETED_IMPORT_STATUS
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, RELEASE_SLATE_LOCK_ACTION, WORD_FILE_IMPORTED_TOAST_MESSAGE, IN_PROGRESS_IMPORT_STATUS, COMPLETED_IMPORT_STATUS, ELEMENT_ON_SLATE_CREATION_INPROGRESS
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -598,7 +598,7 @@ class SlateWrapper extends Component {
                 <Snackbar open={showSnackbar} className='import-alert'
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                         <Alert severity="error" className='alert'>
-                            <AlertTitle ><strong>Word file import in progress...</strong></AlertTitle>
+                            <AlertTitle ><strong>{ELEMENT_ON_SLATE_CREATION_INPROGRESS}</strong></AlertTitle>
                             <div className='alert-message-content'>
                                 {this?.props?.importDataFromResponse?.processedElement} of {this?.props?.importDataFromResponse?.totalElementCount} elements converted</div>
                         </Alert>
