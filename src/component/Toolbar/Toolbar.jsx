@@ -12,7 +12,7 @@ import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, 
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
-import { hasReviewerRole, isSlateLocked, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
+import { hasReviewerRole, isOwnerRole, isSlateLocked, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LockIcon from '@mui/icons-material/Lock';
@@ -20,7 +20,7 @@ import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, LOCKED_BANNER_MESSAGE, SLATES_DEFAULT_LABEL,
-        SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
+        SUBSCRIBER_BANNER_MESSAGE, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
 import Button from '@mui/material/Button';
 
 const _Toolbar = props => {
@@ -135,7 +135,8 @@ const _Toolbar = props => {
         }
         const slateLabel = props.slateTocLabel[config.slateType] ?? SLATES_DEFAULT_LABEL[config.slateType]
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        const approveToWipStatus = await props.slateVersioning(updateRCSlate)
+        const isOwnerSubscribedSlate = isOwnerRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
+        const approveToWipStatus = await props.slateVersioning(updateRCSlate, isOwnerSubscribedSlate)
         if(approveToWipStatus) {
         showNotificationOnCanvas(`${slateLabel} ${MOVED_TO_WIP}`)
         changeAudioNarration()
@@ -161,6 +162,7 @@ const _Toolbar = props => {
     const separatorClass = isSubscribed || isApprovedCondition ? 'separatorClass' : ''
     const lockedByUser = props.slateLockInfo ? props.slateLockInfo.firstName !== "" ? `${props.slateLockInfo.lastName}, ${props.slateLockInfo.firstName}` :
     `${props.slateLockInfo.userId}` : ""
+    const importStatus = props.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS
     return (
         <div className={bannerClass}>
             <div className={toolbarClass}>
@@ -212,7 +214,7 @@ const _Toolbar = props => {
 
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
-                    (props.addAudio && (!isReviewerRole || !isSubscribed)) &&
+                    (props.addAudio && (!isReviewerRole || !isSubscribed) && !importStatus) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
                             <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`}
@@ -289,7 +291,8 @@ const mapStateToProps = (state) => {
         searchUrn: state.searchReducer.searchTerm,
         slateLevelData: state.appStore.slateLevelData,
         roleId:state.appStore.roleId,
-        slateTocLabel:state.projectInfo.slateTocLabel
+        slateTocLabel:state.projectInfo.slateTocLabel,
+        importDataFromResponse: state.appStore.importDataFromResponse
     }
 }
 
@@ -298,8 +301,8 @@ const mapActionToProps = (dispatch) =>{
         checkSlateLock: (payloadObj) => {
             dispatch(checkSlateLock(payloadObj))
         },
-        slateVersioning: (payloadObj) => {
-            dispatch(slateVersioning(payloadObj))
+        slateVersioning: (payloadObj, isOwnerSubscribedContainer) => {
+            dispatch(slateVersioning(payloadObj, isOwnerSubscribedContainer))
         },
         toggleUnlockSlateAction: (payloadObj) => {
             dispatch(toggleUnlockSlateAction(payloadObj))

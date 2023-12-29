@@ -10,6 +10,7 @@ import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 import { checkSlateLock } from '../js/slateLockUtility';
 import { DATA_MCE_SELECTED } from './Element_Constants';
+import { COMPLETED_IMPORT_STATUS, IN_PROGRESS_IMPORT_STATUS } from '../component/SlateWrapper/SlateWrapperConstants';
 // DECLARATION - const or variables
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
@@ -129,6 +130,22 @@ export const isSlateLocked = () =>{
     return checkSlateLock(slateLockInfo);
 }
 
+/**
+ * This function checks if the slate has pending imported elements and is currently importing elements
+ * @returns true when import is in-progress
+ */
+export const isImporting = () => {
+    const authStore = store.getState();
+    const {appStore} = authStore;
+    
+    if(appStore?.importDataFromResponse?.importStatus && 
+        appStore?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS)
+        return true;
+
+    if(!appStore?.importDataFromResponse?.importStatus || 
+        appStore?.importDataFromResponse?.importStatus === COMPLETED_IMPORT_STATUS )
+        return false;
+}
 
 
 export const hasReviewerRole = (value) => {
@@ -138,7 +155,7 @@ export const hasReviewerRole = (value) => {
         return !((hasProjectPermission(value) && !isApproved() && !isSlateLocked()) ? true : false)
     }
     let hasRole = (appStore && (appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isApproved() || isSlateLocked());
+        && (hasProjectPermission('note_viewer'))) || isApproved() || isSlateLocked() || isImporting());
     return hasRole;
 }
 
@@ -919,7 +936,7 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
     convertTag = convertTag?.includes('<span') ? convertTag?.replace(/<span.+?>/g, '') : convertTag
     convertTag = convertTag?.includes('</span>') ? convertTag?.replace(/<*\/span>/g, '') : convertTag
     convertTag = convertTag?.includes('</div>') ? convertTag?.replace(/<div.+?>/g, '')?.replace(/<*\/div>/g, '') : convertTag
-    convertTag = convertTag?.includes('</a>') ? convertTag?.replace(/<a.+?>*<*\/a>/g, '') : convertTag
+    convertTag = convertTag?.includes('</a>') ? convertTag?.replace(/<a.+?>/g, '')?.replace(/<*\/a>/g, '') : convertTag
     convertTag = convertTag?.includes('<sup></sup>') ? convertTag?.replace(/<sup><\/sup>/g, '') : convertTag
     convertTag = convertTag?.includes('<br />') ? convertTag?.replace(/<br \/?>\ ?/g, ' ') : convertTag
     convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag

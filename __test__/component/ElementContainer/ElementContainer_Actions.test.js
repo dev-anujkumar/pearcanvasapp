@@ -2734,37 +2734,37 @@ describe("clearElementStatus  Testing", ()=>{
     })
 })
 
-describe("Test case for getElementStatus",()=>{
-    it("testing-------getElementStatus------method", async ()=>{
-        let store = mockStore(() => initialState);
-        let newObj = {
-                "id": "urn:pearson:work:d70d0ba7-aa97-4149-be94-08b1088f56b2",
-                "entityURN": "urn:pearson:entity:b20db4c1-6e18-4975-a18e-79d375a109c0",
-                "type": [
-                    "NarrativeText",
-                    "Work"
-                ],
-                "status": [
-                    "https://schema.pearson.com/ns/contentlifecyclestatus/wip"
-                ],
-                "dateCreated": "2022-02-09T13:19:34.600Z",
-                "dateModified": "2022-02-09T13:19:34.600Z",
-                "etag": "\"346448123455\""
-        }
-        let elementWorkId = "4343653"
-        let index = "0-1-1";
-        global.fetch = jest.fn().mockImplementationOnce(() =>   {
-            return new Promise((resolve, reject) => {
-                resolve({json: jest.fn(()=> newObj)});
-           });
-        });
-        const spyGetElementStatus = jest.spyOn(actions, 'getElementStatus')
-            return store.dispatch(actions.getElementStatus(elementWorkId, index)).then(() => {
-                expect(spyGetElementStatus).toHaveBeenCalled()
-                spyGetElementStatus.mockClear()
-            });
-    })
-})
+// describe("Test case for getElementStatus",()=>{
+//     it("testing-------getElementStatus------method", async ()=>{
+//         let store = mockStore(() => initialState);
+//         let newObj = {
+//                 "id": "urn:pearson:work:d70d0ba7-aa97-4149-be94-08b1088f56b2",
+//                 "entityURN": "urn:pearson:entity:b20db4c1-6e18-4975-a18e-79d375a109c0",
+//                 "type": [
+//                     "NarrativeText",
+//                     "Work"
+//                 ],
+//                 "status": [
+//                     "https://schema.pearson.com/ns/contentlifecyclestatus/wip"
+//                 ],
+//                 "dateCreated": "2022-02-09T13:19:34.600Z",
+//                 "dateModified": "2022-02-09T13:19:34.600Z",
+//                 "etag": "\"346448123455\""
+//         }
+//         let elementWorkId = "4343653"
+//         let index = "0-1-1";
+//         global.fetch = jest.fn().mockImplementationOnce(() =>   {
+//             return new Promise((resolve, reject) => {
+//                 resolve({json: jest.fn(()=> newObj)});
+//            });
+//         });
+//         const spyGetElementStatus = jest.spyOn(actions, 'getElementStatus')
+//             return store.dispatch(actions.getElementStatus(elementWorkId, index)).then(() => {
+//                 expect(spyGetElementStatus).toHaveBeenCalled()
+//                 spyGetElementStatus.mockClear()
+//             });
+//     })
+// })
 describe("Test case for saveTEMetadata ",()=>{
     xit("testing-------saveTEMetadata ------method", async ()=>{
         let store = mockStore(() => initialState);

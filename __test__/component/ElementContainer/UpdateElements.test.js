@@ -13,11 +13,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     removeBlankSpaceAndConvertToLowercase: jest.fn(() => "pearsoncanadainline")
 }))
 
-config["elementStatus"] = {}
-
 describe('Test for UpdateElements Functions', () => {
     it('Test for ELEMENT-TYPE----->element-authoredtext', () => {
-        config.elementStatus["urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0"] = 'approved';
         let type = "element-authoredtext",
             previousElementData = elementAuthoredText,
             node = {},
@@ -33,6 +30,7 @@ describe('Test for UpdateElements Functions', () => {
             },
             showHideType = 'show',
             asideData = {
+                element:{subtype:"workedexample"},
                 type: "manifestlist",
                 index: '0-0-0-1'
             };
@@ -293,7 +291,6 @@ describe('Test for UpdateElements Functions', () => {
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
     it('Test for ELEMENT-TYPE----->Opener Element', () => {
-        config.elementStatus["urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0"] = "approved";
         let elementData = openerElementData,
             elementType = "openerelement",
             primaryOption = "primary-openerelement",

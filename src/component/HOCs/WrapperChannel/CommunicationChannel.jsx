@@ -326,6 +326,9 @@ function CommunicationChannel(WrappedComponent) {
                 case 'GetActiveSlate':
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
+                case 'importpopupmessage':
+                    this.props.setImportMessageForWordImport()
+                    break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
                     break;

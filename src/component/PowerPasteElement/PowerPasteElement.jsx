@@ -13,8 +13,9 @@ import "tinymce/plugins/powerpaste/js/wordimport.js"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 import { handleImagePaste } from '../../constants/utility.js';
-import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
+import { UnsupportedContentString, UnsupportedContentStringForImportWordFile } from '../../constants/ToolTip_Constant.js';
 import { pasteElementLimit } from '../SlateWrapper/SlateWrapperConstants.js';
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants.js";
 
 const PowerPasteElement = (props) => {
 
@@ -89,9 +90,27 @@ export const pastePreProcess = (data) => {
  * Will be called after Powerpaste filtering is done
  * @param {Object} data processed Clipboard data
  * @param {Object} props Powerpaste component props
+ * @param {Object} processType checks Powerpaste or Import word file
  */
-export const pastePostProcess = (data, props) => {
+export const pastePostProcess = (data, props, processType) => {
+  if(processType==='importWord'){
+    if (data?.body) {
+      tinymce?.get('myTextarea2')?.setContent('')
+      const childNodes = data?.body?.children;
+      const elements = [];
+      createPastedElements(childNodes, elements);
+      const updatedElements = []
+      //preparing content that needs to be preview and import
+      data.body = prepareFinalPasteContent(elements, data?.body, props, '', processType)
+      //filtering supported and unsupported contents
+      filterSupportedTagAndData(elements,updatedElements)
+      // elements?.length ? tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', false) : tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', true);
+      props.onImport(updatedElements, props?.fileToBeUploaded?.name);    //used to send final created elements to Slatewrapper for preview and API call
+    }
+  }
+  else{
   if (data.node) {
+    
     // if you dont click inside the editor after pasting data first time and try to paste again by
     // pressing ctrl + v then this condition runs again so clearing the previous data of editor
     tinyMCE.activeEditor.setContent('');
@@ -143,6 +162,7 @@ export const pastePostProcess = (data, props) => {
     // if valid data has been pasted in to editor once then make editor non-editable
     limitedElements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
+  }
 }
 
 /**
@@ -153,7 +173,7 @@ export const pastePostProcess = (data, props) => {
  * @param {Object} props
  * @returns Content that needs to be pasted on text-editor
  */
-export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements) => {
+export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements,processType) => {
   let isPreviousUnsupportedContent = false
   const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
   const allSupUnsupChildNodes = nodeData.childNodes
@@ -170,26 +190,42 @@ export const prepareFinalPasteContent = (elements,nodeData,props,tooManyElements
       isPreviousUnsupportedContent = false
       let elementOuterHtml = element?.outerHTML
       if(element?.outerHTML?.match(/<img ([\w\W]+?)>/g)) {
+        if(!processType){
+          if(!props.isPowerPasteInvalidContent) {
+            props.checkInvalidPowerPasteContent(true)
+          }
+        elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
+        }
+        else{
+          elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentStringForImportWordFile)
+        }
+      }
+      contentToPaste += elementOuterHtml
+    }
+    else if(!spacesAndNewLineFormatArray.includes(element?.data) && processType) {
+      if(!isPreviousUnsupportedContent) {
+        isPreviousUnsupportedContent = true
+        contentToPaste += UnsupportedContentStringForImportWordFile
+      }
+    } 
+    else if(!spacesAndNewLineFormatArray.includes(element?.data) && !tooManyElements) {
         if(!props.isPowerPasteInvalidContent) {
           props.checkInvalidPowerPasteContent(true)
         }
-        elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
-      }
-      contentToPaste += elementOuterHtml
-    } else if(!spacesAndNewLineFormatArray.includes(element?.data) && !tooManyElements) {
-      if(!props.isPowerPasteInvalidContent) {
-        props.checkInvalidPowerPasteContent(true)
-      }
       if(!isPreviousUnsupportedContent) {
         isPreviousUnsupportedContent = true
-      contentToPaste += UnsupportedContentString
+        contentToPaste += UnsupportedContentString
       }
     }
   }
-
-  const updatedPasteContent = document.createElement('div');
+  let updatedPasteContent;
+  if(!processType)
+    updatedPasteContent = document.createElement('div');
+  else
+    updatedPasteContent = document.createElement('body');
   updatedPasteContent.innerHTML = contentToPaste;
-
+  if(processType)
+  tinymce?.get('myTextarea2')?.setContent(updatedPasteContent.innerHTML)
   return updatedPasteContent
 }
 
