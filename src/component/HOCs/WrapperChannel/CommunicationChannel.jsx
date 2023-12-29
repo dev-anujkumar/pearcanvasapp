@@ -754,7 +754,7 @@ function CommunicationChannel(WrappedComponent) {
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
         handleExtLOData = message => {
-            if (message.statusForExtLOSave) {
+            if (message?.statusForExtLOSave) {
                 if (message?.loLinked?.length) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                     message.loLinked.map(loData => {
@@ -781,11 +781,11 @@ function CommunicationChannel(WrappedComponent) {
                 } else {
                     updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
                 }
-                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs.length} )
+                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs?.length} )
                 this.props.isLOExist(externalLOStatusMessage);
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
-                this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
+                this.props.currentSlateLOType(updatedSlateLOs?.length ? EXTERNAL_LF : "");
                 this.props.updateLastAlignedLO(message.lastAlignedExternalLO);
 
                 let lastAlignedLos = localStorage.getItem('lastAlignedLos');
