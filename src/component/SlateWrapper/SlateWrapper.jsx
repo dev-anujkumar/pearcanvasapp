@@ -99,8 +99,8 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps?.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.importDataFromResponse?.importStatus === COMPLETED_IMPORT_STATUS)
-        {
+        const importedAlertCheck = (prevProps?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS)
+        if(importedAlertCheck) {
             config.scrolling = true;
             showNotificationOnCanvas(WORD_FILE_IMPORTED_TOAST_MESSAGE, 'metadataUpdated');
         }
