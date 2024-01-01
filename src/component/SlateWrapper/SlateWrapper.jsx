@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import { Alert, AlertTitle, Snackbar, IconButton } from '@mui/material';
+import { CheckCircleOutline, Close } from '@mui/icons-material';
 
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
@@ -83,6 +84,8 @@ class SlateWrapper extends Component {
             showSubscriberSlatePopup: false,
             fileToBeUploaded: {},
             importData: {},
+            importCompleteStatus: false,
+            showSnackbarOnce: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -98,11 +101,15 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
-    componentDidUpdate(prevProps) {
-        const importedAlertCheck = (prevProps?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS && this.props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS)
-        if(importedAlertCheck) {
+    componentDidUpdate(prevProps, prevState) {
+        const importedSlateData = this.props?.slateLevelData[config?.slateManifestURN]?.importData
+        const importedAlertCheck = (prevProps?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS && importedSlateData?.importStatus === COMPLETED_IMPORT_STATUS)
+        if(importedAlertCheck && !prevState.showSnackbarOnce) {
             config.scrolling = true;
-            showNotificationOnCanvas(WORD_FILE_IMPORTED_TOAST_MESSAGE, 'metadataUpdated');
+            this.setState({
+                importCompleteStatus: true,
+                showSnackbarOnce: true
+            })
         }
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
@@ -591,6 +598,7 @@ class SlateWrapper extends Component {
 
         return null
     }
+
     //This function is used to display the import elements progress alert
     showImportAlertMessage = () => {
         const showSnackbar = this.props.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
@@ -604,6 +612,48 @@ class SlateWrapper extends Component {
                         </Alert>
                 </Snackbar>
         )
+    }
+
+    closeCompleteImportPopup = () => {
+        this.setState({
+            importCompleteStatus: false
+        })
+    }
+
+    //This function is used to display the imported elements complete alert
+    showImportCompleteAlertMessage = () => {
+        if (this.state.importCompleteStatus) {
+            setTimeout(() => {
+                this.setState({
+                    importCompleteStatus: false
+                })
+            }, 3000);
+            return (
+                <Snackbar open={this.state.importCompleteStatus} className='imported-alert'
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                    <Alert iconMapping={{
+                        success: <CheckCircleOutline fontSize="inherit" />,
+                    }}
+                        action={
+                            <IconButton
+                                aria-label="close"
+                                size="small"
+                                className="closeIcon"
+                                onClick={() => {
+                                    this.closeCompleteImportPopup()
+                                }}
+                            >
+                                <Close className="complete-close-icon" fontSize="inherit" />
+                            </IconButton>
+                        }
+                        className='complete-alert'>
+                        <AlertTitle ><strong>{WORD_FILE_IMPORTED_TOAST_MESSAGE}</strong></AlertTitle>
+                        <div className='complete-alert-message'>
+                            {this?.props?.importDataFromResponse?.processedElement} of {this?.props?.importDataFromResponse?.totalElementCount} elements converted</div>
+                    </Alert>
+                </Snackbar>
+            )
+        }
     }
 
     // Displays upload file popup for word import
@@ -1803,6 +1853,8 @@ class SlateWrapper extends Component {
                 {this.showImportAndDropPopup()}
                 {/* **************** To display import elements progress alert ************* */}
                 {this.showImportAlertMessage()}
+                {/* **************** To display import elements complete alert ************* */}
+                {this.showImportCompleteAlertMessage()}
             </React.Fragment>
         );
     }
