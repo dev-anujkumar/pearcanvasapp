@@ -366,30 +366,3 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
     font-size: 14px;
 }
 
-@media only screen and (min-width:1200px) {
-    .preview-file-popup{
-        width: 618px;
-    }
-    .word-file-import .tox-tinymce{
-        height: 240px !important;
-    }
-}
-
-@media only screen and (min-width:1300px) {
-    .preview-file-popup{
-        width: 756px;
-    }
-    .word-file-import .tox-tinymce{
-        height: 304px !important;
-    }
-}
-
-@media only screen and (min-width:1600px) {
-    .preview-file-popup{
-        width: 940px;
-    }
-    .word-file-import .tox-tinymce{
-        height: 345px !important;
-    }
-}
-

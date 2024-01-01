@@ -1661,7 +1661,12 @@ padding-left: 9px;
     top: 0vh
   }
   .preview-file-popup {
-    top: 0vh !important
+    top: 0vh !important;
+    width: 700px !important;
+    left: 10vh
+  }
+  .word-file-import .tox-tinymce {
+    height: 240px !important;
   }
   .upload-file-popup {
     top: 5vh !important
@@ -1673,7 +1678,12 @@ padding-left: 9px;
     top: 10vh
   }
   .preview-file-popup {
-    top: 0vh !important
+    top: 0vh !important;
+    width: 800px !important;
+    left: 4vh;
+  }
+  .word-file-import .tox-tinymce {
+    height: 310px !important;
   }
   .upload-file-popup {
     top: 15vh !important
@@ -1697,7 +1707,11 @@ padding-left: 9px;
     top: 16vh
   }
   .preview-file-popup {
-    top: 8vh !important
+    top: 8vh !important;
+      width: 900px !important;
+    }
+    .word-file-import .tox-tinymce {
+      height: 345px !important;
   }
 }
 
