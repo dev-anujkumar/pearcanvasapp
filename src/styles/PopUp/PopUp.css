@@ -219,50 +219,31 @@
 
   .import-wordpopup-content-description {
   color: var(--text-primary, #081e27);
-  font-feature-settings: "clig" off, "liga" off;
-  /* typography/body2 */
-  font-family: Open Sans;
   font-size: 14px;
-  font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 19.6px */
 }
 
 
   .import-wordpopup-content-title {
-  margin-top: 12px;
+  padding-top: 16px;
   color: var(--text-primary, #081e27);
-  font-feature-settings: "clig" off, "liga" off;
-  font-family: Open Sans;
-  font-size: 14px;
-  font-style: normal;
+ font-size: 16px;
+  font-weight: 400;
 }
 
-  .import-wordpopup-content-title-2 {
-  margin-top: 14px;
+.import-wordpopup-content-title-2, .import-wordpopup-content-title-4 {
+  padding-top: 20px;
   color: var(--text-primary, #081e27);
-  font-feature-settings: "clig" off, "liga" off;
-  font-family: Open Sans;
-  font-size: 14px;
-  font-style: normal;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 135%;
 }
 
 .import-wordpopup-content-title-3{
-  margin-top: 8px;
+  margin-top: 12px;
   display: flex;
   column-gap: 8px;
-}
-
-.import-wordpopup-content-title-4{
-  margin-top: 14px;
-  color: var(--text-primary, #081E27);
-  font-feature-settings: 'clig' off, 'liga' off;
-  font-family: Open Sans;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 135%;
 }
 
   .cancel-button:hover,.lo-save-button:hover{
@@ -599,7 +580,7 @@ font-size: 14px;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   font-family: "Open Sans", sans-serif;
   color: #000;
-  padding: 12px 24px;
+  padding: 18px 24px;
   position: relative;
   margin: 0 auto;
   max-width: 100%;
@@ -1689,7 +1670,7 @@ padding-left: 9px;
 
 @media screen and (min-width: 1366px) and (max-width: 1439px) {
   .import-word-file-popup{
-    top: 12vh
+    top: 10vh
   }
   .preview-file-popup {
     top: 0vh !important
@@ -1713,10 +1694,10 @@ padding-left: 9px;
 
 @media screen and (min-width: 1600px) and (max-width: 1919px) {
   .import-word-file-popup, .upload-file-popup{
-    top: 25vh
+    top: 16vh
   }
   .preview-file-popup {
-    top: 15vh !important
+    top: 8vh !important
   }
 }
 
