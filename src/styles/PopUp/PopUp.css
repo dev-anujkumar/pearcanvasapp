@@ -596,9 +596,6 @@ font-size: 14px;
   animation-duration: 0.8s;
 }
 .import-word-file-popup {
-  /* border-top: 5px solid #005a70; */
-  -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   font-family: "Open Sans", sans-serif;
   color: #000;
@@ -611,50 +608,14 @@ font-size: 14px;
   font-size: 16px;
   line-height: 16px;
   background-color: #ffffff;
-  top: 194px;    
-  transform: translateY(-50%);
+  top: 17vh;    
+  /* transform: translateY(-50%); */
   animation-duration: 0.8s;
   border-radius: 4px;
 }
 
 .preview-file-popup{
-  -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  font-family: "Open Sans", sans-serif;
-  color: #000;
-  padding: 12px 24px;
-  position: relative;
-  margin: 0 auto;
-  max-width: 100%;
-  width: 1000px;
-  height: auto;
-  font-size: 16px;
-  line-height: 16px;
-  background-color: #ffffff;
-  animation-duration: 0.8s;
-  border-radius: 4px;
-}
-
-.import-and-drop-file-popup{
-  -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-  font-family: "Open Sans", sans-serif;
-  color: #000;
-  padding: 12px 24px;
-  position: relative;
-  margin: 0 auto;
-  max-width: 100%;
-  width: 600px;
-  height: auto;
-  font-size: 16px;
-  line-height: 16px;
-  background-color: #ffffff;
-  top: 185px;    
-  transform: translateY(-50%);
-  animation-duration: 0.8s;
-  border-radius: 4px;
+  width: 1000px !important;
 }
 
 .import-and-drop-file-heading{
@@ -1711,4 +1672,59 @@ padding-left: 9px;
 .stepper-text-upload-text-upload{
   color: #081E27;
   font-size: 14px;
+}
+
+/* media queries for word import popups */
+@media screen and (max-width: 1280px) {
+  .import-word-file-popup{
+    top: 0vh
+  }
+  .preview-file-popup {
+    top: 0vh !important
+  }
+  .upload-file-popup {
+    top: 5vh !important
+  }
+}
+
+@media screen and (min-width: 1366px) and (max-width: 1439px) {
+  .import-word-file-popup{
+    top: 12vh
+  }
+  .preview-file-popup {
+    top: 0vh !important
+  }
+  .upload-file-popup {
+    top: 15vh !important
+  }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1599px) {
+  .import-word-file-popup{
+    top: 18vh
+  }
+  .preview-file-popup {
+    top: 10vh !important
+  }
+  .upload-file-popup {
+    top: 20vh !important
+  }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1919px) {
+  .import-word-file-popup, .upload-file-popup{
+    top: 25vh
+  }
+  .preview-file-popup {
+    top: 15vh !important
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .import-word-file-popup, .upload-file-popup{
+    top: 30vh
+  }
+  .preview-file-popup {
+    top: 20vh !important
+  }
 }

@@ -230,3 +230,4 @@ export const WORD_FILE_IMPORTED_TOAST_MESSAGE = 'Conversion on slate is complete
 export const IN_PROGRESS_IMPORT_STATUS = 'in-progress'
 export const COMPLETED_IMPORT_STATUS = 'completed'
 export const ELEMENT_ON_SLATE_CREATION_INPROGRESS = 'Conversion on slate is in progress...'
+export const IMPORTED_DATA_STATUS = 'imported_data_status'
