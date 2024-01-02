@@ -137,11 +137,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
-            } else {
-            // createNewVersionOfSlate();
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-            return false;
             }
         }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
@@ -871,10 +866,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
-                    }
-                    else{
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
                     }
                     return false;
                 }

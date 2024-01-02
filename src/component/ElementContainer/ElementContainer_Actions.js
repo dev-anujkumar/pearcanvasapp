@@ -876,9 +876,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             }
-            else {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-            }
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             config.conversionInProcess = false
             config.savingInProgress = false
@@ -961,9 +958,6 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
-            }
-            else {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             }
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             // config.conversionInProcess = false

@@ -1564,12 +1564,6 @@ class SlateWrapper extends Component {
     closePopup = () =>{
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
-        if( this.props.slateData && this.props.slateData[config.tempSlateManifestURN] &&
-            this.props.slateData[config.tempSlateManifestURN].status === "approved" &&
-            this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].status === "wip"){
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-        }
         // When normal slate is Wip but popupslate is approved. BG-2742
         if((this.props.slateData[config.slateManifestURN].id !== config.cachedActiveElement.element.id) && config.cachedActiveElement.element.status === "approved"){
             this.props.slateData[config.slateManifestURN].index = config.cachedActiveElement.index;

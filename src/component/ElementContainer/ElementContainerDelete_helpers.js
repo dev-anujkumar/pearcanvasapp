@@ -433,10 +433,6 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData, auto
         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
         handleAutoNumberingOnDelete(autoNumberParams);
     }
-    else {
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        sendDataToIframe({ 'type': SendMessageForVersioning, 'message': 'updateSlate' });
-    }
     return false;
 }
 

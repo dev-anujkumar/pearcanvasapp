@@ -346,9 +346,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             }
-            else{
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-            }
             /**
              * PCAT-6929 : Renumbering of List element creates a new version but doesn't reorder the List numbering in element
              */
@@ -809,9 +806,6 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(parsedParentData.id, parsedParentData.contentUrn, 0, parsedParentData, ""));
             }
-            else {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-            }
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             config.conversionInProcess = false
             config.savingInProgress = false
@@ -924,9 +918,6 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
-            }
-            else {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             }
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             config.conversionInProcess = false
