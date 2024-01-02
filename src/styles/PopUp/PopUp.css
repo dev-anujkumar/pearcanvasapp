@@ -1671,6 +1671,21 @@ padding-left: 9px;
   .upload-file-popup {
     top: 5vh !important
   }
+  .import-word-file-popup{
+    padding: 15px 24px !important;
+  }
+  .import-wordpopup-content-title-2, .import-wordpopup-content-title-4{
+    padding-top: 16px !important;
+  }
+  .import-wordpopup-content-title{
+    padding-top: 14px !important;
+  }
+  .import-wordpopup-content-title-3 {
+    margin-top: 10px !important;
+  }
+  .popup-note-message{
+    margin-top: 12px !important;
+  }
 }
 
 @media screen and (min-width: 1366px) and (max-width: 1439px) {
