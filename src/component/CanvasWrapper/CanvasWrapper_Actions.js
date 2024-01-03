@@ -63,7 +63,7 @@ import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnc
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 import TcmConstants from '../TcmSnapshots/TcmConstants';
 import { closeTcmPopup } from './TCM_Canvas_Popup_Integrations';
-import { DEFAULT_PLAYBACK_MODE, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
+import { DEFAULT_PLAYBACK_MODE, IMPORTED_DATA_STATUS, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -642,6 +642,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }).then(slateData => {
         config.isSlateElementCompleted = false;
         dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
+        sendDataToIframe({ 'type': IMPORTED_DATA_STATUS, 'message': slateData?.data[manifestURN]?.importData });
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
         {
             config.isSlateElementCompleted = true;
