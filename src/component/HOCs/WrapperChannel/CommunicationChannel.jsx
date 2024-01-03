@@ -8,20 +8,22 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole, showNotificationOnCanvas} from '../../../constants/utility.js';
+import { sendDataToIframe, showNotificationOnCanvas} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED,
-        CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED,
+        CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION,
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION,
         CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, IMG_HTML, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
-import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, IMG_HTML, FRONT_MATTER, BACK_MATTER, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
+import {
+    setCurrentSlate, updatePageLink, handleProjectDetails, sendingPermissions,
+    handleElmPickerTransactions, handleSelectedAlfrescoData, getAssessmentForWillowAlignment
+} from './CommunicationActions.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -65,12 +67,12 @@ function CommunicationChannel(WrappedComponent) {
                     showNotificationOnCanvas(message);
                     break;
                 case 'getPermissions':
-                    this.sendingPermissions();
+                    sendingPermissions(this.props);
                     break;
                 case 'selectedSlate':
                 case 'titleChanging':
                     message['parentId'] = this.state.project_urn;
-                    this.setCurrentSlate(message);
+                    setCurrentSlate(message,this.props,this.showCanvasBlocker);
                     break;
                 case 'deleteTocItem':
                 case 'deleteTocMultipleItem':
@@ -132,31 +134,7 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     break;
                 case 'projectDetails':
-                    config.tcmStatus = (message.tcm && message.tcm.activated == true ? true : undefined);
-                    config.userId = message['x-prsn-user-id'].toLowerCase();
-                    config.userName = message['x-prsn-user-id'].toLowerCase();
-                    config.ssoToken = message.ssoToken;
-                    config.myCloudProxySession = message.myCloudProxySession;
-                    config.projectUrn = message.id;
-                    config.citeUrn = message.citeUrn;
-                    config.isCypressPlusEnabled = message.isCypressPlusEnabled;
-                    config.projectEntityUrn = message.entityUrn;
-                    config.alfrescoMetaData = message;
-                    if (message?.alfresco?.repositoryFolder) {
-                        let alfrescoRepository = message.alfresco.repositoryFolder?.split('/')?.[0] || message.alfresco.repositoryFolder
-                        config.alfrescoMetaData.alfresco.repositoryFolder = alfrescoRepository
-                        if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
-                        fetchAlfrescoSiteDropdownList('projectAlfrescoSettings')
-                    }
-                    this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
-                    config.book_title = message.name;
-                    this.props.fetchAuthUser()
-                    this.props.fetchLearnosityContent()
-
-                    // call get project api here
-                    this.props.getProjectDetails()
-                    this.props.fetchProjectLFs()
-                    this.props.fetchDefaultLF(message.defaultLearningFramework)
+                    handleProjectDetails(message,this.props)
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -308,7 +286,7 @@ function CommunicationChannel(WrappedComponent) {
                         this.deleteTocItem(message)
 
                     } else {
-                        this.updatePageLink(message);
+                        updatePageLink(message,this.props);
                     }
                     break;
                 case 'slateLengthChanged':
@@ -338,59 +316,14 @@ function CommunicationChannel(WrappedComponent) {
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
                     break;
-                case 'selectedAlfrescoAssetData' :
-                    //Check if message.asset is array
-                    if (message.asset && Array.isArray(message.asset) && message.asset?.length > 0) {
-                        message.asset = message.asset[0]
-                    }
-                    else if (message.assets && Array.isArray(message.assets) && message.assets?.length > 0) {
-                        message.asset = message.assets[0]
-                    }
-                    if (this.props?.alfrescoReducer?.savedElement) {
-                        message = {
-                            ...message,
-                            ...this.props.alfrescoReducer?.savedElement,
-                            isEditor: this.props.alfrescoReducer.savedElement?.editor ?? undefined
-                        }
-                        let changedSiteUrl = false, changedAlfrescoData = {}
-                        if (message.site && Object.keys(message.site)?.length > 0) {
-                            const projectAlfrescoNodeRef = this.props.alfrescoReducer?.savedElement?.citeNodeRef ?? ""
-                            if (message.site?.citeNodeRef !== projectAlfrescoNodeRef) {
-                                changedSiteUrl = true
-                                changedAlfrescoData = {
-                                    guid: message.site?.citeNodeRef,
-                                    title: message.site?.title,
-                                    id: message.site?.citeName,
-                                    visibility: message.site?.visibility
-                                }
-                            }
-                            message = {
-                                ...message,
-                                changedSiteUrl,
-                                changedAlfrescoData
-                            }
-                        }
-                    }
-                    message.launchAlfrescoPopup = false
-                    console.log('Message from Alfresco', message)
-                    if (message.isEditor) {
-                        this.handleEditorSave(message)
-                    }
-                    if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
-                        this.handleAudioData(message)
-                    }
-                    if (message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote) {
-                        this.handleImageData(message)
-                    }
-                    // Making condition true for triggering slate level save api
-                    localStorage.setItem('isChangeInSlate', 'true');
-                    this.props.saveSelectedAssetData(message)
+                case 'selectedAlfrescoAssetData':
+                    handleSelectedAlfrescoData(message,this.props)
                     break;
                 case 'saveAlfrescoDataToConfig':
                     config.alfrescoMetaData = message
                     break;
                 case TOGGLE_ELM_SPA:
-                    this.handleElmPickerTransactions(message);
+                    handleElmPickerTransactions(message,this.props,this.showCanvasBlocker);
                     break;
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
@@ -458,7 +391,7 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 }
                 case "getAssessmentData":
-                    this.getAssessmentForWillowAlignment(message);
+                    getAssessmentForWillowAlignment(message,this.props);
                     break;
                 case "preflightElementFocus":
                     config.currentElementUrn = message
@@ -490,105 +423,6 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
-
-        /**
-            This Function is used to get AssessmentData For Aligned Willow Framework
-         */
-        getAssessmentForWillowAlignment = (message) => {
-            const {currentSlateLOData, projectLearningFrameworks, currentSlateLF, defaultLF } = this.props
-            let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-            let apiKeys_LO = {
-                'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
-                'strApiKey': config.STRUCTURE_APIKEY,
-                'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-                'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                'myCloudProxySession': config.myCloudProxySession,
-                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
-                'structureApiEndpoint':config.AUDIO_NARRATION_URL
-            };
-            let externalLFUrn = [];
-            if (projectLearningFrameworks?.externalLF?.length) {
-                projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
-            }
-            let assessmentuRN = "";
-            let assessmentType = "";
-            let assessmentTypeLO = "";
-            if (config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length) {
-                assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
-            }
-            switch (assessmentType) {
-                case TDX:
-                    assessmentTypeLO = ASSESSMENT_ITEM_TDX
-                    break;
-                case CITE:
-                case LEARNING_TEMPLATE:
-                case PUF:
-                case LEARNOSITY:
-                default:
-                    assessmentTypeLO = ASSESSMENT_ITEM
-                    break;
-            }
-            let previewData = {
-                previewUrl: config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
-                bookId: config.citeUrn,
-                assessmentUrn: assessmentuRN,
-                assessmentType: assessmentTypeLO,
-                projectEntityUrn:config.projectEntityUrn
-            }
-            sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
-            sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
-            sendDataToIframe({
-                'type': OpenLOPopup,
-                'message': {
-                    'text': AddToExternalFrameworkAS,
-                    'data': currentSlateLOData,
-                    'isLOExist': true,
-                    'editAction': '',
-                    'selectedLOs': currentSlateLOData,
-                    'apiConstants': message.apiKeys_LO ?? apiKeys_LO,
-                    'externalLFUrn': externalLFUrn,
-                    'currentSlateId': slateManifestURN,
-                    'chapterContainerUrn': '',
-                    'currentSlateLF': currentSlateLF,
-                    'assessmentUrn': message.assessmentUrn  ? message.assessmentUrn : assessmentuRN,
-                    'previewData': previewData,
-                    'defaultLF': defaultLF,
-                    'loSpa_Source': message.loSpa_Source,
-                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false,
-                    'isApprovedSlate':message.isApprovedSlate,
-                    'entityURN':message.entityURN,
-                    'isSlateLocked':message?.isSlateLocked
-                }
-            })
-        }
-
-        /**
-          * This method handles all transactions from Elm Picker SPA
-          * @param {*} message | message received from wrapper
-          */
-        handleElmPickerTransactions = (message) => {
-            if (message?.dataToSend?.type) {
-                switch (message.dataToSend.type) {
-                    case ELM_CREATE_IN_PLACE:
-                    case SAVE_ELM_DATA:
-                        this.props.setElmPickerData(message.dataToSend);
-                        break;
-                    case CLOSE_ELM_PICKER:
-                    default:
-                        this.props.setElmPickerData({})
-                        break;
-                }
-                this.setState({
-                    showBlocker: false
-                });
-            } else {
-                this.props.setElmPickerData({})
-            }
-            hideBlocker();
-        }
-
         /**
          * Updates the element count and refreshes slate
          * @param {String} message element count in a slate
@@ -598,140 +432,6 @@ function CommunicationChannel(WrappedComponent) {
             this.handleRefreshSlate()
         }
 
-        /**
-         * Handle the element update action on linking a page
-         */
-        updatePageLink = (linkData) => {
-            let activeElement, linkNode, linkHTML, editor;
-            let linkId = "", elementId = "", pageId = "";
-            let linkNotification = '';
-            document.getElementById('link-notification').innerText = "";
-            if ('link' in linkData && linkData.link == "link" && 'elementId' in linkData &&
-                'linkId' in linkData && 'pageId' in linkData && 'pageName' in linkData) {
-
-                linkId = linkData.linkId || "";
-                elementId = linkData.elementId || "";
-                pageId = linkData.pageId || "";
-
-                var html = linkData.pageName;
-                var div = document.createElement("div");
-                div.innerHTML = html;
-                const pageLinkText = div.innerText
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
-                activeElement = elementContainer.querySelectorAll('.cypress-editable');
-                activeElement.forEach((item) => {
-                    if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
-                        if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
-                            tinymce.activeEditor.undoManager.transact(() => {
-                                item.focus();
-                                editor = item;
-
-                                let elementTag = "";
-                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) :
-                                item.querySelector('#' + linkData.linkId);
-                                if(linkNode.classList.contains('sup')) {
-                                    elementTag = 'sup';
-                                } else if(linkNode.classList.contains('sub')) {
-                                    elementTag = 'sub';
-                                }
-                                linkHTML = linkNode.innerHTML || '';
-                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId +
-                                '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
-                                if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
-                                    linkNotification = "Link updated to slate '" + pageLinkText + "'.";
-                                } else {
-                                    linkNotification = "Link added to slate '" + pageLinkText + "'.";
-                                }
-                            });
-                        }
-                    }
-                });
-            } else if ('link' in linkData && (linkData.link == "cancel" || linkData.link == "unlink" || linkData.link == "unlinkToc") &&
-                'elementId' in linkData && 'linkId' in linkData) {
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
-                activeElement = elementContainer.querySelectorAll('.cypress-editable');
-                activeElement.forEach((item) => {
-                    if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
-                        if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
-
-                            tinymce.activeEditor.undoManager.transact(() => {
-                                item.focus();
-                                editor = item;
-                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) :
-                                        item.querySelector('#' + linkData.linkId);
-                                linkHTML = linkNode.innerHTML || '';
-                                linkNode.outerHTML = linkHTML;
-                                if (linkData.link == "unlink" || linkData.link == "unlinkToc") {
-                                    this.props.assetIdForSnapshot(linkData.linkId)
-                                    linkNotification = "Link removed.";
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-
-            document.getElementById('link-notification').innerText = linkNotification;
-            sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
-
-            setTimeout(() => {
-                if (editor) {
-                    editor.click();
-                    editor.blur();
-                }
-            }, 500);
-        }
-
-        handleEditorSave = (message) =>{
-            let params = {
-                element: message.id,
-                editor: this.props.alfrescoEditor,
-                asset: message.asset,
-                launchAlfrescoPopup: false,
-                isInlineEditor: message.isEditor,
-                imageArgs: this.props.imageArgs
-            }
-            this.props.saveInlineImageData(params);
-            hideBlocker();
-        }
-
-        handleAudioData = (message) => {
-            let imageData = message.asset;
-            let figureType = imageData?.content?.mimeType?.split('/')[0]
-            let smartLinkAssetType = imageData?.properties[CM_DESCRIPTION] && (typeof (imageData.properties[CM_DESCRIPTION]) == "string") ?
-            imageData.properties[CM_DESCRIPTION].includes('smartLinkType') ?
-            JSON.parse(imageData.properties[CM_DESCRIPTION]).smartLinkType : "" : "";
-            if (figureType == "audio" || smartLinkAssetType?.toLowerCase() == "audio") {
-                this.props.saveDataFromAlfresco(message);
-                let payloadObj = {
-                    asset: {},
-                    id: ''
-                }
-                this.props.saveSelectedAssetData(payloadObj);
-                hideBlocker();
-            } else {
-                this.props.showWrongAudioPopup(true);
-            }
-        }
-
-        /**
-         * handle Glossary Image Data
-         */
-        handleImageData = (message) => {
-            let imageData = message.asset;
-            let figureType = imageData?.content?.mimeType?.split('/')[0]
-            if (figureType == "image") {
-                this.props.saveImageDataFromAlfresco(message);
-                let payloadObj = {
-                    asset: {},
-                    id: ''
-                }
-                this.props.saveSelectedAssetData(payloadObj);
-                hideBlocker();
-            } else {
-                this.props.showWrongImagePopup(true);
-            }
-        }
         /**
          * Releases slate lock and logs user out.
          */
@@ -950,20 +650,6 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
-        /**
-         * function to set owner project slate popup flag as true
-         */
-        resetOwnerSlatePopupFlag = () => {
-            const { projectSubscriptionDetails } = this.props;
-            const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
-            const isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
-            if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
-                this.props.isOwnersSubscribedSlate(true);
-            }else if(isSubscriberRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) &&
-                    !isSubscribersKeyExist){
-                this.props.isSubscribersSubscribedSlate(true);
-            }
-        }
 
         handleRefreshSlate = () => {
             const { projectSubscriptionDetails } = this.props;
@@ -995,165 +681,8 @@ function CommunicationChannel(WrappedComponent) {
             });
         }
 
-        sendDataToIframe = (messageObj) => {
-            sendDataToIframe(messageObj);
-        }
         hanndleSplitSlate = (newSlateObj) => {
             this.props.handleSplitSlate(newSlateObj);
-        }
-        sendingPermissions = () => {
-            /**
-             * TO BE VERIFIED
-             *  */
-            let permissionObj = this.props.currentProject || null;
-            if (permissionObj === null) {
-                permissionObj = {};
-                if (this.props.permissions) {
-                    let tocEditTitle = this.props.permissions.includes('toc_edit_title') ? 'toc_edit_title' : ""
-                    let tocDelete = this.props.permissions.includes('toc_delete_entry') ? 'toc_delete_entry' : ""
-                    let tocRearrage = this.props.permissions.includes('toc_rearrange_entry') ? 'toc_rearrange_entry' : ""
-                    let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
-                    let unlinkContent = this.props.permissions.includes('unlink_content_from_TOC') ? 'unlink_content_from_TOC' : ""
-                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd, unlinkContent]
-                }
-                permissionObj.roleId = this.props.roleId;
-            }
-
-
-            sendDataToIframe({
-                'type': 'Permissions',
-                'message': { 'permissions': permissionObj.permissions, 'roleName': permissionObj.roleId }
-            });
-        }
-
-        setCurrentSlate = (message) => {
-            config.isSlateLockChecked = false;
-            let currentSlateObject = {};
-            const projectSubscriptionDetails = {
-                isSubscribed: false,
-                owner: {}
-            }
-
-            if (message?.node?.autoNumberingDetails) {
-                this.props.setTocContainersAutoNumberList(message.node.autoNumberingDetails)
-            }
-            // reset owner slate popup flag on slate change
-            this.resetOwnerSlatePopupFlag();
-            if (message['category'] === 'titleChange') {
-                config.staleTitle = message?.title ?? '';
-                currentSlateObject = {
-                    title: message.title,
-                }
-                this.props.setUpdatedSlateTitle(currentSlateObject)
-            }
-            if (message && message.node) {
-                // To prevent the change slate focus action on browser refresh
-                let isRefreshBrowser = localStorage.getItem('browser_refresh');
-                if (isRefreshBrowser == '1') {
-                    localStorage.setItem('browser_refresh', '0');
-                    // At the time slate versioning prevent trigger slate level save
-                } else if (localStorage.getItem('slateNewVersion') === 'true') {
-                    localStorage.removeItem('slateNewVersion');
-                } else {
-                    triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
-                }
-                const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
-                if (this.props.withinLockPeriod === true) {
-                    this.props.releaseSlateLock(config.projectUrn, slateManifest)
-                    triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
-                }
-                sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
-                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                currentSlateObject = {
-                    title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
-                }
-                this.setState({
-                    showBlocker: false
-                })
-                this.props.setUpdatedSlateTitle(currentSlateObject)
-                config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
-                config.slateEntityURN = message.node.entityUrn;
-                config.slateManifestURN = message.node.containerUrn;
-                config.tempSlateManifestURN = null;
-                config.tempSlateEntityURN = null;
-                config.disablePrev = message.disablePrev;
-                config.disableNext = message.disableNext;
-                config.slateType = message?.node?.nodeLabel === "assessment-slate" ? "assessment" : message?.node?.nodeLabel;
-                config.parentContainerUrn = message.node.ParentContainerUrn;
-                config.parentEntityUrn = message.node.ParentEntityUrn;
-                config.page = 0;
-                config.scrolling = true;
-                config.totalPageCount = 0;
-                config.fromTOC = true;
-                config.tcmslatemanifest= null;
-                config.parentLabel = message.node.nodeParentLabel;
-                config.parentOfParentItem = message.node.parentOfParentItem
-                // checking if selected container is subscribed or not
-                if (message?.node?.isSubscribed) {
-                    projectSubscriptionDetails.isSubscribed = message.node.isSubscribed;
-                }
-                // calling an action to set project subscription details coming from TOC SPA
-                this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
-                this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
-                let slateData = {
-                    currentProjectId: config.projectUrn,
-                    slateEntityUrn: config.slateEntityURN
-                }
-                /* Message from TOC is current Slate is Joined PDF */
-                /** ---------------------------------------------- */
-                if (message?.node) {
-                    let matterType = 'bodymatter'
-                    if (message.node.parentOfParentItem !== "") {
-                        if (message.node.parentOfParentItem === 'backmatter') {
-                            matterType = 'backmatter'
-                        } else if (message.node.parentOfParentItem === 'frontmatter') {
-                            matterType = 'frontmatter'
-                        }
-                    } else if (message.node.nodeParentLabel === 'backmatter') {
-                        matterType = 'backmatter'
-                    } else if (message.node.nodeParentLabel === 'frontmatter') {
-                        matterType = 'frontmatter'
-                    }
-                    this.props.setSlateMatterType(matterType);
-                }
-                config.isPopupSlate = false;
-                config.figureDataToBeFetched = true;
-                this.props.fetchAudioNarrationForContainer(slateData)
-                this.props.clearElementStatus()
-                this.props.fetchUsageTypeData('assessment');
-                this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
-                this.props.fetchLOBList();
-                config.savingInProgress = false
-                this.props.setSlateType(config.slateType);
-                this.props.setSlateEntity(config.slateEntityURN);
-                this.props.setSlateParent(message.node.nodeParentLabel);
-                this.props.glossaaryFootnotePopup(false);
-                this.props.audioGlossaryPopup(false);
-                this.props.savePopupParentSlateData({});
-                let apiKeys_LO = {
-                    'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
-                    'strApiKey': config.STRUCTURE_APIKEY,
-                    'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
-                    'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                    'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
-                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                    'structureApiEndpoint':config.AUDIO_NARRATION_URL
-                }
-                if (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
-                    let externalLFUrn = []
-                    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-                        this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
-                    }
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN,
-                    apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
-                }
-                else if (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER && config.slateType == "container-introduction") {
-                    sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
-                }
-            }
-            /**
-             * TO BE IMPLEMENTED
-             *  */
         }
 
         slateLockAlert = (userInfo) => {
@@ -1253,6 +782,10 @@ function CommunicationChannel(WrappedComponent) {
 
             sendDataToIframe({type : 'showTOCDeletePopup', message : newMessage})
         }
+        /**
+         * Function used to show Blocker on canvas
+         * @param {Boolean} status 
+        */
         showCanvasBlocker = (bFlag) => {
             this.setState({
                 showBlocker: bFlag
@@ -1309,7 +842,7 @@ function CommunicationChannel(WrappedComponent) {
             return (
                 <React.Fragment>
                     <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker}
-                    tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
+                    tocDeleteMessage={this.state.tocDeleteMessage}  closeUndoTimer = {this.state.closeUndoTimer}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )
