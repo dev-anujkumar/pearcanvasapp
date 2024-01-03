@@ -2826,4 +2826,16 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spysendingPermissions.mockClear()
     })
+    test('Test for import message case', () => {
+        const event = {
+            data: {
+                type: "importpopupmessage",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    })
 })

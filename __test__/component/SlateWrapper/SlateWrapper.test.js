@@ -104,7 +104,8 @@ jest.mock('../../../src/component/CanvasWrapper/CanvasWrapper_Actions.js', () =>
     fetchSlateData: mockFunction
 }));
 jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions.js', () => ({
-    createElement: mockFunction
+    createElement: mockFunction,
+    createPayloadForWordImport: jest.fn()
 }));
 jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions.js', () => ({
     setSlateLock: mockFunction,
@@ -750,7 +751,13 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.32 Test - toggleWrongAudioPopup ", () => {
         it('1.32.1  Test - if case ', () => {
-            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'toggleWrongAudioPopup')
             compInstance.toggleWrongAudioPopup(true, 1);
@@ -777,7 +784,13 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.35 Test - showImageGlossaryRemoveConfirmationPopup ", () => {
         it('1.35.1  Test - if case (this.props.removeGlossaryImage)', () => {
-            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true}};
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'showImageGlossaryRemoveConfirmationPopup')
             compInstance.showImageGlossaryRemoveConfirmationPopup(true, 1);
@@ -785,7 +798,13 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
         it('1.35.2  Test - else if case (this.props.openWrongImagePopup)', () => {
-            const newInitialState = {...initialState, appStore: {openWrongImagePopup: true}};
+            const newInitialState = {...initialState, appStore: {openWrongImagePopup: true, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'showImageGlossaryRemoveConfirmationPopup')
             compInstance.showImageGlossaryRemoveConfirmationPopup(false, 1);
@@ -795,7 +814,13 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.36 Test - toggleImageGlossaryPopup ", () => {
         it('1.36.1  Test - if case (this.props.removeGlossaryImage)', () => {
-            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true}};
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'toggleImageGlossaryPopup')
             compInstance.toggleImageGlossaryPopup(true, 1);
@@ -803,7 +828,13 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
         it('1.36.2  Test - else case ', () => {
-            const newInitialState = {...initialState, appStore: {removeGlossaryImage: false}};
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: false, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'toggleImageGlossaryPopup')
             compInstance.toggleImageGlossaryPopup(false, 1);
@@ -813,7 +844,13 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.37 Test - toggleWrongImagePopup ", () => {
         it('1.37.1  Test - if case (this.props.removeGlossaryImage)', () => {
-            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'toggleWrongImagePopup')
             compInstance.toggleWrongImagePopup(true, 1);
@@ -821,7 +858,13 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
         it('1.37.2  Test - else case ', () => {
-            const newInitialState = {...initialState, appStore: {accesDeniedPopup: false}};
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: false, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'toggleWrongImagePopup')
             compInstance.toggleWrongImagePopup(false, 1);
@@ -831,7 +874,13 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.38 Test - processRemoveImageGlossaryConfirmation ", () => {
         it('1.38.1  Test - if case (this.props.removeGlossaryImage)', () => {
-            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true}};
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'processRemoveImageGlossaryConfirmation')
             compInstance.processRemoveImageGlossaryConfirmation(true, 1);
@@ -839,7 +888,13 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
         it('1.38.2  Test - else case ', () => {
-            const newInitialState = {...initialState, appStore: {removeGlossaryImage: false}};
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: false, slateLevelData: {
+                "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                    importData: {
+                        importStatus: 'in-progress'
+                    }
+                }
+            }}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'processRemoveImageGlossaryConfirmation')
             compInstance.processRemoveImageGlossaryConfirmation(false, 1);
@@ -1204,11 +1259,124 @@ describe("SlateWrapper Component", () => {
         spy.mockClear()
     })
     it('2.5  Test - handleUnlockSlateWarning ', () => {
-        const newInitialState = {...initialState, appStore: {userRole: 'admin'}};
+        const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                importData: {
+                    importStatus: 'in-progress'
+                }
+            }
+        }}};
         const compInstance = slateWrapInstance(props, newInitialState);
         const spy = jest.spyOn(compInstance, 'handleUnlockSlateWarning')
         const status = 'ok'
         compInstance.handleUnlockSlateWarning(status);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+})
+
+describe("SlateWrapper Component import word file", () => {
+    config.ssoToken = "1214";
+    let props = {
+        slateData: slateData,
+        permissions : [],
+        toggleTocDelete: true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn(),
+        releaseSlateLock: jest.fn(),
+        commentSearchScrollTop: "123",
+        accesDeniedPopup: true,
+        getCommentElements: jest.fn(),
+        updateTimer: jest.fn(),
+        commentSearchScrollTop : {},
+        slateVersioning: jest.fn(),
+        ...actionProps
+    };
+
+    it('3.0 Importing tips popup', () => {
+        const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                importData: {
+                    importStatus: 'in-progress'
+                }
+            }
+        }, importMsgCanvas: true}};
+        const newProps = {...props, setImportWordFileMessageInCanvas: jest.fn()}
+        const compInstance = slateWrapInstance(newProps, newInitialState);
+        const spy = jest.spyOn(compInstance, 'togglePopupForImportWordFile')
+        const spy2 = jest.spyOn(compInstance, 'startImportingButtonHandling')
+        compInstance.togglePopupForImportWordFile();
+        compInstance.startImportingButtonHandling();
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('3.1 Preview file popup', () => {
+        const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                importData: {
+                    importStatus: 'in-progress'
+                }
+            }
+        }, importMsgCanvas: true}};
+        const newProps = {...props, setImportWordFileMessageInCanvas: jest.fn()}
+        const compInstance = slateWrapInstance(newProps, newInitialState);
+        compInstance.setState({showUploadFilePopup: true});
+        const spy = jest.spyOn(compInstance, 'showUploadFilePopup')
+        const spy2 = jest.spyOn(compInstance, 'togglePopupForUploadFilePopup')
+        const spy3 = jest.spyOn(compInstance, 'handleImportButton')
+        const spy4 = jest.spyOn(compInstance, 'onImport')
+        compInstance.showUploadFilePopup();
+        compInstance.handleImportButton();
+        compInstance.onImport({}, 'Perception.docx');
+        compInstance.togglePopupForUploadFilePopup('', {target: 'false', preventDefault: jest.fn(), stopPropagation: jest.fn()});
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+        expect(spy3).toHaveBeenCalled();
+        expect(spy4).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('3.2 Upload file popup', () => {
+        const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                importData: {
+                    importStatus: 'in-progress'
+                }
+            }
+        }, importMsgCanvas: true}};
+        const newProps = {...props, setImportWordFileMessageInCanvas: jest.fn()}
+        const compInstance = slateWrapInstance(newProps, newInitialState);
+        compInstance.setState({showImportAndDragFile: true});
+        const spy = jest.spyOn(compInstance, 'showImportAndDropPopup')
+        const spy2 = jest.spyOn(compInstance, 'toggleNextButton')
+        const spy3 = jest.spyOn(compInstance, 'toggleShowImportAndDropPopup')
+        const spy4 = jest.spyOn(compInstance, 'handleImportingTipsClick')
+        compInstance.showImportAndDropPopup();
+        compInstance.toggleNextButton();
+        compInstance.toggleShowImportAndDropPopup();
+        compInstance.handleImportingTipsClick();
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+        expect(spy3).toHaveBeenCalled();
+        expect(spy4).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('3.3 Show Complete import alert', () => {
+        jest.useFakeTimers()
+        const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                importData: {
+                    importStatus: 'in-progress'
+                }
+            }
+        }, importMsgCanvas: true}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        compInstance.setState({importCompleteStatus: true});
+        const spy = jest.spyOn(compInstance, 'showImportCompleteAlertMessage')
+        compInstance.showImportCompleteAlertMessage ();
+        jest.advanceTimersByTime(3000)
         expect(spy).toHaveBeenCalled();
         spy.mockClear()
     })

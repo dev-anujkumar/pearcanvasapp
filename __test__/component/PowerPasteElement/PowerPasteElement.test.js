@@ -435,4 +435,69 @@ describe('Testing FigureUserInterface component', () => {
         }
         prepareFinalPasteContent(elementsData,pasteElementNodeData,props,true);
     })
+
+    it('Test-3 pastePostProcess for import', () => {
+        let props = {
+            index: 0,
+            onPowerPaste: jest.fn(),
+            toggleWordPasteProceed: jest.fn(),
+            isPowerPasteInvalidContent: false,
+            checkInvalidPowerPasteContent: jest.fn(),
+            onImport: jest.fn()
+        }
+        let data = {
+            body: {
+                children: nodePara1,
+                childNodes:[{outerHTML:"<p></p>"}]
+            }
+        }
+        tinyMCE.activeEditor = {
+            setContent: jest.fn(),
+            getBody: () => ({
+                setAttribute: jest.fn()
+            })
+        }
+        let result = pastePostProcess(data, props, 'importWord');
+        expect(result).toBe(undefined);
+    })
+    it('Test-3 pastePostProcess for import else', () => {
+        let props = {
+            index: 0,
+            onPowerPaste: jest.fn(),
+            toggleWordPasteProceed: jest.fn(),
+            isPowerPasteInvalidContent: false,
+            checkInvalidPowerPasteContent: jest.fn(),
+            onImport: jest.fn()
+        }
+        let data = {
+        }
+        tinyMCE.activeEditor = {
+            setContent: jest.fn(),
+            getBody: () => ({
+                setAttribute: jest.fn()
+            })
+        }
+        let result = pastePostProcess(data, props, 'importWord');
+        expect(result).toBe(undefined);
+    })
+    it('Test-3 pastePostProcess for powerpaste else case', () => {
+        let props = {
+            index: 0,
+            onPowerPaste: jest.fn(),
+            toggleWordPasteProceed: jest.fn(),
+            isPowerPasteInvalidContent: false,
+            checkInvalidPowerPasteContent: jest.fn(),
+            onImport: jest.fn()
+        }
+        let data = {
+        }
+        tinyMCE.activeEditor = {
+            setContent: jest.fn(),
+            getBody: () => ({
+                setAttribute: jest.fn()
+            })
+        }
+        let result = pastePostProcess(data, props);
+        expect(result).toBe(undefined);
+    })
 });
