@@ -1,24 +1,22 @@
 .original-text{
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: var(--text-primary, #081E27);
     font-feature-settings: 'clig' off, 'liga' off;
     font-family: Open Sans;
-    font-size: 18px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 600;
-    line-height: 120%;
     width: 48%;
 }
 
 .converted-text{
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: var(--text-primary, #081E27);
     font-feature-settings: 'clig' off, 'liga' off;
     font-family: Open Sans;
-    font-size: 18px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 600;
-    line-height: 120%;
     width: 48%;
 }
 
