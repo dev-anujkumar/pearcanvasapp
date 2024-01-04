@@ -22,7 +22,7 @@ import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunct
 import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
 import {
     setCurrentSlate, updatePageLink, handleProjectDetails, sendingPermissions,
-    handleElmPickerTransactions, handleSelectedAlfrescoData, getAssessmentForWillowAlignment
+    handleElmPickerTransactions, handleSelectedAlfrescoData, getAssessmentForWillowAlignment, resetOwnerSlatePopupFlag
 } from './CommunicationActions.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -661,7 +661,7 @@ function CommunicationChannel(WrappedComponent) {
             config.isPopupSlate = false
             let id = config.slateManifestURN;
             // reset owner slate popup flag on slate refresh
-            this.resetOwnerSlatePopupFlag();
+            resetOwnerSlatePopupFlag(this.props)
             // get slate subscription details on slate refresh from canvas SPA
             if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
                 sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });

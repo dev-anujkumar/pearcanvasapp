@@ -153,7 +153,7 @@ export const setCurrentSlate = (message, props, showCanvasBlocker) => {
 /**
  * function to set owner project slate popup flag as true
  */
-const resetOwnerSlatePopupFlag = (props) => {
+export const resetOwnerSlatePopupFlag = (props) => {
     const { projectSubscriptionDetails } = props;
     const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
     const isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
