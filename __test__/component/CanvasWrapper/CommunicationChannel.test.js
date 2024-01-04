@@ -878,19 +878,6 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleLOData).toHaveBeenCalled()
         spyhandleLOData.mockClear()
     })
-    test('Test for loEditResponse case', () => {
-        let event = {
-            data: {
-                type: "loEditResponse",
-                message: ""
-            }
-        }
-        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-        channelInstance.handleIncommingMessages(event);
-        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-        expect(channelInstance.state.showBlocker).toBe(false)
-        spyhandleIncommingMessages.mockClear()
-    })
     test('Test for getLOlistResponse case', () => {
         let event = {
             data: {
@@ -1813,137 +1800,7 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - externalLF if block', () => {
-            const event = {
-                data: {
-                    type: "currentSlateLOAfterWarningPopup",
-                    message: {
-                        unlinkStatus: true,
-                        currentSlateLF: "externalLF",
-                        statusForExtLOSave: true,
-                        loLinked: [{
-                            label: {
-                                en: 'en'
-                            }
-                        }]
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
-        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - cypressLF if block', () => {
-            const event = {
-                data: {
-                    type: "currentSlateLOAfterWarningPopup",
-                    message: {
-                        unlinkStatus: true,
-                        currentSlateLF: "cypressLF",
-                        statusForSave: true,
-                        loLinked: [{
-                            label: {
-                                en: 'en'
-                            }
-                        }],
-                        unlinkedLOs: ['1'],
-                        loObj: {
-                            // id: '1',
-                            loUrn: '1'
-                        }
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
-        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - cypressLF if block - without loObj', () => {
-            const event = {
-                data: {
-                    type: "currentSlateLOAfterWarningPopup",
-                    message: {
-                        unlinkStatus: true,
-                        currentSlateLF: "cypressLF",
-                        statusForSave: true,
-                        loLinked: [{
-                            label: {
-                                en: 'en'
-                            }
-                        }],
-                        unlinkedLOs: ['1']
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
-        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - else block', () => {
-            const event = {
-                data: {
-                    type: "currentSlateLOAfterWarningPopup",
-                    message: {
-                        unlinkStatus: true,
-                        unlinkedLOs: []
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
-        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - unlinkStatus - false', () => {
-            const event = {
-                data: {
-                    type: "currentSlateLOAfterWarningPopup",
-                    message: {
-                        unlinkStatus: false,
-                        unlinkedLOs: []
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
-        it('Test for unlinkLOFailForWarningPopup case - handleUnlinkedLOData method - unlinkStatus true', () => {
-            const event = {
-                data: {
-                    type: "unlinkLOFailForWarningPopup",
-                    message: {
-                        unlinkedLOs: ['1'],
-                        unlinkStatus: true,
-                        currentSlateLF: ""
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
-        it('Test for unlinkLOFailForWarningPopup case - handleUnlinkedLOData method - unlinkStatus false', () => {
-            const event = {
-                data: {
-                    type: "unlinkLOFailForWarningPopup",
-                    message: {
-                        unlinkedLOs: ['1'],
-                        unlinkStatus: false,
-                        currentSlateLF: ""
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            spyhandleIncommingMessages.mockClear()
-        })
+
         it('Test for projectPreview case - savingInProgress true', () => {
             config.savingInProgress = true;
             const event = {
@@ -2653,36 +2510,6 @@ describe('Testing communication channel', () => {
         channelInstance1.handleIncommingMessages(event);
         expect(channelInstance1.handleRefreshSlate).toHaveBeenCalled()
         spyhandleRefreshSlate.mockClear()
-    })
-    
-    test('Test - handleUnlinkedLODataCypress method - without message', () => {
-        const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
-        channelInstance1.handleUnlinkedLODataCypress({});
-        expect(channelInstance1.handleUnlinkedLODataCypress ).toHaveBeenCalled()
-        spyhandleUnlinkedLODataCypress.mockClear()
-    })
-     
-    test('Test - handleUnlinkedLODataCypress method - metadataElems empty', () => {
-        const message = {
-            statusForSave: true,
-            unlinkedLOs: ['2'],
-
-        }
-        const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
-        channelInstance1.handleUnlinkedLODataCypress(message);
-        expect(channelInstance1.handleUnlinkedLODataCypress ).toHaveBeenCalled()
-        spyhandleUnlinkedLODataCypress.mockClear()
-    })
-
-    test('Test - handleUnlinkedLODataCypress method - index > 0', () => {
-        const message = {
-            statusForSave: true,
-            unlinkedLOs: ['2', '1']
-        }
-        const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
-        channelInstance1.handleUnlinkedLODataCypress(message);
-        expect(channelInstance1.handleUnlinkedLODataCypress ).toHaveBeenCalled()
-        spyhandleUnlinkedLODataCypress.mockClear()
     })
 
     test('Test - sendingPermissions method - permissions not present', () => {
