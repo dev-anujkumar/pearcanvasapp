@@ -10,19 +10,18 @@ import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
 import { sendDataToIframe, showNotificationOnCanvas} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED,
-        CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION,
+import { ALREADY_USED_SLATE_TOC, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION,
         CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
-import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, IMG_HTML, FRONT_MATTER, BACK_MATTER, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
+import { IMG_HTML } from '../../../constants/Element_Constants.js';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
 import {
     setCurrentSlate, updatePageLink, handleProjectDetails, sendingPermissions,
-    handleElmPickerTransactions, handleSelectedAlfrescoData, getAssessmentForWillowAlignment, resetOwnerSlatePopupFlag
+    handleElmPickerTransactions, handleSelectedAlfrescoData, getAssessmentForWillowAlignment,
+    handleRefreshSlate, handleSlateTag, handleExtLOData
 } from './CommunicationActions.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -139,9 +138,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
                     break;
-                case 'statusForSave':
-                    this.handleLOData(message);
-                    break;
                 case 'getSlateLOResponse':
                     if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
@@ -168,7 +164,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.updateFigureDropdownValues(message)
                     break;
                 case 'refreshSlate':
-                    this.handleRefreshSlate();
+                    handleRefreshSlate(this.props);
                     triggerSlateLevelSave(config.slateEntityURN, SLATE_REFRESH_ACTION);
                     break;
                 case 'closeUndoTimer' :
@@ -197,41 +193,7 @@ function CommunicationChannel(WrappedComponent) {
                         showBlocker: false
                     });
                     // handles Element Update API call with loAssociation key from TOC and RC
-                    if(message.hasOwnProperty('slateTagEnabled')){
-                        let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] :
-                                        this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
-                        let messageData = {assessmentResponseMsg:message.slateTagEnabled};
-                        let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
-                        let isFromRC = message.assessmentSlateData ? true : false;
-                        this.props.isLOExist(messageData);
-                        const { assessmenId } = this.props.assessmentReducer
-                        const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN]?.status
-                        const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
-                        if (config.parentEntityUrn !== (FRONT_MATTER || BACK_MATTER)) {
-                            let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn :
-                                             config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
-                            if(dataToSend?.elementdata){
-                                dataToSend.inputType = ELEMENT_ASSESSMENT
-                                dataToSend.inputSubType = "NA"
-                                dataToSend.index = "0"
-                                dataToSend.elementParentEntityUrn = message.slateEntityUrn ?? config.slateEntityURN
-                                dataToSend.elementdata.loAssociation = message.slateTagEnabled
-                                dataToSend.slateVersionUrn = slateManifestUrn
-                                dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                if(approvedAssessmentCheck && assessmenId){    // this is to update id and versionUrn if assessment slate status is approved
-                                    dataToSend.id = assessmenId
-                                    dataToSend.versionUrn = assessmenId
-                                }
-                                // fromTOCWrapper is used for aligning slate tag and LO indicator in TOC
-                                if(assessmenId || message?.fromCE || message?.fromTOCWrapper){
-                                    this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
-                                }
-                                if(message.assessmentSlateData)
-                                    this.handleRefreshSlate();
-                            }
-                        }
-                }
+                    handleSlateTag(message,this.props)
                     break;
                 case 'brokerPreview':
                 case 'slatePreview':
@@ -303,7 +265,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.setImportMessageForWordImport()
                     break;
                 case 'statusForExtLOSave':
-                    this.handleExtLOData(message);
+                    handleExtLOData(message,this.props);
                     break;
                     break;
                 case 'selectedAlfrescoAssetData':
@@ -321,7 +283,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'spellCheckStatus':
                     this.props.toggleSpellCheckAction();
                     // refreshing the slate once spell check toggle is changed
-                    this.handleRefreshSlate();
+                    handleRefreshSlate(this.props);
                     break;
                 case PROJECT_SHARING_ROLE:
                     if (message?.sharingContextRole) {
@@ -398,7 +360,7 @@ function CommunicationChannel(WrappedComponent) {
                     const assessmentSlateData = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
                     const assessmentSlateCheck = assessmentSlateData?.type === 'element-assessment' && assessmentSlateData?.elementdata?.assessmentid === message?.assessmentUrn
                     if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment" && assessmentSlateCheck) {
-                        this.handleRefreshSlate();
+                        handleRefreshSlate(this.props);
                     }
                     break;
                 case 'sendSlatesLabel':
@@ -419,7 +381,7 @@ function CommunicationChannel(WrappedComponent) {
          */
         changeSlateLength = (message) => {
             this.props.setSlateLength(message)
-            this.handleRefreshSlate()
+            handleRefreshSlate(this.props)
         }
 
         /**
@@ -448,143 +410,11 @@ function CommunicationChannel(WrappedComponent) {
                 'message': {}
             })
         }
-        /**
-         * This function is responsible for handling the updated LOs w.r.t. Slate
-         * and updating the Metadata Anchor Elements on Slate
-         * @param {*} message Event Message on Saving Ext LF LO data for Slate
-         */
-        handleExtLOData = message => {
-            if (message?.statusForExtLOSave) {
-                if (message?.loLinked?.length) {
-                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                    message.loLinked.map(loData => {
-                        loData.label.en = loData?.label?.en.replace(regex, IMG_HTML) ?? loData.label.en;
-                    });
-                }
-                const newLOsLinked = [...message.loLinked];
-                let slateData = this.props.slateLevelData;
-                const newSlateData = JSON.parse(JSON.stringify(slateData));
-                let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
-                let loDataToUpdate = prepareLODataForUpdate(bodymatter, message);
-                /** Update Existing Metadata Anchors on the Slate */
-                if (loDataToUpdate?.length) {
-                    let requestPayload = {
-                        "loData": loDataToUpdate
-                    }
-                    this.props.updateElement(requestPayload)
-                }
-                let updatedSlateLOs = []
-                if (message?.loUnlinked?.length && typeof message.loUnlinked[0] === 'string') {
-                    const existingSlateLOs = this.props.currentSlateLOData;
-                    updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.loUnlinked?.indexOf(existingLO.id ?? existingLO.loUrn) < 0);
-                    updatedSlateLOs = updatedSlateLOs.concat(newLOsLinked ?? []);
-                } else {
-                    updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
-                }
-                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs?.length} )
-                this.props.isLOExist(externalLOStatusMessage);
-                this.props.currentSlateLO(updatedSlateLOs);
-                this.props.currentSlateLOMath(updatedSlateLOs);
-                this.props.currentSlateLOType(updatedSlateLOs?.length ? EXTERNAL_LF : "");
-                this.props.updateLastAlignedLO(message.lastAlignedExternalLO);
-
-                let lastAlignedLos = localStorage.getItem('lastAlignedLos');
-                let lastAlignedLosToSlates = {};
-                if(lastAlignedLos && lastAlignedLos.length > 0){
-                    lastAlignedLosToSlates = JSON.parse(lastAlignedLos);
-                }
-                let slateUrn = config.slateManifestURN;
-                let newAlignment = {};
-                newAlignment[slateUrn] = message.lastAlignedExternalLO
-                localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
-            }
-        }
-        handleLOData = (message) => {
-            if (message.statusForSave) {
-                message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
-                if (message.loObj && message.loObj.label && message.loObj.label.en) {
-                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
-                    message.loObj.label.en = message.loObj.label.en.replace(regex, IMG_HTML);
-                }
-                const loDataToSave = config.slateType == SLATE_ASSESSMENT ? message : message.loObj ? [message.loObj] : [message]
-                this.props.currentSlateLO(loDataToSave);
-                this.props.currentSlateLOType(message.loObj?.loUrn || message.loObj?.id || config.slateType == SLATE_ASSESSMENT ? CYPRESS_LF : "");
-                this.props.isLOExist(message);
-                let slateData = this.props.slateLevelData;
-                const newSlateData = JSON.parse(JSON.stringify(slateData));
-                let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter
-                let LOElements = [];
-
-                let loIndex = [];
-                bodymatter.forEach((item, index) => {
-                    if (item.type == ELEMENT_LEARNING_OBJECTIVE_MAPPING) {
-                        LOElements.push(item.id)
-                        loIndex.push(index);
-                    }
-                    if (item.type == "element-aside") {
-                        item.elementdata.bodymatter.forEach((ele, indexInner) => {
-                            if (ele.type == ELEMENT_LEARNING_OBJECTIVE_MAPPING) {
-                                LOElements.push(ele.id)
-                                indexInner = index + "-" + indexInner;
-                                loIndex.push(indexInner);
-                            }
-                        })
-                    }
-                });
-                let currentSlateLOs = Array.isArray(this.props.currentSlateLOData) ? this.props.currentSlateLOData[0] : this.props.currentSlateLOData;
-                let loUrn = currentSlateLOs.id ? currentSlateLOs.id : currentSlateLOs.loUrn;
-                let LOWipData = {
-                    "elementdata": {
-                        "loref": loUrn
-                    },
-                    "metaDataAnchorID": LOElements,
-                    "elementVersionType": ELEMENT_LEARNING_OBJECTIVE_MAPPING,
-                    "loIndex": loIndex
-                }
-                if (LOElements.length) {
-                    let requestPayload = {
-                        "loData": [LOWipData]
-                    }
-                    this.props.updateElement(requestPayload)
-                }
-            }
-        }
 
         handlePermissioning = (message) => {
             if (message && message.permissions) {
                 this.props.handleUserRole(message.permissions, message.roleId)
             }
-        }
-
-
-        handleRefreshSlate = () => {
-            const { projectSubscriptionDetails } = this.props;
-            localStorage.removeItem('newElement');
-            config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-            config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
-            config.tempSlateManifestURN = null
-            config.tempSlateEntityURN = null
-            config.isPopupSlate = false
-            let id = config.slateManifestURN;
-            // reset owner slate popup flag on slate refresh
-            resetOwnerSlatePopupFlag(this.props)
-            // get slate subscription details on slate refresh from canvas SPA
-            if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
-                sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
-            }
-            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
-                config.page = 0;
-                config.scrolling = true;
-                config.totalPageCount = 0;
-                config.pageLimit = 0;
-                config.fromTOC = false;
-                config.elementSlateRefresh = true
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
-                this.props.handleSlateRefresh(id, () => {
-                    config.isSlateLockChecked = false;
-                    this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
-                })
-            });
         }
 
         hanndleSplitSlate = (newSlateObj) => {

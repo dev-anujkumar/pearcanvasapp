@@ -2,12 +2,16 @@ import { triggerSlateLevelSave } from "../../../js/slateLevelSave";
 import { sendDataToIframe, isOwnerRole, isSubscriberRole, defaultMathImagePath } from "../../../constants/utility";
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { hideBlocker } from "../../../js/toggleLoader.js";
+import { releaseSlateLockWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
+import { prepareLODataForUpdate, setCurrentSlateLOs } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import config from "../../../config/config";
-import { CHANGE_SLATE_ACTION, RELEASE_SLATE_LOCK_ACTION } from "../../SlateWrapper/SlateWrapperConstants";
-import {  ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION } from '../../../constants/Element_Constants.js';
-
+import { CHANGE_SLATE_ACTION, RELEASE_SLATE_LOCK_ACTION, ELEMENT_ASSESSMENT } from "../../SlateWrapper/SlateWrapperConstants";
 import {
-    TocToggle, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, OpenLOPopup, AddToExternalFrameworkAS
+    ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION,
+    IMG_HTML, EXTERNAL_LF
+} from '../../../constants/Element_Constants.js';
+import {
+    TocToggle, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, OpenLOPopup, AddToExternalFrameworkAS, CHECK_SUBSCRIBED_SLATE_STATUS
 } from '../../../constants/IFrameMessageTypes';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 
@@ -523,4 +527,133 @@ export const getAssessmentForWillowAlignment = (message,props) => {
             'isSlateLocked': message?.isSlateLocked
         }
     })
+}
+
+/**
+ * This fuctions is used to handle slate refresh
+ * @param {Object} props | Component props
+ */
+export const handleRefreshSlate = (props) => {
+    const { projectSubscriptionDetails } = props;
+    localStorage.removeItem('newElement');
+    config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+    config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
+    config.tempSlateManifestURN = null
+    config.tempSlateEntityURN = null
+    config.isPopupSlate = false
+    let id = config.slateManifestURN;
+    // reset owner slate popup flag on slate refresh
+    resetOwnerSlatePopupFlag(props)
+    // get slate subscription details on slate refresh from canvas SPA
+    if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
+        sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
+    }
+    releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
+        config.page = 0;
+        config.scrolling = true;
+        config.totalPageCount = 0;
+        config.pageLimit = 0;
+        config.fromTOC = false;
+        config.elementSlateRefresh = true
+        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
+        props.handleSlateRefresh(id, () => {
+            config.isSlateLockChecked = false;
+            props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+        })
+    });
+}
+
+export const handleSlateTag = (message,props) => {
+    if (message.hasOwnProperty('slateTagEnabled')) {
+        let dataToSend = message.assessmentSlateData ? props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] :
+            props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+        let messageData = { assessmentResponseMsg: message.slateTagEnabled };
+        let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
+        let isFromRC = message.assessmentSlateData ? true : false;
+        props.isLOExist(messageData);
+        const { assessmenId } = props.assessmentReducer
+        const slateVersionStatus = props.slateLevelData[config.slateManifestURN]?.status
+        const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
+        if (config.parentEntityUrn !== (FRONT_MATTER || BACK_MATTER)) {
+            let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+            sendDataToIframe({
+                'type': 'AssessmentSlateTagStatus', 'message': {
+                    assessmentId: assessmentUrn ? assessmentUrn :
+                        config.assessmentId, AssessmentSlateTagStatus: message.slateTagEnabled, containerUrn: slateManifestUrn
+                }
+            });
+            if (dataToSend?.elementdata) {
+                dataToSend.inputType = ELEMENT_ASSESSMENT
+                dataToSend.inputSubType = "NA"
+                dataToSend.index = "0"
+                dataToSend.elementParentEntityUrn = message.slateEntityUrn ?? config.slateEntityURN
+                dataToSend.elementdata.loAssociation = message.slateTagEnabled
+                dataToSend.slateVersionUrn = slateManifestUrn
+                dataToSend.html = { title: `<p>${dataToSend.elementdata.assessmenttitle}</p>` }
+                if (approvedAssessmentCheck && assessmenId) {    // this is to update id and versionUrn if assessment slate status is approved
+                    dataToSend.id = assessmenId
+                    dataToSend.versionUrn = assessmenId
+                }
+                // fromTOCWrapper is used for aligning slate tag and LO indicator in TOC
+                if (assessmenId || message?.fromCE || message?.fromTOCWrapper) {
+                    props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, props?.getRequiredSlateData?.getRequiredSlateData);
+                }
+                if (message.assessmentSlateData)
+                    handleRefreshSlate(props);
+            }
+        }
+    }
+}
+
+
+/**
+ * This function is responsible for handling the updated LOs w.r.t. Slate
+ * and updating the Metadata Anchor Elements on Slate
+ * @param {*} message Event Message on Saving Ext LF LO data for Slate
+ */
+export const handleExtLOData = (message,props) => {
+    if (message?.statusForExtLOSave) {
+        if (message?.loLinked?.length) {
+            const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+            message.loLinked.map(loData => {
+                loData.label.en = loData?.label?.en.replace(regex, IMG_HTML) ?? loData.label.en;
+            });
+        }
+        const newLOsLinked = [...message.loLinked];
+        let slateData = props.slateLevelData;
+        const newSlateData = JSON.parse(JSON.stringify(slateData));
+        let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+        let loDataToUpdate = prepareLODataForUpdate(bodymatter, message);
+        /** Update Existing Metadata Anchors on the Slate */
+        if (loDataToUpdate?.length) {
+            let requestPayload = {
+                "loData": loDataToUpdate
+            }
+            props.updateElement(requestPayload)
+        }
+        let updatedSlateLOs = []
+        if (message?.loUnlinked?.length && typeof message.loUnlinked[0] === 'string') {
+            const existingSlateLOs = props.currentSlateLOData;
+            updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.loUnlinked?.indexOf(existingLO.id ?? existingLO.loUrn) < 0);
+            updatedSlateLOs = updatedSlateLOs.concat(newLOsLinked ?? []);
+        } else {
+            updatedSlateLOs = setCurrentSlateLOs(props.currentSlateLOData, message.loUnlinked, newLOsLinked);
+        }
+        const externalLOStatusMessage = Object.assign(message, { loListLength: updatedSlateLOs?.length })
+        props.isLOExist(externalLOStatusMessage);
+        props.currentSlateLO(updatedSlateLOs);
+        props.currentSlateLOMath(updatedSlateLOs);
+        props.currentSlateLOType(updatedSlateLOs?.length ? EXTERNAL_LF : "");
+        props.updateLastAlignedLO(message.lastAlignedExternalLO);
+
+        let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+        let lastAlignedLosToSlates = {};
+        if (lastAlignedLos && lastAlignedLos.length > 0) {
+            lastAlignedLosToSlates = JSON.parse(lastAlignedLos);
+        }
+        let slateUrn = config.slateManifestURN;
+        let newAlignment = {};
+        newAlignment[slateUrn] = message.lastAlignedExternalLO
+        localStorage.setItem('lastAlignedLos', JSON.stringify({ ...lastAlignedLosToSlates, ...newAlignment }));
+    }
 }
