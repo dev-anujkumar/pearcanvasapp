@@ -342,7 +342,7 @@ export default {
    */
   addHeadingClass: function (headingNode, headingLevel) {
     headingNode.classList.add(`heading${headingLevel}NummerEins`);
-    ["b", "u", "s", "i", "a"].forEach((oldTag) => {
+    ["b", "u", "s", "i", "a", "strong"].forEach((oldTag) => {
       if (oldTag === "i") {
         this.convertTag(headingNode, oldTag, "em");
       } else {

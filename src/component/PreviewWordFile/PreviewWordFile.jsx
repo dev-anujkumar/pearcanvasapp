@@ -51,6 +51,7 @@ const PreviewWordFile = (props) => {
                         const html = result?.value; // The generated HTML
                         editor?.setContent(html);
                         editor?.getBody()?.setAttribute('contenteditable', false);
+                        if(editor && editor?.getBody) editor.getBody().style.pointerEvents = "none";
                         setBackdropOrig(false);
                     })
                     .catch(function(error) {
@@ -59,7 +60,8 @@ const PreviewWordFile = (props) => {
                     });            
                 }
             })
-        }
+        },
+        readonly: 1,
     }
 
     const editorConfig2 = {
@@ -94,10 +96,11 @@ const PreviewWordFile = (props) => {
                         const parser = new DOMParser();
                         const doc = parser?.parseFromString(html, "text/html")
                         editor?.setContent(html);
-                        editor?.getBody()?.setAttribute('contenteditable', false);
                         pastePostProcess(doc,props, 'importWord');
                         setBackdropConv(false);
                         props?.enableImportButton()
+                        editor?.getBody()?.setAttribute('contenteditable', false);
+                        if(editor && editor?.getBody) editor.getBody().style.pointerEvents = "none";
                     })
                     .catch(function(error) {
                         console.error(error);
@@ -105,7 +108,8 @@ const PreviewWordFile = (props) => {
                     });
                 }
             })
-        }
+        },
+        readonly: 1,
     }
 
     useEffect(() => {
