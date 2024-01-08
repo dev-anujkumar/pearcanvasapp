@@ -351,7 +351,7 @@ class Sidebar extends Component {
          if (activeElementType === 'element-authoredtext' && asideData?.type !== 'manifestlist') {
              return (
                  <FormControl>
-                     <FormLabel id="demo-radio-buttons-group-label" className="radioHeading">Output Type</FormLabel>
+                     <FormLabel id="demo-radio-buttons-group-label" className= {`radioHeading ${isReadOnly ? "textDisable" : "" }`}>Output Type</FormLabel>
                      <RadioGroup
                          aria-labelledby="demo-radio-buttons-group-label"
                          name="radio-buttons-group"
@@ -360,7 +360,7 @@ class Sidebar extends Component {
                      >
                         {
                             outputTypeData.map((obj) => {
-                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.name} disabled={isReadOnly} value={obj.value} control={<Radio sx={!isReadOnly && {color: '#005A70 !important'}}/>} label={<Typography className="radioText">{obj.name}</Typography>} />
+                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.name} disabled={isReadOnly} value={obj.value} control={<Radio sx={!isReadOnly ? {color: '#005A70 !important'} : {color: 'rgba(25, 28, 30, 0.38) !important'}}/>} label={<Typography className={`radioText ${isReadOnly ? "textDisable" : ""}`}>{obj.name}</Typography>} />
                             })
                         }
                      </RadioGroup>

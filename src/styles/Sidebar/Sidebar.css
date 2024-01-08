@@ -388,3 +388,7 @@ pointer-events: none;
     font-size: 16px !important;
     font-weight: 400 !important;
 }
+
+.textDisable {
+    color: rgba(25, 28, 30, 0.5) !important;
+}
