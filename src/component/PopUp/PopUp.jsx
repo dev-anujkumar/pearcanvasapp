@@ -8,10 +8,6 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import importPopupSS1 from './Assets/importPopup-ss-1.svg';
 import importPopupSS2 from './Assets/importPopup-ss-2.svg';
 import importPopupSS3 from './Assets/importPopup-ss-3.svg';
-import importPopupSS4 from './Assets/importPopup-ss-4.svg';
-import importPopupSS5 from './Assets/importPopup-ss-5.svg';
-import importPopupSS6 from './Assets/importPopup-ss-6.svg';
-import importPopupSS7 from './Assets/importPopup-ss-7.svg';
 import importPopupSS8 from './Assets/importPopup-ss-8.svg';
 import importPopupSS11 from './Assets/importPopup-ss-11.svg';
 import importPopupSS12 from './Assets/importPopup-ss-12.svg';
@@ -845,7 +841,7 @@ class PopUp extends React.Component {
                             {IMPORTING_TIPS_CONTENT_TEXT_FIRST}
                         </div>
                         <div className='import-wordpopup-content-title'>
-                            <strong>{IMPORTING_TIPS_CONTENT_TEXT_SECOND}</strong>{IMPORTING_TIPS_CONTENT_TEXT_THIRD}
+                            <strong>{IMPORTING_TIPS_CONTENT_TEXT_SECOND}</strong>{IMPORTING_TIPS_CONTENT_TEXT_THIRD}<strong> .docx</strong> format
                         </div>
                         <div className='import-wordpopup-content-title-2'>
                             <strong>{IMPORTING_TIPS_CONTENT_TEXT_FOURTH}</strong>{IMPORTING_TIPS_CONTENT_TEXT_FIFTH}
@@ -854,15 +850,9 @@ class PopUp extends React.Component {
                             <img src={importPopupSS1} width='44px' height='30px' />
                             <img src={importPopupSS2} width='44px' height='30px' />
                             <img src={importPopupSS3} width='44px' height='30px' />
-                            <img src={importPopupSS4} width='44px' height='30px' />
                         </div>
                         <div className='import-wordpopup-content-title-4'>
                             <strong>{IMPORTING_TIPS_CONTENT_TEXT_SIXTH}</strong>{IMPORTING_TIPS_CONTENT_TEXT_SEVENTH}
-                        </div>
-                        <div className='import-wordpopup-content-title-3'>
-                            <img src={importPopupSS5} width='35px' height='55px' />
-                            <img src={importPopupSS6} width='49px' height='55px' />
-                            <img src={importPopupSS7} width='61px' height='55px' />
                         </div>
                 </div>
             </>
