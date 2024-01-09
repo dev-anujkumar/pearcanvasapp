@@ -116,8 +116,10 @@ export default {
       node.removeAttribute("dir");
     }
 
-    this.addOListClasses(node.firstElementChild, depth);
-    this.addOListClasses(node.nextElementSibling, depth);
+    if (depth <= 4) {
+      this.addOListClasses(node.firstElementChild, depth);
+      this.addOListClasses(node.nextElementSibling, depth);
+    }
   },
 
 
@@ -313,8 +315,10 @@ export default {
       );
     }
 
-    this.addUListClasses(node.firstElementChild, depth);
-    this.addUListClasses(node.nextElementSibling, depth);
+    if (depth <= 4) {
+      this.addUListClasses(node.firstElementChild, depth);
+      this.addUListClasses(node.nextElementSibling, depth);
+    }
   },
 
   /**
