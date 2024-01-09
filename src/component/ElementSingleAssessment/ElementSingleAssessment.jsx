@@ -133,9 +133,9 @@ class ElementSingleAssessment extends Component {
             let title = getAssessmentTitle(nextProps.model) != null ? getAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
             return {
                 assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ?
-                    nextProps.model.figuredata.elementdata.assessmentid : "",
+                nextProps.model.figuredata.elementdata.assessmentid : "",
                 assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ?
-                    nextProps.model.figuredata.elementdata.assessmentitemid : "",
+                nextProps.model.figuredata.elementdata.assessmentitemid : "",
                 assessmentTitle: title,
                 elementType: nextProps.model.figuredata.elementdata.assessmentformat || "",
                 assessmentItemTitle: setAssessmentItemTitle(nextProps.model)
