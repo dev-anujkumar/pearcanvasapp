@@ -128,12 +128,7 @@ class ElementSingleAssessment extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const elmAssessmentItems = nextProps?.model?.figuredata?.elementdata?.assessmentformat === PUF || nextProps?.model?.figuredata?.elementdata?.assessmentformat === LEARNOSITY
-        if(elmAssessmentItems) {
-            return {
-                elementType: nextProps.model.figuredata.elementdata.assessmentformat || "",
-            }
-        } else if ('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata &&
+        if ('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata &&
             'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
             let title = getAssessmentTitle(nextProps.model) != null ? getAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
             return {
