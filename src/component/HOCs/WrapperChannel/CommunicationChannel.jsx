@@ -264,7 +264,7 @@ function CommunicationChannel(WrappedComponent) {
                         triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION);
                     }
                     if (!config.savingInProgress) {
-                        this.props.publishContent(messageType);
+                        this.props.publishContent(messageType,message);
                     }
                     break;
                 case 'getSlateLockStatus':

@@ -62,7 +62,8 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
   }
 }
 
-export const publishSlate = (project, section, cite) => {
+export const publishSlate = (project, section, cite, message) => {
+  console.log('message',message)
   const startTime = performance.now()
   const content_url = config_object.SLATE_PREVIEW_ENDPOINT
   const proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS || 'false'

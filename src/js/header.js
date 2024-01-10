@@ -24,12 +24,12 @@ export const GET_CURRENT_SLATE = function (){
 * @description - Redirects to slate preview or project preview.
 * @param {type} -  Type of preview(Slate/Project)
 */
-export const publishContent = function (type) {
+export const publishContent = function (type,message) {
     var projectURN = config_object.projectUrn;
     var citeURN = config_object.citeUrn;
     var firstSlate = config_object.isPopupSlate ? config_object.tempSlateManifestURN : config_object.slateManifestURN;
     if(type == 'slatePreview') {
-        publishSlate(projectURN,firstSlate,citeURN);
+        publishSlate(projectURN,firstSlate,citeURN,message);
     }
     else {
         publishTitle(projectURN,firstSlate,citeURN, undefined, true, type);
