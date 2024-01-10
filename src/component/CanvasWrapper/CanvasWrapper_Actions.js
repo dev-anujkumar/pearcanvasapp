@@ -34,7 +34,8 @@ import {
     NO_DISCUSSION_ITEMS,
     BANNER_IS_VISIBLE,
     SUBSCRIBERS_SUBSCRIBED_SLATE,
-    SET_TOC_SLATE_LABEL
+    SET_TOC_SLATE_LABEL,
+    SET_IMPORT_DETAILS_ACTION
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -62,7 +63,7 @@ import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnc
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 import TcmConstants from '../TcmSnapshots/TcmConstants';
 import { closeTcmPopup } from './TCM_Canvas_Popup_Integrations';
-import { DEFAULT_PLAYBACK_MODE } from '../SlateWrapper/SlateWrapperConstants';
+import { DEFAULT_PLAYBACK_MODE, IMPORTED_DATA_STATUS, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -579,6 +580,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload, isFetchAnySlate) => (dispatch, getState) => {
     /** [TK-3289]- Fetch Data for All Slates */
+    config.isSlateElementCompleted = false;   // for fixing scrolling issue when import is in progress
     const startTime = performance.now();
     dispatch(closeTcmPopup());
     dispatch(fetchAllSlatesData());
@@ -644,6 +646,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
+        config.isSlateElementCompleted = false;
+        dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
+        sendDataToIframe({ 'type': IMPORTED_DATA_STATUS, 'message': slateData?.data[manifestURN]?.importData });
+        if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
+        {
+            config.isSlateElementCompleted = true;
+                setTimeout(async () =>{
+                    dispatch(await fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'',""))
+                }, 10000)
+        }
         // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
          /* Slate tag issue */
@@ -1893,4 +1905,10 @@ export const getDefaultPlaybackMode = (elementData) => {
         let playbackMode = DEFAULT_PLAYBACK_MODE[removeBlankSpaceAndConvertToLowercase(vendor)];
         return playbackMode
     }
+}
+/**
+ * Set import message in canvas
+ */
+export const setImportMessageForWordImport = () => (dispatch) => {
+    return dispatch({ type: 'save-import-message', payload: true })
 }

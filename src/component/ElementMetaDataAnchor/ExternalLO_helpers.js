@@ -8,8 +8,8 @@ import elementConstants from '../../component/ElementContainer/ElementConstants.
  * This methoda is used to get a unique LO URN to create a new Metadata Anchor on slate
  */
 export const getMetadataAnchorLORef = () => (dispatch, getState) => {
-    let currentSlateLOs = getState().metadataReducer.currentSlateLOData;
-    currentSlateLOs && currentSlateLOs.length && currentSlateLOs.map(slateLO => {
+    let currentSlateLOs = getState().metadataReducer?.currentSlateLOData;
+    currentSlateLOs && currentSlateLOs?.length && currentSlateLOs?.map(slateLO => {
         if (!slateLO.hasOwnProperty("loUrn")) {
             slateLO["loUrn"] = slateLO["id"]
         }
@@ -28,7 +28,7 @@ export const getMetadataAnchorLORef = () => (dispatch, getState) => {
         existingSlateMAonPopupSlate = popupSlateElements?.length ? getSlateMetadataAnchorElem(popupSlateElements) : [];
     }
     existingSlateMetadataAnchors = existingSlateMetadataAnchors.concat(existingSlateMAonPopupSlate)
-    const existingLOUrns = existingSlateMetadataAnchors.map(element => element.loUrn);
+    const existingLOUrns = existingSlateMetadataAnchors?.map(element => element.loUrn);
     let uniqueSlateMetadataAnchors = [...new Set(existingLOUrns)];
     let existingLOsinMA = findLOsToLink(currentSlateLOUrns, uniqueSlateMetadataAnchors, []);
     const loUrnToLink = existingLOsinMA?.length ? existingLOsinMA[0] : currentSlateLOUrns[0];
@@ -42,8 +42,8 @@ export const getMetadataAnchorLORef = () => (dispatch, getState) => {
  * @param {Array} finalArray
  */
 const findLOsToLink = (array1, array2, finalArray = []) => {
-    array1.forEach(item1 => {
-        const itemExists = array2.some(item2 => item2 === item1);
+    array1?.forEach(item1 => {
+        const itemExists = array2?.some(item2 => item2 === item1);
         !itemExists && finalArray.push(item1)
     })
     return finalArray;
@@ -56,15 +56,15 @@ const findLOsToLink = (array1, array2, finalArray = []) => {
  */
 export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMetadataAnchors = []) => {
     if (slateElements?.length) {
-        slateElements.map((element, index) => {
+        slateElements?.map((element, index) => {
             let metadataAnchorElement = {};
-            switch (element.type) {
+            switch (element?.type) {
                 case elementConstants.METADATA_ANCHOR: /** MA on Slate */
                     metadataAnchorElement = { id: element.id, loUrn: element?.elementdata?.loref ?? "", index: index };
                     metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
                     break;
                 case elementConstants.ELEMENT_ASIDE:
-                    element.elementdata.bodymatter.map((nestedElem, nestedIndex) => {
+                    element?.elementdata?.bodymatter?.map((nestedElem, nestedIndex) => {
                         /** MA inside Aside/WE:HEAD */
                         if (nestedElem.type == elementConstants.METADATA_ANCHOR) {
                             metadataAnchorElement = { id: nestedElem.id, loUrn: nestedElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}` };
@@ -72,7 +72,7 @@ export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMeta
                         }
                         /** MA inside Aside/WE:BODY */
                         else if (nestedElem.type == elementConstants.ELEMENT_SECTION_BREAK) {
-                            nestedElem.contents.bodymatter.map((weBodyElem, weIndex) => {
+                            nestedElem?.contents?.bodymatter?.map((weBodyElem, weIndex) => {
                                 if (weBodyElem.type == elementConstants.METADATA_ANCHOR) {
                                     metadataAnchorElement = { id: weBodyElem.id, loUrn: weBodyElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}-${weIndex}` };
                                     metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
@@ -104,20 +104,20 @@ export const prepareLODataForUpdate = (slateBodymatter, message) => {
     /** Handle M.A. elements with LO unlinked and update with new LO link if there any */
     message?.loUnlinked?.forEach(loItem => {
         let unlinkUrn = (typeof (loItem) === 'string') ? loItem : loItem.id ? loItem.id : loItem.loUrn ?? "";
-        let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === unlinkUrn);
-        if (metadataElems.length) {
+        let metadataElems = slateLOElems?.filter(metadataElem => metadataElem?.loUrn === unlinkUrn);
+        if (metadataElems?.length) {
             let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
             if (linkLOs?.length) {
-                LOWipData.elementdata.loref = linkLOs[0].id;
+                LOWipData.elementdata.loref = linkLOs[0]?.id;
                 linkLOs.splice(0, 1);
-                metadataElemToUpdate = metadataElemToUpdate.concat(metadataElems);
+                metadataElemToUpdate = metadataElemToUpdate?.concat(metadataElems);
             }
             loDataToUpdate.push(LOWipData)
         }
     });
     /** Handle M.A. elements with no LO and update with new LO link if there any */
     const remaningMAElems = anyMatchInArray(slateLOElems, 'id', metadataElemToUpdate, 'id', []);
-    let metadataElemsEmpty = slateLOElems.filter(metadataElem => metadataElem.loUrn === "");
+    let metadataElemsEmpty = slateLOElems?.filter(metadataElem => metadataElem?.loUrn === "");
     if (linkLOs?.length && remaningMAElems?.length) {
         remaningMAElems?.forEach(loItem => {
             if (metadataElemsEmpty.length) {
@@ -144,8 +144,8 @@ export const prepareLODataForUpdate = (slateBodymatter, message) => {
  */
 export const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN) => {
 
-    const metadataIDs = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.id) ?? []) : [metadataElems.id];
-    const metadataIndexes = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.index) ?? []) : [metadataElems.index];
+    const metadataIDs = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.id) ?? []) : [metadataElems?.id];
+    const metadataIndexes = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.index) ?? []) : [metadataElems?.index];
     return {
         "elementdata": {
             "loref": loUrn
@@ -181,12 +181,12 @@ export const anyMatchInArray = (array1, key1, array2, key2, finalArray = []) => 
 export const setCurrentSlateLOs = (existingSlateLOs, unlinkedLOs, linkedLOs) => {
     let updatedSlateLOs = [];
     const slateLO_Unlinked = unlinkedLOs?.length ? unlinkedLOs.map(unlinkedLO => unlinkedLO.id) : [];
-    existingSlateLOs && existingSlateLOs.length && existingSlateLOs.forEach(slateLO => {
+    existingSlateLOs && existingSlateLOs.length && existingSlateLOs?.forEach(slateLO => {
         if (!slateLO.hasOwnProperty("id")) {
             slateLO["id"] = slateLO["loUrn"]
         }
     })
-    updatedSlateLOs = existingSlateLOs.filter(existingLO => slateLO_Unlinked.indexOf(existingLO.id) < 0);
-    updatedSlateLOs = updatedSlateLOs.concat(linkedLOs ?? []);
+    updatedSlateLOs = existingSlateLOs && existingSlateLOs.length && existingSlateLOs.filter(existingLO => slateLO_Unlinked?.indexOf(existingLO.id) < 0);
+    updatedSlateLOs = updatedSlateLOs?.concat(linkedLOs ?? []);
     return updatedSlateLOs;
 }

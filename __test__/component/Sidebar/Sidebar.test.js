@@ -13,7 +13,6 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', 
     prepareDataForTcmUpdate: jest.fn()
 }))
 import config from '../../../src/config/config.js';
-config["elementStatus"] = {}
 describe('Test for Sidebar component', () => {
     jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
     const mockStore = configureMockStore(middlewares);
@@ -27,7 +26,8 @@ describe('Test for Sidebar component', () => {
         tag: "Fg",
         toolbar: [],
         type:"figure",
-        assetIdFor3PISmartlink:"3rd-party"
+        assetIdFor3PISmartlink:"3rd-party",
+        status:"approved"
     };
     let initialStore = {
         appStore: {
@@ -75,7 +75,7 @@ describe('Test for Sidebar component', () => {
     let props = {
         value:['fontValue','bulletValue'],
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
-        activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",secondaryOption:'' },
+        activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",secondaryOption:'',status:"approved" },
         activefontStyle:'font-type-1',
         asideData:{
             type:'showhide'
@@ -1950,9 +1950,52 @@ describe('Test for Sidebar component', () => {
                 els.push(children)
                 return els
             }
-            config.elementStatus = {
-                "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b": "approved"
+            // pactiveElement.status = "approved"
+            // props.updateElement = jest.fn()
+            // config.elementStatus = {
+            //     "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b": "approved"
+            // }
+            let sidebar = mount(<Provider store={sidebarWithDataTemp}><Sidebar {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.showModuleName(e);
+        })
+        it("Checking showModuleName function for slateType = partintro else case", () => {
+            let slateLevelData2 = { ...slateLevelData }
+            slateLevelData2["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"]["type"] = "partintro";
+            let initalStore2 = { ...initialStore }
+            activeElement.status =""
+            initalStore2["appStore"] = {
+                activeElement,
+                updateElement,
+                conversionElement,
+                slateLevelData: slateLevelData2
             }
+            const sidebarWithDataTemp = mockStore(initalStore2);
+            let e = { currentTarget: { checked: true } }
+            const elementIdInfo = document.createElement('div');
+            elementIdInfo.className = "moduleContainer learningObjectiveData";
+            document.body.appendChild(elementIdInfo);
+            document.getElementsByClassName = () => {
+                let els = []
+                let children =  {
+                    classList: {
+                        add: jest.fn(),
+                        remove: jest.fn()
+                    },
+                    querySelectorAll: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+                els.push(children)
+                return els
+            }
+            // pactiveElement.status = "approved"
+            // props.updateElement = jest.fn()
+            // config.elementStatus = {
+            //     "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b": "approved"
+            // }
             let sidebar = mount(<Provider store={sidebarWithDataTemp}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.showModuleName(e);

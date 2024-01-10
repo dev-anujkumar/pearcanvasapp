@@ -644,34 +644,6 @@ const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
 }
 
 /**
- * Gets element's status of versioning (i.e wip or approved)
- * @param {*} elementWorkId element work URN
- * @param {*} index index of element
- */
-export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
-    let apiUrl = `${config.NARRATIVE_READONLY_ENDPOINT}v2/${elementWorkId}`
-    const resp = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': CONTENT_TYPE,
-            'ApiKey': config.APO_API_KEY,
-            'myCloudProxySession': config.myCloudProxySession
-        }
-      })
-    try {
-        const res = await resp.json()
-        let statusString = res?.status[0]
-        let splittedString = statusString?.split("/")
-        if(splittedString){
-        let elementVersioningStatus = splittedString[splittedString.length - 1]
-        config.elementStatus[elementWorkId] = elementVersioningStatus
-        }
-    } catch (error) {
-        console.error("Error in fetching element status", error)
-    }
-}
-
-/**
  * Responsible for clearing element status store data
  */
 export const clearElementStatus = () => {

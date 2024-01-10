@@ -149,7 +149,7 @@ const KeyboardUpDown = (props) => {
         keyboardUpDown.current.addEventListener('keydown', handleKeyDown);
         return () => {
 
-            keyboardUpDown.current.removeEventListener('keydown', handleKeyDown);
+            keyboardUpDown?.current?.removeEventListener('keydown', handleKeyDown);
         }
     }, [activeElement]);
 

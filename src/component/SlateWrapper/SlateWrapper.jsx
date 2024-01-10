@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
+import { Alert, AlertTitle, Snackbar, IconButton } from '@mui/material';
+import { CheckCircleOutline, Close } from '@mui/icons-material';
 
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
@@ -11,7 +13,7 @@ import { LargeLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, createPayloadForWordImport, setImportWordFileMessageInCanvas } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName,
          hasReviewerRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown, SlateLockStatus } from '../../constants/IFrameMessageTypes.js';
@@ -21,7 +23,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, RELEASE_SLATE_LOCK_ACTION
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, RELEASE_SLATE_LOCK_ACTION, WORD_FILE_IMPORTED_TOAST_MESSAGE, IN_PROGRESS_IMPORT_STATUS, COMPLETED_IMPORT_STATUS, ELEMENT_ON_SLATE_CREATION_INPROGRESS
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -74,9 +76,16 @@ class SlateWrapper extends Component {
             powerPasteData: [],
             updatedindex:'',
             showOwnerSlatePopup: false,
+            showImportWordFilePopup: false,
+            showUploadFilePopup: false,
+            showImportAndDragFile: false,
             parentUrn:null,
             updateAssessment: false,
-            showSubscriberSlatePopup: false
+            showSubscriberSlatePopup: false,
+            fileToBeUploaded: {},
+            importData: {},
+            importCompleteStatus: false,
+            showSnackbarOnce: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -92,7 +101,16 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
+        const importedSlateData = this.props?.slateLevelData[config?.slateManifestURN]?.importData
+        const importedAlertCheck = (prevProps?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS && importedSlateData?.importStatus === COMPLETED_IMPORT_STATUS)
+        if(importedAlertCheck && !prevState.showSnackbarOnce) {
+            config.scrolling = true;
+            this.setState({
+                importCompleteStatus: true,
+                showSnackbarOnce: true
+            })
+        }
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
@@ -543,7 +561,120 @@ class SlateWrapper extends Component {
             return null
         }
     }
+    //To display the importing tips popup
+    showImportWordFilePopup = () => {
+        if (this.props.importMsgCanvas) {
+            showBlocker();
+            this.props.showBlocker(true);
+            return (
+                <PopUp 
+                    dialogText='Get Started with Word Imports'
+                    togglePopup={this.togglePopupForImportWordFile}
+                    proceed={this.startImportingButtonHandling}
+                    importWordFilePopup={this.props.importMsgCanvas}
+                />
+            )
+        }
 
+        return null
+    }
+    //To display the preview imported word file popup
+    showUploadFilePopup = () => {
+        if (this.state.showUploadFilePopup) {
+            showBlocker();
+            this.props.showBlocker(true);
+            return (
+                <PopUp 
+                    dialogText='Upload File'
+                    togglePopup={this.togglePopupForUploadFilePopup}
+                    proceed={this.handleImportButton}
+                    saveButtonText='Import'
+                    previewUploadedFilePopup={true}
+                    onImport={this.onImport}
+                    fileToBeUploaded={this.state.fileToBeUploaded}
+                />
+            )
+        }
+
+        return null
+    }
+
+    //This function is used to display the import elements progress alert
+    showImportAlertMessage = () => {
+        const showSnackbar = this.props.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
+            return (
+                <Snackbar open={showSnackbar} className='import-alert'
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                        <Alert severity="error" className='alert'>
+                            <AlertTitle ><strong>{ELEMENT_ON_SLATE_CREATION_INPROGRESS}</strong></AlertTitle>
+                            <div className='alert-message-content'>
+                                {this?.props?.importDataFromResponse?.processedElement} of {this?.props?.importDataFromResponse?.totalElementCount} elements converted</div>
+                        </Alert>
+                </Snackbar>
+        )
+    }
+
+    closeCompleteImportPopup = () => {
+        this.setState({
+            importCompleteStatus: false
+        })
+    }
+
+    //This function is used to display the imported elements complete alert
+    showImportCompleteAlertMessage = () => {
+        if (this.state.importCompleteStatus) {
+            setTimeout(() => {
+                this.setState({
+                    importCompleteStatus: false
+                })
+            }, 3000);
+            return (
+                <Snackbar open={this.state.importCompleteStatus} className='imported-alert'
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                    <Alert iconMapping={{
+                        success: <CheckCircleOutline fontSize="inherit" />,
+                    }}
+                        action={
+                            <IconButton
+                                aria-label="close"
+                                size="small"
+                                className="closeIcon"
+                                onClick={() => {
+                                    this.closeCompleteImportPopup()
+                                }}
+                            >
+                                <Close className="complete-close-icon" fontSize="inherit" />
+                            </IconButton>
+                        }
+                        className='complete-alert'>
+                        <AlertTitle ><strong>{WORD_FILE_IMPORTED_TOAST_MESSAGE}</strong></AlertTitle>
+                        <div className='complete-alert-message'>
+                            {this?.props?.importDataFromResponse?.processedElement} of {this?.props?.importDataFromResponse?.totalElementCount} elements converted</div>
+                    </Alert>
+                </Snackbar>
+            )
+        }
+    }
+
+    // Displays upload file popup for word import
+    showImportAndDropPopup = () => {
+        if (this.state.showImportAndDragFile) {
+            showBlocker();
+            this.props.showBlocker(true);
+            return (
+                <PopUp  
+                    dialogText='Import Word File'
+                    active
+                    importAndDropPopup
+                    toggleNextButton={this.toggleNextButton}
+                    togglePopup={this.toggleShowImportAndDropPopup}
+                    handleImportingTipsClick={this.handleImportingTipsClick}
+                />
+            )
+        }
+
+        return null
+    }
 
     toggleCustomPopup = (toggleValue, event) => {
         this.setState({
@@ -552,6 +683,30 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
+    }
+
+    // Next button handling for upload file popup
+    toggleNextButton = (toggleValue, event, file) => {
+        this.setState({showImportAndDragFile: false, showUploadFilePopup: true, fileToBeUploaded: file})
+        this.props.showBlocker(toggleValue);
+        hideBlocker();
+        this.prohibitPropagation(event)
+    }
+
+    // Toggles upload file popup
+    toggleShowImportAndDropPopup = (toggleValue, e) => {
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        this.setState({showImportAndDragFile: false})
+        this.prohibitPropagation(e);
+    }
+
+    // Handle importing tips click in upload file popup
+    handleImportingTipsClick = () => {
+        this.setState({showImportAndDragFile: false})
+        this.props.showBlocker(false);
+        hideBlocker()
+        this.props.setImportWordFileMessageInCanvas(true)
     }
 
     closeAudioBookDialog =()=>{
@@ -571,6 +726,33 @@ class SlateWrapper extends Component {
         hideBlocker()
         this.prohibitPropagation(event)
         this.props.approvedSlatePopupStatus(false)
+    }
+
+    //Toggle Importing tips popup 
+    togglePopupForImportWordFile = (toggleValue, event) => {
+        this.props.setImportWordFileMessageInCanvas(toggleValue)
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        this.prohibitPropagation(event)
+    }
+
+    //Toggle preview file popup
+    togglePopupForUploadFilePopup = (toggleValue, event) => {
+        this.props.showBlocker(toggleValue);
+        hideBlocker();
+        this.setState({showUploadFilePopup: toggleValue});
+        event && this.prohibitPropagation(event)
+    }
+
+    // Create payload for the import word api call
+    onImport = (importData, filename) => {
+        const res = createPayloadForWordImport(importData, 0)
+        this.setState({
+            importData: {
+                data: res,
+                filename: filename.substring(0, filename.lastIndexOf('.docx'))
+            },
+        })
     }
 
     proceedButtonHandling = (isChecked, toggleValue, e) => {
@@ -594,6 +776,24 @@ class SlateWrapper extends Component {
         }
         this.props.isOwnersSubscribedSlate(false);
         this.props.isSubscribersSubscribedSlate(false);
+    }
+
+    //Closes Importing tips popup and toggles upload file popup
+    startImportingButtonHandling = (toggleValue, e) => {
+        this.props.setImportWordFileMessageInCanvas(toggleValue)
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        this.prohibitPropagation(e);
+        this.setState({showImportAndDragFile: true})
+    }
+
+    // Handles Import button handling on preview file popup
+    handleImportButton = (toggleValue, event) => {
+        this.setState({showUploadFilePopup: toggleValue})
+        sendDataToIframe({type: 'proceed for import word file', message: this.state.importData})
+        this.props.showBlocker(toggleValue);
+        hideBlocker()
+        this.prohibitPropagation(event);
     }
 
     handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
@@ -1031,7 +1231,7 @@ class SlateWrapper extends Component {
                                         userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
-                                        element={(element?.type === 'openerelement' && isSubscribedSlate) ? JSON.parse(JSON.stringify(element)) : element}
+                                        element={(element?.type === 'openerelement' && hasReviewerRole()) ? JSON.parse(JSON.stringify(element)) : element}
                                         index={index}
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         elementSepratorProps={this.elementSepratorProps}
@@ -1645,6 +1845,16 @@ class SlateWrapper extends Component {
                 {/* **************** To reload slate after assessment update ************* */}
                 {this.reloadSlateAfterAssessmentUpdate()}
                 {this.showUnlockSlatePopup()}
+                {/* **************** To display importing tips popup ************* */}
+                {this.showImportWordFilePopup()}    
+                {/* **************** To display preview file popup ************* */}
+                {this.showUploadFilePopup()}
+                {/* **************** To display upload file popup ************* */}
+                {this.showImportAndDropPopup()}
+                {/* **************** To display import elements progress alert ************* */}
+                {this.showImportAlertMessage()}
+                {/* **************** To display import elements complete alert ************* */}
+                {this.showImportCompleteAlertMessage()}
             </React.Fragment>
         );
     }
@@ -1669,6 +1879,7 @@ const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         pageLoading: state.appStore.pageLoading,
+        importMsgCanvas: state.appStore.importMsgCanvas,
         slateTitleUpdated: state.appStore.slateTitleUpdated,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
@@ -1706,7 +1917,9 @@ const mapStateToProps = state => {
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
-        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle
+        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
+        importDataFromResponse: state.appStore.importDataFromResponse,
+        slateLevelData: state.appStore.slateLevelData
     };
 };
 
@@ -1749,6 +1962,7 @@ export default connect(
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
         assessmentReloadConfirmation,
-        toggleUnlockSlateAction
+        toggleUnlockSlateAction,
+        setImportWordFileMessageInCanvas
     }
 )(SlateWrapper);

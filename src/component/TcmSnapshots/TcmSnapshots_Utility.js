@@ -425,6 +425,8 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
             snapshotUrn: elementDetails.elementUrn,
             elementType: elementDetails.elementType,
             elementWip: JSON.stringify(res),
+            elementVersionUrn: res?.versionUrn || res?.id,
+            elementEntityUrn: res?.contentUrn,
             elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) :
             JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
             ...defaultKeys

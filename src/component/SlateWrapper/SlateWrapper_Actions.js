@@ -808,6 +808,22 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
     }
 
 }
+//Used to create payload for the imported elements for Import Word functionality
+export const createPayloadForWordImport = (importData, index) => {
+    let indexOfInsertion = index;
+    let data = [];
+    importData?.forEach(importedElement => {
+        const newElement = {
+            "html" : {
+                text: importedElement?.html
+            },
+            ...slateWrapperConstants?.elementDataByTag[importedElement?.tagName],
+            index: indexOfInsertion++
+        }
+        data?.push(newElement)
+    });
+    return data;
+}
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
@@ -1813,7 +1829,7 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
     });
 }
 
-export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
+export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (dispatch, getState) => {
     // Api to change container status from approved to WIP
     const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?isRCEnabled=${updateRCSlate}`;
     return axios.post(versioningStatus, null, {
@@ -1826,9 +1842,15 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
             // Making condition true for triggering slate level save api
             localStorage.setItem('isChangeInSlate', 'true');
             localStorage.setItem('slateNewVersion', 'true');
-
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
+            // if projectrole is Owner and container is subscribed, then delay the
+            // versioning flow for 5 sec to retain visual cue in TOC and Canvas
+            if (isOwnerSubscribedContainer) {
+                setTimeout(() => {
+                    triggerVersioningFlow()
+                }, config.VERSIONING_DELAY_INTERVAL);
+            } else {
+                triggerVersioningFlow()
+            }
             return true
         }
     }).catch(error => {
@@ -1836,4 +1858,16 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
         console.log("error", error)
         return false
     })
+}
+
+/**
+ * Refresh TOC and Canvas when creating newversion of a container
+ */
+const triggerVersioningFlow = () => {
+    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
+    sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
+}
+
+export const setImportWordFileMessageInCanvas = (value) => (dispatch) => {
+    dispatch({type: 'save-import-message', payload: value})
 }
