@@ -7835,4 +7835,16 @@ describe('Tests Slate Wrapper Actions', () => {
         const { type } = store3.getActions()[0];
         expect(type).toBe('SWAP_ELEMENT');
     })
-});
+
+    it('Test createPayloadForWordImport', () => {
+        const spyPowerPasteElement = jest.spyOn(actions, 'createPayloadForWordImport');
+        const powerPasteData = [{
+            "html": {
+                "text": `<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+            }
+        }];
+        const index = 0;
+        actions.createPayloadForWordImport(powerPasteData, index);
+        expect(spyPowerPasteElement).toHaveBeenCalled();
+    })
+})

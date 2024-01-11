@@ -50,7 +50,7 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, ELEMENT_AUTHOREDTEXT, ELEMENT_ASIDE, CONTENT_TYPE, FORMATTED_TITLE } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
-import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { resetAssessmentStore, fetchAssessmentUpdatedData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
@@ -682,9 +682,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
             if (slateBodymatter[0] && slateBodymatter[0].type == ELEMENT_ASSESSMENT && isElmLearnosityAssessment(slateBodymatter[0].elementdata) &&
                  slateBodymatter[0].elementdata.assessmentid) {
-                const assessmentData = { targetId: slateBodymatter[0].elementdata.assessmentid }
                 config.saveElmOnAS = true
-                dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
+                if(!store.getState()?.assessmentReducer?.updatedAssessmentData?.length){
+                    dispatch(fetchAssessmentUpdatedData()); // calling Assessment API to fetch the latest assessment data
+                }
             }
         }
         /** ---- Check if current slate is Double Spread PDF ---- */

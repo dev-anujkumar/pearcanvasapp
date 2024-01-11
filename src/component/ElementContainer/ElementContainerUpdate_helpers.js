@@ -2,7 +2,6 @@
 import { customEvent } from '../../js/utils';
 import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { updateAutoNumberedElement } from './UpdateElements';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../component/FigureHeader/AutoNumberConstants';
 //Constants
@@ -1113,19 +1112,10 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
-    const { assessmentItemAutoUpdateData, updatedAssessmentArray } = getState().assessmentReducer;
     // update Element in store based on AutoNumber Settings
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
-    // sending the VCS API call for the assessment items
-    if(assessmentItemAutoUpdateData?.length) {
-        assessmentItemAutoUpdateData.forEach(item => {
-            if(item && item.oldAssessmentId && item.newAssessmentId && !updatedAssessmentArray?.includes(item.newAssessmentId)) {
-                dispatch(updateAssessmentVersion(item.oldAssessmentId, item.newAssessmentId));
-            }
-        })
-    }
     if(responseData.id !== updatedData.id){
         glossaryFootnoteValue.elementWorkId = responseData.id;
         dispatch({

@@ -59,7 +59,7 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
-import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId, fetchAssessmentUpdatedData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive,checkSmartLinkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement,
          checkImageForMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
@@ -163,15 +163,8 @@ class ElementContainer extends Component {
         /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
         let { element } = this.props
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
-        if (this.props.element && embeddedAssessment === true) {
-            const assessmentID = element.figuredata.elementdata.assessmentid;
-            const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
-            const itemData = {
-                itemId: assessmentItemID,
-                parentId: assessmentID,
-                targetItemid: assessmentItemID
-            }
-            this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
+        if (this.props.element && embeddedAssessment === true && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
+            this.props.fetchAssessmentUpdatedData(); // calling assessment API to fetch latest assessment details
         }
         const elmInteractiveElem = checkInteractive(element)
         if (element && elmInteractiveElem === true) {
@@ -231,15 +224,8 @@ class ElementContainer extends Component {
             let { element } = this.props
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const elmInteractiveElem = checkInteractive(element)
-            if (this.props.element && embeddedAssessment === true) {
-                const assessmentID = element.figuredata.elementdata.assessmentid;
-                const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
-                const itemData = {
-                    itemId: assessmentItemID,
-                    parentId: assessmentID,
-                    targetItemid: assessmentItemID
-                }
-                this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
+            if (this.props.element && embeddedAssessment === true && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
+                this.props.fetchAssessmentUpdatedData(); // calling assessment API to fetch latest assessment details
             }
             /* Updating the interactive data inside the store after the store reset */
             if (element && elmInteractiveElem) {
@@ -3478,6 +3464,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         saveSelectedAltTextLongDescData: (payloadObj) => {
             dispatch(saveSelectedAltTextLongDescData(payloadObj))
+        },
+        fetchAssessmentUpdatedData: () => {
+            dispatch(fetchAssessmentUpdatedData())
         }
     }
 }
