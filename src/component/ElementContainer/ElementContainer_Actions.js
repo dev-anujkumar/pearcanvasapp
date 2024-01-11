@@ -21,9 +21,9 @@ import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
-import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { fetchAssessmentUpdatedData, updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import store from '../../appstore/store';
-import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { FIGURE_INTERACTIVE, LEARNOSITY, PUF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { CONTENT_TYPE, CPLG_ALT, CPLG_LONGDESCRIPTION, ELEMENT_ASSESSMENT_LOWERCASE } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
@@ -262,6 +262,23 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         // Making condition true for triggering slate level save api
         localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
+        const assessmentUpdatedData = store.getState().assessmentReducer?.updatedAssessmentData
+        const assessmentTypeCheck = (updatedData?.elementdata?.assessmentformat === PUF || updatedData?.elementdata?.assessmentformat === LEARNOSITY || 
+            updatedData?.figuredata?.elementdata?.assessmentformat === PUF || updatedData?.figuredata?.elementdata?.assessmentformat === LEARNOSITY)
+        const assessmentIdCheck = updatedData?.figuredata?.elementdata?.assessmentid || updatedData?.elementdata?.assessmentid
+        // filtering the current assesssment item details from the assessment API response 
+        const elmAssessmentData = assessmentUpdatedData?.filter((item) => {
+            return item?.assessmentVersionUrn == updatedData?.figuredata?.elementdata?.assessmentid;
+        })
+        const assessmentItemUpdateCheck = elmAssessmentData && elmAssessmentData[0]?.assessmentVersionUrn !== updatedData?.figuredata?.elementdata?.assessmentid
+        // calling the assessment API to fetch the latest assessment data after the saving call
+        if((!assessmentUpdatedData || (assessmentUpdatedData && assessmentUpdatedData[0]?.versionUrn !== updatedData?.elementdata?.assessmentid)) && assessmentTypeCheck && updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
+            store.dispatch(fetchAssessmentUpdatedData())
+        }
+        // calling the assessment API to fetch the latest assessment item data after the saving call
+        if((!elmAssessmentData || assessmentItemUpdateCheck) && assessmentTypeCheck && updatedData?.figuredata?.type === ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
+            store.dispatch(fetchAssessmentUpdatedData())
+        }
         if (updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE) {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
