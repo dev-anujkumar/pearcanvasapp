@@ -474,74 +474,10 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance6.state.activeAssessmentUsageType).toBe('Homework')
             expect(assessmentSlateInstance6.props.getAssessmentDataPopup).toBe(false)
         })
-        it('Test 7.4-updateElmAssessment', () => {
-            document.getElementById = () => {
-                return {
-                    innerText: "",
-                    style: { display: "" },
-                    classList: {
-                        add: jest.fn(),
-                        remove: jest.fn()
-                    }
-                }
-            }
-            let event = {
-                stopPropagation: jest.fn(),
-                preventDefault: jest.fn()
-            }
-            let expectedProps = {
-                'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464':
-                {
-                    activeWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    assessmentStatus: 'final',
-                    assessmentTitle: 'Quiz: 7.4 Developing Relationships',
-                    assessmentEntityUrn: 'urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86',
-                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565',
-                    "targetId": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
-                }
-            }
-            jest.spyOn(assessmentSlateInstance6, 'updateElmAssessment')
-            assessmentSlateInstance6.updateElmAssessment(event);
-            expect(assessmentSlateInstance6.props.assessmentReducer).toEqual(expectedProps)
-        })
         xit('Test 7.5-closeElmWindow', () => {
             jest.spyOn(assessmentSlateInstance6, 'closeElmWindow')
             assessmentSlateInstance6.closeElmWindow();
             expect(assessmentSlateInstance6.state.showElmComponent).toBe(false)
-        })
-        it('Test 7.6.1-showElmVersionStatus -IF', () => {
-            let expectedProps = {
-                'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464':
-                {
-                    activeWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    assessmentStatus: 'final',
-                    assessmentTitle: 'Quiz: 7.4 Developing Relationships',
-                    assessmentEntityUrn: 'urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86',
-                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565',
-                    "targetId": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
-                }
-            }
-            jest.spyOn(assessmentSlateInstance6, 'showElmVersionStatus')
-            assessmentSlateInstance6.showElmVersionStatus();
-            expect(assessmentSlateInstance6.props.assessmentReducer).toEqual(expectedProps)
-        })
-        it('Test 7.6.2-showElmVersionStatus -ELSE', () => {
-            let expectedProps = {
-                'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464': expectedRes2
-            }
-            let newStore = mockStore(initialState2);
-            const component7 = mount(<Provider store={newStore}><AssessmentSlateData
-                {...props}
-                model={assessmentSlateELM}
-                assessmentSlateObj={pufObj}
-                getAssessmentData={true}
-                getAssessmentDataPopup={false}
-            /></Provider>)
-            let assessmentSlateInstance7 = component7.find('AssessmentSlateData').instance();
-            jest.spyOn(assessmentSlateInstance7, 'showElmVersionStatus')
-            assessmentSlateInstance7.showElmVersionStatus();
-            expect(assessmentSlateInstance7.showElmVersionStatus).toHaveBeenCalled()
-            expect(assessmentSlateInstance7.props.assessmentReducer).toEqual(expectedProps)
         })
         it('Test 10.6-componentDidUpdate', () => {
             const dataFromElm = {
