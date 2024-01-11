@@ -367,4 +367,24 @@ describe('Test AssessmentReducer', () => {
             payload: payload
         })).toEqual({ usageTypeListData: {}, ...expectedState })
     })
+
+    it('UPDATED_ASSESSMENTS_ARRAY', () => {
+        let payload = {
+            currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+            oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
+        }
+        let expectedState = {
+            usageTypeListData: {},
+            currentEditAssessment: {},
+            itemUpdateEvent: false,
+            updatedAssessmentArray: [{
+                currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
+            }]
+        }
+        expect(reducer(INITIAL_STATE, {
+            type: UPDATED_ASSESSMENTS_ARRAY,
+            payload: payload
+        })).toEqual({ usageTypeListData: {}, ...expectedState })
+    })
 });
