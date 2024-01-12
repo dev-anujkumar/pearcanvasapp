@@ -186,7 +186,7 @@ export const setCurrentSlateLOs = (existingSlateLOs, unlinkedLOs, linkedLOs) => 
             slateLO["id"] = slateLO["loUrn"]
         }
     })
-    updatedSlateLOs = existingSlateLOs && existingSlateLOs.length && existingSlateLOs.filter(existingLO => slateLO_Unlinked?.indexOf(existingLO.id) < 0);
+    updatedSlateLOs = existingSlateLOs && existingSlateLOs.length ? existingSlateLOs.filter(existingLO => slateLO_Unlinked?.indexOf(existingLO.id) < 0) : [];
     updatedSlateLOs = updatedSlateLOs?.concat(linkedLOs ?? []);
     return updatedSlateLOs;
 }
