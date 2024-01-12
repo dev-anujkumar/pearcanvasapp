@@ -374,10 +374,6 @@ describe('Test AssessmentReducer', () => {
             usageTypeListData: {},
             currentEditAssessment: {},
             itemUpdateEvent: false,
-            updatedAssessmentArray: [{
-                currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
-                oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
-            }]
         }
         expect(reducer(INITIAL_STATE, {
             type: UPDATED_ASSESSMENTS_ARRAY,
