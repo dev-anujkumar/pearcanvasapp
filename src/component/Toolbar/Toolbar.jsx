@@ -37,11 +37,11 @@ const _Toolbar = props => {
     useEffect(() => {
         setLODropdown(false);
         hideSlateTagIcon()
-      }, [props.setSlateEntity, props.setSlateParent]);
+      }, [props.setSlateEntity, props.setSlateParent, props.importDataFromResponse?.importStatus]);
 
     useEffect(() => {
         changeAudioNarration()
-    }, [props.openAudio ,props.addAudio])
+    }, [props.openAudio ,props.addAudio, props.importDataFromResponse?.importStatus])
 
     /**
     * Function for show/hide slate tag icon
@@ -195,7 +195,7 @@ const _Toolbar = props => {
                 <div className={`header ${isToolBarBlocked} ${accessToolbar} ${isReadOnly}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
-                !config.parentOfParentItem &&
+                !config.parentOfParentItem && !importStatus &&
                     <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
                             <div className={`learningobjectiveicon slate-tag-icon ${(hasReviewerRole()  && !props.isLOExist) ? "disable" : ""}`}
