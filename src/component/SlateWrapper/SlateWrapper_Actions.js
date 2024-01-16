@@ -1829,7 +1829,7 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
 
 export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (dispatch, getState) => {
     // Api to change container status from approved to WIP
-    const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?isRCEnabled=${updateRCSlate}`;
+    const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?isRCEnabled=${updateRCSlate}&isCypressPlusEnabled=${config.isCypressPlusEnabled}`;
     return axios.post(versioningStatus, null, {
         headers: {
             "Content-Type": CONTENT_TYPE,
