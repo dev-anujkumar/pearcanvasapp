@@ -8,7 +8,7 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase, sendDataToIframe } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
@@ -337,6 +337,8 @@ class Sidebar extends Component {
 
     handleOutputTypeValue = (e) => {
         let value = e.target.value;
+        if((!this.props.isConditionalContent) && (value === "digital" || value === "print")){
+        sendDataToIframe({ 'type': 'conditionalContentStatus', 'message': true })}
         this.props.setBCEMetadata('output', value);
         this.setState({
             outputType: value
@@ -1381,6 +1383,7 @@ const mapStateToProps = state => {
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         alfrescoAltLongDescData: state.alfrescoReducer.savedAltLongDesData,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
+        isConditionalContent: state.appStore.isConditionalContent
     };
 };
 

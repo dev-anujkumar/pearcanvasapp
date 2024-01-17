@@ -58,7 +58,8 @@ import {
     DECO_TO_OTHER_IMG_TYPES,
     FETCH_CONVERSION_DATA,
     SAVE_IMPORT_MESSAGE,
-    SET_IMPORT_DETAILS_ACTION
+    SET_IMPORT_DETAILS_ACTION,
+    CONDITIONAL_CONTENT_STATUS
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -895,6 +896,16 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: SET_IMPORT_DETAILS_ACTION,
             payload: {}
+        })).toEqual(output);
+    });
+    it('case 62- CONDITIONAL_CONTENT_STATUS ', () => {
+        let output = {
+            ...initialState,
+            isConditionalContent: true
+        }
+        expect(reducer(initialState, {
+            type: CONDITIONAL_CONTENT_STATUS,
+            payload: true
         })).toEqual(output);
     });
 });

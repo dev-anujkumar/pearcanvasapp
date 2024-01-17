@@ -35,7 +35,9 @@ import {
     BANNER_IS_VISIBLE,
     SUBSCRIBERS_SUBSCRIBED_SLATE,
     SET_TOC_SLATE_LABEL,
-    SET_IMPORT_DETAILS_ACTION
+    SET_IMPORT_DETAILS_ACTION,
+    CONDITIONAL_CONTENT_STATUS,
+    SLATE_TYPES_FOR_CONDITIONAL_CONTENT
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -677,6 +679,14 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
+
+        /* This check will get the status of ConditionalContent key based on type of slate and will send message to wrapper */
+        if(SLATE_TYPES_FOR_CONDITIONAL_CONTENT?.includes(slateData?.data[manifestURN]?.type)){
+            slateData.data[manifestURN].isConditionalContent = true
+            dispatch(setCondtionalContentStatus(slateData?.data[manifestURN]?.isConditionalContent))
+            sendDataToIframe({ 'type': 'conditionalContentStatus', 'message': slateData?.data[manifestURN]?.isConditionalContent});
+        }
+
         /** PCAT-8900 - Updating Full Assessments - Elm */
         if (config.slateType == FIGURE_ASSESSMENT && slateData && slateData.data[newVersionManifestId]) {
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
@@ -1912,4 +1922,13 @@ export const getDefaultPlaybackMode = (elementData) => {
  */
 export const setImportMessageForWordImport = () => (dispatch) => {
     return dispatch({ type: 'save-import-message', payload: true })
+}
+/**
+ * Set isConditionalContent status
+ */
+export const setCondtionalContentStatus = (isConditionalContent) => (dispatch) => {
+    dispatch({
+        type: CONDITIONAL_CONTENT_STATUS,
+        payload: isConditionalContent
+    })
 }

@@ -63,7 +63,6 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
 }
 
 export const publishSlate = (project, section, cite, message) => {
-  console.log('message',message)
   const startTime = performance.now()
   const content_url = config_object.SLATE_PREVIEW_ENDPOINT
   const proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS || 'false'
@@ -74,6 +73,9 @@ export const publishSlate = (project, section, cite, message) => {
     requester: config_object.userEmail,//"requester": "james.cooney@pearson.com",
     timestamp: new Date().toISOString(),//"timestamp": "2017-04-23T18:25:43.511Z"
     proactiveSlatePreview: proactiveSlatePreview,
+  }
+  if(message?.slatePreviewType){
+    content_data.outputType = message?.slatePreviewType
   }
   // GTM event object
   const content_data_GTM = {
