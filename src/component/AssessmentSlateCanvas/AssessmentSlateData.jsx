@@ -462,7 +462,7 @@ class AssessmentSlateData extends Component {
         if (isElmLearnosity) {
             const usageTypeList = assessmentReducer?.usageTypeListData;
             const updatedUsageType = usageTypeList?.find((type) => type.label === usageType)
-            if (updatedAssessmentData?.usageType && (updatedAssessmentData.usageType !== updatedUsageType?.usagetype)) {
+            if (updatedAssessmentData?.usageType && (updatedAssessmentData.usageType?.toLowerCase() !== updatedUsageType?.usagetype?.toLowerCase())) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType

@@ -190,7 +190,7 @@ class ElementSingleAssessment extends Component {
                 return item?.versionUrn == model?.id;
             })
             const updatedUsageType = usageTypeList?.find((type) => type?.label === usageType)
-            if (elmAssessmentData?.length && elmAssessmentData[0]?.usageType && (elmAssessmentData[0].usageType !== updatedUsageType?.usagetype)) {
+            if (elmAssessmentData?.length && elmAssessmentData[0]?.usageType && (elmAssessmentData[0].usageType?.toLowerCase() !== updatedUsageType?.usagetype?.toLowerCase())) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType
