@@ -456,13 +456,13 @@ class AssessmentSlateData extends Component {
      * @param e - event triggered
     */
     handleAssessmentUsageTypeChange = (usageType) => {
-        const isElmLearnosity = (this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) ? true : false
+        const { activeAssessmentType, updatedAssessmentData } = this.state
+        const { assessmentReducer } = this.props;
+        const isElmLearnosity = activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY
         if (isElmLearnosity) {
-            let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
-            const { assessmentSlateObj, assessmentReducer } = this.props;
-            const newAssessmentData =  assessmentSlateObj  && assessmentSlateObj.assessmentId && assessmentReducer[assessmentSlateObj.assessmentId]
-            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
-            if (newAssessmentData?.intendedUsage?.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+            const usageTypeList = assessmentReducer?.usageTypeListData;
+            const updatedUsageType = usageTypeList?.find((type) => type.label === usageType)
+            if (updatedAssessmentData?.usageType && (updatedAssessmentData.usageType !== updatedUsageType?.usagetype)) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType
@@ -471,10 +471,9 @@ class AssessmentSlateData extends Component {
             else {
                 this.setChangeUsageType(usageType)
             }
+            return;
         }
-        else {
-            this.setChangeUsageType(usageType)
-        }
+        this.setChangeUsageType(usageType)
     }
 
 
