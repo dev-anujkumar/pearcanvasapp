@@ -56,7 +56,9 @@ import {
     CHECK_ASIDE_NUMBER,
     APPROVED_SLATE_POPUP_STATUS,
     DECO_TO_OTHER_IMG_TYPES,
-    FETCH_CONVERSION_DATA
+    FETCH_CONVERSION_DATA,
+    SAVE_IMPORT_MESSAGE,
+    SET_IMPORT_DETAILS_ACTION
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -872,6 +874,26 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         }
         expect(reducer(initialState, {
             type: FETCH_CONVERSION_DATA,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 60- SAVE_IMPORT_MESSAGE ', () => {
+        let output = {
+            ...initialState,
+            importMsgCanvas: {}
+        }
+        expect(reducer(initialState, {
+            type: SAVE_IMPORT_MESSAGE,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 61- SET_IMPORT_DETAILS_ACTION ', () => {
+        let output = {
+            ...initialState,
+            importDataFromResponse: {}
+        }
+        expect(reducer(initialState, {
+            type: SET_IMPORT_DETAILS_ACTION,
             payload: {}
         })).toEqual(output);
     });

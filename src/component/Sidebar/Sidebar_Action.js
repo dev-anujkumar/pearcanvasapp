@@ -7,7 +7,8 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
-    CHECK_ASIDE_NUMBER
+    CHECK_ASIDE_NUMBER,
+    UPDATE_ASSESSMENT_DATA
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -283,7 +284,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
-    if(config.elementStatus[conversionDataToSend.id] === "approved"){
+        if(conversionDataToSend?.status === "approved"){
         config.savingInProgress = true
     }
     config.isSavingElement = true
@@ -508,6 +509,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
+        });
+        // clearing the store whenever changing the item type
+        dispatch({
+            type: UPDATE_ASSESSMENT_DATA,
+            payload: []
         });
         if (activeElementObject.tag === "BQ") {
             const node1 = document.querySelector(`[data-id="${activeElementObject.elementId}"]`)

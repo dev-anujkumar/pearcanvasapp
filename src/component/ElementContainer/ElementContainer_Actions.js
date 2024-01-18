@@ -21,9 +21,9 @@ import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
-import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { fetchAssessmentUpdatedData, updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import store from '../../appstore/store';
-import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { FIGURE_INTERACTIVE, LEARNOSITY, PUF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { CONTENT_TYPE, CPLG_ALT, CPLG_LONGDESCRIPTION, ELEMENT_ASSESSMENT_LOWERCASE } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
@@ -262,6 +262,23 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         // Making condition true for triggering slate level save api
         localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
+        const assessmentUpdatedData = store.getState().assessmentReducer?.updatedAssessmentData
+        const assessmentTypeCheck = (updatedData?.elementdata?.assessmentformat === PUF || updatedData?.elementdata?.assessmentformat === LEARNOSITY || 
+            updatedData?.figuredata?.elementdata?.assessmentformat === PUF || updatedData?.figuredata?.elementdata?.assessmentformat === LEARNOSITY)
+        const assessmentIdCheck = updatedData?.figuredata?.elementdata?.assessmentid || updatedData?.elementdata?.assessmentid
+        // filtering the current assesssment item details from the assessment API response 
+        const elmAssessmentData = assessmentUpdatedData?.filter((item) => {
+            return item?.assessmentVersionUrn == updatedData?.figuredata?.elementdata?.assessmentid;
+        })
+        const assessmentItemUpdateCheck = elmAssessmentData && elmAssessmentData[0]?.assessmentVersionUrn !== updatedData?.figuredata?.elementdata?.assessmentid
+        // calling the assessment API to fetch the latest assessment data after the saving call
+        if((!assessmentUpdatedData || (assessmentUpdatedData && assessmentUpdatedData[0]?.versionUrn !== updatedData?.elementdata?.assessmentid)) && assessmentTypeCheck && updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
+            store.dispatch(fetchAssessmentUpdatedData())
+        }
+        // calling the assessment API to fetch the latest assessment item data after the saving call
+        if((!elmAssessmentData || assessmentItemUpdateCheck) && assessmentTypeCheck && updatedData?.figuredata?.type === ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
+            store.dispatch(fetchAssessmentUpdatedData())
+        }
         if (updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE) {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
@@ -641,34 +658,6 @@ export const showError = (error, dispatch, errorMessage) => {
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
     dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,""));
-}
-
-/**
- * Gets element's status of versioning (i.e wip or approved)
- * @param {*} elementWorkId element work URN
- * @param {*} index index of element
- */
-export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
-    let apiUrl = `${config.NARRATIVE_READONLY_ENDPOINT}v2/${elementWorkId}`
-    const resp = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': CONTENT_TYPE,
-            'ApiKey': config.APO_API_KEY,
-            'myCloudProxySession': config.myCloudProxySession
-        }
-      })
-    try {
-        const res = await resp.json()
-        let statusString = res?.status[0]
-        let splittedString = statusString?.split("/")
-        if(splittedString){
-        let elementVersioningStatus = splittedString[splittedString.length - 1]
-        config.elementStatus[elementWorkId] = elementVersioningStatus
-        }
-    } catch (error) {
-        console.error("Error in fetching element status", error)
-    }
 }
 
 /**

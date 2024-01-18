@@ -304,8 +304,7 @@ class FigureImage extends Component {
             schema: IMAGE_SCHEMA_URL,
             imageid: `urn:pearson:alfresco:${uniqID}`,
             alttext: altText,
-            longdescription: longDesc,
-            type: figureType,
+            longdescription: longDesc
         }
         if (this.props.model?.figuredata?.decorative) {
             setFigureData = {

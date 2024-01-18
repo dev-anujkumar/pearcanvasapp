@@ -3627,6 +3627,12 @@ export class TinyMceEditor extends Component {
         customEvent.subscribe('assetPopoverSave', () => {
             this.handleBlur(null, true);
             customEvent.unsubscribe('assetPopoverSave');
+            customEvent.unsubscribe('assetPopoverCancel');
+        })
+        customEvent.subscribe('assetPopoverCancel', () => {
+            this.handleBlur(null, false);
+            customEvent.unsubscribe('assetPopoverCancel');
+            customEvent.unsubscribe('assetPopoverSave');
         })
         this.props.openAssetPopoverPopUp(true);
         sendDataToIframe({ 'type': 'disableTOC', 'message': {} });

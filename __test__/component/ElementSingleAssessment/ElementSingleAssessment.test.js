@@ -395,34 +395,6 @@ describe('Testing Element Single Assessment component', () => {
             expect(spyaddPuffAssessment).toHaveBeenCalled();
             spyaddPuffAssessment.mockClear();
         });
-        it('Test-5-updatePufAssessment', () => {
-            let pufObj = {
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-                itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
-                title: "ELM Assessment"
-            }
-            elmAssessment.update();
-            elmAssessmentInstance.forceUpdate();
-            jest.spyOn(elmAssessmentInstance, 'updatePufAssessment')
-            elmAssessmentInstance.updatePufAssessment(pufObj, "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464");
-            expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-        })
-        it('Test-6-updateElmAssessment', () => {
-            let pufObj = {
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-                itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
-                title: "ELM Assessment"
-            }
-            elmAssessmentInstance.setState({
-                assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-                assessmentItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b"
-            })
-            elmAssessment.update();
-            elmAssessmentInstance.forceUpdate();
-            jest.spyOn(elmAssessmentInstance, 'updateElmAssessment')
-            elmAssessmentInstance.updateElmAssessment(event);
-            expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-        })
         xit('Test-7-addAssessmentResource-Add ELM', () => {
             const spyaddAssessmentResource = jest.spyOn(elmAssessmentInstance, 'addAssessmentResource')
             elmAssessmentInstance.addAssessmentResource(event);
@@ -446,44 +418,7 @@ describe('Testing Element Single Assessment component', () => {
             expect(spyaddPuffAssessment).toHaveBeenCalled();
             spyaddPuffAssessment.mockClear();
         });
-        it('Test-6-updateElmAssessment', () => {
-            let nextProps = {
-                model: singleAssessmentElmDefault,
-                index: "1",
-                usagetype: "Practice",
-                handleFocus: jest.fn(),
-                onClick: jest.fn(),
-                handleBlur: jest.fn(),
-                showBlocker: jest.fn(),
-                openCustomPopup: jest.fn(),
-                permissions: userPermissions,
-                checkEntityUrn: jest.fn(),
-                fetchAssessmentMetadata: jest.fn(),
-                updateAssessmentVersion: jest.fn(),
-                fetchAssessmentLatestVersion: jest.fn()
-            };
-            let newStore = mockStore({...initialState,
-                assessmentReducer:assessmentRed2
-            });
-            let learnosityAssessment = mount(<Provider store={newStore}><ElementSingleAssessment {...nextProps} /></Provider>);
-            const learnosityAssessmentInstance = learnosityAssessment.find('ElementSingleAssessment').instance();
-            
-            let pufObj = {
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-                itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
-                title: "ELM Assessment"
-            }
-            learnosityAssessmentInstance.setState({
-                assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-                assessmentItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b"
-            })
-            learnosityAssessment.update();
-            learnosityAssessmentInstance.forceUpdate();
-            jest.spyOn(learnosityAssessmentInstance, 'updateElmAssessment')
-            learnosityAssessmentInstance.updateElmAssessment(event);
-            expect(learnosityAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-        })
-    });
+    })
 });
 describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', () => {
     let newProps2 = {

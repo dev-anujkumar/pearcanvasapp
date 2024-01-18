@@ -194,5 +194,11 @@ module.exports = {
               }),
               new CssMinimizerPlugin(),
         ]
+    },
+    resolve: {
+        fallback: {
+          util: require.resolve("util/"),
+          "path": require.resolve("path-browserify")
+        },
     }
 }

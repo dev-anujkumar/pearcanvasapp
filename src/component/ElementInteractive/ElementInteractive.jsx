@@ -20,8 +20,7 @@ import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA, INSTITUTION_
 import interactiveTypeData from './interactiveTypes.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion,
-         setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resource_Type } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
@@ -564,6 +563,7 @@ class Interactive extends React.Component {
                 const { SMARTLINK_ALFRESCO_TYPES, INTERACTIVE_EXTERNAL_LINK } = elementTypeConstant;
                 const { interactiveSubtypeConstants: { THIRD_PARTY, EXTERNAL_WEBSITE_LINK, PDF, TABLE, LEGACY_WEB_LINK } } = TcmConstants;
                 const ctaSmartLinks = [PDF, EXTERNAL_WEBSITE_LINK, LEGACY_WEB_LINK]
+                const interactiveDataTypes = [EXTERNAL_WEBSITE_LINK,THIRD_PARTY, TABLE, LEGACY_WEB_LINK ]
                 let interactivetype = THIRD_PARTY;
                 switch (smartLinkType.toLowerCase()) {
                     case SMARTLINK_ALFRESCO_TYPES[0]:
@@ -599,15 +599,18 @@ class Interactive extends React.Component {
                     interactiveformat: INTERACTIVE_EXTERNAL_LINK,
                     interactivetitle: smartLinkTitle,
                     vendor: vendorName,
-                    posterimage: {
-                        "imageid": uniqueIDInteractive,
-                        "path": epsURL
-                    },
                     "path": smartLinkPath
+                }
+                const posterimage = {
+                    "imageid": uniqueIDInteractive,
+                    "path": epsURL
                 }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
                     figuredata.alttext = altText
                     figuredata.longdescription = longDescription
+                }
+                if(interactiveDataTypes?.includes(interactivetype)) {
+                    figuredata.posterimage = posterimage
                 }
                 if (ctaSmartLinks.indexOf(interactivetype) > -1) {
                     let pdfPosterTextDOM = document.getElementById(`cypress-${this.props.index}-2`);
@@ -922,7 +925,6 @@ const mapActionToProps = (dispatch) => {
         fetchAssessmentVersions: (entityUrn, type, createdDate, assessmentData, assessmentItemData) => {
             dispatch(fetchAssessmentVersions(entityUrn, type, createdDate, assessmentData, assessmentItemData))
         },
-        updateAssessmentVersion: updateAssessmentVersion,
         setElmPickerData: (payloadObj) => {
             dispatch(setElmPickerData(payloadObj))
         },

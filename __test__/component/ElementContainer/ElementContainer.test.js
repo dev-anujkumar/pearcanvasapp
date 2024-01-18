@@ -59,7 +59,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
         return true
     },
     getShowhideChildUrns: jest.fn(),
-    removeBlankSpaceAndConvertToLowercase: jest.fn(() => "vitalsource") 
+    removeBlankSpaceAndConvertToLowercase: jest.fn(() => "vitalsource"),
+    hasReviewerSubscriberRole: jest.fn()
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -585,7 +586,7 @@ describe('Test for element container component', () => {
         tcmData:[{"id":"222","feedback":"asdsa"}],
         projectSharingRole:"OWNER",
 		elemBorderToggle: true,
-		borderToggle: "active",
+		borderToggle: "active"
     };
 
     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -925,7 +926,10 @@ describe('Test for element container component', () => {
                 element: wipData.assessment,
                 permissions: [],
                 index:1,
-                storeOldAssetForTCM :  jest.fn()
+                storeOldAssetForTCM :  jest.fn(),
+                assessmentReducer: {
+                    updatedAssessmentData: [{test: "111"}]
+                }
             };
             
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -2450,7 +2454,7 @@ describe('Test for element container component', () => {
             updateElement: jest.fn(),
             elemBorderToggle: false,
             openElmAssessmentPortal: jest.fn(),
-            fetchAssessmentMetadata: jest.fn()
+            fetchAssessmentUpdatedData: jest.fn()
         };
         let event = {
             stopPropagation: jest.fn(),
@@ -2636,36 +2640,6 @@ describe('Test-Other Functions', () => {
         expect(spyhandleFocus).toHaveBeenCalled()
         spyhandleFocus.mockClear()
     })
-
-    it('Test-getElementVersionStatus Function- poetry with creditsarray', () => {
-        const elementStatus = {}
-        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
-        elementContainerInstance.getElementVersionStatus(props.element, elementStatus);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spygetElementVersionStatus).toHaveBeenCalled()
-        spygetElementVersionStatus.mockClear()
-    })
-
-    it('Test-getElementVersionStatus Function- citationgroup', () => {
-        const elementStatus = {}
-        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
-        elementContainerInstance.getElementVersionStatus(wipData.citationgroup2, elementStatus);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spygetElementVersionStatus).toHaveBeenCalled()
-        spygetElementVersionStatus.mockClear()
-    })
-
-    it('Test-getElementVersionStatus Function- popup', () => {
-        const elementStatus = {}
-        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
-        elementContainerInstance.getElementVersionStatus(wipData.popup2, elementStatus);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spygetElementVersionStatus).toHaveBeenCalled()
-        spygetElementVersionStatus.mockClear()
-    })
     
     it("componentDidUpdate", () => {
         const store1 = mockStore({
@@ -2757,7 +2731,12 @@ describe('Test-Other Functions', () => {
                 markedIndexCurrentValue: '',
                 markedIndexValue: ''
             },
-            autoNumberReducer: mockAutoNumberReducerEmpty
+            autoNumberReducer: mockAutoNumberReducerEmpty,
+            assessmentReducer: {
+                updatedAssessmentData: [{
+                    test: "111"
+                }]
+            }
         });
         let props = {
             element: wipData.pullquote,

@@ -22,7 +22,7 @@ import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopu
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs,
      setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus,
-      isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
+      isSubscribersSubscribedSlate,setTocSlateLabel, setImportMessageForWordImport } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -140,9 +140,12 @@ export class CanvasWrapper extends Component {
     }
 
     loadMorePages = () => {
-        config.page++;
-        if(config.totalPageCount <= config.page) return false;
-        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
+        if(config.isSlateElementCompleted===false)   // check for preventing scrolling when import elements are not generated
+        {
+            config.page++;
+            if(config.totalPageCount <= config.page) return false;
+            this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
+        }
     }
 
     ReleaseErrorPopup = () => {
@@ -219,7 +222,7 @@ export class CanvasWrapper extends Component {
                                         navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement}
                                         tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker}
                                         isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked}
-                                        closeUndoTimer = {this.props.closeUndoTimer}/>
+                                        closeUndoTimer = {this.props.closeUndoTimer} showCanvasBlocker={this.props.showCanvasBlocker}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -398,6 +401,8 @@ export default connect(
         setTocSlateLabel,
         saveLockDetails,
         saveSelectedAlfrescoElement,
-        currentNodeAncestorData
+        currentNodeAncestorData,
+        saveLockDetails,
+        setImportMessageForWordImport
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

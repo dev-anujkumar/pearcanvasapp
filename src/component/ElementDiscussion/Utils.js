@@ -1,7 +1,7 @@
 import config from "../../config/config"
 
 export const createDiscussionForUpdateAPI = (_props, elementDiscussion) => {
-    if (config.elementStatus?.[elementDiscussion.id] === "approved") {
+    if (elementDiscussion?.status === "approved") {
         config.savingInProgress = true
     }
     const index = _props.index.toString().split('-') || [];

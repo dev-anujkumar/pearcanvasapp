@@ -116,8 +116,10 @@ export default {
       node.removeAttribute("dir");
     }
 
-    this.addOListClasses(node.firstElementChild, depth);
-    this.addOListClasses(node.nextElementSibling, depth);
+    if (depth <= 10) {
+      this.addOListClasses(node.firstElementChild, depth);
+      this.addOListClasses(node.nextElementSibling, depth);
+    }
   },
 
 
@@ -313,8 +315,10 @@ export default {
       );
     }
 
-    this.addUListClasses(node.firstElementChild, depth);
-    this.addUListClasses(node.nextElementSibling, depth);
+    if (depth <= 10) {
+      this.addUListClasses(node.firstElementChild, depth);
+      this.addUListClasses(node.nextElementSibling, depth);
+    }
   },
 
   /**
@@ -338,7 +342,7 @@ export default {
    */
   addHeadingClass: function (headingNode, headingLevel) {
     headingNode.classList.add(`heading${headingLevel}NummerEins`);
-    ["b", "u", "s", "i", "a"].forEach((oldTag) => {
+    ["b", "u", "s", "i", "a", "strong"].forEach((oldTag) => {
       if (oldTag === "i") {
         this.convertTag(headingNode, oldTag, "em");
       } else {

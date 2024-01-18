@@ -178,11 +178,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
                     break;
-                case 'loEditResponse':
-                    this.setState({
-                        showBlocker: false
-                    });
-                    break;
                 case 'getLOlistResponse':
                     this.props.currentSlateLO(message);
                     break;
@@ -326,14 +321,12 @@ function CommunicationChannel(WrappedComponent) {
                 case 'GetActiveSlate':
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
+                case 'importpopupmessage':
+                    this.props.setImportMessageForWordImport()
+                    break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
                     break;
-                case 'currentSlateLOAfterWarningPopup':
-                    this.handleLOAfterWarningPopup(message)
-                    break;
-                case 'unlinkLOFailForWarningPopup':
-                    this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedCatToolData' :
                     //Check if message.asset is array
@@ -758,97 +751,13 @@ function CommunicationChannel(WrappedComponent) {
                 'message': {}
             })
         }
-
-        handleLOAfterWarningPopup = (message) => {
-            if (message.unlinkStatus == true) {
-                /** Save button Click - Add new Ext LOs*/
-                if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
-                    this.handleExtLOData(message);
-                }
-                /** Cancel button Click Unlink All LOs from MA Elements */
-                else {
-                    this.handleUnlinkedLOData(message);
-                }
-            }
-        }
-
-        handleUnlinkedLODataCypress = (message) => {
-            if (message.statusForSave) {
-                let slateData = this.props.slateLevelData;
-                const newSlateData = JSON.parse(JSON.stringify(slateData));
-                const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
-                let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
-                let lOsToUpdate=[]
-                message?.unlinkedLOs.forEach((loItem, index) => {
-                    let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
-                    if (metadataElems.length) {
-                        let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
-                        if (index == 0) {
-                            LOWipData.elementdata.loref = message.loObj ? message.loObj.id ? message.loObj.id : message.loObj.loUrn : "";
-                        }
-                        lOsToUpdate.push(LOWipData);
-
-                    }
-                })
-                let requestPayload = {
-                    "loData": lOsToUpdate
-                }
-                this.props.updateElement(requestPayload);
-                this.props.isLOExist(message);
-                this.props.currentSlateLO([message.loObj ?? {}]);
-                this.props.currentSlateLOMath([message.loObj ?? {}]);
-            }
-        }
-        /**
-         * This function is responsible for handling the unlinked LOs w.r.t. Slate
-         * and updating the Metadata Anchor Elements on Slate after warning Popup Action
-         * @param {*} message Event Message on Saving Ext LF LO data for Slate
-         */
-        handleUnlinkedLOData = (message) => {
-            let slateData = this.props.slateLevelData;
-            const newSlateData = JSON.parse(JSON.stringify(slateData));
-            const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
-            let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
-            let loDataToUpdate = [], lOsUpdated=[];
-            /** Update All Metadata Anchor Elements for LOs Unlinked */
-            message?.unlinkedLOs?.forEach(loItem => {
-                let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
-                if (metadataElems.length) {
-                    let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
-                    loDataToUpdate = loDataToUpdate.concat(metadataElems)
-                    lOsUpdated.push(LOWipData);
-                }
-            })
-            let requestPayload = {
-                "loData": lOsUpdated
-            }
-            this.props.updateElement(requestPayload)
-            /** When All Slate LOs unlinked but no new LO linked */
-            if (message && message.unlinkStatus === true && message.currentSlateLF === "") {
-                this.props.isLOExist(message);
-                this.props.currentSlateLO([]);
-                this.props.currentSlateLOMath([]);
-                this.props.currentSlateLOType("");
-            }
-            /** When All Slate LOs not unlinked */
-            else if (message && message.unlinkStatus === false) {
-                this.props.currentSlateLOType(message.currentSlateLF);
-                const existingSlateLOs = this.props.currentSlateLOData
-                const updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.unlinkedLOs?.indexOf(existingLO.id) < 0);
-                this.props.currentSlateLO(updatedSlateLOs);
-                this.props.currentSlateLOMath(updatedSlateLOs);
-            }
-            this.setState({
-                showBlocker: false
-            });
-        }
         /**
          * This function is responsible for handling the updated LOs w.r.t. Slate
          * and updating the Metadata Anchor Elements on Slate
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
         handleExtLOData = message => {
-            if (message.statusForExtLOSave) {
+            if (message?.statusForExtLOSave) {
                 if (message?.loLinked?.length) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                     message.loLinked.map(loData => {
@@ -875,11 +784,11 @@ function CommunicationChannel(WrappedComponent) {
                 } else {
                     updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
                 }
-                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs.length} )
+                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs?.length} )
                 this.props.isLOExist(externalLOStatusMessage);
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
-                this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
+                this.props.currentSlateLOType(updatedSlateLOs?.length ? EXTERNAL_LF : "");
                 this.props.updateLastAlignedLO(message.lastAlignedExternalLO);
 
                 let lastAlignedLos = localStorage.getItem('lastAlignedLos');

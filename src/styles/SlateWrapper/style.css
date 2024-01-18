@@ -345,3 +345,55 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 .ownerSlateBackGround{
     background-color: #E7F7F6 !important;
 }
+
+.alert{
+    color: #4D003C !important;
+    background-color: #FFEBFC !important;
+    width: 350px;
+    box-sizing: border-box;
+}
+
+.alert .MuiTypography-body1{
+    color: #4D003C !important;  
+    font-size: 16px !important;  
+}
+
+.complete-alert{
+    color: #233600 !important;
+    background-color: #F1FFD3 !important;
+    width: 369px;
+    box-sizing: border-box;
+}
+
+.complete-alert .MuiTypography-body1{
+    color: #233600 !important;  
+    font-size: 16px !important;  
+}
+
+.import-alert .MuiAlert-icon{
+    color:  #9C007C !important;
+}
+
+.imported-alert .MuiAlert-icon{
+    color:  #426100 !important;
+}
+
+.alert-message-content{
+    font-size: 14px;
+}
+
+.complete-alert-message{
+    color: #233600;
+    font-size: 14px;
+}
+
+.closeIcon {
+    padding: 4px 5px !important;
+    color: #4F616A !important;
+}
+
+.complete-close-icon {
+    width: 18px !important;
+    height: 18px !important;
+}
+
