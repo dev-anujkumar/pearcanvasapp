@@ -920,7 +920,8 @@ function CommunicationChannel(WrappedComponent) {
                     let tocRearrage = this.props.permissions.includes('toc_rearrange_entry') ? 'toc_rearrange_entry' : ""
                     let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
                     let unlinkContent = this.props.permissions.includes('unlink_content_from_TOC') ? 'unlink_content_from_TOC' : ""
-                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd, unlinkContent]
+                    const loEditMetadata = this.props.permissions.includes('lo_edit_metadata') ? 'lo_edit_metadata' : ""
+                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd, unlinkContent, loEditMetadata]
                 }
                 permissionObj.roleId = this.props.roleId;
             }

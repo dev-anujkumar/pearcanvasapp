@@ -1980,7 +1980,9 @@ describe('Testing communication channel', () => {
                 'toc_edit_title',
                 'toc_delete_entry',
                 'toc_rearrange_entry',
-                'toc_add_pages'
+                'toc_add_pages',
+                "unlink_content_from_TOC",
+                "lo_edit_metadata"
             ]
         },
         metadataReducer: {

@@ -96,11 +96,13 @@ class SlateTagDropdown extends React.Component {
     const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
     const isSlateLocked = checkSlateLock(slateLockInfo)
-    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
+    const hasLoEditPermission = this.props.permissions.includes('lo_edit_metadata')
+    if (currentSlateLF === CYPRESS_LF && hasLoEditPermission){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
-    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
       sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
+      // isApprovedSlate key is used both for approved slate and reviewer user
       sendDataToIframe({
         'type': OpenLOPopup,
         'message': {
@@ -118,7 +120,7 @@ class SlateTagDropdown extends React.Component {
           'projectSharingRole': projectSharingRole,
           'isSubscribed': isSubscribed,
           'defaultLF': defaultLF,
-          "isApprovedSlate": slateVersioningStatus,
+          "isApprovedSlate": slateVersioningStatus || !hasLoEditPermission,
           'isSlateLocked': isSlateLocked
         }
       })
@@ -197,6 +199,8 @@ class SlateTagDropdown extends React.Component {
     }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
+    const hasLoEditPermission = this.props.permissions.includes('lo_edit_metadata')
+    // isApprovedSlate key is used both for approved slate and reviewer user
     if(popupType==='add'){
       sendDataToIframe({
         'type': OpenLOPopup,
@@ -216,7 +220,7 @@ class SlateTagDropdown extends React.Component {
             'defaultLF': defaultLF,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate': slateVersioningStatus,
+            'isApprovedSlate': slateVersioningStatus || !hasLoEditPermission,
             'isSlateLocked': isSlateLocked
         }
       })
@@ -239,7 +243,7 @@ class SlateTagDropdown extends React.Component {
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate':slateVersioningStatus,
+            'isApprovedSlate': slateVersioningStatus || !hasLoEditPermission,
             'isSlateLocked': isSlateLocked
         }
       })
