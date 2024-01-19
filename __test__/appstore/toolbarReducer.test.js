@@ -1,5 +1,5 @@
 import toolbarReducer from '../../src/appstore/toolbarReducer';
-import { TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK } from '../../src/constants/Action_Constants';
+import { TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK, TOGGLE_UNLOCK_SLATE } from '../../src/constants/Action_Constants';
 
 const INIT_STATE = {
     elemBorderToggle: true,
@@ -18,6 +18,10 @@ const pageNumberExpectedState={
 const spellcheckExpectedState={
     ...INIT_STATE,
     spellCheckToggle: false
+}
+const toggleUnlockSlateExpectedState={
+    ...INIT_STATE,
+    unlockSlateToggle: true
 }
 describe('testing Toolbar Reducer cases --', () => {
 
@@ -46,6 +50,12 @@ describe('testing Toolbar Reducer cases --', () => {
                 spellCheckToggle: false
                }
            })).toEqual(spellcheckExpectedState);
+       })
+       it('Change unlock slate Toggle ', () => {
+        expect(toolbarReducer(INIT_STATE, {
+               type: TOGGLE_UNLOCK_SLATE,
+               payload: true
+           })).toEqual(toggleUnlockSlateExpectedState);
        })
 });
 

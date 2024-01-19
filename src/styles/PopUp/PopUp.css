@@ -1519,6 +1519,7 @@ ol li.listItemNumeroUnoLowerRoman {
   flex-direction: row;
   justify-content: end;
   width: 100%;
+  margin-top: 18px;
 }
 
 .import-warning-checkbox-message{

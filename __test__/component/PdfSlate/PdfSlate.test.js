@@ -248,37 +248,21 @@ describe('1. PDF Slate test cases', () => {
 		});
 	});
 	describe('1.6 Test getAlfrescoData Function', () => {
-		const pdfData = {
-			content: {
-				mimeType: 'media/pdf'
-			},
-			smartLinkDesc:{
-				smartLinkType : 'eps media'
-			},
-			properties: {
-				"cm:description": "eps media",
-				"cm:title": "Test Pdf",
-				"avs:url": "https://www.pearsonhighered.com"
-			},
-			"institution-urls": [{
-				publicationUrl: "https://www.pearsonhighered.com"
-			}],
-			id: '007'
-		};
-		const pdfData1 = {
-			content: {
-				mimeType: 'media/pdf'
-			},
-			smartLinkDesc:{
-				smartLinkType : 'eps media'
-			},
-			properties: {},
-			"institution-urls": [{
-				publicationUrl: "https://www.pearsonhighered.com"
-			}],
-			id: '007'
-		};
-		it('1.6.1 If Conditions - IsPDF == true & eps media', () => {
+		it('1.6.1 > smartLinkString > true', () => {
+			const pdfData = {
+				content: {
+					mimeType: 'media/mp3'
+				},
+				properties: {
+					"cm:description": "{\"smartLinkType\":\"pdf\"}",
+					"avs:url": "https://www.pearsonhighered.com",
+					"cm:title": "Test Pdf"
+				},
+				"institution-urls": [{
+					publicationUrl: "https://www.pearsonhighered.com"
+				}],
+				id: '007'
+			};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
@@ -286,64 +270,81 @@ describe('1. PDF Slate test cases', () => {
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.2 If Conditions - IsPDF == true & non eps media', () => {
-			const newPdfData =  {...pdfData,properties: {
-				"cm:description": "non eps media"
-			}};
+		it('1.6.1 > (smartLinkType?.toLowerCase() NOT pdf)', () => {
+			const pdfData = {
+				content: {
+					mimeType: 'media/pdf'
+				},
+				properties: {
+					"cm:description": "{\"smartLinkType\":\"test\"}",
+					"avs:url": "https://www.pearsonhighered.com",
+					"cm:title": "Test Pdf"
+				},
+				"institution-urls": [{
+					publicationUrl: "https://www.pearsonhighered.com"
+				}],
+				id: '007'
+			};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
-			compInstance.getAlfrescoData(newPdfData);
+			compInstance.getAlfrescoData(pdfData);
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.3 Else Condition - IsPDF !== true', () => {
-			const newPdfData =  {...pdfData, content: {
-				mimeType: 'media/mp3'
-			}};
+		it('1.6.2 > smartLinkString > true > without ["avs:url"]', () => {
+			const pdfData = {
+				content: {
+					mimeType: 'media/mp3'
+				},
+				properties: {
+					"cm:description": "{\"smartLinkType\":\"pdf\"}",
+				},
+				"institution-urls": [{
+					publicationUrl: "https://www.pearsonhighered.com"
+				}],
+				id: '007'
+			};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
-			compInstance.getAlfrescoData(newPdfData);
+			compInstance.getAlfrescoData(pdfData);
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.4 If Condition - pdfData?.id ', () => {
-			const newPdfData =  {...pdfData, properties: {
-				"cm:description": "pdf"
-			}, id: '007'};
+		it('1.6.3 > smartLinkString > false', () => {
+			const pdfData = {
+				content: {
+					mimeType: 'media/mp3'
+				},
+				properties: {
+					"cm:description": "eps media",
+				},
+			};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
-			compInstance.getAlfrescoData(newPdfData);
+			compInstance.getAlfrescoData(pdfData);
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.5 Else Condition - pdfData?.id ', () => {
-			const newPdfData =  {...pdfData, id: ''};
+		it('1.6.4 > if (pdfData?.id) > else', () => {
+			const pdfData = {
+				content: {
+					mimeType: 'media/mp3'
+				},
+				properties: {
+					"cm:description": "{\"smartLinkType\":\"pdf\"}",
+					"avs:url": "https://www.pearsonhighered.com"
+				},
+				"institution-urls": [{
+					publicationUrl: "https://www.pearsonhighered.com"
+				}],
+			};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
-			compInstance.getAlfrescoData(newPdfData);
-			expect(spy).toHaveBeenCalled();
-			spy.mockClear();
-		});
-		it('1.6.6 Inside if condition - SmartLinkPath false conditon', () => {
-			const compInstance = pdfSlateInstance(props);
-			expect(compInstance).toBeDefined();
-			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
-			compInstance.getAlfrescoData(pdfData1);
-			expect(spy).toHaveBeenCalled();
-			spy.mockClear();
-		});
-		it('1.6.7 Inside if Condition - pdfData?.id ', () => {
-			const newPdfData =  {...pdfData1, smartLinkDesc: {
-				smartLinkType: 'pdf'
-			}};
-			const compInstance = pdfSlateInstance(props);
-			expect(compInstance).toBeDefined();
-			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
-			compInstance.getAlfrescoData(newPdfData);
+			compInstance.getAlfrescoData(pdfData);
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});

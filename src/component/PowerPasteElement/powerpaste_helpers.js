@@ -116,7 +116,7 @@ export default {
       node.removeAttribute("dir");
     }
 
-    if (depth <= 4) {
+    if (depth <= 10) {
       this.addOListClasses(node.firstElementChild, depth);
       this.addOListClasses(node.nextElementSibling, depth);
     }
@@ -315,7 +315,7 @@ export default {
       );
     }
 
-    if (depth <= 4) {
+    if (depth <= 10) {
       this.addUListClasses(node.firstElementChild, depth);
       this.addUListClasses(node.nextElementSibling, depth);
     }

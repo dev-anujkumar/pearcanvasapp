@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 // IMPORT - Assets //
 import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
-import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
+import { approvedIcon, dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import { connect } from 'react-redux';
 import { showTocBlocker, disableHeader, hideTocBlocker, hideToc } from '../../js/toggleLoader';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
@@ -12,16 +12,14 @@ import { UsageTypeDropdown } from '../AssessmentSlateCanvas/UsageTypeDropdown/Us
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import { setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus, setAssessmentItemTitle,
+import { setAssessmentUsageType, setAssessmentProperties, setAssessmentItemTitle,
         getAssessmentTitle } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import PopUp from '../PopUp';
-import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
-import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions,
-        setElmPickerData, setNewItemFromElm, saveUpdatedAssessmentArray } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { PUF, LEARNOSITY, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { checkEntityUrn, setElmPickerData, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
-import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
+import { ELM_CREATE_IN_PLACE, OPEN_ELM_PICKER, SAVE_ELM_DATA, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import moment from 'moment';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -47,7 +45,9 @@ class ElementSingleAssessment extends Component {
             searchTitle : '',
             filterUUID : '',
             openedFrom:'',
-            assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
+            assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model),
+            assessmentItemStatus: "wip",
+            dateModified: ''
         };
     }
 
@@ -66,22 +66,31 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidUpdate() {
-        const { assessmentReducer } = this.props;
-        const { elementType, assessmentId } = this.state;
-        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentReducer)){
-            const { dataFromElm } = assessmentReducer;
-            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
-                if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.elmUrl && dataFromElm.usageType) {
-                    window.open(dataFromElm.elmUrl);
-                    handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT_ITEM, 'add', 'fromCreate');
-                    this.props.setElmPickerData({});
-                } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.pufObj) {
-                    this.addPufAssessment(dataFromElm.pufObj);
-                    this.props.setElmPickerData({});
-                }
-            }else if (assessmentId && assessmentReducer[assessmentId]?.items) {
-                this.updateElmLearnosityOnRefresh(this.props);
+        const { assessmentReducer, model } = this.props;
+        const { elementType, assessmentId, assessmentItemId, assessmentTitle, assessmentItemTitle } = this.state;
+        const elmAssessmentData = assessmentReducer?.updatedAssessmentData?.filter((item) => {
+            return item?.versionUrn == model?.id;
+        })
+        if (!(!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentReducer))){
+            return;
+        }
+        const { dataFromElm } = assessmentReducer;
+        const assessmentItemUpdate = elmAssessmentData?.length && (elmAssessmentData[0]?.assessmentVersionUrn !== assessmentId || elmAssessmentData[0]?.assessmentItemVersionUrn !== assessmentItemId || elmAssessmentData[0]?.assessmenttitle !== assessmentTitle || elmAssessmentData[0]?.assessmentitemtitle !== assessmentItemTitle)
+        if(!assessmentReducer.dataFromElm && assessmentReducer?.updatedAssessmentData?.length && assessmentItemUpdate) {
+            if(elmAssessmentData?.length){
+                this.updateAssessment(elmAssessmentData[0]) // function to update the item if update available
             }
+        } else if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
+            if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl && dataFromElm.usageType) {
+                window.open(dataFromElm.elmUrl);
+                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT_ITEM, 'add', 'fromCreate');
+                this.props.setElmPickerData({});
+            } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
+                this.addPufAssessment(dataFromElm.pufObj);
+                this.props.setElmPickerData({});
+            }
+        }else if (assessmentId && assessmentReducer[assessmentId]?.items) {
+            this.updateElmLearnosityOnRefresh(this.props);
         }
     }
 
@@ -172,24 +181,26 @@ class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        const isElmLearnosity = (this.state.elementType == PUF || this.state.elementType == LEARNOSITY) ? true : false
-        if (isElmLearnosity && this.state.assessmentId && this.state.activeAsseessmentUsageType !== usageType) {
-            let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
-            const { assessmentReducer } = this.props;
-            const { assessmentId } = this.state
-            const newAssessmentData = assessmentReducer[assessmentId]
-            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
-            if (newAssessmentData?.intendedUsage.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+        const { elementType, assessmentId, activeAsseessmentUsageType } = this.state
+        const { assessmentReducer, model } = this.props;
+        const isElmLearnosity = elementType == PUF || elementType == LEARNOSITY
+        if (isElmLearnosity && assessmentId && activeAsseessmentUsageType !== usageType) {
+            let usageTypeList = assessmentReducer?.usageTypeListData;
+            const elmAssessmentData = assessmentReducer?.updatedAssessmentData?.filter((item) => {
+                return item?.versionUrn == model?.id;
+            })
+            const updatedUsageType = usageTypeList?.find((type) => type?.label === usageType)
+            if (elmAssessmentData?.length && elmAssessmentData[0]?.usageType && (elmAssessmentData[0].usageType?.toLowerCase() !== updatedUsageType?.usagetype?.toLowerCase())) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType
                 });
             }
-            else if (this.state.activeAsseessmentUsageType !== usageType) {
+            else if (activeAsseessmentUsageType !== usageType) {
                 this.setChangeUsageType(usageType)
             }
         }
-        else if (this.state.activeAsseessmentUsageType !== usageType) {
+        else if (activeAsseessmentUsageType !== usageType) {
             this.setChangeUsageType(usageType)
         }
         this.setState({
@@ -376,6 +387,16 @@ class ElementSingleAssessment extends Component {
     }
     /** -------------------------------------ELM - Assessments-------------------------------------------- */
 
+    /***
+    *  @description - This is the function to update Elm/Learnosity Embedded-Assessment
+    * @param pufObj - The object contains data about Elm/Learnosity Assessment
+    */
+    updateAssessment = (pufObj) => {
+        this.setState({ assessmentId: pufObj?.assessmentVersionUrn, assessmentItemId: pufObj?.assessmentItemVersionUrn, assessmentTitle: pufObj?.assessmenttitle, assessmentItemTitle: pufObj?.assessmentitemtitle },
+            () => {
+                this.saveAssessment(() => {});
+            })
+    }
 
     /***
     *  @description - This is the function to add Elm/Learnosity to Embedded-Assessment
@@ -383,32 +404,9 @@ class ElementSingleAssessment extends Component {
     */
     addPufAssessment = (pufObj, cb) => {
         if(pufObj.elementUrn === this.props.elementId){
-
-            let usageTypeList = this.props?.assessmentReducer?.usageTypeListData
-            /**if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
-                showTocBlocker();
-                disableHeader(true);
-                const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
-                this.setState({
-                    activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType
-                });
-            }*/
             this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },
                 () => {
-                    const itemData = {
-                        itemId: pufObj.itemid,
-                        parentId: pufObj.id,
-                        targetItemid: pufObj.itemid
-                    }
-                    const elmData = { targetId: pufObj.id }
-                    this.props.fetchAssessmentMetadata('assessment', 'fromAddElm', elmData, itemData);
-                    let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid;
-                    this.saveAssessment(() => {
-                        if (oldAssessmentId && oldAssessmentId !== pufObj.id) {
-                            let data = [oldAssessmentId, pufObj.id]
-                            this.props.checkEntityUrn(data)
-                        }
-                    });
+                    this.saveAssessment(() => {});
                 })
             if (cb) {
                 cb();
@@ -432,21 +430,6 @@ class ElementSingleAssessment extends Component {
             disableHeader(false);
             hideTocBlocker(false);
         }))
-    }
-
-    /*** @description This function is to show Approved/Unapproved Status on AS */
-    showElmVersionStatus = () => {
-        let elmAssessment = this.props.assessmentReducer[this.state.assessmentId];
-        if (elmAssessment) {
-            return (<ElmUpdateButton
-                elmAssessment={elmAssessment}
-                updateElmVersion={this.updateElmAssessment}
-                buttonText={ELM_UPDATE_BUTTON}
-                embeddedElmClass={'embedded-assessment'}
-                status={true}
-                assessmentItem={true}
-            />)
-        }
     }
 
     /*** @description This function is used to open Version update Popup */
@@ -486,57 +469,6 @@ class ElementSingleAssessment extends Component {
         this.props.showBlocker(value);
     }
 
-    /*** @description This function is used to update elm assessment after click on update from Version update Popup */
-    updateElmAssessment = async (event) => {
-        this.showCanvasBlocker(false);
-        let oldWorkUrn = this.state.assessmentId
-        let itemData = {
-            itemId: this.state.assessmentItemId,
-            parentId: this.state.assessmentId,
-            targetItemid: this.state.assessmentItemId
-        }
-        let oldReducerData = this.props.assessmentReducer[this.state.assessmentId];
-        oldReducerData.targetId = this.state.assessmentId;
-        await this.props.fetchAssessmentVersions(oldReducerData.assessmentEntityUrn, 'assessmentUpdate', oldReducerData.createdDate, oldReducerData, itemData);
-        const latestReducerData = this.props.assessmentReducer[this.state.assessmentId]
-        const { latestVersion, secondLatestVersion, items } = latestReducerData;
-        const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
-        const updatedItem = items && items.find(item => item.oldItemId == this.state.assessmentItemId)
-        let updatedElmObj = {
-            id: newVersion.id,
-            itemid: updatedItem && updatedItem.latestItemId,
-            title: latestVersion.title,
-            itemtitle: updatedItem && updatedItem.latestItemTitle,
-            usagetype: this.state.activeAsseessmentUsageType
-        }
-        this.updatePufAssessment(updatedElmObj, oldWorkUrn);
-        disableHeader(false);
-        hideTocBlocker(false);
-    }
-
-    /***
-    *  @description - This is the function to add Elm/Learnosity to Embedded-Assessment
-    * @param pufObj - The object contains data about Elm/Learnosity Assessment
-    */
-    updatePufAssessment = (pufObj, oldElmAssessmentId) => {
-        showTocBlocker();
-        disableHeader(true);
-        const { assessmentItemAutoUpdateData } = this.props.assessmentReducer
-        // checking if the data for update is already there in assessmentItemAutoUpdateData reducer
-        const filteredAssessmentData = assessmentItemAutoUpdateData?.some((item) =>
-        item.oldAssessmentId === oldElmAssessmentId &&
-        item.newAssessmentId === pufObj.id);
-        this.props.saveAutoUpdateData(oldElmAssessmentId, pufObj.id);
-        // pushing the unique oldAssessmentId and newAssessmentId = pufObj.id in store
-        if(!filteredAssessmentData){
-            this.props.saveUpdatedAssessmentArray(oldElmAssessmentId, pufObj.id)
-        }
-        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemtitle },
-            () => {
-                this.saveAssessment();
-            })
-    }
-
     /**
      * Prevents event propagation and default behaviour
      * @param {*} event event object
@@ -572,11 +504,7 @@ class ElementSingleAssessment extends Component {
     renderAssessmentType = (model) => {
         var assessmentJSX;
         let assessmentKeys = setAssessmentProperties(this.state.elementType)
-        let isElmStatus = checkElmAssessmentStatus(this.state.assessmentId, this.props);
-        const { assessmentid } = model.figuredata.elementdata;
         const {assessmentItemId, assessmentId, activeAsseessmentUsageType, elementType } = this.state
-        const oldReducerData = this.props.assessmentReducer[assessmentid]
-        const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
             <figure className={`figureAssessment ${elementType !== TDX ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
@@ -598,8 +526,77 @@ class ElementSingleAssessment extends Component {
                         </div>
                     </div >
                 </div>
-                {oldReducerData && <div className="embedded-assessment-status">
-                    <div className={`${isElmStatus == true ? "has-update" : ""}`}>{(elementType == PUF || elementType == LEARNOSITY) && this.showElmVersionStatus()}</div>
+                <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
+                    data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
+                    data-assessment={assessmentId ? assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
+                    data-assessment-item={assessmentItemId ? assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
+                    data-item-type={elementType !== TDX ? "assessmentItem" : "tdxAssessmentItem"}
+                    onClick={(e) => activeAsseessmentUsageType ? this.addAssessmentResource(e) : null}>
+                    <img src={DEFAULT_ASSESSMENT_SOURCE} data-src={DEFAULT_ASSESSMENT_SOURCE}
+                        title="View Image" alt="" className={`imageTextWidth lazyloaded imageeee ${activeAsseessmentUsageType ? "" : "default-img"}`}></img>
+                </div>
+            </figure>
+
+        </div>
+        return assessmentJSX;
+    }
+
+    // rending the assessment item header having id and title details
+    renderElmAssessmentHeader = (modelProps) => {
+        const { assessmentTitle, assessmentId, assessmentItemTitle, assessmentItemId } = this.state;
+        const { assessmentid, assessmentitemid, assessmentitemtitle } = modelProps.figuredata.elementdata;
+        const headerJSX = <div className='assessment-metadata-container'>
+            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>TITLE: </p>
+            <span className='embedded-title'>{assessmentTitle}</span></div>
+            <div className='assessment-metadata'><p className='single-assessment-title'>ID: </p>
+            <span className='embedded-id'>{assessmentId ? assessmentId : (assessmentid ? assessmentid : "")}</span></div>
+            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>ITEM TITLE: </p>
+            <span className='embedded-itemtitle'>{assessmentItemTitle ? assessmentItemTitle : (assessmentitemtitle ? assessmentitemtitle : "")}</span></div>
+            <div className='assessment-metadata'><p className='single-assessment-title'>ITEM ID: </p>
+            <span className='embedded-itemid'>{assessmentItemId ? assessmentItemId : (assessmentitemid ? assessmentitemid : "")}</span></div>
+        </div>
+        return headerJSX;
+    }
+
+    /*** @description - This function is for handling the different types of figure-element of Elm and Learnosity Assessment.
+    * @param model object that defined the type of element
+    */
+    renderElmAssessmentType = (model) => {
+        let assessmentJSX;
+        const { assessmentReducer } = this.props;
+        // filtering the current assessment item data from API response
+        const elmAssessmentData = assessmentReducer?.updatedAssessmentData?.filter((item) => {
+            return item?.versionUrn == model?.id;
+        })
+        const {assessmentItemId, assessmentId, activeAsseessmentUsageType, elementType } = this.state
+        const assessmentKeys = setAssessmentProperties(elementType)
+        const approveText = elmAssessmentData?.length && elmAssessmentData[0]?.status?.includes('final') ? "Approved" : "Unapproved"
+        const approveIconClass = elmAssessmentData?.length && elmAssessmentData[0]?.status?.includes('final') ? "enable" : "disable"
+        const assessmentCreatedDate = elmAssessmentData?.length && elmAssessmentData[0]?.dateModified ? elmAssessmentData[0]?.dateModified : ''
+        /*JSX for the Single Assessment Element */
+        assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
+            <figure className="figureAssessment figureAssessmentItem">
+                {model.figuredata.elementdata && this.renderElmAssessmentHeader(model)}
+                <div className="singleAssessment_Dropdown_Container">
+                    <div className="single-assessment-usagetype-container">
+                        <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
+                        <div className={`singleAssessment_Dropdown_activeDropdown isElmUpdate`} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
+                            <span className="singleAssessment_Dropdown_currentLabel">{activeAsseessmentUsageType ? activeAsseessmentUsageType : 'Select'}</span>
+                            <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
+                            {
+                                this.state.asseessmentUsageTypeDropdown ? (
+                                    <ul className="slate_assessment_type_dropdown_options">
+                                        {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentTypeChange} />}
+                                    </ul>
+                                ) : null
+                            }
+                        </div>
+                    </div >
+                </div>
+                {assessmentCreatedDate && <div className="embedded-assessment-status">
+                <div className={`elm-status-div embedded-assessment`}>{approveText === "Unapproved" ? "" :
+                <span className={`approved-button-embedded ${approveIconClass}`}>{approvedIcon}</span>}
+                <p className={`approved-button-text-embedded ${approveIconClass}`}>{approveText}</p></div>
                     <div className="assessment-dateModified assessmentItem_Timestamp">
                         <span className='last-updated-time'>|</span>
                         <div className="embedded-assessment-time">
@@ -609,7 +606,7 @@ class ElementSingleAssessment extends Component {
                         </div>
                     </div>
                 </div>}
-                <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
+                <div className={`pearson-component ${assessmentKeys?.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
                     data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
                     data-assessment={assessmentId ? assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
                     data-assessment-item={assessmentItemId ? assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
@@ -626,9 +623,10 @@ class ElementSingleAssessment extends Component {
 
     render() {
         const { model, index } = this.props;
+        const elmAssessmentItems = model?.figuredata?.elementdata?.assessmentformat === PUF || model?.figuredata?.elementdata?.assessmentformat === LEARNOSITY
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
-                {this.renderAssessmentType(model, index)}
+                {elmAssessmentItems ? this.renderElmAssessmentType(model, index) : this.renderAssessmentType(model, index)}
                 {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'}
                 closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX}
@@ -677,17 +675,12 @@ const mapStateToProps = state => {
 };
 
 const mapActionToProps = {
-    setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting: assessmentSorting,
-    checkEntityUrn:checkEntityUrn,
-    fetchAssessmentMetadata: fetchAssessmentMetadata,
-    updateAssessmentVersion: updateAssessmentVersion,
-    saveAutoUpdateData: saveAutoUpdateData,
-    fetchAssessmentVersions: fetchAssessmentVersions,
-    setElmPickerData: setElmPickerData,
-    setNewItemFromElm: setNewItemFromElm,
-    saveUpdatedAssessmentArray: saveUpdatedAssessmentArray
+    setCurrentCiteTdx,
+    setCurrentInnerCiteTdx,
+    assessmentSorting,
+    checkEntityUrn,
+    setElmPickerData,
+    setNewItemFromElm,
 }
 
 export default connect(
