@@ -511,6 +511,10 @@ class ElementAudioVideo extends Component {
                 break;
         }
 
+        if(config.alfrescoMetaData?.alfresco?.siteId !== this.props.model?.alfrescoPlatformMetadata?.siteId){
+            const data = {}
+            handleAlfrescoSiteUrl(this.props.elementId, data)
+        }
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
