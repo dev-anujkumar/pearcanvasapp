@@ -49,7 +49,7 @@ export default {
    * @param {Number} depth level of nesting
    */
   addOListClasses: function (node, depth) {
-    if (node === null || node === undefined) {
+    if (node === null || node === undefined || node.nextElementSibling?.tagName === "OL") {
       return;
     }
 
@@ -118,7 +118,12 @@ export default {
 
     if (depth <= 10) {
       this.addOListClasses(node.firstElementChild, depth);
-      this.addOListClasses(node.nextElementSibling, depth);
+      if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "OL") {
+        depth = 1;
+        this.addOListClasses(node.nextElementSibling, depth);
+      } else {
+        this.addOListClasses(node.nextElementSibling, depth);
+      }
     }
   },
 
@@ -287,11 +292,12 @@ export default {
    * @param {Number} depth level of nesting
    */
   addUListClasses: function (node, depth) {
-    if (node === null || node === undefined) {
+    if (node === null || node === undefined || node.nextElementSibling?.tagName === "UL" ) {
       return;
     }
 
     node.removeAttribute("style");
+    node.classList = ''
     if (node.tagName === "UL") {
       node.classList.add("disc");
       if (depth === 4) {
@@ -317,7 +323,12 @@ export default {
 
     if (depth <= 10) {
       this.addUListClasses(node.firstElementChild, depth);
-      this.addUListClasses(node.nextElementSibling, depth);
+      if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "UL") {
+        depth = 1;
+        this.addUListClasses(node.nextElementSibling, depth);
+      } else {
+        this.addUListClasses(node.nextElementSibling, depth);
+      }
     }
   },
 
