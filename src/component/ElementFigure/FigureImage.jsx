@@ -410,7 +410,7 @@ class FigureImage extends Component {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData, currentAsset);
                 this.props.alfrescoPopup(payloadObj);
-                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             } else {
                 this.props.accessDenied(true)
             }

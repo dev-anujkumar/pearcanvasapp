@@ -345,7 +345,7 @@ function CommunicationChannel(WrappedComponent) {
                         let changedSiteUrl = false, changedAlfrescoData = {}
                         if (message.site && Object.keys(message.site)?.length > 0) {
                             const projectAlfrescoNodeRef = this.props.alfrescoReducer?.savedElement?.citeNodeRef ?? ""
-                            if (message.site?.citeNodeRef !== projectAlfrescoNodeRef) {
+                            if (message.site?.rootNodeId !== projectAlfrescoNodeRef) {
                                 changedSiteUrl = true
                                 changedAlfrescoData = {
                                     guid: message.site?.rootNodeId,

@@ -725,7 +725,7 @@ class Interactive extends React.Component {
                         rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
                         currentAsset,
-                        defaultCategory:"smartlink"
+                        defaultCategory:currentAsset?.type
                      }
                         sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                         const messageDataToSaveSmartlink = {
@@ -742,7 +742,7 @@ class Interactive extends React.Component {
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                    this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, currentAsset);
-                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             }
             else {
                 this.props.accessDenied(true)

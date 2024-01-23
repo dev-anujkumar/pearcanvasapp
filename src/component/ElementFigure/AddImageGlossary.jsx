@@ -76,7 +76,7 @@ class AddImageGlossary extends Component {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 let currentAsset = { type: "image" }
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isImageGlossary, currentAsset)
-                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
 
             } else {
                 this.props.accessDenied(true)
@@ -95,29 +95,6 @@ class AddImageGlossary extends Component {
             currentAsset
         }
         that.props.alfrescoPopup(payloadObj)
-        // return axios.get(url,
-        //     {
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'ApiKey': config.CMDS_APIKEY,
-        //             'Content-Type': 'application/json',
-        //             'myCloudProxySession': config.myCloudProxySession
-        //         }
-        //     })
-        //     .then(function (response) {
-        //        let payloadObj = {
-        //         launchAlfrescoPopup: true,
-        //         alfrescoPath: alfrescoPath,
-        //         alfrescoListOption: response.data.list.entries,
-        //         id,
-        //         isImageGlossary,
-        //         currentAsset
-        //     }
-        //         that.props.alfrescoPopup(payloadObj)
-        //     })
-        //     .catch(function (error) {
-        //         console.log("Error IN SITE API", error)
-        //     });
     }
 
 

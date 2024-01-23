@@ -91,7 +91,7 @@ export const handleC2MediaClick = (permissions, editor, element, props) => {
                     elementId: element.id,
                     editor: true,
                     currentAsset,
-                    defaultCategory:'image'
+                    defaultCategory:currentAsset?.type
                 }
                 sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                 const messageDataToSaveInlineImage = {

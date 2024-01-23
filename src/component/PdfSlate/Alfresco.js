@@ -47,7 +47,7 @@ export const handleC2MediaClick = (props) => {
         if (props.permissions.includes('alfresco_crud_access')) {
             let currentAsset = { type: "Pdf" }
             handleSiteOptionsDropdown(alfrescoPath, props.element.id, props, currentAsset);
-            sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
+            sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
         } else {
             props.accessDenied(true)
         }

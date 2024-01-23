@@ -48,7 +48,6 @@ class AddAudioBook extends React.Component {
             return true
         }
         let alfrescoPath = config.alfrescoMetaData;
-        console.log('config.alfrescoMetaData', config.alfrescoMetaData);
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
@@ -66,7 +65,7 @@ class AddAudioBook extends React.Component {
                         elementId: this.props.elementId,
                         calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary,
                         currentAsset: { type: "audio" },
-                        defaultCategory:"audio"
+                        defaultCategory: currentAsset?.type
                     }
 
                     sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
@@ -84,13 +83,13 @@ class AddAudioBook extends React.Component {
                 }
             } else {
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary, currentAsset);
-                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: true } })
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 let currentAsset = { type: "audio" }
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary, currentAsset);
-                sendDataToIframe({ 'type': 'launchSitePicker', 'message': { browse: true } })
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             } else {
                 this.props.accessDenied(true)
             }
