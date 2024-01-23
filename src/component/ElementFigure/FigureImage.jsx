@@ -185,9 +185,11 @@ class FigureImage extends Component {
                 decorative: true
             }
         }
-        if(config.alfrescoMetaData?.alfresco?.siteId !== this.props.model?.alfrescoPlatformMetadata?.siteId){
-            handleAlfrescoSiteUrl(this.props.elementId, {})
-        }
+        // Reset state on click of delete Asset from Figure Element
+        this.setState({
+            alfrescoSiteData: {}
+        })
+        handleAlfrescoSiteUrl(this.props.elementId, {})
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
