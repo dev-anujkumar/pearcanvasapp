@@ -1,3 +1,5 @@
+import { unorderedList } from "../../images/TinyMce/TinyMce";
+
 export default {
   /**
    * Converts containing tag
@@ -254,7 +256,7 @@ export default {
 
     this.addSpecificOListClasses(firstNode, node?.firstElementChild, depth);
     if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "OL") {
-      depth = 1;
+      depth = 1; // IF next nextElementSibling will be ordered list then we need to reset the depth
       this.addSpecificOListClasses(node?.nextElementSibling, node?.nextElementSibling, depth);
     } else {
       this.addSpecificOListClasses(firstNode, node?.nextElementSibling, depth);
@@ -324,7 +326,7 @@ export default {
     if (depth <= 10) {
       this.addUListClasses(node?.firstElementChild, depth);
       if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "UL") {
-        depth = 1;
+        depth = 1;  // IF next nextElementSibling will be unorderedList then we need to reset the depth
         this.addUListClasses(node?.nextElementSibling, depth);
       } else {
         this.addUListClasses(node?.nextElementSibling, depth);
