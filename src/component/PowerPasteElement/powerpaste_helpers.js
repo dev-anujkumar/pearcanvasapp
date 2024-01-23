@@ -49,7 +49,7 @@ export default {
    * @param {Number} depth level of nesting
    */
   addOListClasses: function (node, depth) {
-    if (node === null || node === undefined || node.nextElementSibling?.tagName === "OL") {
+    if (node === null || node === undefined || node?.nextElementSibling?.tagName === "OL") {
       return;
     }
 
@@ -117,12 +117,12 @@ export default {
     }
 
     if (depth <= 10) {
-      this.addOListClasses(node.firstElementChild, depth);
-      if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "OL") {
+      this.addOListClasses(node?.firstElementChild, depth);
+      if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "OL") {
         depth = 1;
-        this.addOListClasses(node.nextElementSibling, depth);
+        this.addOListClasses(node?.nextElementSibling, depth);
       } else {
-        this.addOListClasses(node.nextElementSibling, depth);
+        this.addOListClasses(node?.nextElementSibling, depth);
       }
     }
   },
@@ -253,9 +253,9 @@ export default {
     }
 
     this.addSpecificOListClasses(firstNode, node?.firstElementChild, depth);
-    if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "OL") {
+    if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "OL") {
       depth = 1;
-      this.addSpecificOListClasses(node.nextElementSibling, node.nextElementSibling, depth);
+      this.addSpecificOListClasses(node?.nextElementSibling, node?.nextElementSibling, depth);
     } else {
       this.addSpecificOListClasses(firstNode, node?.nextElementSibling, depth);
     }
@@ -292,7 +292,7 @@ export default {
    * @param {Number} depth level of nesting
    */
   addUListClasses: function (node, depth) {
-    if (node === null || node === undefined || node.nextElementSibling?.tagName === "UL" ) {
+    if (node === null || node === undefined || node?.nextElementSibling?.tagName === "UL" ) {
       return;
     }
 
@@ -322,12 +322,12 @@ export default {
     }
 
     if (depth <= 10) {
-      this.addUListClasses(node.firstElementChild, depth);
-      if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "UL") {
+      this.addUListClasses(node?.firstElementChild, depth);
+      if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "UL") {
         depth = 1;
-        this.addUListClasses(node.nextElementSibling, depth);
+        this.addUListClasses(node?.nextElementSibling, depth);
       } else {
-        this.addUListClasses(node.nextElementSibling, depth);
+        this.addUListClasses(node?.nextElementSibling, depth);
       }
     }
   },
