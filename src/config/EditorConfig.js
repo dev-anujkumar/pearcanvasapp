@@ -31,7 +31,7 @@ export const EditorConfig = {
             specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry 
             code IndexEntry | customListButton customUoListButton indent outdent | slateTag `,
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste image casechange",
+    plugins: "lists advlist  charmap paste casechange",
 }
 
 export const GlossaryFootnoteEditorConfig = {
