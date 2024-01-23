@@ -682,7 +682,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
         /* This check will get the status of ConditionalContent key based on type of slate and will send message to wrapper */
         if(SLATE_TYPES_FOR_CONDITIONAL_CONTENT?.includes(slateData?.data[manifestURN]?.type)){
-            slateData.data[manifestURN].isConditionalContent = true
             dispatch(setCondtionalContentStatus(slateData?.data[manifestURN]?.isConditionalContent))
             sendDataToIframe({ 'type': 'conditionalContentStatus', 'message': slateData?.data[manifestURN]?.isConditionalContent});
         }
