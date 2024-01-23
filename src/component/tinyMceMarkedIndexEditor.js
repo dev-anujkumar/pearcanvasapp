@@ -25,7 +25,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
       formats: GlossaryFootnoteEditorConfig.formats,
-      plugins: handleTinymceEditorPlugins("placeholder paste"),
+      plugins: handleTinymceEditorPlugins("paste"),
       menubar: false,
       selector: '#markedindex-0',
       inline: true,

@@ -24,7 +24,7 @@ export class ReactEditor extends React.Component {
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
       formats: GlossaryFootnoteEditorConfig.formats,
-      plugins: handleTinymceEditorPlugins("placeholder paste"),
+      plugins: handleTinymceEditorPlugins("paste"),
       menubar: false,
       selector: '#glossary-0',
       inline: true,
