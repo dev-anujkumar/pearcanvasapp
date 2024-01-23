@@ -725,7 +725,7 @@ class Interactive extends React.Component {
                         rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
                         currentAsset,
-                        defaultCategory:currentAsset?.type
+                        defaultCategory: "smartlink"
                      }
                         sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                         const messageDataToSaveSmartlink = {
