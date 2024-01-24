@@ -17,8 +17,12 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         dispatch({
             type: SET_SLATE_LOCK_STATUS,
             payload: {
-                isLocked : false,
-                userId : ""
+                isLocked: false,
+                userId: "",
+                userFirstName: "",
+                userLastName: "",
+                firstName: "",
+                lastName: ""
             }
         })
         return false
@@ -184,13 +188,16 @@ export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
  * Sets User details on slate from count API response
  * @param {*} lockInfo tells the user details
  */
-export const saveLockDetails = (lockInfo) => (dispatch) =>{
-    dispatch({
-        type: SET_SLATE_LOCK_STATUS,
-        payload: {
-            ...lockInfo,
-            userFirstName: "",
-            userLastName: ""
-        }
-    })
+export const saveLockDetails = (lockInfo) => (dispatch, getState) =>{
+    const slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
+    if (slateLockInfo.isLocked !== lockInfo.isLocked) {
+        dispatch({
+            type: SET_SLATE_LOCK_STATUS,
+            payload: {
+                ...lockInfo,
+                userFirstName: "",
+                userLastName: ""
+            }
+        })
+    }
 }

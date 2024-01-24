@@ -32,8 +32,8 @@ import {
 } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags,
-         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole,
-        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
+         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, checkOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole,
+        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase, stopRerendering } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -2115,9 +2115,10 @@ class ElementContainer extends Component {
      * @param {element}
     */
     renderElement = (element = {}) => {
+        console.log('rendering Element Container');
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData,
-            spellCheckToggle, parentUrn, currentSlateAncestorData,projectInfo } = this.props;
+            spellCheckToggle, parentUrn, currentSlateAncestorData } = this.props;
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
@@ -2734,7 +2735,7 @@ class ElementContainer extends Component {
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_LTI];
         const inContainer = this.props.parentUrn ? true : false;
-        let isOwner = isOwnerRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+        let isOwner = checkOwnerRole();
         const isgreyBorder = isApproved() && READ_ONLY_ELEMENT_LABELS.includes(labelText);
         const readOnlyBorder = isgreyBorder ? 'greyBorder': '';
         const showElementLabel =  !isApproved() || this.state.borderToggle == 'active'
@@ -3294,6 +3295,10 @@ class ElementContainer extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return stopRerendering(nextProps, this.props);
+    }
+
     render = () => {
         const { element } = this.props;
             try {
@@ -3500,10 +3505,10 @@ const mapStateToProps = (state) => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
         projectUsers: state.commentsPanelReducer.users,
-        projectInfo: state.projectInfo,
+        // projectInfo: state.projectInfo,
         oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
         oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare,
-        markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
+        // markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
@@ -3512,10 +3517,10 @@ const mapStateToProps = (state) => {
         spellCheckToggle: state.toolbarReducer.spellCheckToggle,
         cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
         isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
-        figureDropdownData: state.appStore.figureDropdownData,
+        // figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
-        deletedKeysValue: state.appStore.deletedElementKeysData,
+        // deletedKeysValue: state.appStore.deletedElementKeysData,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle
     }
 }

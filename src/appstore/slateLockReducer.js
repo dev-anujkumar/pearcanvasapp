@@ -5,9 +5,12 @@ import {
 
 let INITIAL_STATE = {
     slateLockInfo : {
-        isLocked: false,
-        timestamp: "",
-        userId: ""
+        isLocked : false,
+        userId : "",
+        userFirstName: "",
+        userLastName: "",
+        firstName: "",
+        lastName: ""
     },
     withinLockPeriod: false
 }

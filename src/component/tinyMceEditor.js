@@ -28,7 +28,7 @@ import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnot
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE,
         removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS,
-        isSubscriberRole, withoutCursorInitailizedElements, isElementIndent, isDialogueIndent, ALLOWED_FORMATTING_TAGS } from '../constants/utility.js';
+        isSubscriberRole, withoutCursorInitailizedElements, isElementIndent, isDialogueIndent, ALLOWED_FORMATTING_TAGS, stopRerendering } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY,
      INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
@@ -3954,6 +3954,11 @@ export class TinyMceEditor extends Component {
                 this.placeHolderClass = '';
             }
         }
+    }
+
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return stopRerendering(nextProps, this.props);
     }
 
     /**
