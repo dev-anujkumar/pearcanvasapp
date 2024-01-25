@@ -678,7 +678,8 @@ class Interactive extends React.Component {
             launchAlfrescoPopup: true,
             alfrescoPath: alfrescoPath,
             elementId: id,
-            currentAsset
+            currentAsset,
+            defaultCategory:"smartlink"
         }
         that.props.alfrescoPopup(payloadObj)
     }

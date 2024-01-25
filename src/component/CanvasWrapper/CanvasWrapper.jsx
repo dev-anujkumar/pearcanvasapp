@@ -321,6 +321,7 @@ const mapStateToProps = state => {
         roleId: state.appStore.roleId,
         alfrescoPath: state.alfrescoReducer.alfrescoPath,
         currentAsset: state.alfrescoReducer.currentAsset,
+        defaultCategory: state.alfrescoReducer.defaultCategory,
         alfrescoElementId: state.alfrescoReducer.elementId,
         isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen,
         locationData: state.alfrescoReducer.locationData,

@@ -116,7 +116,7 @@ export const sendSelectedSiteData = (props, selectedSite) => {
         appName: 'cypress', rootNodeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, rootNodeId: locationSiteDataNodeRef,
         elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
         calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote, currentAsset: props.currentAsset,
-        defaultCategory: props.currentAsset.type
+        defaultCategory: props.defaultCategory || props.currentAsset.type
     }
     sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
     // saving the current element data
