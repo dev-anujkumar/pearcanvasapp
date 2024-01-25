@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // IMPORT - Components //
 import config from '../../config/config';
-import axios from 'axios';
 import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 
 // // IMPORT - Assets //

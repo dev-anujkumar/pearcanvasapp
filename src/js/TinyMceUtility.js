@@ -2,7 +2,6 @@
  * Module - TinyMceUtility
  * Description - This file contains utility functions for the TinyMceEditor
  */
-import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
 import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING, MULTI_COLUMN, TAB } from '../constants/Element_Constants';

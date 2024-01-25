@@ -5,7 +5,6 @@ import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
-import axios from 'axios';
 import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 
 /**
@@ -51,7 +50,7 @@ class AddAudioBook extends React.Component {
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
-        let currentAsset = { type: "audio" }
+        const currentAsset = { type: "audio" }
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {          //if alfresco location is available
                 if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
@@ -64,7 +63,7 @@ class AddAudioBook extends React.Component {
                         rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary,
-                        currentAsset: { type: "audio" },
+                        currentAsset: currentAsset,
                         defaultCategory: currentAsset?.type
                     }
 
@@ -87,7 +86,6 @@ class AddAudioBook extends React.Component {
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                let currentAsset = { type: "audio" }
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary, currentAsset);
                 sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             } else {

@@ -12,7 +12,6 @@ import {
     EXIF_PIXELYDIMENSION
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
-import axios from 'axios';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';

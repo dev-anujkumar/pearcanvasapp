@@ -9,7 +9,6 @@ import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 import { showTocBlocker,hideTocBlocker, disableHeader, hideToc } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
-import axios from 'axios';
 import { hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'

@@ -79,8 +79,14 @@ export const fetchAlfrescoSiteDropdownList = (calledFrom) => {
         });
 }
 
-
+/**
+ * This function updates the project CAT site
+ * @param {Object} props Component Props
+ * @param {\Object} selectedSite Site selected using CAT site picker
+ * @returns 
+ */
 export const sendSelectedSiteData = (props, selectedSite) => {
+    // aflresco site details payload for alfrescoDetails API
     let alfrescoData = {
         guid: selectedSite?.site?.rootNodeId,
         id: selectedSite?.site?.title,
@@ -105,6 +111,7 @@ export const sendSelectedSiteData = (props, selectedSite) => {
     let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
     locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
+    // message send to CAT tool to open CAT picker after site picker
     let messageObj = {
         appName: 'cypress', rootNodeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, rootNodeId: locationSiteDataNodeRef,
         elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
@@ -112,6 +119,7 @@ export const sendSelectedSiteData = (props, selectedSite) => {
         defaultCategory: props.currentAsset.type
     }
     sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
+    // saving the current element data
     const messageDataToSave = {
         id: props.alfrescoElementId,
         calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,

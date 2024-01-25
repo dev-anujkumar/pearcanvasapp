@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
-import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 

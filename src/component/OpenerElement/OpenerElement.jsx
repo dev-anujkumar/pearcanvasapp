@@ -8,7 +8,6 @@ import { createLabelNumberTitleModel, getLabelNumberTitleHTML, hasReviewerRole, 
 import noImage from '../../images/OpenerElement/no-image.png'
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
-import axios from 'axios';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement, saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import TinyMceEditor from '../tinyMceEditor';
