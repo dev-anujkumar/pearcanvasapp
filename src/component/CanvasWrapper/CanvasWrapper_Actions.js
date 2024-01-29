@@ -437,7 +437,7 @@ export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
 }
@@ -476,7 +476,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
     return axios.get(lobURL, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then (response => {
         dispatch({
@@ -503,7 +503,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(lobPermissionsURL, {
                 headers: {
                     "Content-Type": CONTENT_TYPE,
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).then (response => {
                 const { elementPermissions } = response.data;
@@ -521,7 +521,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(workflowRoleURL, {
                 headers: {
                     "Content-Type": CONTENT_TYPE,
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).then(response => {
                 dispatch({
@@ -546,7 +546,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     ApiKey:config.STRUCTURE_APIKEY,
                     'Content-Type':CONTENT_TYPE,
                     Authorization:config.CMDS_AUTHORIZATION,
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).then (usageTypeResponse => {
                 const data = usageTypeResponse?.data;
@@ -637,7 +637,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(slateData => {
         config.isSlateElementCompleted = false;
@@ -1255,7 +1255,7 @@ export const fetchAuthUser = () => dispatch => {
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then((response) => {
         let userInfo = response.data;
@@ -1497,7 +1497,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
     .then((response) => {
@@ -1568,7 +1568,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
     .then((response) => {
@@ -1748,7 +1748,7 @@ export const fetchLearnosityContent = () => dispatch => {
     return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}`, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then((response) => {
      if(response.status==200){
@@ -1777,7 +1777,7 @@ export const fetchProjectLFs = () => dispatch => {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": CONTENT_TYPE,
             "x-Roles": "ContentPlanningAdmin",
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
@@ -1853,7 +1853,7 @@ const getLOBList = () => {
 	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
 		headers: {
 			"ApiKey": config.STRUCTURE_APIKEY,
-            "myCloudProxySession": config.myCloudProxySession,
+            "withCredentials":true,
 			"Content-Type": CONTENT_TYPE,
 			"x-Roles": "LearningAdmin",
 		}

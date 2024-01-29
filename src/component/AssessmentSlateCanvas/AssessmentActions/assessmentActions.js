@@ -47,7 +47,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
         let url = `${config.STRUCTURE_READONLY_ENDPOINT}usagetypes/v3/${entityType}?locale=en`;
         return axios.get(url, {
             headers: {
-                myCloudProxySession: config.myCloudProxySession
+                "withCredentials":true
             }
         }).then((res) => {
             dispatchUsageTypeList(entityType, res, 200, dispatch);
@@ -69,7 +69,7 @@ export const fetchAssessmentUpdatedData = () => (dispatch) => {
     try {
         axios.put(apiUrl, {}, {
             headers: {
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         }).then(res => {
             dispatch({
@@ -96,7 +96,7 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
             headers: {
                 "Content-Type": "application/json",
                 "ApiKey": config.STRUCTURE_APIKEY,
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         }).then(async (res) => {
             if (res && res.data && res.data.status) {
@@ -130,7 +130,7 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
         headers: {
             "Content-Type": "application/json",
             "ApiKey": config.STRUCTURE_APIKEY,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(async (res) => {
         if (res && res.data && res.data.length > 0) {
@@ -171,7 +171,7 @@ export const fetchAssessmentItems = (itemEntityUrn, apiParams) => dispatch => {
     let url = `${config.REACT_APP_API_URL}v1/slate/assessment/${activeWorkUrn}/items`;
     return axios.get(url, {
         headers: {
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(async (res) => {
         if (res?.data?.items?.length > 0) {

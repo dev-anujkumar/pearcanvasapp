@@ -14,7 +14,7 @@ const axiosRequestCreator = () => {
         return axios.get(url, {
             cancelToken: apiCall.token,
             headers:{
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }});
     };
 };

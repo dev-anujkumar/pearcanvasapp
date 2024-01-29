@@ -18,7 +18,7 @@ let initialState = {
 const axiosMock = axios.create({
     headers: {
         'Content-Type': 'application/json',
-        'myCloudProxySession': config.myCloudProxySession
+        "withCredentials":true
     }
 })
 jest.mock('../../../../src/appstore/store', () => {
@@ -275,7 +275,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).reply(200, res);
             const spygetContainerData = jest.spyOn(actions, 'getContainerData');
@@ -304,7 +304,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).reply(200, res);
             const spygetContainerData = jest.spyOn(actions, 'getContainerData');
@@ -333,7 +333,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).reply(200, res);
             const spygetContainerData = jest.spyOn(actions, 'getContainerData');
@@ -357,7 +357,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             const axiosObject = axios.create({
                 headers: {
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             });
 
@@ -389,7 +389,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).reply(200, res);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
@@ -417,7 +417,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             }).reply(200, res);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";

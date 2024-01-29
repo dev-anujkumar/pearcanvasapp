@@ -12,7 +12,7 @@ export const handleSlateRefresh = (id,cb) => (dispatch, getState) => {
      axios.get(url,{
         headers: {
         "Content-Type": "application/json",
-        'myCloudProxySession': config.myCloudProxySession
+        "withCredentials":true
     }
     }).then((res) => {
         dispatch({

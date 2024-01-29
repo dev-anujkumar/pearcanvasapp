@@ -11,7 +11,7 @@ export const getAssetMetadata = async (assetID) => {
     headers: {
       "Content-Type": "application/json",
       apikey: config.CMDS_APIKEY,
-      myCloudProxySession: config.myCloudProxySession,
+      "withCredentials":true,
     },
   });
   const { properties } = response?.data?.entry || {};

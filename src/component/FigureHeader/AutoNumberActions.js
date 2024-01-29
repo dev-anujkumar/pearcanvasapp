@@ -18,7 +18,7 @@ import { CONTENT_TYPE } from '../../constants/Element_Constants.js';
 const commonHeaders = {
     "ApiKey": config.STRUCTURE_APIKEY,
     "Content-Type": CONTENT_TYPE,
-    'myCloudProxySession': config.myCloudProxySession
+    "withCredentials":true
 }
 
 /**
@@ -31,7 +31,7 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
         const headers = {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
         const figureUrl = getAPIUrl(currentParentUrn);
         const containerUrl = ['frontMatter', 'backMatter'].includes(currentParentUrn) ? `${figureUrl}?aside=true` : `${figureUrl}&aside=true`;
@@ -173,7 +173,7 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         const response = await axios.get(apiUrl, {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
         const slateData = Object.values(response.data)[0];

@@ -22,7 +22,7 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     return axios.get(url, {
         headers: {
             withCredentials: true,
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then((response) => {
         if (response && response.data && response.data.elements) {
@@ -75,7 +75,7 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 const callSnapshotAPI = async (snapshotData) => {
     return axios.post(config.TCM_SNAPSHOT_URL, snapshotData, {
         headers: {
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then((res) => {
         console.log("Successs !!!")
@@ -94,7 +94,7 @@ export const getLatestVersion = async (containerUrn) => {
         const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
         return response.data[0];
@@ -113,7 +113,7 @@ export const slateLinkDetails = async (containerUrn) => {
         const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}`, {
             headers: {
                 "Content-Type": "application/json",
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
         return response.data;
@@ -129,7 +129,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(slateData => {
         let parentData = getState().appStore.slateLevelData;
@@ -169,7 +169,7 @@ export const callCutCopySnapshotAPI = async (snapshotData,isAutoNumberingEnabled
         }
         return axios.post(url, snapshotData, {
             headers: {
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         }).then((res) => {
             console.log("Successs !!!")
@@ -180,7 +180,7 @@ export const callCutCopySnapshotAPI = async (snapshotData,isAutoNumberingEnabled
     else{
         return axios.put(url, snapshotData, {
             headers: {
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         }).then((res) => {
             console.log("Successs !!!")

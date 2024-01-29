@@ -65,7 +65,7 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
     })
     return axios.get(url, {
         headers: {
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then((res) => {
         const data = res.data
@@ -120,7 +120,7 @@ export const tcmButtonHandler = (status, tcmSnapshotData, elementData) => (dispa
     let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${eURN}`
     return axios.patch(url, body, {
         headers: {
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then((res) => {
         const tcmObject = { isTCMCanvasPopup: false }

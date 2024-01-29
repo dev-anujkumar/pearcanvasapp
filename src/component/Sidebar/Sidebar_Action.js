@@ -292,7 +292,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     axios.post(url, JSON.stringify(conversionDataToSend), {
         headers: {
             "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(async res =>{
         // Making condition true for triggering slate level save api
@@ -803,7 +803,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
@@ -922,7 +922,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
+            "withCredentials":true
         }
     }).then(res => {
         if (currentSlateData?.status === 'approved') {

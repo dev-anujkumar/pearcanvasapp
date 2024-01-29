@@ -60,7 +60,7 @@ const handleSiteOptionsDropdown = (alfrescoPath, id, props, currentAsset) =>{
                 'Accept': 'application/json',
                 'ApiKey': config.CMDS_APIKEY,
                 'Content-Type': 'application/json',
-                'myCloudProxySession': config.myCloudProxySession
+                "withCredentials":true
             }
         })
         .then(function (response) {

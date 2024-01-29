@@ -177,7 +177,7 @@ function AlfrescoPopup(props) {
                     'ApiKey': config.STRUCTURE_APIKEY,
                     'Content-Type': 'application/json',
                     'If-Match': request.eTag,
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             })
             .then(function (response) {

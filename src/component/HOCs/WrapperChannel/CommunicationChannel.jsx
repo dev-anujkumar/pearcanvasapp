@@ -136,7 +136,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
                     config.ssoToken = message.ssoToken;
-                    config.myCloudProxySession = message.myCloudProxySession;
+                    config.PearsonExtSSOSession = message.PearsonExtSSOSession;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.isCypressPlusEnabled = message.isCypressPlusEnabled;
@@ -493,7 +493,7 @@ function CommunicationChannel(WrappedComponent) {
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                'myCloudProxySession': config.myCloudProxySession,
+                "withCredentials":true,
                 'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
                 'structureApiEndpoint':config.AUDIO_NARRATION_URL
             };

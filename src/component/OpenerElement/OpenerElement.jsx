@@ -97,7 +97,7 @@ class OpenerElement extends Component {
                     'Accept': 'application/json',
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
+                    "withCredentials":true
                 }
             })
             .then(function (response) {
