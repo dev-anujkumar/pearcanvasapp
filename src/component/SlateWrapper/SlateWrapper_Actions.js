@@ -92,7 +92,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                "withCredentials":true
+                
             }
         }
     ).then(async createdElemData => {
@@ -726,7 +726,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         const response = await axios.post(url, JSON.stringify(_requestData), {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                "withCredentials":true
+                
             }
         })
 
@@ -856,7 +856,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                "withCredentials":true
+                
             }
         })
         .then((responseData) => {
@@ -1106,7 +1106,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                "withCredentials":true
+                
             }
         }
     ).then(res => {
@@ -1225,7 +1225,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                     'Content-Type': CONTENT_TYPE,
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
-                    "withCredentials":true
+                    
                 }
             }
         ).then(res => {
@@ -1269,7 +1269,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                     'Content-Type': CONTENT_TYPE,
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
-                    "withCredentials":true
+                    
                 }
             }
         ).then(res => {
@@ -1369,7 +1369,7 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
     let url = `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementID}`;
     return axios.get(url, {
         headers: {
-            "withCredentials":true
+            
         }
     }).then((response) => {
         let newPageNumber = {
@@ -1434,7 +1434,7 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            "withCredentials":true
+            
         }
 })
 }
@@ -1677,7 +1677,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 {
                     headers: {
                         "Content-Type": CONTENT_TYPE,
-                        "withCredentials":true
+                        
                     }
                 }
             )
@@ -1797,7 +1797,7 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
                     "ApiKey": config.STRUCTURE_APIKEY,
                     "Accept": CONTENT_TYPE,
                     "Content-Type": CONTENT_TYPE,
-                    "withCredentials":true
+                    
                 }
             }
         )
@@ -1833,7 +1833,7 @@ export const slateVersioning = (updateRCSlate, isOwnerSubscribedContainer) => (d
     return axios.post(versioningStatus, null, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            "withCredentials":true
+            
         }
     }).then(response => {
         if(response?.data?.status === "success"){

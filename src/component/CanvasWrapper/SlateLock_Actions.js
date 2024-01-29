@@ -33,7 +33,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         return axios.get(url, {
             headers: {
                 "Content-Type": "application/json",
-                "withCredentials":true
+                
             }
         })
         .then((res) => {
@@ -72,7 +72,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     return axios.get(url, {
 		headers: {
 			"Content-Type": "application/json",
-			"withCredentials":true
+			
 		}
     }).then((res) => {
         if (callback) callback(res.data)
@@ -104,7 +104,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
     return axios.post(url, data, {
         headers: {
 			"Content-Type": "application/json",
-			"withCredentials":true
+			
 		}
     }).then((res) => {
         config.releaseCallCount = 0
@@ -135,7 +135,7 @@ export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRol
     return axios.post(url, data, {
         headers: {
             "Content-Type": "application/json",
-            "withCredentials":true
+            
         }
     }).then((res) => {
         if (releaseLockButton) { // Condition to remove the lockinfo data on Unlock button clicked by Admin
@@ -170,7 +170,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     return axios.post(url, data, {
         headers: {
 			"Content-Type": "application/json",
-			"withCredentials":true
+			
 		}
     }).then((res) => {
         store.dispatch({

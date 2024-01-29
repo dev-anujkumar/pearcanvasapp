@@ -242,7 +242,7 @@ class ElementFigure extends Component {
             PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
             STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
             AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA,
-            "withCredentials":true
+            
         }
         const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
@@ -271,7 +271,7 @@ class ElementFigure extends Component {
                     'Accept': 'application/json',
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': 'application/json',
-                    "withCredentials":true
+                    
                 }
             })
             .then(function (response) {

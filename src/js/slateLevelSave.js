@@ -39,7 +39,6 @@ export const triggerSlateLevelSave = (entityURN, triggerAction, paramDetails = {
         return axios.post(url, requestBody, {
             headers: {
                 "Content-Type": "application/json",
-                "withCredentials":true
             }
         })
             .then(res => {

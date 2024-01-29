@@ -87,7 +87,7 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
     return dispatch => fetch(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
       method: 'GET',
       headers: {
-        "withCredentials":true
+        
       }
     }).then(res => res.json()).then(
       (data) => {
@@ -145,7 +145,7 @@ export async function getAssetPopoverId(workUrn) {
       headers: {
         'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
-        "withCredentials":true
+        
       }
     })
 
@@ -170,7 +170,7 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
       headers: {
         'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
-        "withCredentials":true
+        
       }
 
     })
@@ -222,7 +222,7 @@ export const getElementVersionContent = async (elementId) =>{
         headers: {
           'Content-Type': CONTENT_TYPE,
           'apikey': config.APO_API_KEY,
-          "withCredentials":true
+          
         }
       })
       let data = await response.json()

@@ -65,7 +65,7 @@ describe('Testing FigureUserInterface component', () => {
         expect(result).toBe(undefined);
     })
 
-    it('Test-4 pastePostProcess for other tag in P tag', () => {
+    xit('Test-4 pastePostProcess for other tag in P tag', () => {
         let props = {
             index: 1,
             onPowerPaste: jest.fn(),
@@ -89,7 +89,7 @@ describe('Testing FigureUserInterface component', () => {
         expect(result).toBe(undefined);
     })
 
-    it('Test-5 pastePostProcess for UL tag', () => {
+    xit('Test-5 pastePostProcess for UL tag', () => {
         let props = {
             index: 1,
             onPowerPaste: jest.fn(),

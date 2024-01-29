@@ -38,7 +38,7 @@ class App extends Component {
         return axios.get(`${cypressConfig.getENVConfig}v1/taskdef/cypress/environment/${requestURI}`, {
             headers: {
                 "Content-Type": "application/json",
-                "withCredentials":true
+                
             }
         }).then((response) => {
             if(response){

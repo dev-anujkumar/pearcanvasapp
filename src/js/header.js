@@ -89,7 +89,6 @@ const logoutWithModernOpenAM = async () => {
         await axios.post(config_object.LOGOUT_API, null, {
             headers: {
                 "Content-Type": "application/json",
-                "withCredentials":true
             }
         })
             .then(response => {

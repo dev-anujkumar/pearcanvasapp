@@ -71,7 +71,6 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
     let url =`${config.REACT_APP_API_URL}v1/slate/assessment/${currentAssessmentSelected}/items`;
     return axios.get(url, {
           headers:  {
-            "withCredentials":true
         }
     }).then((res) => {
             dispatch({
@@ -158,7 +157,6 @@ export async function getMCQGuidedData(workUrn) {
         let responseData = await axios.get(`${config.ASSESSMENT_ENDPOINT}assessmentitem/v2/${workUrn}/content`,
             {
                 headers: {
-                    "withCredentials":true
                 }
             });
 

@@ -1,4 +1,4 @@
-const ENV_NAME = 'qa'
+const ENV_NAME = 'dev'
 let cypressConfig = {
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/toc-wrapper/index.html` : 'https://local-dev.pearson.com:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges` :"http://localhost:5000",

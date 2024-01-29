@@ -71,7 +71,7 @@ class SlateTagDropdown extends React.Component {
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-      "withCredentials":true,
+      
       'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
     };
     const selectedLOs = this.props.currentSlateLOData;

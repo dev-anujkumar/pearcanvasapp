@@ -88,7 +88,7 @@ export class CanvasWrapper extends Component {
             const paramDetails = {
                 'slateEntityURN': config.slateEntityURN,
                 'projectUrn': config.projectUrn,
-                "withCredentials":true,
+                
                 'userId': config.userId
             }
             localStorage.setItem('paramDetails', JSON.stringify(paramDetails));

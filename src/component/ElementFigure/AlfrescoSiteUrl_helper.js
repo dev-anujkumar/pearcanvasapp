@@ -14,7 +14,7 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
     axios.put(url, req, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            "withCredentials":true
+            
         }
     }).then(response => {
     }).catch(error => {
@@ -30,7 +30,7 @@ export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData, curren
                     'Accept': CONTENT_TYPE,
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': CONTENT_TYPE,
-                    "withCredentials":true
+                    
                 }
             })
             .then(function (response) {

@@ -493,7 +493,7 @@ function CommunicationChannel(WrappedComponent) {
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                "withCredentials":true,
+                
                 'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
                 'structureApiEndpoint':config.AUDIO_NARRATION_URL
             };
