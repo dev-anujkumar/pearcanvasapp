@@ -49,8 +49,8 @@ export default {
    * @param {HTMLElement} node HTML element node object
    * @param {Number} depth level of nesting
    */
-  addOListClasses: function (node, depth) {
-    if (node === null || node === undefined || node?.nextElementSibling?.tagName === "OL") {
+  addOListClasses: function (node, depth, processType) {
+    if (node === null || node === undefined || (processType === 'importWord' && node?.nextElementSibling?.tagName === "OL")) {
       return;
     }
 
@@ -118,12 +118,12 @@ export default {
     }
 
     if (depth <= 10) {
-      this.addOListClasses(node?.firstElementChild, depth);
+      this.addOListClasses(node?.firstElementChild, depth, processType);
       if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "OL") {
         depth = 1;
-        this.addOListClasses(node?.nextElementSibling, depth);
+        this.addOListClasses(node?.nextElementSibling, depth, processType);
       } else {
-        this.addOListClasses(node?.nextElementSibling, depth);
+        this.addOListClasses(node?.nextElementSibling, depth, processType);
       }
     }
   },
@@ -292,8 +292,8 @@ export default {
    * @param {HTMLElement} node HTML element node object
    * @param {Number} depth level of nesting
    */
-  addUListClasses: function (node, depth) {
-    if (node === null || node === undefined || node?.nextElementSibling?.tagName === "UL" ) {
+  addUListClasses: function (node, depth, processType) {
+    if (node === null || node === undefined || (processType === 'importWord' && node?.nextElementSibling?.tagName === "UL" )) {
       return;
     }
 
@@ -323,12 +323,12 @@ export default {
     }
 
     if (depth <= 10) {
-      this.addUListClasses(node?.firstElementChild, depth);
+      this.addUListClasses(node?.firstElementChild, depth, processType);
       if (node?.nextElementSibling !== null && node?.nextElementSibling?.tagName === "UL") {
         depth = 1;  // IF next nextElementSibling will be unorderedList then we need to reset the depth
-        this.addUListClasses(node?.nextElementSibling, depth);
+        this.addUListClasses(node?.nextElementSibling, depth, processType);
       } else {
-        this.addUListClasses(node?.nextElementSibling, depth);
+        this.addUListClasses(node?.nextElementSibling, depth, processType);
       }
     }
   },
