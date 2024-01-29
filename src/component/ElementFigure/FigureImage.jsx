@@ -185,6 +185,11 @@ class FigureImage extends Component {
                 decorative: true
             }
         }
+        // Reset state on click of delete Asset from Figure Element
+        this.setState({
+            alfrescoSiteData: {}
+        })
+        handleAlfrescoSiteUrl(this.props.elementId, {})
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();

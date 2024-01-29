@@ -616,7 +616,8 @@ class SlateWrapper extends Component {
 
     closeCompleteImportPopup = () => {
         this.setState({
-            importCompleteStatus: false
+            importCompleteStatus: false,
+            showSnackbarOnce: false
         })
     }
 
@@ -625,7 +626,8 @@ class SlateWrapper extends Component {
         if (this.state.importCompleteStatus) {
             setTimeout(() => {
                 this.setState({
-                    importCompleteStatus: false
+                    importCompleteStatus: false,
+                    showSnackbarOnce: false
                 })
             }, 3000);
             return (

@@ -5,7 +5,7 @@ import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnch
 import { OpenLOPopup, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AddEditLOsAssessmentSlate,
     ViewLOsAssessmentSlate, AddToExternalFrameworkAS, ViewExternalFrameworkAS
     } from '../../constants/IFrameMessageTypes';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, CYPRESS_LF, DISABLE_BUTTTON } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -96,11 +96,14 @@ class SlateTagDropdown extends React.Component {
     const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
     const isSlateLocked = checkSlateLock(slateLockInfo)
-    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
+    const hasLoEditPermission = this.props.permissions.includes('lo_edit_metadata')
+    const isReviewerRole = hasReviewerRole()
+    if (currentSlateLF === CYPRESS_LF && hasLoEditPermission){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
-    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && (hasLoEditPermission  ||isReviewerRole)) {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
       sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
+      // isApprovedSlate key is used both for approved slate and reviewer user
       sendDataToIframe({
         'type': OpenLOPopup,
         'message': {
@@ -118,7 +121,7 @@ class SlateTagDropdown extends React.Component {
           'projectSharingRole': projectSharingRole,
           'isSubscribed': isSubscribed,
           'defaultLF': defaultLF,
-          "isApprovedSlate": slateVersioningStatus,
+          "isApprovedSlate": slateVersioningStatus || isReviewerRole,
           'isSlateLocked': isSlateLocked
         }
       })
@@ -197,6 +200,8 @@ class SlateTagDropdown extends React.Component {
     }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
+    const isReviewerRole = hasReviewerRole()
+    // isApprovedSlate key is used both for approved slate and reviewer user
     if(popupType==='add'){
       sendDataToIframe({
         'type': OpenLOPopup,
@@ -216,7 +221,7 @@ class SlateTagDropdown extends React.Component {
             'defaultLF': defaultLF,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate': slateVersioningStatus,
+          'isApprovedSlate': slateVersioningStatus || isReviewerRole,
             'isSlateLocked': isSlateLocked
         }
       })
@@ -239,7 +244,7 @@ class SlateTagDropdown extends React.Component {
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate':slateVersioningStatus,
+          'isApprovedSlate': slateVersioningStatus || isReviewerRole,
             'isSlateLocked': isSlateLocked
         }
       })
