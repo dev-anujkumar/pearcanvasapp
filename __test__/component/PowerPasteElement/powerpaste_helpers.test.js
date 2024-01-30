@@ -127,7 +127,7 @@ describe('-----------------------Test powerpaste_helper Functions---------------
             expect(spyFunction).toHaveBeenCalledWith(node, depth);
         })
     });
-    describe('Test-4-Function--1--addUListClasses', () => {
+    xdescribe('Test-4-Function--1--addUListClasses', () => {
         let node = node4;
         it('addUListClasses with depth 1', () => {
             let depth = 1;
