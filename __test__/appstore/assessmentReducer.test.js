@@ -11,7 +11,6 @@ import {
     ELM_ASSESSMENT_EDIT_ID,
     ELM_NEW_ITEM_DATA,
     ASSESSMENT_RELOAD_CONFIRMATION,
-    UPDATED_ASSESSMENTS_ARRAY,
     UPDATE_ASSESSMENT_DATA
 } from '../../src/constants/Action_Constants';
 
@@ -365,19 +364,4 @@ describe('Test AssessmentReducer', () => {
         })).toEqual({ usageTypeListData: {}, ...expectedState })
     })
 
-    it('UPDATED_ASSESSMENTS_ARRAY', () => {
-        let payload = {
-            currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
-            oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
-        }
-        let expectedState = {
-            usageTypeListData: {},
-            currentEditAssessment: {},
-            itemUpdateEvent: false,
-        }
-        expect(reducer(INITIAL_STATE, {
-            type: UPDATED_ASSESSMENTS_ARRAY,
-            payload: payload
-        })).toEqual({ usageTypeListData: {}, ...expectedState })
-    })
 });

@@ -262,6 +262,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         // Making condition true for triggering slate level save api
         localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
+        config.updatedAssessmentAPITriggered = false
         const assessmentUpdatedData = store.getState().assessmentReducer?.updatedAssessmentData
         const assessmentTypeCheck = (updatedData?.elementdata?.assessmentformat === PUF || updatedData?.elementdata?.assessmentformat === LEARNOSITY || 
             updatedData?.figuredata?.elementdata?.assessmentformat === PUF || updatedData?.figuredata?.elementdata?.assessmentformat === LEARNOSITY)
@@ -270,7 +271,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         const elmAssessmentData = assessmentUpdatedData?.filter((item) => {
             return item?.assessmentVersionUrn == updatedData?.figuredata?.elementdata?.assessmentid;
         })
-        const assessmentItemUpdateCheck = elmAssessmentData && elmAssessmentData[0]?.assessmentVersionUrn !== updatedData?.figuredata?.elementdata?.assessmentid
+        const assessmentItemUpdateCheck = elmAssessmentData && elmAssessmentData[0]?.assessmentItemVersionUrn !== updatedData?.figuredata?.elementdata?.assessmentitemid
         // calling the assessment API to fetch the latest assessment data after the saving call
         if((!assessmentUpdatedData || (assessmentUpdatedData && assessmentUpdatedData[0]?.versionUrn !== updatedData?.elementdata?.assessmentid)) && assessmentTypeCheck && updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
             store.dispatch(fetchAssessmentUpdatedData())
@@ -293,6 +294,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         config.isSavingElement = false
+        config.updatedAssessmentAPITriggered = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("updateElement Api fail", error);

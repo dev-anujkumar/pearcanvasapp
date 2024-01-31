@@ -641,6 +641,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     }).then(slateData => {
         config.isSlateElementCompleted = false;
+        config.updatedAssessmentAPITriggered = false;
         dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
         sendDataToIframe({ 'type': IMPORTED_DATA_STATUS, 'message': slateData?.data[manifestURN]?.importData });
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
