@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // IMPORT - Components //
 import config from '../../config/config';
-import axios from 'axios';
 import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 
 // // IMPORT - Assets //
@@ -19,6 +18,7 @@ import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import { updateAudioVideoDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
 import { getAssetMetadata } from './ElementAudioVideo_helper';
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -320,29 +320,14 @@ class ElementAudioVideo extends Component {
     }
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            })
-            .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true,
-                alfrescoPath: alfrescoPath,
-                alfrescoListOption: response.data.list.entries,
-                id,
-                locationData,
-                currentAsset
-            }
-                that.props.alfrescoPopup(payloadObj)
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+        let payloadObj = {
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
+            id,
+            locationData,
+            currentAsset
+        }
+        that.props.alfrescoPopup(payloadObj)
     }
 
     componentDidMount() {
@@ -425,11 +410,14 @@ class ElementAudioVideo extends Component {
                     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
                     const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
-                    let messageObj = {appName:'cypress', citeName: citeName,
-                        citeNodeRef: nodeRefs,
+                    let messageObj = {
+                        appName: 'cypress', rootNodeName: citeName,
+                        rootNodeId: nodeRefs,
                         elementId: this.props.elementId,
-                        currentAsset }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                        currentAsset,
+                        defaultCategory: currentAsset.type
+                        }
+                    sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                     const messageDataToSaveAudio = {
                         id: this.props.model.id,
                         editor: undefined,
@@ -446,6 +434,7 @@ class ElementAudioVideo extends Component {
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData, currentAsset);
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             }
             else {
                 this.props.accessDenied(true)

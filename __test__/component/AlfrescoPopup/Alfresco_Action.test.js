@@ -105,3 +105,99 @@ describe('Test fetchAlfrescoSiteDropdownList',()=>{
         spyFunction.mockClear();
     });
 })
+describe('Test ',()=>{
+    it('test case for sendSelectedSiteData ', () => {
+        const props = {
+            editor: {},
+            alfrescoPath: {
+                eTag: "1234"
+            },
+            locationData:{
+                nodeRef:'nodde',
+                title:'title'
+            },
+            currentAsset: {
+                type: 'type'
+            },
+            saveSelectedAlfrescoElement: jest.fn(),
+            alfrescoPopup: jest.fn(),
+            linkAlfrescoToProject: jest.fn(() => {})
+        }
+        const selectedSite = {
+            "site": {
+                "role": "SiteManager",
+                "visibility": "MODERATED",
+                "guid": "936bd259-fc6b-49ae-b557-7463367d7b40",
+                "id": "cite-sandbox",
+                "preset": "CITE",
+                "title": "CITE sandbox"
+            },
+        }
+        axios.patch = jest.fn(() => Promise.resolve());
+        const spyonsendSelectedSiteData = jest.spyOn(AlfrescoActions, "sendSelectedSiteData");
+        AlfrescoActions.sendSelectedSiteData(props,selectedSite);
+        expect(spyonsendSelectedSiteData).toHaveBeenCalled();
+    });
+    it('test case for sendSelectedSiteData ', () => {
+        const props = {
+            editor: {},
+            alfrescoPath: {
+                eTag: "1234"
+            },
+            locationData:{
+                guid:'guid',
+                repositoryFolder:'repo'
+            },
+            currentAsset: {
+                type: 'type'
+            },
+            saveSelectedAlfrescoElement: jest.fn(),
+            alfrescoPopup: jest.fn(),
+            linkAlfrescoToProject: jest.fn(() => {})
+        }
+        const selectedSite = {
+            "site": {
+                "role": "SiteManager",
+                "visibility": "MODERATED",
+                "guid": "936bd259-fc6b-49ae-b557-7463367d7b40",
+                "id": "cite-sandbox",
+                "preset": "CITE",
+                "title": "CITE sandbox"
+            },
+        }
+        axios.patch = jest.fn(() => Promise.resolve());
+        const spyonsendSelectedSiteData = jest.spyOn(AlfrescoActions, "sendSelectedSiteData");
+        AlfrescoActions.sendSelectedSiteData(props,selectedSite);
+        expect(spyonsendSelectedSiteData).toHaveBeenCalled();
+    });
+    it('test case for sendSelectedSiteData ', () => {
+        const props = {
+            editor: {},
+            alfrescoPath:{
+            },
+            locationData:{
+                title:''
+            },
+            currentAsset: {
+                type: 'type'
+            },
+            saveSelectedAlfrescoElement: jest.fn(),
+            alfrescoPopup: jest.fn(),
+            linkAlfrescoToProject: jest.fn(() => {})
+        }
+        const selectedSite = {
+            "site": {
+                "role": "SiteManager",
+                "visibility": "MODERATED",
+                "guid": "936bd259-fc6b-49ae-b557-7463367d7b40",
+                "id": "cite-sandbox",
+                "preset": "CITE",
+                "title": "CITE sandbox"
+            },
+        }
+        axios.patch = jest.fn(() => Promise.resolve());
+        const spyonsendSelectedSiteData = jest.spyOn(AlfrescoActions, "sendSelectedSiteData");
+        AlfrescoActions.sendSelectedSiteData(props,selectedSite);
+        expect(spyonsendSelectedSiteData).toHaveBeenCalled();
+    });
+})

@@ -166,7 +166,7 @@ const insertImageHandler = (params) => {
     let { element, permissions, editor ,props} = params;
     let allowedElementTypes = [ElementConstants.ELEMENT_LIST,ElementConstants.AUTHORED_TEXT,ElementConstants.LEARNING_OBJECTIVE_ITEM,ElementConstants.BLOCKFEATURE];
     if (allowedElementTypes.indexOf(element?.type) > -1) {
-        handleC2MediaClick(permissions, editor, element, props.saveSelectedAlfrescoElement);
+        handleC2MediaClick(permissions, editor, element, props);
     }
 }
 /** Insert Media-Selector Dropdown Handler */

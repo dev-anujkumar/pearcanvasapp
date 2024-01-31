@@ -10,6 +10,8 @@ export const PreviousSlate = "prevSlate"
 export const NextSlate = "nextSlate"
 export const SplitCurrentSlate = "splitCurrentSlate"
 export const WORKFLOW_ROLES = "workflowRoles"
+export const LAUNCH_SITE_PICKER = "launchSitePicker"
+export const LAUNCH_CAT_TOOL = "launchCatTool"
 
 /******************* Learning Objective Message Types ***********************/
 export const OpenLOPopup = "openLoPopup"
