@@ -262,7 +262,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         // Making condition true for triggering slate level save api
         localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
-        config.updatedAssessmentAPITriggered = false
         const assessmentUpdatedData = store.getState().assessmentReducer?.updatedAssessmentData
         const assessmentTypeCheck = (updatedData?.elementdata?.assessmentformat === PUF || updatedData?.elementdata?.assessmentformat === LEARNOSITY || 
             updatedData?.figuredata?.elementdata?.assessmentformat === PUF || updatedData?.figuredata?.elementdata?.assessmentformat === LEARNOSITY)

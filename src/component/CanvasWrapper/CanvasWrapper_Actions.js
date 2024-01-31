@@ -977,6 +977,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     })
     .catch(err => {
+        config.updatedAssessmentAPITriggered = false;
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         dispatch({type: ERROR_API_POPUP, payload:{show: true,message:SLATE_API_ERROR}})
         console.error('Error in fetch Slate api', err);
