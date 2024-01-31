@@ -106,8 +106,11 @@ jest.mock('../../src/js/utils.js', () => ({
 )
 describe('Testing TinyMceUtility', () => {
     it('Test - handleC2MediaClick - List Element', () => {
+        let props ={
+            saveSelectedAlfrescoElement: jest.fn()
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs, saveSelectedAlfrescoElement);
+        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs,props);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear()
     });
@@ -165,16 +168,24 @@ describe('Testing TinyMceUtility', () => {
         }
     }
     it('Test - handleC2MediaClick - List Element-with img data',async () => {
+        let props = {
+            alfrescoPopup:jest.fn(),
+            saveSelectedAlfrescoElement: jest.fn()
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
         axios.get = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
-        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs,props);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
     it('Test - handleC2MediaClick - List Element-with img data',async () => {
+        let props ={
+            alfrescoPopup:jest.fn(),
+            saveSelectedAlfrescoElement: jest.fn()
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
         axios.get = await jest.fn().mockImplementationOnce(() => Promise.resolve({ data: { list: { entries: [] } } }));
-        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs,props);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
@@ -187,9 +198,12 @@ describe('Testing TinyMceUtility', () => {
                 'modeRef': "url"
             }
         }
+        let props={
+            saveSelectedAlfrescoElement:jest.fn()
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
         axios.get = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
-        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs, saveSelectedAlfrescoElement);
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs, props);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });

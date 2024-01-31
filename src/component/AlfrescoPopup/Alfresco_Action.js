@@ -8,6 +8,8 @@ import {
 } from './../../constants/Action_Constants';
 import config from '../../config/config';
 import axios from 'axios';
+import { sendDataToIframe } from '../../constants/utility';
+import { LAUNCH_CAT_TOOL } from '../../constants/IFrameMessageTypes';
 
 export const alfrescoPopup = (data) => {
     return {
@@ -74,5 +76,83 @@ export const fetchAlfrescoSiteDropdownList = (calledFrom) => {
         })
         .catch(function (error) {
             console.log("Error IN AlfrescoSite API", error)
+        });
+}
+
+/**
+ * This function updates the project CAT site
+ * @param {Object} props Component Props
+ * @param {\Object} selectedSite Site selected using CAT site picker
+ * @returns 
+ */
+export const sendSelectedSiteData = (props, selectedSite) => {
+    // aflresco site details payload for alfrescoDetails API
+    let alfrescoData = {
+        guid: selectedSite?.site?.rootNodeId,
+        id: selectedSite?.site?.title,
+        title: selectedSite?.site?.rootNodeName,
+        visibility: selectedSite?.site?.visibility,
+        preset: selectedSite?.site?.preset,
+        role: selectedSite?.site?.role,
+        repositoryFolder: selectedSite?.site?.repositoryFolder
+    }
+
+    let tempData = props.alfrescoPath || {}
+    tempData.alfresco = alfrescoData
+    config.alfrescoMetaData = tempData
+    let payloadObj = {
+        launchAlfrescoPopup: false,
+        alfrescoPath: props.alfrescoPath
+    }
+
+    props.alfrescoPopup(payloadObj)
+    const editor = props.isInlineEditorOpen === true
+    let alfrescoLocationData = props.locationData
+    let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
+    locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
+    const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
+    // message send to CAT tool to open CAT picker after site picker
+    let messageObj = {
+        appName: 'cypress', rootNodeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, rootNodeId: locationSiteDataNodeRef,
+        elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
+        calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote, currentAsset: props.currentAsset,
+        defaultCategory: props.defaultCategory || props.currentAsset.type
+    }
+    sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
+    // saving the current element data
+    const messageDataToSave = {
+        id: props.alfrescoElementId,
+        calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
+        editor: editor,
+        citeNodeRef: locationSiteDataNodeRef,
+        calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote
+    }
+    props.saveSelectedAlfrescoElement(messageDataToSave)
+    let request = {
+        eTag: props.alfrescoPath.etag,
+        projectId: props.alfrescoPath.id,
+        ...props.alfrescoPath,
+        additionalMetadata: { ...alfrescoData },
+        alfresco: { ...alfrescoData }
+    };
+    /*
+        API to set alfresco location on dashboard
+    */
+    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+    return axios.patch(url, request.alfresco,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'ApiKey': config.STRUCTURE_APIKEY,
+                'Content-Type': 'application/json',
+                'If-Match': request.eTag,
+                'myCloudProxySession': config.myCloudProxySession
+            }
+        })
+        .then(function (response) {
+            console.log('Updated Project Alfresco site',response)
+        })
+        .catch(function (eror) {
+            console.error("Error in updating roject Alfresco Site", error)
         });
 }
