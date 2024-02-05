@@ -47,7 +47,8 @@ class AssessmentSlateData extends Component {
             isUpdateFinal:false,
             openUsageDropdown:false,
             openAssessmentDropdown:false,
-            updatedAssessmentData: []
+            updatedAssessmentData: [],
+            openSuccessPopup: false
         }
         this.dropdownRef = React.createRef();
     }
@@ -92,6 +93,15 @@ class AssessmentSlateData extends Component {
         if (isElmLearnosity && !config.savingInProgress && !config.isSavingElement && assessmentReducer) {
             const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
             if(!assessmentReducer.dataFromElm && isElmLearnosity && assessmentReducer?.updatedAssessmentData?.length && (updatedAssessmentData?.assessmenttitle !== prevProps?.model?.elementdata?.assessmenttitle || updatedAssessmentData?.versionUrn !== prevProps?.model?.elementdata?.assessmentid)) {
+                // openSuccessPopup to open the success message popup when assessment updated
+                this.setState({
+                    openSuccessPopup: true
+                }) 
+                setTimeout(() => {
+                    this.setState({
+                        openSuccessPopup: false
+                    })
+                }, 3000)
                 this.props.handleAssessmentBlur(dataToSend); // triggering the saving call if there is any update in assessment data
                 handleElmPortalEvents('remove');
             } else if (assessmentReducer.dataFromElm) {
@@ -520,8 +530,8 @@ class AssessmentSlateData extends Component {
     /*** @description - This function is to render the Assessment Slate Element*/
     renderAssessmentSlate = () => {
         this.setSlateTagIcon();
-        const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
-        const { activeAssessmentType, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
+        const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj, model } = this.props;
+        const { activeAssessmentType, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType, openSuccessPopup } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         const elmAssessments = activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY
         let assessmentSlateJSX;
@@ -539,6 +549,10 @@ class AssessmentSlateData extends Component {
             assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title,activeAssessmentUsageType);
         } else {
             assessmentSlateJSX = this.showNewAssessmentSlate(activeAssessmentType,activeAssessmentUsageType);
+        }
+        //check to show the success message popup when assessment updated
+        if(getAssessmentData && openSuccessPopup) {
+            assessmentSlateJSX = this.showSuccessMessage(model?.elementdata?.assessmenttitle,activeAssessmentUsageType);
         }
         return assessmentSlateJSX;
     }
@@ -749,7 +763,10 @@ class AssessmentSlateData extends Component {
     */
     showFinalElmAssessmentSlate = (assessmentType, assessmentUsageType) => {
         const { updatedAssessmentData } = this.state
-        const assessmentTypeValue = updatedAssessmentData?.type === "assessment" && "Assessment";
+        const assessmentData = this.props.model.elementdata
+        const assessmentTypeValue = this.props.model?.type === "element-assessment" && "Assessment";
+        const assessmentTitle = updatedAssessmentData.assessmenttitle || assessmentData?.assessmenttitle
+        const assessmentVersionurn = updatedAssessmentData.versionUrn || assessmentData?.assessmentid
         const approveText = updatedAssessmentData?.status?.includes('final') ? "Approved" : "Unapproved"
         const approveIconClass = updatedAssessmentData?.status?.includes('final') ? "enable" : "disable"
         const assessmentCreatedDate = updatedAssessmentData?.dateModified ? updatedAssessmentData?.dateModified : ''
@@ -758,9 +775,9 @@ class AssessmentSlateData extends Component {
                 <div className="slate_assessment_data_content">
                     <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                     <div className="slate_assessment_data_details">
-                        <div className="slate_assessment_data_title">{updatedAssessmentData.assessmenttitle}</div>
-                        <div className="slate_assessment_data_id">ID: {updatedAssessmentData.versionUrn}</div>
-                        <div className="slate_assessment_data_id_lo">{updatedAssessmentData.versionUrn}</div>
+                        <div className="slate_assessment_data_title">{assessmentTitle}</div>
+                        <div className="slate_assessment_data_id">ID: {assessmentVersionurn}</div>
+                        <div className="slate_assessment_data_id_lo">{assessmentVersionurn}</div>
                         {assessmentCreatedDate && <div className="assessment-dateModified">
                             <div className="last-updated-time">Last Updated:</div>
                             <div className="last-updated-time-format">{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
@@ -773,7 +790,7 @@ class AssessmentSlateData extends Component {
             </div>
             {this.setUsageType(assessmentUsageType,'updateUsageType')}
             {this.setAssessmentType(assessmentUsageType, assessmentType,'updateAssessmentFormat')}
-            {<div className={`elm-status-div`}>
+            {assessmentCreatedDate && <div className={`elm-status-div`}>
                 <span className={`${APPROVED_BUTTON} ${approveIconClass}`}>{approvedIcon}</span>
                 <p className={`approved-button-text ${approveIconClass}`}>{approveText}</p></div>}
         </div>;

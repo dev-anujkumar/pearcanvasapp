@@ -63,6 +63,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  * This action creator is used to fetch the latest assessment details
  */
 export const fetchAssessmentUpdatedData = () => (dispatch) => {
+    config.updatedAssessmentAPITriggered = true
     const subscribercheck = hasReviewerSubscriberRole()
     const apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=${subscribercheck ? "false" : "true"}`;
     try {
@@ -75,9 +76,11 @@ export const fetchAssessmentUpdatedData = () => (dispatch) => {
                 payload: res?.data?.assessments
             })
         }).catch(error => {
+            config.updatedAssessmentAPITriggered = false
             console.error('Error in getting assessment data', error)
         });
     } catch (err) {
+        config.updatedAssessmentAPITriggered = false
         console.error('Error in getting assessment data', err)
     }
 }

@@ -130,6 +130,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
             
         }
     }).then(slateData => {
+        config.updatedAssessmentAPITriggered = false;
         let parentData = getState().appStore.slateLevelData;
         let newslateData = JSON.parse(JSON.stringify(parentData));
         newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];

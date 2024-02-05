@@ -163,7 +163,7 @@ class ElementContainer extends Component {
         /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
         let { element } = this.props
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
-        if (this.props.element && embeddedAssessment === true && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
+        if (this.props.element && embeddedAssessment === true && !config.updatedAssessmentAPITriggered && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
             this.props.fetchAssessmentUpdatedData(); // calling assessment API to fetch latest assessment details
         }
         const elmInteractiveElem = checkInteractive(element)
@@ -224,7 +224,7 @@ class ElementContainer extends Component {
             let { element } = this.props
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const elmInteractiveElem = checkInteractive(element)
-            if (this.props.element && embeddedAssessment === true && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
+            if (this.props.element && embeddedAssessment === true && !config.updatedAssessmentAPITriggered && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
                 this.props.fetchAssessmentUpdatedData(); // calling assessment API to fetch latest assessment details
             }
             /* Updating the interactive data inside the store after the store reset */
@@ -2760,7 +2760,7 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} importStatus={this.props?.slateLevelData[config.slateManifestURN]?.importData?.importStatus} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
