@@ -23,29 +23,12 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
 }
 
 export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData, currentAsset) => {
-    let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': CONTENT_TYPE,
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': CONTENT_TYPE,
-                    
-                }
-            })
-            .then(function (response) {
-
-                let payloadObj = {
-                    launchAlfrescoPopup: true,
-                    alfrescoPath: alfrescoPath,
-                    alfrescoListOption: response.data.list.entries,
-                    id,
-                    locationData,
-                    currentAsset
-                }
-                return payloadObj;
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+    let payloadObj = {
+        launchAlfrescoPopup: true,
+        alfrescoPath: alfrescoPath,
+        id,
+        locationData,
+        currentAsset
+    }
+    return payloadObj;
 }

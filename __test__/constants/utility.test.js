@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import { utility, matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom, labelValueForFiguretype, labelValue, Table, Equation, Exhibit, dropdownValueForFiguretype, dropdownList, subtype, preformattedtext, mathml, image, tableasmarkup, getCookieByName, handleTextToRetainFormatting, showNotificationOnCanvas, removeBlankSpaceAndConvertToLowercase } from '../../src/constants/utility.js';
+import { utility, matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom, labelValueForFiguretype, labelValue, Table, Equation, Exhibit, dropdownValueForFiguretype, dropdownList, subtype, preformattedtext, mathml, image, tableasmarkup, getCookieByName, handleTextToRetainFormatting, showNotificationOnCanvas, removeBlankSpaceAndConvertToLowercase, getDEClassName, getDEClassType, getDesignType, isOwnerRole, isSubscriberRole, prepareStageDirectionDom, releaseOwnerPopup, replaceUnwantedtags, removeStyleAttribute, removeMarkedIndexDOMAttributes, removedDOMAttributes } from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
 import { newFigureObj, textRetainObject } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
@@ -26,7 +26,7 @@ describe('Testing Function - matchHTMLwithRegex', () => {
 
         expect(returnData).toBe(expectedData);
     })
-    xit('Case 3- with Html - true',()=>{
+    it('Case 3- with Html - true',()=>{
         let htmlData = "<p></p>"
         let expectedData = true;
         let returnData = matchHTMLwithRegex(htmlData);
@@ -195,6 +195,16 @@ describe('Testing Function - getTitleSubtitleModel', () => {
         let result = getTitleSubtitleModel(model, 'formatted-subtitle', 'popup');
         expect(result).toBe("<p class=\"paragraphNumeroUno\"><number>number text</number>subtitle text</p>");
     })
+    it('Case 8 number part', () => {
+        let model = `<p><span>number text</span>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-code-content', 'figure');
+        expect(result).toBe("<span class=\"codeNoHighlightLine\">number text</span>");
+    })
+    it('Case 8.1 number part', () => {
+        let model = `<p>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-code-content', 'figure');
+        expect(result).toBe(undefined);
+    })
 })
 
 describe('Testing Function - createTitleSubtitleModel', () => {
@@ -227,11 +237,11 @@ describe('Testing Function - createLabelNumberTitleModel', () => {
     })
 })
 
-xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
+describe('Testing Function - getLabelNumberTitleHTML', () => {
     let figureObj = newFigureObj;
     it('Case 1', () => {
         let result = getLabelNumberTitleHTML(figureObj);
-        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>","preformattedText": undefined});
     })
     it('Case 2', () => {
         figureObj = {
@@ -252,7 +262,7 @@ xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
             }
         }
         let result = getLabelNumberTitleHTML(figureObj);
-        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>","preformattedText": undefined,});
     })
     it('Case 3 conditional coverage', () => {
         figureObj = {
@@ -270,7 +280,7 @@ xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
         }
         figureObj.hasOwnProperty('title') ? delete figureObj.title : figureObj;
         let result = getLabelNumberTitleHTML(figureObj);
-        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>","preformattedText": undefined});
     })
     it('Case 4 conditional coverage', () => {
         figureObj = {
@@ -283,7 +293,7 @@ xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
         }
         figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
         let result = getLabelNumberTitleHTML(figureObj);
-        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>","preformattedText": undefined});
     })
     it('Case 5 conditional coverage', () => {
         figureObj = {
@@ -299,7 +309,7 @@ xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
             }
         }
         let result = getLabelNumberTitleHTML(figureObj);
-        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>","preformattedText": undefined});
     })
     it('Case 6 conditional coverage', () => {
         figureObj = {
@@ -308,7 +318,7 @@ xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
         }
         figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
         let result = getLabelNumberTitleHTML(figureObj);
-        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>", "preformattedText": undefined});
     })
 })
 
@@ -419,7 +429,7 @@ describe('-----Testing Function  labelValueForFiguretype ------------', () => {
 });
 describe('-----Testing Function  dropdownValueForFiguretype ------------', () => {
     const figureDropdownData = {
-        tableasmarkup: ["No Label", 'Table', "Custom"],
+        tableasmarkup: ["No Label", "Table", "Custom"],
         mathml: ["No Label", "Equation", "Custom"],
         preformattedtext: ["No Label", "Exhibit", "Custom"],
         image: ["No Label", "Figure", "Table", "Equation", "Custom"]
@@ -500,7 +510,7 @@ describe('Testing Function - showNotificationOnCanvas', () => {
         expect(result).toBe(undefined);
         jest.advanceTimersByTime(3000)
       });
-      it("Case 4", () => {
+      it("Case 5", () => {
         jest.useFakeTimers()
         let result = showNotificationOnCanvas();
         expect(result).toBe(undefined);
@@ -858,5 +868,123 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
     it('Case 12.18 testcases for removeBlankSpaceAndConvertToLowercase else case', () => {
         let result = removeBlankSpaceAndConvertToLowercase("");
         expect(result).toBe(undefined);
+    })
+})
+
+describe('Testing Function - getDEClassName', () => {
+    it('Case 1', () => {
+        const classList =["CNLineLevel1"]
+        let result = getDEClassName(classList);
+        expect(result).toBeDefined;
+    })
+    it('Case 2', () => {
+        const classList =["CNLineLevel2"]
+        let result = getDEClassName(classList);
+        expect(result).toBeDefined
+    })
+    it('Case 3', () => {
+        const classList =["CNLineLevel3"]
+        let result = getDEClassName(classList);
+        expect(result).toBeDefined
+    })
+    it('Case 4', () => {
+        const classList =["CNLineLevel4"]
+        let result = getDEClassName(classList);
+        expect(result).toBeDefined
+    })
+})
+
+describe('Testing Function - getDesignType', () => {
+    it('Case 1', () => {
+        const classList =["paragraphNumeroUnoIndentLevel1"]
+        let result = getDesignType(classList);
+        expect(result).toBeDefined;
+    })
+    it('Case 2', () => {
+        const classList =["paragraphNumeroUnoIndentLevel2"]
+        let result = getDesignType(classList);
+        expect(result).toBeDefined
+    })
+    it('Case 3', () => {
+        const classList =["paragraphNumeroUnoIndentLevel3"]
+        let result = getDesignType(classList);
+        expect(result).toBeDefined
+    })
+    it('Case 4', () => {
+        const classList =["paragraphNumeroUnoIndentLevel4"]
+        let result = getDesignType(classList);
+        expect(result).toBeDefined
+    })
+})
+it('Case 1', () => {
+    const projectSharingRole = 'OWNER';
+    const isSubscribed = true;
+    let result = isOwnerRole(projectSharingRole, isSubscribed);
+    expect(result).toBeDefined;
+})
+it('Case 1', () => {
+    const projectSharingRole = 'SUBSCRIBER';
+    const isSubscribed = true;
+    let result = isSubscriberRole(projectSharingRole, isSubscribed);
+    expect(result).toBeDefined;
+})
+it('Case 1', () => {
+    const model = '<p></p>';
+    let result = prepareStageDirectionDom(model);
+    expect(result).toBeDefined;
+})
+it('Case 1', () => {
+    const data ={
+        data : ''
+    }
+    const projectSharingRole = 'OWNER'
+    const isSubscribed = true
+    let result = releaseOwnerPopup(data,projectSharingRole,isSubscribed);
+    expect(result).toBeDefined;
+})
+it('Case 2', () => {
+    const data ={
+        data : ''
+    }
+    const projectSharingRole = 'SUBSCRIBER'
+    const isSubscribed = true
+    let result = releaseOwnerPopup(data,projectSharingRole,isSubscribed);
+    expect(result).toBeDefined;
+})
+it('Case 2', () => {
+    const data ={
+        data : ''
+    }
+    const projectSharingRole = ''
+    const isSubscribed = true
+    let result = releaseOwnerPopup(data,projectSharingRole,isSubscribed);
+    expect(result).toBeDefined;
+})
+describe('Testing Function - replaceUnwantedtags', () => {
+    it('Case 1', () => {
+        const html = '<>'
+        let result = replaceUnwantedtags(html);
+        expect(result).toBeDefined;
+    })
+})
+describe('Testing Function - removeStyleAttribute', () => {
+    it('Case 1', () => {
+        const html = '<>'
+        let result = removeStyleAttribute(html);
+        expect(result).toBeDefined;
+    })
+})
+describe('Testing Function - removeMarkedIndexDOMAttributes', () => {
+    it('Case 1', () => {
+        const html = '<>'
+        let result = removeMarkedIndexDOMAttributes(html);
+        expect(result).toBeDefined;
+    })
+})
+describe('Testing Function - removedDOMAttributes', () => {
+    it('Case 1', () => {
+        const html = '<>'
+        let result = removedDOMAttributes(html);
+        expect(result).toBeDefined;
     })
 })

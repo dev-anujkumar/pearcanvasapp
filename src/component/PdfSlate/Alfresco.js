@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../../config/config";
 import { hasReviewerRole, sendDataToIframe } from "../../constants/utility";
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from "../../constants/IFrameMessageTypes";
 
 var projectMetadata;
 
@@ -25,12 +26,13 @@ export const handleC2MediaClick = (props) => {
                 const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                 let messageObj = {
                     appName:'cypress',
-                    citeName: citeName,
-                    citeNodeRef: citeNodeRef,
+                    rootNodeName: citeName,
+                    rootNodeId: citeNodeRef,
                     elementId: props.element.id,
-                    currentAsset: { type: "Pdf" }
+                    currentAsset: { type: "Pdf" },
+                    defaultCategory:'other'
                 }
-                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                 const messageDataToSave = {
                     id: props.element.id,
                     editor: undefined,
@@ -45,6 +47,7 @@ export const handleC2MediaClick = (props) => {
         if (props.permissions.includes('alfresco_crud_access')) {
             let currentAsset = { type: "Pdf" }
             handleSiteOptionsDropdown(alfrescoPath, props.element.id, props, currentAsset);
+            sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
         } else {
             props.accessDenied(true)
         }
@@ -52,27 +55,12 @@ export const handleC2MediaClick = (props) => {
 
 }
 
-const handleSiteOptionsDropdown = (alfrescoPath, id, props, currentAsset) =>{
-    let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-    return axios.get(url,
- {
-            headers: {
-                'Accept': 'application/json',
-                'ApiKey': config.CMDS_APIKEY,
-                'Content-Type': 'application/json',
-                
-            }
-        })
-        .then(function (response) {
-           let payloadObj = {launchAlfrescoPopup: true,
-            alfrescoPath: alfrescoPath,
-            alfrescoListOption: response.data.list.entries,
-            id,
-            currentAsset
-        }
-            props.alfrescoPopup(payloadObj)
-        })
-        .catch(function (error) {
-            console.log("Error IN SITE API", error)
-        });
+const handleSiteOptionsDropdown = (alfrescoPath, id, props, currentAsset) => {
+    let payloadObj = {
+        launchAlfrescoPopup: true,
+        alfrescoPath: alfrescoPath,
+        id,
+        currentAsset
+    }
+    props.alfrescoPopup(payloadObj)
 }
