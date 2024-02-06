@@ -1618,9 +1618,6 @@ padding-left: 9px;
   display: none;
 }
 
-.mce-content-body p img{
-  width: 50%;
-}
 
 .preview-container{
   display: 'flex';

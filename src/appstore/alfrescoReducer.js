@@ -23,7 +23,8 @@ const INITIAL_STATE = {
     savedElement:{},
     savedAltLongDesData: {
     },
-    currentAsset:{}
+    currentAsset: {},
+    defaultCategory:""
 }
 
 const INITIAL_ACTION = {
@@ -44,7 +45,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 locationData: action.payload.locationData,
                 calledFromGlossaryFootnote: action.payload.isGlossary,
                 calledFromImageGlossaryFootnote: action.payload.isImageGlossary,
-                currentAsset: action.payload.currentAsset
+                currentAsset: action.payload.currentAsset,
+                defaultCategory:action.payload.defaultCategory
             }
         case SAVE_ALFRESCO_ASSET_DATA:
             return {

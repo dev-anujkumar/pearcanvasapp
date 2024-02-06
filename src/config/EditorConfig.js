@@ -31,7 +31,7 @@ export const EditorConfig = {
             specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry 
             code IndexEntry | customListButton customUoListButton indent outdent | slateTag `,
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste image casechange",
+    plugins: "lists advlist  charmap paste casechange",
 }
 
 export const GlossaryFootnoteEditorConfig = {
@@ -166,7 +166,7 @@ const insertImageHandler = (params) => {
     let { element, permissions, editor ,props} = params;
     let allowedElementTypes = [ElementConstants.ELEMENT_LIST,ElementConstants.AUTHORED_TEXT,ElementConstants.LEARNING_OBJECTIVE_ITEM,ElementConstants.BLOCKFEATURE];
     if (allowedElementTypes.indexOf(element?.type) > -1) {
-        handleC2MediaClick(permissions, editor, element, props.saveSelectedAlfrescoElement);
+        handleC2MediaClick(permissions, editor, element, props);
     }
 }
 /** Insert Media-Selector Dropdown Handler */

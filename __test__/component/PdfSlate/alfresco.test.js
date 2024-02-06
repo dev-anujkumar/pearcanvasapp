@@ -78,13 +78,14 @@ describe('handleC2MediaClick', () => {
         // mockFetchData.mockReturnValue(false);
         handleC2MediaClick(props)
     });
-    it('handleC2MediaClick with permissions as "alfresco_crud_access', () => {
+    
+    it('handleC2MediaClick with no permissions as "alfresco_crud_access"', () => {
         const props = {
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
             saveSelectedAlfrescoElement: jest.fn(),
             alfrescoPopup: jest.fn(),
-            permissions: ['alfresco_crud_access'],
+            permissions: [],
             element: {id:1}
         }
         config.alfrescoMetaData = {
@@ -102,7 +103,7 @@ describe('handleC2MediaClick', () => {
             accessDenied: jest.fn(),
             saveSelectedAlfrescoElement: jest.fn(),
             alfrescoPopup: jest.fn(),
-            permissions: [],
+            permissions: ['alfresco_crud_access'],
             element: {id:1}
         }
         config.alfrescoMetaData = {
