@@ -51,7 +51,6 @@ import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
 import tabIcon from '../../images/ElementButtons/tabIcon.png'
 import ElementConstants from '../ElementContainer/ElementConstants';
 import blureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants.js';
 class ElementButton extends Component {
 
   /**
@@ -63,7 +62,7 @@ class ElementButton extends Component {
     renderButton = (type, clickHandlerFn, elementType, btnClassName = '', isButtonDisabled = false) => {
         let buttonJSX = null
         const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : '';
-        const { labelText,elementId,isSubscribersSlate, isgreyBorder, importStatus } = this.props;
+        const { labelText,elementId,isSubscribersSlate, isgreyBorder } = this.props;
         const isBorderOff = isgreyBorder ? "greyElementTag" : "";
         switch(type){
             case buttonTypes.CLOSE_CONTAINER:
@@ -72,7 +71,7 @@ class ElementButton extends Component {
             case buttonTypes.ADD_COMMENT:
                 buttonJSX = <div className='add-comment-btn'>
                     <Tooltip direction='comment' tooltipText="Add Comment">
-                        <span className={`btn-element small add-comment ${btnClassName} ${(isSubscribersSlate || (importStatus === IN_PROGRESS_IMPORT_STATUS)) ? 'subscriberSlate' : ''} ${elementTypeClassName}`}
+                        <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`}
                          onClick={clickHandlerFn}>
                             <img src={add2} />
                         </span>

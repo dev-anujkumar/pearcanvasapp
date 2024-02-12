@@ -90,7 +90,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                     'Accept': CONTENT_TYPE,
                     'Content-Type': CONTENT_TYPE,
                     'ApiKey': config.AUDIO_API_KEY,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             });
             if(audioDataResponse && audioDataResponse.data && audioDataResponse.status == 200){
@@ -156,7 +156,7 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                     'Accept': CONTENT_TYPE,
                     'Content-Type': CONTENT_TYPE,
                     'ApiKey': config.AUDIO_API_KEY,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             });
             if (audioDataResponse && audioDataResponse.status == 200) {
@@ -233,7 +233,7 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
                     'Accept': CONTENT_TYPE,
                     'Content-Type': CONTENT_TYPE,
                     'ApiKey': config.AUDIO_API_KEY,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             });
            // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"

@@ -25,7 +25,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         {
             headers: {
                 "Content-Type": "application/json",
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         }
     ).then(async (response) => {

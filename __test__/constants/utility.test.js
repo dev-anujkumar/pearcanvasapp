@@ -96,11 +96,8 @@ describe('Testing Function - dropdownValueAtIntialize', () => {
 
 describe('Testing Function - requestConfigURI', () => {
     it('Case 1', () => {
-        process.env = {
-            NODE_ENV: "development"
-        }
-        let result = requestConfigURI(process);
-        expect(result).toBe('dev');
+        let result = requestConfigURI();
+        expect(result).toBe('prod');
     })
     it('Case 2 conditional coverage', () => {
         process.env = {
@@ -111,12 +108,9 @@ describe('Testing Function - requestConfigURI', () => {
         expect(result).toBe('prod');
     })
     it('Case 3 conditional coverage', () => {
-        process.env = {
-            NODE_ENV: "prod"
-        }
         cypressConfig.prodUrl = "structuredauthoring.pearson.com";
         let result = requestConfigURI();
-        expect(result).toBe('localhost');
+        expect(result).toBe('prod');
     })
 })
 

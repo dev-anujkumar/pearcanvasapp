@@ -14,7 +14,7 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
     axios.put(url, req, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then(response => {
     }).catch(error => {

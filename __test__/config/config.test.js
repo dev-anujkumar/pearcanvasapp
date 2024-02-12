@@ -29,7 +29,7 @@ describe('Testing config----->', () => {
         it('will receive process.env.NODE_ENV = production variables', () => {
             process.env.NODE_ENV = 'production';
             const testedModule = require('../../src/config/config').default
-            expect(testedModule.WRAPPER_URL).toBe("https://localhost:/toc-wrapper/index.html")
+            expect(testedModule.WRAPPER_URL).toBe("https://localhost:/cypress/toc-wrapper/index.html")
             expect(testedModule.TCM_DASHBOARD_UI_URL).toBe('https://localhost:/cypress/trackchanges/index.html')
         });
         it('will receive process.env.NODE_ENV not given', () => {

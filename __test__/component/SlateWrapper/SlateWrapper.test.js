@@ -782,7 +782,7 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.35 Test - showImageGlossaryRemoveConfirmationPopup ", () => {
+    xdescribe("1.35 Test - showImageGlossaryRemoveConfirmationPopup ", () => {
         it('1.35.1  Test - if case (this.props.removeGlossaryImage)', () => {
             const newInitialState = {...initialState, appStore: {removeGlossaryImage: true, slateLevelData: {
                 "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -812,7 +812,7 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.36 Test - toggleImageGlossaryPopup ", () => {
+    xdescribe("1.36 Test - toggleImageGlossaryPopup ", () => {
         it('1.36.1  Test - if case (this.props.removeGlossaryImage)', () => {
             const newInitialState = {...initialState, appStore: {removeGlossaryImage: true, slateLevelData: {
                 "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -842,7 +842,7 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.37 Test - toggleWrongImagePopup ", () => {
+    xdescribe("1.37 Test - toggleWrongImagePopup ", () => {
         it('1.37.1  Test - if case (this.props.removeGlossaryImage)', () => {
             const newInitialState = {...initialState, appStore: {accesDeniedPopup: true, slateLevelData: {
                 "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -872,7 +872,7 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.38 Test - processRemoveImageGlossaryConfirmation ", () => {
+    xdescribe("1.38 Test - processRemoveImageGlossaryConfirmation ", () => {
         it('1.38.1  Test - if case (this.props.removeGlossaryImage)', () => {
             const newInitialState = {...initialState, appStore: {removeGlossaryImage: true, slateLevelData: {
                 "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {

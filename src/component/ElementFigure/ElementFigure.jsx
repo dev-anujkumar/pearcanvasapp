@@ -243,7 +243,7 @@ class ElementFigure extends Component {
             PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
             STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
             AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA,
-            myCloudProxySession: config.myCloudProxySession
+            
         }
         const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
