@@ -5,7 +5,7 @@ import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
-import axios from 'axios';
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 
 /**
 * @description - AddAudioBook is a class based component. It is defined simply for adding audio Narration.
@@ -30,29 +30,14 @@ class AddAudioBook extends React.Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary,currentAsset) => {
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            })
-            .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true,
-                alfrescoPath: alfrescoPath,
-                alfrescoListOption: response.data.list.entries,
-                id,
-                isGlossary,
-                currentAsset
-            }
-                that.props.alfrescoPopup(payloadObj);
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+        let payloadObj = {
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
+            id,
+            isGlossary,
+            currentAsset
+        }
+        that.props.alfrescoPopup(payloadObj);
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -65,6 +50,7 @@ class AddAudioBook extends React.Component {
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
+        const currentAsset = { type: "audio" }
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {          //if alfresco location is available
                 if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
@@ -72,14 +58,16 @@ class AddAudioBook extends React.Component {
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                    let messageObj = {appName:'cypress', citeName:  citeName,
-                        citeNodeRef: citeNodeRef,
+                    let messageObj = {
+                        appName: 'cypress', rootNodeName:  citeName,
+                        rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary,
-                        currentAsset: { type: "audio" }
+                        currentAsset: currentAsset,
+                        defaultCategory: currentAsset?.type
                     }
 
-                        sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                         const messageDataToSaveAudioBook = {
                             id: this.props.elementId,
                             calledFrom: 'NarrativeAudio',
@@ -92,11 +80,14 @@ class AddAudioBook extends React.Component {
                 } else {
                     this.props.accessDenied(true)
                 }
+            } else {
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary, currentAsset);
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                let currentAsset = { type: "audio" }
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary, currentAsset);
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             } else {
                 this.props.accessDenied(true)
             }

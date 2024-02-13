@@ -8,11 +8,11 @@ import { createLabelNumberTitleModel, getLabelNumberTitleHTML, hasReviewerRole, 
 import noImage from '../../images/OpenerElement/no-image.png'
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
-import axios from 'axios';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement, saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import TinyMceEditor from '../tinyMceEditor';
 import { CPLG_ALT, CPLG_LONGDESCRIPTION, NAME_ATTR_SELECT, NAME_ATTR_SELECT_LONGDESC } from '../../constants/Element_Constants';
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 
 class OpenerElement extends Component {
 
@@ -90,28 +90,13 @@ class OpenerElement extends Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            })
-            .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true,
-                alfrescoPath: alfrescoPath,
-                alfrescoListOption: response.data.list.entries,
-                id,
-                currentAsset
-            }
-                that.props.alfrescoPopup(payloadObj)
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+        let payloadObj = {
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
+            id,
+            currentAsset
+        }
+        that.props.alfrescoPopup(payloadObj)
     }
 
      /**
@@ -141,12 +126,13 @@ class OpenerElement extends Component {
                     const citeNodeRef = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
                     let messageObj = {
                         appName:'cypress',
-                        citeName: citeName,
-                        citeNodeRef: citeNodeRef,
+                        rootNodeName: citeName,
+                        rootNodeId: citeNodeRef,
                         elementId: this.props.elementId,
-                        currentAsset : {type: "image"}
+                        currentAsset: { type: "image" },
+                        defaultCategory:"image"
                     }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                     const messageDataToSave = {
                         id: this.props.elementId,
                         editor: undefined,
@@ -162,6 +148,7 @@ class OpenerElement extends Component {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 let currentAsset = {type: "image"}
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, currentAsset);
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse : false} })
             }
             else {
                 this.props.accessDenied(true)
@@ -190,12 +177,13 @@ class OpenerElement extends Component {
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                 let messageObj = {
                     appName:'cypress',
-                    citeName: globalAlfrescoPath?.repoName,
-                    citeNodeRef: globalAlfrescoPath?.nodeRef,
+                    rootNodeName: globalAlfrescoPath?.repoName,
+                    rootNodeId: globalAlfrescoPath?.nodeRef,
                     elementId: this.props.elementId,
-                    currentAsset: { type: "image" }
+                    currentAsset: { type: "image" },
+                    defaultCategory:"image"
                 }
-                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                 const messageDataToSave = {
                     id: this.props.elementId,
                     editor: undefined,

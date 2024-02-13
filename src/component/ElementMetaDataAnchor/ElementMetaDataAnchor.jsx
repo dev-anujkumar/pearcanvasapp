@@ -130,7 +130,7 @@ export class ElementMetaDataAnchor extends Component {
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-      'myCloudProxySession': config.myCloudProxySession,
+      
       'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
     };
     const selectedLOs = this.props.currentSlateLOData;

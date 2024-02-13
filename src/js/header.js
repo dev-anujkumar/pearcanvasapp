@@ -89,7 +89,6 @@ const logoutWithModernOpenAM = async () => {
         await axios.post(config_object.LOGOUT_API, null, {
             headers: {
                 "Content-Type": "application/json",
-                'myCloudProxySession': config_object.myCloudProxySession
             }
         })
             .then(response => {
@@ -103,7 +102,7 @@ const logoutWithModernOpenAM = async () => {
                         localStorage.removeItem('hasSubscriberView');
                     }
                     deleteCookie('PearsonSSOSession', PEARSON_DOMAIN);
-                    deleteCookie('myCloudProxySession', PEARSON_DOMAIN);
+                    deleteCookie('PearsonExtSSOSession', PEARSON_DOMAIN);
                     deleteCookie('DISABLE_DELETE_WARNINGS', PEARSON_DOMAIN);
                     deleteCookie('DISABLE_LIST_ELEMENT_WARNING', PEARSON_DOMAIN);
                     deleteCookie('DISABLE_DI_CONVERSION_WARNING', PEARSON_DOMAIN);

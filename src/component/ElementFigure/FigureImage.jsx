@@ -26,6 +26,7 @@ import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
 import { launchTableSPA } from './ElementFigure_Utility';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -391,12 +392,13 @@ class FigureImage extends Component {
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     let messageObj = {
                         appName:'cypress',
-                        citeName: citeName,
-                        citeNodeRef: nodeRefs,
+                        rootNodeName: citeName,
+                        rootNodeId: nodeRefs,
                         elementId: this.props.elementId,
-                        currentAsset
+                        currentAsset,
+                        defaultCategory:currentAsset.type
                     }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                     const messageDataToSave = {
                         id: this.props.elementId,
                         editor: undefined,
@@ -413,6 +415,7 @@ class FigureImage extends Component {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData, currentAsset);
                 this.props.alfrescoPopup(payloadObj);
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             } else {
                 this.props.accessDenied(true)
             }

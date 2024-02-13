@@ -12,13 +12,13 @@ import {
     EXIF_PIXELYDIMENSION
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
-import axios from 'axios';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
 import { handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
+import { LAUNCH_CAT_TOOL, LAUNCH_SITE_PICKER } from '../../constants/IFrameMessageTypes.js';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -199,7 +199,7 @@ class ElementFigure extends Component {
                     elementId: this.props.elementId,
                     currentAsset
                  }
-                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
             }
             else {
                 this.props.accessDenied(true)
@@ -208,6 +208,7 @@ class ElementFigure extends Component {
         }} else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
+                sendDataToIframe({ 'type': LAUNCH_SITE_PICKER, 'message': { browse: false } })
             } else {
                 this.props.accessDenied(true)
             }
@@ -242,7 +243,7 @@ class ElementFigure extends Component {
             PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
             STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
             AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA,
-            myCloudProxySession: config.myCloudProxySession
+            
         }
         const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
@@ -264,29 +265,13 @@ class ElementFigure extends Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            })
-            .then(function (response) {
-
-               let payloadObj = {launchAlfrescoPopup: true,
-                alfrescoPath: alfrescoPath,
-                alfrescoListOption: response.data.list.entries,
-                id,
-                locationData
-            }
-                that.props.alfrescoPopup(payloadObj)
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
+        let payloadObj = {
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
+            id,
+            locationData
+        }
+        that.props.alfrescoPopup(payloadObj)
     }
     /*** @description - This function is for handling the different types of figure-element.
         * @param model object that defined the type of element

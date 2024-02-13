@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility';
+import { getCookieByName, hasReviewerRole, sendDataToIframe } from '../../constants/utility';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave.js';
 import { RELEASE_SLATE_LOCK_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 
@@ -34,7 +34,12 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
 
     // if projectUrn and slateId has values then only call should be triggered
     if (projectUrn && slateId) {
-        return axios.get(url)
+        return axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                
+            }
+        })
         .then((res) => {
             config.isSlateLockChecked = res.data.isLocked;
             sendDataToIframe({
@@ -67,15 +72,16 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         return callback({isLocked : false, userId : ""})
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
-
-    return axios.get(url)
-        .then((res) => {
-            if(callback)
-                callback(res.data)
-        })
-        .catch((err) => {
-        })
-}
+    
+    return axios.get(url, {
+		headers: {
+			"Content-Type": "application/json",
+			
+		}
+    }).then((res) => {
+        if (callback) callback(res.data)
+    }).catch((err) => {})
+}  
 
 /**
  * Action Creator
@@ -94,19 +100,25 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
     let data = {
         projectUrn,
         slateId,
-        lockDuration
+        lockDuration,
+        firstName: getCookieByName('FIRST_NAME'),
+        lastName: getCookieByName('LAST_NAME'),
+        userName: getCookieByName('USER_NAME')
     }
-    return axios.post(url, data)
-        .then((res) => {
-            config.releaseCallCount = 0
-            dispatch({
-                type : SET_LOCK_FLAG,
-                payload : true
-            })
+    return axios.post(url, data, {
+        headers: {
+			"Content-Type": "application/json",
+			
+		}
+    }).then((res) => {
+        config.releaseCallCount = 0
+        dispatch({
+            type : SET_LOCK_FLAG,
+            payload : true
         })
-        .catch((err) => {
-            console.log("error from set slate>>>>",err)
-        })
+    }).catch((err) => {
+        console.log("error from set slate>>>>",err)
+    })
  }
 
  /**
@@ -118,26 +130,31 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
 export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRole) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
-       projectUrn,
-       slateId
+        projectUrn,
+        slateId,
+        firstName: getCookieByName('FIRST_NAME'),
+        userName: getCookieByName('USER_NAME')
     }
-    if(userRole) data.roleId = userRole
-    return axios.post(url, data)
-       .then((res) => {
-            if(releaseLockButton){ // Condition to remove the lockinfo data on Unlock button clicked by Admin
-                let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
-                dispatch(saveLockDetails(lockInfo))
-                const lockDuration = 5400
-                dispatch(setSlateLock(projectUrn, slateId, lockDuration))
-            }
-            dispatch({
-                type : SET_LOCK_FLAG,
-                payload : false
-            })
+    if (userRole) data.roleId = userRole
+    return axios.post(url, data, {
+        headers: {
+            "Content-Type": "application/json",
+            
+        }
+    }).then((res) => {
+        if (releaseLockButton) { // Condition to remove the lockinfo data on Unlock button clicked by Admin
+            let lockInfo = { "isLocked": false, "userId": "", "timestamp": "", "firstName": "", "lastName": "" }
+            dispatch(saveLockDetails(lockInfo))
+            const lockDuration = 5400
+            dispatch(setSlateLock(projectUrn, slateId, lockDuration))
+        }
+        dispatch({
+            type: SET_LOCK_FLAG,
+            payload: false
         })
-        .catch((err) => {
-            console.log("API error from release slate>>>>",err)
-        })
+    }).catch((err) => {
+        console.log("API error from release slate>>>>", err)
+    })
 }
 
 /**
@@ -150,25 +167,30 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
-       slateId
+       slateId,
+       firstName: getCookieByName('FIRST_NAME'),
+       userName: getCookieByName('USER_NAME')
     }
-    return axios.post(url, data)
-       .then((res) => {
-           store.dispatch({
-               type: SET_LOCK_FLAG,
-               payload: false
-           })
-           triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
-            if(callback){
-                callback(res.data)
-            }
+    return axios.post(url, data, {
+        headers: {
+			"Content-Type": "application/json",
+			
+		}
+    }).then((res) => {
+        store.dispatch({
+            type: SET_LOCK_FLAG,
+            payload: false
         })
-        .catch((err) => {
-            triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
-            if(callback){
-                callback(err)
-            }
-        })
+        triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
+        if(callback){
+            callback(res.data)
+        }
+    }).catch((err) => {
+        triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
+        if(callback){
+            callback(err)
+        }
+    })
 }
 
 /**

@@ -31,7 +31,6 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
     axios.post(content_url, JSON.stringify(content_data), {
       headers: {
         'Content-Type': 'application/json',
-        myCloudProxySession: config_object.myCloudProxySession,
         'aws-resource': config_object.AWS_RESOURCE,
         arn: PREVIEW_ARN,
         accept: 'application/json, text/plain, */*',
@@ -91,7 +90,7 @@ export const publishSlate = (project, section, cite) => {
   axios.post(content_url, JSON.stringify(content_data), {
     headers: {
       'Content-Type': 'application/json',
-      myCloudProxySession: config_object.myCloudProxySession,
+      
       'aws-resource': config_object.AWS_RESOURCE,
       arn: config_object.SLATE_PREVIEW_ARN,
       accept: 'application/json, text/plain, */*',
