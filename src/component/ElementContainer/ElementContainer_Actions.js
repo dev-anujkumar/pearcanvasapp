@@ -58,7 +58,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
             headers: {
                 "Content-Type": CONTENT_TYPE,
                 ApiKey: config.STRUCTURE_APIKEY,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         }
     )
@@ -116,7 +116,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         }
     )
@@ -239,7 +239,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             {
                 headers: {
                     "Content-Type": CONTENT_TYPE,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             }
         )
@@ -270,7 +270,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         const elmAssessmentData = assessmentUpdatedData?.filter((item) => {
             return item?.assessmentVersionUrn == updatedData?.figuredata?.elementdata?.assessmentid;
         })
-        const assessmentItemUpdateCheck = elmAssessmentData && elmAssessmentData[0]?.assessmentVersionUrn !== updatedData?.figuredata?.elementdata?.assessmentid
+        const assessmentItemUpdateCheck = elmAssessmentData && elmAssessmentData[0]?.assessmentItemVersionUrn !== updatedData?.figuredata?.elementdata?.assessmentitemid
         // calling the assessment API to fetch the latest assessment data after the saving call
         if((!assessmentUpdatedData || (assessmentUpdatedData && assessmentUpdatedData[0]?.versionUrn !== updatedData?.elementdata?.assessmentid)) && assessmentTypeCheck && updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE && assessmentIdCheck) {
             store.dispatch(fetchAssessmentUpdatedData())
@@ -293,6 +293,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         config.isSavingElement = false
+        config.updatedAssessmentAPITriggered = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("updateElement Api fail", error);
@@ -460,7 +461,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         }
     ).then(response => {
@@ -547,7 +548,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         }
     ).then( async (createdElemData) => {
@@ -882,7 +883,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then(res => {
         // Making condition true for triggering slate level save api
@@ -968,7 +969,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then(res => {
         // Making condition true for triggering slate level save api
@@ -1042,7 +1043,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
                     'Accept': CONTENT_TYPE,
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': CONTENT_TYPE,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             });
         const {properties} = response.data.entry;
@@ -1161,7 +1162,7 @@ export const saveTEMetadata = async (editedImageList) => {
                     headers: {
                         "Content-Type": CONTENT_TYPE,
                         "apikey": config.CMDS_APIKEY,
-                        'myCloudProxySession': config.myCloudProxySession
+                        
                     }
                 });
                 promiseArray.push(response);
@@ -1279,7 +1280,7 @@ export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
             headers: {
                 "Content-Type": CONTENT_TYPE,
                 "apikey": config.CMDS_APIKEY,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         })
         if(response && response?.status === 200){

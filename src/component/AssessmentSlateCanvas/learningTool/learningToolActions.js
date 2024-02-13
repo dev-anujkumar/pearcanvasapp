@@ -34,7 +34,7 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
         'X-Roles': 'ContentPlanningAdmin',
         'Content-Type': CONTENT_TYPE,
         'apikey': config.STRUCTURE_APIKEY,
-        'myCloudProxySession': config.myCloudProxySession
+        
       }
     }
   )
@@ -77,7 +77,7 @@ export const openLTFunction = (taxonomyId) => dispatch => {
         'X-Roles': 'ContentPlanningAdmin',
         'Content-Type': CONTENT_TYPE,
         'apikey': config.STRUCTURE_APIKEY,
-        'myCloudProxySession': config.myCloudProxySession
+        
       }
     }
   ).then(res => {
@@ -193,7 +193,7 @@ export const fetchLearningTemplates = () => async dispatch => {
       method: 'GET',
       headers: {
         'Content-Type': CONTENT_TYPE,
-        'myCloudProxySession': config.myCloudProxySession
+        
       }
     });
     let {data} = resp;

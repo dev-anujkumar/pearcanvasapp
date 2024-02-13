@@ -42,7 +42,7 @@ import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached,
         isElementInsideBlocklist, checkActiveElement, setInstanceToolbar, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
-import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
+import { saveInlineImageData, saveSelectedAlfrescoElement, alfrescoPopup } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
 import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES,
@@ -931,7 +931,7 @@ export class TinyMceEditor extends Component {
                 }
                 config.updateInlineImage = true
                 this.props.saveInlineImageData(params)
-                handleC2MediaClick(this.props.permissions, editor, this.props.element, this.props.saveSelectedAlfrescoElement);
+                handleC2MediaClick(this.props.permissions, editor, this.props.element, this.props);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -4855,5 +4855,5 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps,
     { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement,
-        saveSelectedAlfrescoElement, saveCaretPosition, approvedSlatePopupStatus }
+        saveSelectedAlfrescoElement, saveCaretPosition, approvedSlatePopupStatus, alfrescoPopup }
 )(TinyMceEditor);

@@ -33,23 +33,28 @@ export const MARKEDINDEX = 'MARKEDINDEX';
 export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
 export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
 export const validFirstNodeTags = ['span','dfn'];
-export const withoutCursorInitailizedElements = ['figure', 'element-aside']
+export const withoutCursorInitailizedElements = ['figure', 'element-aside'];
+export const ALLOWED_ENVIRONMENT_NAMES = ['dev', 'test', 'qa', 'staging', 'perf', 'prf', 'stg', 'smk'];
 export const ALLOWED_FORMATTING_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
 
+// function to get the environment name based on host
 export const requestConfigURI = () => {
-    let uri = '';
-    if(process.env.NODE_ENV === "development"){
-        uri = cypressConfig.sitePointing;
-    }else{
-        let originUrl  = window.location.origin;
-        if(originUrl === cypressConfig.prodUrl) {
-            uri = 'prod';
-        }else{
-            let splitOriginUri = originUrl.split("-")[0];
-            uri = splitOriginUri.split("//")[1]
+    const hostname = window.location.host;
+    let environmentName = 'prod';
+    if(hostname) {
+        const splittedHostName = hostname.split(".");
+        if(splittedHostName.length > 0 ) {
+            const splittedHost = splittedHostName[0].split("-");
+            if(splittedHost.length > 0) {
+                splittedHost.forEach((environment) => {
+                    if(ALLOWED_ENVIRONMENT_NAMES.includes(environment)) {
+                        environmentName = environment;
+                    }
+                }); 
+            }
         }
     }
-    return uri;
+    return environmentName;
 }
 
 export const sendDataToIframe = (messageObj) => {
@@ -863,18 +868,6 @@ export const getDesignType = (classList) => {
     }
 }
 
-/**Function to retun class to apply based on selectedOption & focused Button for AlfrescoPopup Component 'Select' button*/
-export const getPrimaryButtonClass = (selectedOption, focusedButton) => {
-    if(selectedOption !== '' && focusedButton === PRIMARY_BUTTON) {
-        return "active-button-class primary";
-    } else if(selectedOption !== '' && focusedButton !== PRIMARY_BUTTON) {
-        return "active-button-class";
-    } else if(selectedOption === '' && focusedButton === PRIMARY_BUTTON) {
-        return "primary";
-    } else {
-        return null;
-    }
-}
 
 // function to get cookie value by key name
 export const getCookieByName = (name) => {

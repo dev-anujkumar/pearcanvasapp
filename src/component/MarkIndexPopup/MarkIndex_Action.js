@@ -236,7 +236,7 @@ export const getCrossReferenceValues = () => async (dispatch) => {
         const result = await axios.get(url, {
             headers: {
                 "Content-Type": "application/json",
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         });
 

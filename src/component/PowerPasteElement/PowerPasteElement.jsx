@@ -98,7 +98,7 @@ export const pastePostProcess = (data, props, processType) => {
       tinymce?.get('myTextarea2')?.setContent('')
       const childNodes = data?.body?.children;
       const elements = [];
-      createPastedElements(childNodes, elements);
+      createPastedElements(childNodes, elements, processType);
       const updatedElements = []
       //preparing content that needs to be preview and import
       data.body = prepareFinalPasteContent(elements, data?.body, props, '', processType)
@@ -248,7 +248,7 @@ export const filterSupportedTagAndData = (elements,updatedElements) => {
  * @param {HTMLElement} childElements HTML element node object
  * @param {Array} elements Array containing details of elements copied
  */
-export const createPastedElements = (childElements, elements) => {
+export const createPastedElements = (childElements, elements, processType) => {
   for (let i = 0; i < childElements.length; i++) {
     switch (childElements[i].tagName) {
       case 'P':
@@ -265,14 +265,14 @@ export const createPastedElements = (childElements, elements) => {
           // }
         break;
         case 'UL':
-          powerPasteHelpers.addUListClasses(childElements[i], 1);
+          powerPasteHelpers.addUListClasses(childElements[i], 1, processType);
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'OL':
           // if the list starts other than numeric format then calls addSpecificOListClasses method
           // otherwise calls addOListClasses method for adding list classes to html and if the list
           // does not start with digits and has style attribute then remove it
-          childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
+          childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1, processType);
           if(childElements[i].hasAttribute('style')){
             childElements[i].removeAttribute('style');
           }

@@ -181,24 +181,26 @@ class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        const isElmLearnosity = (this.state.elementType == PUF || this.state.elementType == LEARNOSITY) ? true : false
-        if (isElmLearnosity && this.state.assessmentId && this.state.activeAsseessmentUsageType !== usageType) {
-            let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
-            const { assessmentReducer } = this.props;
-            const { assessmentId } = this.state
-            const newAssessmentData = assessmentReducer[assessmentId]
-            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
-            if (newAssessmentData?.intendedUsage.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+        const { elementType, assessmentId, activeAsseessmentUsageType } = this.state
+        const { assessmentReducer, model } = this.props;
+        const isElmLearnosity = elementType == PUF || elementType == LEARNOSITY
+        if (isElmLearnosity && assessmentId && activeAsseessmentUsageType !== usageType) {
+            let usageTypeList = assessmentReducer?.usageTypeListData;
+            const elmAssessmentData = assessmentReducer?.updatedAssessmentData?.filter((item) => {
+                return item?.versionUrn == model?.id;
+            })
+            const updatedUsageType = usageTypeList?.find((type) => type?.label === usageType)
+            if (elmAssessmentData?.length && elmAssessmentData[0]?.usageType && (elmAssessmentData[0].usageType?.toLowerCase() !== updatedUsageType?.usagetype?.toLowerCase())) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType
                 });
             }
-            else if (this.state.activeAsseessmentUsageType !== usageType) {
+            else if (activeAsseessmentUsageType !== usageType) {
                 this.setChangeUsageType(usageType)
             }
         }
-        else if (this.state.activeAsseessmentUsageType !== usageType) {
+        else if (activeAsseessmentUsageType !== usageType) {
             this.setChangeUsageType(usageType)
         }
         this.setState({

@@ -445,7 +445,7 @@ export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         })
 }
@@ -484,7 +484,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
     return axios.get(lobURL, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then (response => {
         dispatch({
@@ -511,7 +511,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(lobPermissionsURL, {
                 headers: {
                     "Content-Type": CONTENT_TYPE,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             }).then (response => {
                 const { elementPermissions } = response.data;
@@ -529,7 +529,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(workflowRoleURL, {
                 headers: {
                     "Content-Type": CONTENT_TYPE,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             }).then(response => {
                 dispatch({
@@ -554,7 +554,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     ApiKey:config.STRUCTURE_APIKEY,
                     'Content-Type':CONTENT_TYPE,
                     Authorization:config.CMDS_AUTHORIZATION,
-                    'myCloudProxySession': config.myCloudProxySession
+                    
                 }
             }).then (usageTypeResponse => {
                 const data = usageTypeResponse?.data;
@@ -645,10 +645,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then(slateData => {
         config.isSlateElementCompleted = false;
+        config.updatedAssessmentAPITriggered = false;
         dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
         sendDataToIframe({ 'type': IMPORTED_DATA_STATUS, 'message': slateData?.data[manifestURN]?.importData });
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
@@ -991,6 +992,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     })
     .catch(err => {
+        config.updatedAssessmentAPITriggered = false;
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         dispatch({type: ERROR_API_POPUP, payload:{show: true,message:SLATE_API_ERROR}})
         console.error('Error in fetch Slate api', err);
@@ -1270,12 +1272,13 @@ export const fetchAuthUser = () => dispatch => {
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
         headers: {
             "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then((response) => {
         let userInfo = response.data;
 		config.userEmail = userInfo.email;
         config.fullName = userInfo.lastName + ',' + userInfo.firstName
+        document.cookie = (userInfo.userId)?`USER_NAME=${userInfo.userId};path=/;`:`USER_NAME=;path=/;`;
         document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
@@ -1511,7 +1514,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         })
     .then((response) => {
@@ -1582,7 +1585,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         {
             headers: {
                 "Content-Type": CONTENT_TYPE,
-                'myCloudProxySession': config.myCloudProxySession
+                
             }
         })
     .then((response) => {
@@ -1761,8 +1764,7 @@ export const setSlateLength = (length) => {
 export const fetchLearnosityContent = () => dispatch => {
     return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}`, {
         headers: {
-            "Content-Type": CONTENT_TYPE,
-            'myCloudProxySession': config.myCloudProxySession
+            "Content-Type": CONTENT_TYPE      
         }
     }).then((response) => {
      if(response.status==200){
@@ -1791,7 +1793,7 @@ export const fetchProjectLFs = () => dispatch => {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": CONTENT_TYPE,
             "x-Roles": "ContentPlanningAdmin",
-            'myCloudProxySession': config.myCloudProxySession
+            
         }
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
@@ -1867,7 +1869,7 @@ const getLOBList = () => {
 	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
 		headers: {
 			"ApiKey": config.STRUCTURE_APIKEY,
-            "myCloudProxySession": config.myCloudProxySession,
+            
 			"Content-Type": CONTENT_TYPE,
 			"x-Roles": "LearningAdmin",
 		}

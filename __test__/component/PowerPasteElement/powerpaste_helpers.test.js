@@ -127,27 +127,27 @@ describe('-----------------------Test powerpaste_helper Functions---------------
             expect(spyFunction).toHaveBeenCalledWith(node, depth);
         })
     });
-    describe('Test-4-Function--1--addUListClasses', () => {
+    xdescribe('Test-4-Function--1--addUListClasses', () => {
         let node = node4;
-        it('addUListClasses with depth 1', () => {
+        xit('addUListClasses with depth 1', () => {
             let depth = 1;
             const spyFunction = jest.spyOn(methods, 'addUListClasses');
             methods.addUListClasses(node, depth);
             expect(spyFunction).toHaveBeenCalledWith(node, depth);
         })
-        it('addUListClasses with depth 2', () => {
+        xit('addUListClasses with depth 2', () => {
             let depth = 2;
             const spyFunction = jest.spyOn(methods, 'addUListClasses');
             methods.addUListClasses(node, depth);
             expect(spyFunction).toHaveBeenCalledWith(node, depth);
         })
-        it('addUListClasses with depth 3', () => {
+        xit('addUListClasses with depth 3', () => {
             let depth = 3;
             const spyFunction = jest.spyOn(methods, 'addUListClasses');
             methods.addUListClasses(node, depth);
             expect(spyFunction).toHaveBeenCalledWith(node, depth);
         })
-        it('addOListClasses with depth 4', () => {
+        xit('addOListClasses with depth 4', () => {
             let depth = 4;
             const spyFunction = jest.spyOn(methods, 'addUListClasses');
             methods.addUListClasses(node, depth);

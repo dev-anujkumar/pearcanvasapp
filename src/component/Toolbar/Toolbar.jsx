@@ -154,7 +154,7 @@ const _Toolbar = props => {
     const slatePublishStatus = (slateStatus === "approved") && !popupSlate && !isReviewerRole
     const setPopUpSlateLOstatus = props?.slateLevelData?.[config.slateManifestURN]?.type === "popup" && props?.slateLevelData?.[config.slateManifestURN]?.status === "approved" &&
     config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
-    const isApprovedCondition = (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole);
+    const isApprovedCondition = (slatePublishStatus && !isReviewerRole);
     const isLockedSlate = isSlateLocked();
     const bannerClass = isSubscribed ? 'read-only-banner' : (isApprovedCondition || isLockedSlate) ? 'approved-banner' : 'banner';
     const isReadOnly = (isApprovedCondition || isLockedSlate) ? 'hideToolbar' : ''
