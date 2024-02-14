@@ -2115,7 +2115,6 @@ class ElementContainer extends Component {
      * @param {element}
     */
     renderElement = (element = {}) => {
-        console.log('rendering Element Container');
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData,
             spellCheckToggle, parentUrn, currentSlateAncestorData } = this.props;
@@ -3520,7 +3519,7 @@ const mapStateToProps = (state) => {
         // figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
-        // deletedKeysValue: state.appStore.deletedElementKeysData,
+        deletedKeysValue: state.appStore.deletedElementKeysData,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle
     }
 }

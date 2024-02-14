@@ -63,7 +63,8 @@ jest.mock('../../../src/constants/utility', () => {
         getSlateType:()=>{
             return 'slateType'
         },
-        getCookieByName: () => false
+        getCookieByName: () => false,
+        stopRerendering: jest.fn()
     }
 });
 

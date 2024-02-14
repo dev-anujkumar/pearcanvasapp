@@ -1,5 +1,5 @@
 var _ = require("lodash");
-const uuidV4 = require("uuid/v4");
+// const uuidV4 = require("uuid/v4");
 import { utils, checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, fetchUpdatedImageUrl, removeImageCache, prepareBqHtml  } from '../../src/js/utils.js';
 import { JSDOM } from 'jsdom'
 global.document = (new JSDOM()).window.Element;

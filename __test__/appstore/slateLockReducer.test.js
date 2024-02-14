@@ -6,16 +6,22 @@ import {
 
 const initialState = {
     slateLockInfo: {
+        firstName: '',
         isLocked: false,
-        timestamp: "",
-        userId: ""
+        userId: "",
+        lastName: '',
+        userFirstName: '',
+        userLastName: ''
     },
     withinLockPeriod: false
 }
 const slateLockInfoData ={
-    isLocked: false,
-    timestamp: "",
-    userId: ""
+        firstName: '',
+        isLocked: false,
+        userId: "",
+        lastName: '',
+        userFirstName: '',
+        userLastName: ''
 }
 const expectedState2={
     slateLockInfo:slateLockInfoData,
@@ -34,9 +40,12 @@ describe('testing slateLock Reducer cases -->', () => {
         expect(slateLockReducer(initialState, {
             type: SET_SLATE_LOCK_STATUS,
             payload: {
-                    isLocked: false,
-                    timestamp: "",
-                    userId: ""
+                firstName: '',
+                isLocked: false,
+                userId: "",
+                lastName: '',
+                userFirstName: '',
+                userLastName: ''
             }
         })).toEqual(expectedState2);
     })
