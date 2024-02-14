@@ -6,7 +6,7 @@ import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, sectionBreakMockSlateData1, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3, NotSectionBreakMockSlateData4, NotSectionBreakMockSlateData5, updateBL_IN_AS, updateBL_IN_WE, updateBL_IN_AS2, updateBL_IN_AS3, updateBL_IN_AS4, updateBL_IN_WE4, updateBL4, updateBL_IN_2C_3C4, tabbedData, tabbedData2 } from "../../../fixtures/slateTestingData"
-import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP,SET_SLATE_MATTER_TYPE, SET_PARENT_NODE, SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED, SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP, CYPRESS_PLUS_ENABLED, UPDATE_CARET_OFFSET } from '../../../src/constants/Action_Constants';
+import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP,SET_SLATE_MATTER_TYPE, SET_PARENT_NODE, SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED, SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP, CYPRESS_PLUS_ENABLED, UPDATE_CARET_OFFSET, PDF_SLATE_NAVIGATED } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside, slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3, asideData11, workedexampleaside, asideforgouped, showHideAsideData } from '../../../fixtures/elementAsideData';
 import MockAdapter from 'axios-mock-adapter';
@@ -752,6 +752,11 @@ describe('Tests Slate Wrapper Actions', () => {
         store.dispatch(actions.saveCaretPosition({}))
         const { type } = store.getActions()[0];
         expect(type).toBe(UPDATE_CARET_OFFSET);
+    });
+    it('testing------- pdfSlatedNavigated  ------action', () => {
+        store.dispatch(actions.pdfSlatedNavigated({}))
+        const { type } = store.getActions()[0];
+        expect(type).toBe(PDF_SLATE_NAVIGATED);
     });
     it('updatePageNumber ----else', () => {
         jest.mock('axios');
