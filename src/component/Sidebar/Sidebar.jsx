@@ -14,7 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
         PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE,
         DISABLE_PLAYBACK_MODE_VENDORS, 
-        outputTypeData} from '../SlateWrapper/SlateWrapperConstants.js';
+        outputTypeData,DIGITAL,PRINT} from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, ELEMENT_ASSESSMENT_LOWERCASE, POINTER_EVENTS_NONE, PRIMARY_BLOCKCODE_EQUATION, ELEMENT_ASIDE, SIDEBAR_DISABLE } from '../../constants/Element_Constants.js';
@@ -337,7 +337,7 @@ class Sidebar extends Component {
 
     handleOutputTypeValue = (e) => {
         let value = e.target.value;
-        if((!this.props.isConditionalContent) && (value === "digital" || value === "print")){
+        if((!this.props.isConditionalContent) && (value === DIGITAL || value === PRINT)){
         sendDataToIframe({ 'type': 'conditionalContentStatus', 'message': true })}
         this.props.setBCEMetadata('output', value);
         this.setState({
