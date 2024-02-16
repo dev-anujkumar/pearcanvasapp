@@ -61,6 +61,10 @@ function CommunicationChannel(WrappedComponent) {
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
+                case 'tableContentModified':
+                    // Making condition true for triggering slate level save api
+                    localStorage.setItem('isChangeInSlate', 'true');
+                    break;
                 case 'tocContainersLabelUpdate':
                     showNotificationOnCanvas(message);
                     break;
