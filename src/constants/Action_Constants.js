@@ -255,5 +255,9 @@ export const DECO_TO_OTHER_IMG_TYPES = "DECO_TO_OTHER_IMG_TYPES"
 export const FETCH_CONVERSION_DATA = "FETCH_CONVERSION_DATA"
 export const SAVE_IMPORT_MESSAGE = 'save-import-message'
 export const SET_IMPORT_DETAILS_ACTION = 'SET_IMPORT_DATA_FOR_CURRENT_SLATE'
+
+/*---------------- PDF SLATE ------------------------*/
+export const PDF_SLATE_NAVIGATED = 'PDF_SLATE_NAVIGATED'
+
 export const CONDITIONAL_CONTENT_STATUS = 'CONDITIONAL_CONTENT_STATUS'
 export const SLATE_TYPES_FOR_CONDITIONAL_CONTENT = ['manifest', 'chapterintro', 'volumeintro', 'partintro']
