@@ -802,6 +802,8 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
                 slateLevelData: newParentData
             }
         });
+        localStorage.setItem('isChangeInSlate', 'true');
+
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     } catch (error) {
         console.error("Error in Powerpaste", error)
