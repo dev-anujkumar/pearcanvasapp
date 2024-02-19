@@ -258,10 +258,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
+                    let slateEntityURN = this.props?.popupParentSlateData?.isPopupSlate ? this.props?.popupParentSlateData?.parentSlateEntityUrn : config.slateEntityURN;
                     if (messageType === 'slatePreview') {
-                        triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
+                        triggerSlateLevelSave(slateEntityURN, CHANGE_SLATE_ACTION);
                     } else {
-                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION);
+                        triggerSlateLevelSave(slateEntityURN, PROJECT_PREVIEW_ACTION);
                     }
                     if (!config.savingInProgress) {
                         this.props.publishContent(messageType);
