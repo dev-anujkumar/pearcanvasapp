@@ -85,8 +85,9 @@ export class CanvasWrapper extends Component {
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN)
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
+            let slateEntityURN = this.props?.popupParentSlateData?.isPopupSlate ? this.props?.popupParentSlateData?.parentSlateEntityUrn : config.slateEntityURN;
             const paramDetails = {
-                'slateEntityURN': config.slateEntityURN,
+                'slateEntityURN': slateEntityURN,
                 'projectUrn': config.projectUrn,
                 
                 'userId': config.userId
@@ -331,6 +332,7 @@ const mapStateToProps = state => {
         locationData: state.alfrescoReducer.locationData,
         calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote,
         calledFromImageGlossaryFootnote: state.alfrescoReducer.calledFromImageGlossaryFootnote,
+        popupParentSlateData: state.autoNumberReducer.popupParentSlateData
     };
 };
 

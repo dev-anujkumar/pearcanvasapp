@@ -13,7 +13,7 @@ import { LargeLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, createPayloadForWordImport, setImportWordFileMessageInCanvas } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, createPayloadForWordImport, setImportWordFileMessageInCanvas, pdfSlatedNavigated } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName,
          hasReviewerRole, isApproved, stopRerendering } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown, SlateLockStatus } from '../../constants/IFrameMessageTypes.js';
@@ -109,6 +109,9 @@ class SlateWrapper extends Component {
                 importCompleteStatus: true,
                 showSnackbarOnce: true
             })
+        }
+        if(prevProps?.newlyPdfSlateCreated) {
+            this.props.pdfSlatedNavigated(false)
         }
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
@@ -489,7 +492,7 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
-        if (this.checkLockStatus()) {
+        if (this.checkLockStatus() && !this.props.newlyPdfSlateCreated) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
         }
@@ -1895,7 +1898,8 @@ const mapStateToProps = state => {
         reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
         unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
         importDataFromResponse: state.appStore.importDataFromResponse,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        newlyPdfSlateCreated: state.appStore.newlyPdfSlateCreated
     };
 };
 
@@ -1939,6 +1943,7 @@ export default connect(
         isSubscribersSubscribedSlate,
         assessmentReloadConfirmation,
         toggleUnlockSlateAction,
-        setImportWordFileMessageInCanvas
+        setImportWordFileMessageInCanvas,
+        pdfSlatedNavigated
     }
 )(SlateWrapper);

@@ -9,26 +9,47 @@ describe('Testing c4_modules', () => {
     it('Testing publishSlate function', () => {
         let project = 'project',
             section = 'section',
-            cite = 'cite';
+            cite = 'cite',
+            message = {
+                slatePreviewType: "digital"
+            }
         jest.mock('axios');
         const response = {data: {data: {
             previewURL: 'https://www.test.com'
         }}};
         axios.post = jest.fn(() => Promise.resolve(response));
         window.addEventListener = jest.fn(() => event);
-        publishSlate(project, section, cite);
+        publishSlate(project, section, cite,message);
     })
     it('Testing publishSlate function else case', () => {
         let project = 'project',
             section = 'section',
-            cite = 'cite';
+            cite = 'cite',
+            message = {
+                slatePreviewType: "digital"
+            }
         jest.mock('axios');
         const response = {data: {data: {
             text: 'abc'
         }}};
         axios.post = jest.fn(() => Promise.resolve(response));
         window.addEventListener = jest.fn(() => event);
-        publishSlate(project, section, cite);
+        publishSlate(project, section, cite, message);
+    })
+    it('Testing publishSlate function else case', () => {
+        let project = 'project',
+            section = 'section',
+            cite = 'cite',
+            message = {
+                slatePreviewType: ""
+            }
+        jest.mock('axios');
+        const response = {data: {data: {
+            text: 'abc'
+        }}};
+        axios.post = jest.fn(() => Promise.resolve(response));
+        window.addEventListener = jest.fn(() => event);
+        publishSlate(project, section, cite, message);
     })
 
     xit('Testing publishContent function', () => {

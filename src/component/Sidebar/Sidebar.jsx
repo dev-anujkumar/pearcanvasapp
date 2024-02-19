@@ -8,12 +8,13 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase, sendDataToIframe } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
         PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE,
-        DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
+        DISABLE_PLAYBACK_MODE_VENDORS, 
+        outputTypeData,DIGITAL,PRINT} from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, ELEMENT_ASSESSMENT_LOWERCASE, POINTER_EVENTS_NONE, PRIMARY_BLOCKCODE_EQUATION, ELEMENT_ASIDE, SIDEBAR_DISABLE } from '../../constants/Element_Constants.js';
@@ -21,7 +22,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import modalIcon from '../../images/Sidebar/modalIcon.svg'
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants.js';
 
@@ -62,7 +63,8 @@ class Sidebar extends Component {
             decorativePopupWarning: false,
             sidebarValue: "",
             isPlayBackDropdownOpen: false,
-            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
+            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue,
+            outputType: this.props.activeElement?.output
         };
         this.playbackModeRef = React.createRef();
         this.playbackModeLabelRef = React.createRef();
@@ -103,7 +105,8 @@ class Sidebar extends Component {
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
                 selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue,
-                isPlayBackDropdownOpen: isPlayBackDropdownOpen
+                isPlayBackDropdownOpen: isPlayBackDropdownOpen,
+                outputType: nextProps.activeElement.output,
             };
         }
 
@@ -332,6 +335,42 @@ class Sidebar extends Component {
         });
     }
 
+    handleOutputTypeValue = (e) => {
+        let value = e.target.value;
+        if((!this.props.isConditionalContent) && (value === DIGITAL || value === PRINT)){
+        sendDataToIframe({ 'type': 'conditionalContentStatus', 'message': true })}
+        this.props.setBCEMetadata('output', value);
+        this.setState({
+            outputType: value
+        }, () => this.handleTextBlur());
+    }
+
+     // function to render the output type option inside the sidebar
+     outputTypeOption = () => {
+        const isReadOnly =  hasReviewerRole();
+        const { activeElementType } = this.state;
+        const { asideData } = this.props;
+         if (activeElementType === 'element-authoredtext' && asideData?.type !== 'manifestlist') {
+             return (
+                 <FormControl>
+                     <FormLabel id="demo-radio-buttons-group-label" className= {`radioHeading ${isReadOnly ? "textDisable" : "" }`}>Output Type</FormLabel>
+                     <RadioGroup
+                         aria-labelledby="demo-radio-buttons-group-label"
+                         name="radio-buttons-group"
+                         value={this.state.outputType}
+                         onChange={this.handleOutputTypeValue}
+                     >
+                        {
+                            outputTypeData.map((obj) => {
+                                return <FormControlLabel sx={{marginLeft: '0px'}} id={obj.name} disabled={isReadOnly} value={obj.value} control={<Radio sx={!isReadOnly ? {color: '#005A70 !important'} : {color: 'rgba(25, 28, 30, 0.38) !important'}}/>} label={<Typography className={`radioText ${isReadOnly ? "textDisable" : ""}`}>{obj.name}</Typography>} />
+                            })
+                        }
+                     </RadioGroup>
+                 </FormControl>
+             )
+         }
+    }
+
     primaryOption = () => {
         const { activePrimaryOption } = this.state
         const isReadOnly =  hasReviewerRole() ? POINTER_EVENTS_NONE : ''
@@ -367,7 +406,7 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === ELEMENT_ASIDE &&
                     this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId &&
                     this.props.cutCopySelection?.operationType === "cut")
-                primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
+                primaryOptions = (!(["element-dialogue", "element-authoredtext"].includes(this.props.activeElement.elementType))) ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? SIDEBAR_DISABLE : ""}`}>
                     {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
                     <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
@@ -594,6 +633,9 @@ class Sidebar extends Component {
         let languageDropdownOptions = [];
         let enableColumn3SecondaryOption = false;
         const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE : '';
+        if(this.props.activeElement.elementType === "element-authoredtext") {
+            return;
+        }
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
@@ -959,6 +1001,21 @@ class Sidebar extends Component {
         }
     }
 
+    //function to trigger save call on change of output type
+    handleTextBlur = () => {
+        const activeTextElementNode = document.getElementById(`cypress-${this.props.activeElement.index}`)
+        const activeTextElementBlockquoteNodePara1 = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        const activeTextElementBlockquoteNodePara2 = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
+        if (activeTextElementBlockquoteNodePara1 || activeTextElementBlockquoteNodePara2) {
+            activeTextElementBlockquoteNodePara1.focus()
+            activeTextElementBlockquoteNodePara1.blur()
+        }
+        else if (activeTextElementNode) {
+            activeTextElementNode.focus()
+            activeTextElementNode.blur()
+        }
+    }
+
 
     handleNumberedLineToggle = () => {
         this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
@@ -1249,10 +1306,10 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" &&
-                this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && !(this.state.activeElementType === 'element-authoredtext' && this.props?.asideData?.type === 'manifestlist') && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
+                    {this.outputTypeOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
@@ -1325,6 +1382,8 @@ const mapStateToProps = state => {
         asideTitleData: state.appStore.asideTitleData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         alfrescoAltLongDescData: state.alfrescoReducer.savedAltLongDesData,
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        isConditionalContent: state.appStore.isConditionalContent
     };
 };
 

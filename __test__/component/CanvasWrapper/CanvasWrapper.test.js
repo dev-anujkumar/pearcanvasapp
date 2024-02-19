@@ -154,6 +154,16 @@ const initialState = {
             "popUpStatus": false
         },
         markedIndexGlossary:  {popUpStatus: true,  indexEntries: {}, markedIndexEntryURN: '' },
+    },
+    autoNumberReducer: {
+        popupParentSlateData: {
+            contentUrn: "urn:pearson:entity:55f90187-77a2-48e0-8457-8dad9858aa41",
+            index: 1,
+            isPopupSlate: true,
+            parentSlateEntityUrn: "urn:pearson:entity:82d8232b-d013-4002-963a-821748fd93bf",
+            parentSlateId: "urn:pearson:manifest:907eac56-3273-45b2-b11d-6cd9c0ff2ff2",
+            versionUrn: "urn:pearson:manifest:6bfce92a-cc45-4039-9977-bae47ac4b655"
+        }
     }
 };
 
@@ -198,6 +208,16 @@ const initialState1 = {
             "popUpStatus": false
         },
         markedIndexGlossary:  {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '' },
+    },
+    autoNumberReducer: {
+        popupParentSlateData: {
+            contentUrn: "urn:pearson:entity:55f90187-77a2-48e0-8457-8dad9858aa41",
+            index: 1,
+            isPopupSlate: true,
+            parentSlateEntityUrn: "urn:pearson:entity:82d8232b-d013-4002-963a-821748fd93bf",
+            parentSlateId: "urn:pearson:manifest:907eac56-3273-45b2-b11d-6cd9c0ff2ff2",
+            versionUrn: "urn:pearson:manifest:6bfce92a-cc45-4039-9977-bae47ac4b655"
+        }
     }
 };
 

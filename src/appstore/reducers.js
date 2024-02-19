@@ -65,7 +65,9 @@ import {
     DECO_TO_OTHER_IMG_TYPES,
     FETCH_CONVERSION_DATA,
     SAVE_IMPORT_MESSAGE,
-    SET_IMPORT_DETAILS_ACTION
+    SET_IMPORT_DETAILS_ACTION,
+    PDF_SLATE_NAVIGATED,
+    CONDITIONAL_CONTENT_STATUS
 } from '../constants/Action_Constants';
 
 /**
@@ -141,7 +143,9 @@ const INITIAL_STATE = {
     decoToOtherTypes: false,
     conversionData: {},
     importMsgCanvas: false,
-    importDataFromResponse: {}
+    importDataFromResponse: {},
+    newlyPdfSlateCreated: {},
+    isConditionalContent: false
 };
 
 const INITIAL_ACTION = {
@@ -470,6 +474,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 importDataFromResponse: action.payload
+            }
+        case PDF_SLATE_NAVIGATED: 
+            return {
+            ...state,
+            newlyPdfSlateCreated: action.payload
+            }
+        case CONDITIONAL_CONTENT_STATUS:
+            return {
+                ...state,
+                isConditionalContent: action.payload
             }
         default:
             return state;

@@ -20,7 +20,8 @@ import {
     SLATE_FIGURE_ELEMENTS,
     CYPRESS_PLUS_ENABLED,
     SET_SLATE_MATTER_TYPE,
-    UPDATE_CARET_OFFSET
+    UPDATE_CARET_OFFSET,
+    PDF_SLATE_NAVIGATED
 } from '../../constants/Action_Constants';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -801,6 +802,8 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
                 slateLevelData: newParentData
             }
         });
+        localStorage.setItem('isChangeInSlate', 'true');
+
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     } catch (error) {
         console.error("Error in Powerpaste", error)
@@ -1443,6 +1446,7 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
     let allComments = getState().commentsPanelReducer.allComments;
+    let output = getState().appStore.activeElement.output;
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
             index,
@@ -1518,7 +1522,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
                 "versionUrn": selection.element.versionUrn,
                 "contentUrn": selection.element.contentUrn,
-                "destinationSlateUrn": slateEntityUrn
+                "destinationSlateUrn": slateEntityUrn,
+                "output": output
             }]
         };
         /* if parent Element type showhide then add sectionType where element tobe paste */
@@ -1868,4 +1873,11 @@ const triggerVersioningFlow = () => {
 
 export const setImportWordFileMessageInCanvas = (value) => (dispatch) => {
     dispatch({type: 'save-import-message', payload: value})
+}
+
+export const pdfSlatedNavigated = (data) => (dispatch) => {
+    dispatch({
+        type: PDF_SLATE_NAVIGATED,
+        payload: data
+    })
 }

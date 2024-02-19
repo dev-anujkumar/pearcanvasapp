@@ -158,6 +158,21 @@ export const elementDataByTag = {
     }
 }
 
+export const outputTypeData = [
+    {
+        name: 'All (default)',
+        value: 'all',
+    },
+    {
+        name: 'Digital (eText, Revel)',
+        value: 'digital',
+    },
+    {
+        name: 'Print (ePub, pdf, inDesign)',
+        value: 'print',
+    },
+]
+export const allowedOutputTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list"];
 export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup', 'code']
 export const allowedClassName = ['calloutone', 'callouttwo', 'calloutthree', 'calloutfour', 'markedforindex', 'pearson-component glossaryterm']
 export const UNSUPPORTED_CONTENT_ERR_MSG = "Unsupported Content found which will not be pasted."
@@ -231,3 +246,5 @@ export const IN_PROGRESS_IMPORT_STATUS = 'in-progress'
 export const COMPLETED_IMPORT_STATUS = 'completed'
 export const ELEMENT_ON_SLATE_CREATION_INPROGRESS = 'Conversion on slate is in progress...'
 export const IMPORTED_DATA_STATUS = 'imported_data_status'
+export const DIGITAL = 'digital'
+export const PRINT = 'print'

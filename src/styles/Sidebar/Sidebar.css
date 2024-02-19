@@ -374,3 +374,21 @@ pointer-events: none;
     opacity: 50%;
     pointer-events: none;
 }
+
+.radioHeading {
+    color: #354A53 !important;
+    font-family: 'Open Sans' !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+}
+
+.radioText {
+    color: #081E27 !important;
+    font-family: 'Open Sans' !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+}
+
+.textDisable {
+    color: rgba(25, 28, 30, 0.5) !important;
+}
