@@ -808,7 +808,9 @@ export const prepareDialogueDom = (model) => {
 }
 // This function is use to add Playscript stageDirection class
 export const prepareStageDirectionDom = (model) => {
-    const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : model
+    // check if string is coming before p tag if it happens then move the string inside p tag
+    let checkedModel = /^\s*(\S.*?)<p.*?>/.test(model) ? `<p class='stageDirectionLine'>${model.match(/^\s*(\S.*?)<p.*?>/)[1]}</p>` : model; 
+    const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : checkedModel
     return ConvertedModel;
 }
 

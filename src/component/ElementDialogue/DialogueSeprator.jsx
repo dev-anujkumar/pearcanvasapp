@@ -7,7 +7,7 @@ import { hasReviewerRole } from '../../constants/utility';
 
 const defaultSDElement = {
     type: "stagedirection",
-    text: "<p></p>"
+    text: "<p><br></p>"
 }
 
 const defaultDialougeElement = {
