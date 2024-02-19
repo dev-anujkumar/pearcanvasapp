@@ -35,7 +35,9 @@ import {
     BANNER_IS_VISIBLE,
     SUBSCRIBERS_SUBSCRIBED_SLATE,
     SET_TOC_SLATE_LABEL,
-    SET_IMPORT_DETAILS_ACTION
+    SET_IMPORT_DETAILS_ACTION,
+    CONDITIONAL_CONTENT_STATUS,
+    SLATE_TYPES_FOR_CONDITIONAL_CONTENT
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -83,6 +85,7 @@ export const findElementType = (element, index) => {
                 }
                 break;
             case ELEMENT_AUTHOREDTEXT:
+                elementType['output'] = element?.output || 'all';
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
@@ -104,6 +107,7 @@ export const findElementType = (element, index) => {
                 elementType = {
                     ...elementDataBank[element.type][element.elementdata.type]
                 }
+                elementType['output'] = element?.output || 'all';
                 break;
             case 'figure':
                 switch (element.figuretype) {
@@ -253,6 +257,7 @@ export const findElementType = (element, index) => {
                 elementType = {
                     ...elementDataBank[type][subtype]
                 }
+                elementType['output'] = element?.output || 'all';
                 break;
             }
             case 'element-learningobjectivemapping':
@@ -260,6 +265,9 @@ export const findElementType = (element, index) => {
             case 'element-learningobjectives':
             case "popup":
                 elementType = { ...elementDataBank[element.type] }
+                if(element.type === 'element-learningobjectives'){
+                    elementType['output'] = element?.output || 'all';
+                }
                 break;
             case 'openerelement':
                 altText = element.backgroundimage.alttext ? element.backgroundimage.alttext : ""
@@ -672,6 +680,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
+
+        /* This check will get the status of ConditionalContent key based on type of slate and will send message to wrapper */
+        if(SLATE_TYPES_FOR_CONDITIONAL_CONTENT?.includes(slateData?.data[manifestURN]?.type)){
+            dispatch(setCondtionalContentStatus(slateData?.data[manifestURN]?.isConditionalContent))
+            sendDataToIframe({ 'type': 'conditionalContentStatus', 'message': slateData?.data[manifestURN]?.isConditionalContent});
+        }
+
         /** PCAT-8900 - Updating Full Assessments - Elm */
         if (config.slateType == FIGURE_ASSESSMENT && slateData && slateData.data[newVersionManifestId]) {
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
@@ -1908,4 +1923,13 @@ export const getDefaultPlaybackMode = (elementData) => {
  */
 export const setImportMessageForWordImport = () => (dispatch) => {
     return dispatch({ type: 'save-import-message', payload: true })
+}
+/**
+ * Set isConditionalContent status
+ */
+export const setCondtionalContentStatus = (isConditionalContent) => (dispatch) => {
+    dispatch({
+        type: CONDITIONAL_CONTENT_STATUS,
+        payload: isConditionalContent
+    })
 }

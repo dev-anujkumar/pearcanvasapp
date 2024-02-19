@@ -28,6 +28,7 @@ import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberCon
 import ElementConstants from '../ElementContainer/ElementConstants';
 import { decoToOtherTypeConversion, fetchOldDataAfterConversion } from '../ElementContainer/ElementContainer_Actions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { allowedOutputTypes } from '../SlateWrapper/SlateWrapperConstants.js';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -287,6 +288,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if(conversionDataToSend?.status === "approved"){
         config.savingInProgress = true
     }
+    if(allowedOutputTypes.includes(oldElementData.type)){
+        conversionDataToSend["output"] = 'all';
+    }
     config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), {
@@ -443,7 +447,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
-
         let activeElementObject = {
             elementId: res.data.id,
             index: indexes.join("-"),
@@ -454,8 +457,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             toolbar: newElementData.toolbar,
             elementWipType: newElementData.elementWipType,
             altText,
-            longDesc
+            longDesc,
         };
+        if(allowedOutputTypes.includes(newElementData.elementType)){
+            activeElementObject.output = res?.data?.output;
+        }
         if(newElementData.primaryOption=='primary-blockcode-equation'){
             activeElementObject.numbered= res.data.figuredata.numbered
           activeElementObject.startNumber= res.data.figuredata.startNumber

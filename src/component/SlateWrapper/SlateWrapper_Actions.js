@@ -1444,6 +1444,7 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
     let allComments = getState().commentsPanelReducer.allComments;
+    let output = getState().appStore.activeElement.output;
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
             index,
@@ -1519,7 +1520,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
                 "versionUrn": selection.element.versionUrn,
                 "contentUrn": selection.element.contentUrn,
-                "destinationSlateUrn": slateEntityUrn
+                "destinationSlateUrn": slateEntityUrn,
+                "output": output
             }]
         };
         /* if parent Element type showhide then add sectionType where element tobe paste */

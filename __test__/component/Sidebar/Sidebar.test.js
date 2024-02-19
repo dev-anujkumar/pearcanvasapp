@@ -64,6 +64,11 @@ describe('Test for Sidebar component', () => {
                 longDesc: '',
                 savedAltLongDesData: 'abc'
             }
+        },
+        slateLockReducer: {
+            slateLockInfo: {
+                slateLockInfo: {}
+            }
         }
     }
     const sidebarWithData = mockStore(initialStore);
@@ -191,6 +196,11 @@ describe('Test for Sidebar component', () => {
                     longDesc: '',
                     savedAltLongDesData: 'abc'
                 }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
+                }
             }
         });
 
@@ -247,6 +257,11 @@ describe('Test for Sidebar component', () => {
                     longDesc: '',
                     savedAltLongDesData: 'abc'
                 }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
+                }
             }
         });
 
@@ -294,6 +309,11 @@ describe('Test for Sidebar component', () => {
                     altText: '',
                     longDesc: '',
                     savedAltLongDesData: 'abc'
+                }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
                 }
             }
 
@@ -349,6 +369,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -411,6 +436,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -472,6 +502,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -523,6 +558,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -576,6 +616,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -631,6 +676,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -684,6 +734,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -739,6 +794,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -792,6 +852,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -847,6 +912,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -900,6 +970,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -955,6 +1030,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -1008,6 +1088,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -1063,6 +1148,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -1116,6 +1206,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -1171,6 +1266,11 @@ describe('Test for Sidebar component', () => {
                         longDesc: '',
                         savedAltLongDesData: 'abc'
                     }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -1224,6 +1324,11 @@ describe('Test for Sidebar component', () => {
                         altText: '',
                         longDesc: '',
                         savedAltLongDesData: 'abc'
+                    }
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        slateLockInfo: {}
                     }
                 }
             });
@@ -1289,6 +1394,11 @@ describe('Test for Sidebar component', () => {
                     altText: '',
                     longDesc: '',
                     savedAltLongDesData: 'abc'
+                }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
                 }
             }
         });
@@ -1376,6 +1486,11 @@ describe('Test for Sidebar component', () => {
                     altText: '',
                     longDesc: '',
                     savedAltLongDesData: 'abc'
+                }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
                 }
             }
         }
@@ -1475,6 +1590,11 @@ describe('Test for Sidebar component', () => {
                     altText: '',
                     longDesc: '',
                     savedAltLongDesData: 'abc'
+                }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
                 }
             }
         }
@@ -1637,6 +1757,11 @@ describe('Test for Sidebar component', () => {
                     altText: '',
                     longDesc: '',
                     savedAltLongDesData: 'abc'
+                }
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    slateLockInfo: {}
                 }
             }
         }
@@ -1994,6 +2119,11 @@ describe('Test for Sidebar component', () => {
             sidebarInstance.playbackMode();
             expect(sidebarInstance.state.attrInput).toEqual('');
         })
+         it('handleOutputTypeValue function', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             sidebarInstance.handleOutputTypeValue({target: {value: 'all'}});
+         })
          it('componentWillUnmount Event', () => {
              let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
              const sidebarInstance = sidebar.find('Sidebar').instance();

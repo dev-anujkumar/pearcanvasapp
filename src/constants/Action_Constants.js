@@ -258,3 +258,6 @@ export const SET_IMPORT_DETAILS_ACTION = 'SET_IMPORT_DATA_FOR_CURRENT_SLATE'
 
 /*---------------- PDF SLATE ------------------------*/
 export const PDF_SLATE_NAVIGATED = 'PDF_SLATE_NAVIGATED'
+
+export const CONDITIONAL_CONTENT_STATUS = 'CONDITIONAL_CONTENT_STATUS'
+export const SLATE_TYPES_FOR_CONDITIONAL_CONTENT = ['manifest', 'chapterintro', 'volumeintro', 'partintro']
