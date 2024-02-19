@@ -1016,6 +1016,10 @@ class ElementContainer extends Component {
                 this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
+            /* Handling the existing asset value saved in wip */
+            if(previousElementData.figuretype == 'video' && previousElementData.figuredata?.videos[0]?.charAt){
+                delete previousElementData.figuredata.videos[0].charAt
+            }
             return (titleHTML !== previousElementData.displayedlabel ||
                 this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||

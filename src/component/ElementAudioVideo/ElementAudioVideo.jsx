@@ -492,8 +492,7 @@ class ElementAudioVideo extends Component {
                     "videoid": "",
                     "videos": [
                         {
-                            "path": "",
-                            "charAt": 0
+                            "path": ""
                         }
                     ]
                 }
