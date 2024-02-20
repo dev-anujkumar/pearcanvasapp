@@ -87,3 +87,5 @@ export const Resource_Type = Object.freeze({
     ASSESSMENT_ITEM: 'assessmentItem',
     INTERACTIVE: 'interactive'
 });
+
+export const GET_SINGLE_ASSESSMENT_TITLE = 'GET_SINGLE_ASSESSMENT_TITLE'

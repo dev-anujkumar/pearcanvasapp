@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import { CITE, TDX , MMI} from '../../AssessmentSlateConstants';
+import { CITE, TDX , MMI, GET_SINGLE_ASSESSMENT_TITLE} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 import { axiosGetAPI } from '../../../../js/apiCancelRequestHandlers.js';
 
@@ -79,6 +79,12 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
                     data: res.data.items,
                     errFlag: false,
                     isLoading: false
+                }
+            })
+            dispatch({
+                type: GET_SINGLE_ASSESSMENT_TITLE,
+                payload: {
+                    data: res.data.title
                 }
             })
     }).catch((error) => {

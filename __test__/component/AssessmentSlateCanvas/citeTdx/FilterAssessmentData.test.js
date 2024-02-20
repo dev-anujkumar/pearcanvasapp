@@ -23,6 +23,8 @@ describe('Filter Assessment component', () => {
     }
     let initialState={
         citeTdxReducer:{
+            singleAssessmentTitle:{data:"mmi"},
+            isLoading: true,
             sortBy:"name",
             sortOrder:1
         }

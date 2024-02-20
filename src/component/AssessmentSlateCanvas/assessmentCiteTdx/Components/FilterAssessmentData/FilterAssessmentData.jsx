@@ -73,11 +73,11 @@ class FilterAssessmentData extends Component {
             <React.Fragment>
                 <div className={`filter-container ${this.props.openedFrom === "singleSlateAssessmentInner" ? 'inner-assessment':''}`}>
                     <form>
-                        {this.props.setCurrentAssessment && this.props.setCurrentAssessment.title && this.props.setCurrentAssessment.id &&
+                        {this.props.setCurrentAssessment && this.props.setCurrentAssessment.id &&
                          this.props.openedFrom === "singleSlateAssessmentInner" &&
                             <div className="assessemnt-title-container">
                                 <div className="elm-navigate-back-icon" onClick={this.props.assessmentNavigateBack} >{elmNavigateBack}</div>
-                                <div className="assessment-title">{specialCharacterDecode(this.props.setCurrentAssessment.title)}</div>
+                                <div className="assessment-title">{!this.props?.isLoading && specialCharacterDecode(this.props?.singleAssessmentTitle?.data)}</div>
                             </div>
                         }
                         {!this.props.setCurrentAssessment &&
@@ -127,5 +127,11 @@ const mapActionToProps = {
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
     setAssessmentFilterParams:setAssessmentFilterParams
 }
+const mapStateToProps = (state) => {
+    return {
+      isLoading: state.citeTdxReducer.isLoading,
+      singleAssessmentTitle: state.citeTdxReducer.singleAssessmentTitle
+    }
+  }
 
-export default connect(null, mapActionToProps)(FilterAssessmentData);
+export default connect(mapStateToProps, mapActionToProps)(FilterAssessmentData);
