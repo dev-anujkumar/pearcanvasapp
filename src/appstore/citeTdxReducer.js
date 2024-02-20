@@ -13,7 +13,7 @@ const INITIAL_STATE = {
     sortBy:'',
     searchUuidVal:"",
     searchTitleVal:"",
-    singleAssessmentTitle:""
+    singleAssessmentTitle:{}
 }
 
 const INITIAL_ACTION = {

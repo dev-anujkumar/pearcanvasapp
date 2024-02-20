@@ -13,7 +13,7 @@ const INIT_STATE = {
     sortBy:'',
     searchUuidVal:"",
     searchTitleVal:"",
-    singleAssessmentTitle:""
+    singleAssessmentTitle:{}
 }
 
 const currentSlateLOData = { currentSlateLOData: "",
@@ -167,7 +167,6 @@ describe('testing meta data Reducer cases --', () => {
             })).toEqual(state1);
         });
         it('GET_SINGLE_ASSESSMENT_TITLE', () => {
-            // let state = INIT_STATE;
             expect(citeTdxReducer(INIT_STATE, {
                 type: 'GET_SINGLE_ASSESSMENT_TITLE',
             })).toBeDefined
