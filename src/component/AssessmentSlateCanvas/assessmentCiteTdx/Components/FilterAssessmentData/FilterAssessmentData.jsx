@@ -73,7 +73,7 @@ class FilterAssessmentData extends Component {
             <React.Fragment>
                 <div className={`filter-container ${this.props.openedFrom === "singleSlateAssessmentInner" ? 'inner-assessment':''}`}>
                     <form>
-                        {(this.props.setCurrentAssessment && this.props.setCurrentAssessment.id)  &&
+                        {this.props.setCurrentAssessment && this.props.setCurrentAssessment.id &&
                          this.props.openedFrom === "singleSlateAssessmentInner" &&
                             <div className="assessemnt-title-container">
                                 <div className="elm-navigate-back-icon" onClick={this.props.assessmentNavigateBack} >{elmNavigateBack}</div>
