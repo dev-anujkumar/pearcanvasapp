@@ -24,7 +24,6 @@ const elementTypeData = ['element-authoredtext', 'element-list', ELEMENT_BLOCKFE
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index,blockfeatureType,
                                         elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
 
-    if (!glossaryfootnoteid) return false;
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
