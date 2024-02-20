@@ -10,7 +10,8 @@ const INITIAL_STATE = {
     sortOrder:'',
     sortBy:'',
     searchUuidVal:"",
-    searchTitleVal:""
+    searchTitleVal:"",
+    singleAssessmentTitle:""
 }
 
 const INITIAL_ACTION = {
@@ -64,6 +65,12 @@ export default function citeTdxReducer (state = INITIAL_STATE, action = INITIAL_
                 singleAssessmentData: action.payload,
                 assessmenterrFlag : action.payload.errFlag,
                 isLoading: action.payload.isLoading
+            }
+        }
+        case "GET_SINGLE_ASSESSMENT_TITLE": {
+            return {
+                ...state,
+                singleAssessmentTitle: action.payload,             
             }
         }
         case "ASSESSMENT_SORTING": {

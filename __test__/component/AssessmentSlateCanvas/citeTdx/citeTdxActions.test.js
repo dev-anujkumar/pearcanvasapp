@@ -66,17 +66,29 @@ describe("Test-1.2 --getSingleAssessmentData", () => {
       type: "GET_SINGLE_ASSESSMENT_DATA",
       payload: {
         isLoading: false,
-      },
+      }
     };
-    let responseData = data;
+    let data2 = {
+      type: "GET_SINGLE_ASSESSMENT_TITLE",
+      payload: {
+        data: "mmi",
+      }
+    };
+    let responseData = data
+    let responseData2 = data2;
     let dispatch = (data) => {
       if (data && data.type === "GET_SINGLE_ASSESSMENT_DATA") {
         expect(data.payload.isLoading).toEqual(false);
       }
+      if (data2 && data2.type === "GET_SINGLE_ASSESSMENT_TITLE") {
+        expect(data.payload.data).toBeDefined
+      }
     };
     const spyFunction = jest.spyOn(CiteTdxActions, "getSingleAssessmentData");
     axios.get = jest.fn(() => Promise.resolve(responseData));
+    axios.get = jest.fn(() => Promise.resolve(responseData2));
     CiteTdxActions.getSingleAssessmentData(data)(dispatch);
+    CiteTdxActions.getSingleAssessmentData(data2)(dispatch);
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear();
   });

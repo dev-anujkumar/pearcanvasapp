@@ -12,7 +12,8 @@ const INIT_STATE = {
     sortOrder:'',
     sortBy:'',
     searchUuidVal:"",
-    searchTitleVal:""
+    searchTitleVal:"",
+    singleAssessmentTitle:""
 }
 
 const currentSlateLOData = { currentSlateLOData: "",
@@ -164,5 +165,11 @@ describe('testing meta data Reducer cases --', () => {
                     errFlag: true
                 } 
             })).toEqual(state1);
+        });
+        it('GET_SINGLE_ASSESSMENT_TITLE', () => {
+            // let state = INIT_STATE;
+            expect(citeTdxReducer(INIT_STATE, {
+                type: 'GET_SINGLE_ASSESSMENT_TITLE',
+            })).toBeDefined
         });
 });

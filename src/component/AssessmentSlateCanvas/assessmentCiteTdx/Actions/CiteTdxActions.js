@@ -81,6 +81,12 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
                     isLoading: false
                 }
             })
+            dispatch({
+                type: 'GET_SINGLE_ASSESSMENT_TITLE',
+                payload: {
+                    data: res.data.title
+                }
+            })
     }).catch((error) => {
         dispatch({
             type: 'GET_SINGLE_ASSESSMENT_DATA',
