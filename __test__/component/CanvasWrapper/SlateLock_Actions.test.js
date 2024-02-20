@@ -256,7 +256,7 @@ describe('Tests slateLock  action', () => {
         store = mockStore(() => initialState);
         return store.dispatch(actions.releaseSlateLock(projectUrn, slateId, releaseLockButton,userRole)).then(() => {
             const { type } = store.getActions()[0];
-            expect(type).toBe(SET_SLATE_LOCK_STATUS);
+            expect(type).toBe(SET_LOCK_FLAG);
         });
     })
 })

@@ -14,7 +14,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
-import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole, stopRerendering } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock, saveLockDetails } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
@@ -85,8 +85,9 @@ export class CanvasWrapper extends Component {
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN)
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
+            let slateEntityURN = this.props?.popupParentSlateData?.isPopupSlate ? this.props?.popupParentSlateData?.parentSlateEntityUrn : config.slateEntityURN;
             const paramDetails = {
-                'slateEntityURN': config.slateEntityURN,
+                'slateEntityURN': slateEntityURN,
                 'projectUrn': config.projectUrn,
                 
                 'userId': config.userId
@@ -163,6 +164,10 @@ export class CanvasWrapper extends Component {
         } else {
             sendDataToIframe({ 'type': NextSlate, 'message': {} })
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return stopRerendering(nextProps, this.props);
     }
 
     render() {
@@ -327,6 +332,7 @@ const mapStateToProps = state => {
         locationData: state.alfrescoReducer.locationData,
         calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote,
         calledFromImageGlossaryFootnote: state.alfrescoReducer.calledFromImageGlossaryFootnote,
+        popupParentSlateData: state.autoNumberReducer.popupParentSlateData
     };
 };
 

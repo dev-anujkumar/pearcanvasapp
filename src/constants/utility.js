@@ -808,7 +808,9 @@ export const prepareDialogueDom = (model) => {
 }
 // This function is use to add Playscript stageDirection class
 export const prepareStageDirectionDom = (model) => {
-    const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : model
+    // check if string is coming before p tag if it happens then move the string inside p tag
+    let checkedModel = /^\s*(\S.*?)<p.*?>/.test(model) ? `<p class='stageDirectionLine'>${model.match(/^\s*(\S.*?)<p.*?>/)[1]}</p>` : model; 
+    const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : checkedModel
     return ConvertedModel;
 }
 
@@ -831,6 +833,34 @@ export const releaseOwnerPopup=(data, projectSharingRole, isSubscribed)=>{
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
     return projectSharingRole === "OWNER" && isSubscribed;
 }
+
+/**It checks whether its a owner project or not
+ */
+export const checkOwnerRole = () => {
+    const projectInfoData = store.getState().projectInfo;
+    let projectSharingRole = projectInfoData?.projectSharingRole;
+    let isSubscribed = projectInfoData?.projectSubscriptionDetails?.isSubscribed;
+    return projectSharingRole === "OWNER" && isSubscribed;
+}
+
+/**It checks whether rendering should happen or not
+ */
+export const stopRerendering = (nextProps, prevProps) => {
+    Object.keys(nextProps)
+        .filter(key => nextProps[key] !== prevProps[key])
+        .forEach((key) => {
+            if (JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key])) {
+                // console.log('ElementContainer.jsx not changed property:', key, 'from', this.props[key], 'to', nextProps[key]);
+                return false
+            }
+            else {
+                // console.log('ElementContainer.jsx changed property:', key, 'from', this.props[key], 'to', nextProps[key]);
+                return true
+            }
+        });
+    return true
+}
+
 
 /**It checks whether its a Subscriber project or not
  * @param projectSharingRole - role of a user

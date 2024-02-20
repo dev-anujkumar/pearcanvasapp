@@ -45,7 +45,7 @@ const SearchComponent = props => {
 
     const handleClose = e => {
         handleChange('');
-        props.getContainerData('');
+        if (searchTerm) props.getContainerData('');
         props.onClose(e, false);
     }
 

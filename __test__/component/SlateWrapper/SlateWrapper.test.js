@@ -63,7 +63,8 @@ jest.mock('../../../src/constants/utility', () => {
         getSlateType:()=>{
             return 'slateType'
         },
-        getCookieByName: () => false
+        getCookieByName: () => false,
+        stopRerendering: jest.fn()
     }
 });
 
@@ -72,7 +73,7 @@ const initialState = {
         isLocked: false,
         userId: 'c5Test01'
     }, withinLockPeriod: true },
-    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {}, newlyPdfSlateCreated: false, pdfSlatedNavigated: jest.fn() },
     toolbarReducer: { elemBorderToggle: true, unlockSlateToggle: false },
     metadataReducer: { currentSlateLOData: [{}] },
     audioReducer: {openRemovePopUp: false, openSplitPopUp: true},

@@ -32,8 +32,8 @@ import {
 } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags,
-         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole,
-        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
+         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, checkOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole,
+        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase, stopRerendering } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -44,7 +44,7 @@ import { LABELS, TE_POP_UP_HEADER_TEXT, TE_POP_UP_NORMAL_TEXT, READ_ONLY_ELEMENT
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
-import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
+import { updatePageNumber, accessDenied, pdfSlatedNavigated } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup';
@@ -66,7 +66,7 @@ import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive,ch
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT,
-         SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+         SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE, ELEMENT_FIGURE, ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import ElementDialogue from '../ElementDialogue';
@@ -177,6 +177,9 @@ class ElementContainer extends Component {
             const showAsideTitle =  element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false
             this.props.enableAsideNumbering(showAsideTitle,element.id)
         }
+        if(element?.type === ELEMENT_TYPE_PDF) {
+            this.props.pdfSlatedNavigated(true)
+        }
         document.addEventListener('click', () => {
             this.setState({ showCopyPopup: false })
         });
@@ -219,6 +222,9 @@ class ElementContainer extends Component {
             if (this.props.closeUndoTimer) {
                 this.handleUndoOptionTimer();
             }
+        }
+        if(prevProps?.newlyPdfSlateCreated) {
+            this.props.pdfSlatedNavigated(false)
         }
         if (this.props.element !== prevProps.element) {
             let { element } = this.props
@@ -427,7 +433,7 @@ class ElementContainer extends Component {
         
         // disabling Add comment icon for TCC Element in TOC
         if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
-            this.handleCommunication(this.props.element.id);
+            this.handleCommunication(this.props.element.contentUrn);
         }
     }
 
@@ -1016,6 +1022,10 @@ class ElementContainer extends Component {
                 this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
+            /* Handling the existing asset value saved in wip */
+            if(previousElementData.figuretype == 'video' && previousElementData.figuredata?.videos[0]?.charAt){
+                delete previousElementData.figuredata.videos[0].charAt
+            }
             return (titleHTML !== previousElementData.displayedlabel ||
                 this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -1148,7 +1158,7 @@ class ElementContainer extends Component {
                 previousElementData.html.text = previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) &&
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || ((previousElementData?.id === this.props?.activeElement?.elementId) && (previousElementData?.output !== this.props?.activeElement?.output)) || forceupdate) &&
                     !assetPopoverPopupIsVisible && !config.savingInProgress && !config.isGlossarySaving && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId,
                                  this.props.index, this, parentElement, showHideType, asideData, poetryData)
@@ -1352,7 +1362,7 @@ class ElementContainer extends Component {
                         prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g, '');
                         let nodeData = this.replaceUnwantedtags(nodehtml);
                         nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g, '');
-                        if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
+                        if ((nodeData !== prevData || ((previousElementData?.id === this.props?.activeElement?.elementId) && (previousElementData?.output !== this.props?.activeElement?.output)) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption,
                                          secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -2117,12 +2127,12 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData,
-            spellCheckToggle, parentUrn, currentSlateAncestorData,projectInfo } = this.props;
+            spellCheckToggle, parentUrn, currentSlateAncestorData } = this.props;
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
-        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
-        let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.id && commentFlag === true).length > 0
+        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.contentUrn).length > 0
+        let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.contentUrn && commentFlag === true).length > 0
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
@@ -2734,7 +2744,7 @@ class ElementContainer extends Component {
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_LTI];
         const inContainer = this.props.parentUrn ? true : false;
-        let isOwner = isOwnerRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+        let isOwner = checkOwnerRole();
         const isgreyBorder = isApproved() && READ_ONLY_ELEMENT_LABELS.includes(labelText);
         const readOnlyBorder = isgreyBorder ? 'greyBorder': '';
         const showElementLabel =  !isApproved() || this.state.borderToggle == 'active'
@@ -2760,9 +2770,9 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.contentUrn,'addComment')} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.contentUrn,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.contentUrn,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -3294,6 +3304,10 @@ class ElementContainer extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return stopRerendering(nextProps, this.props);
+    }
+
     render = () => {
         const { element } = this.props;
             try {
@@ -3467,6 +3481,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         fetchAssessmentUpdatedData: () => {
             dispatch(fetchAssessmentUpdatedData())
+        },
+        pdfSlatedNavigated: (data) => {
+            dispatch(pdfSlatedNavigated(data))
         }
     }
 }
@@ -3500,10 +3517,8 @@ const mapStateToProps = (state) => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
         projectUsers: state.commentsPanelReducer.users,
-        projectInfo: state.projectInfo,
         oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
         oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare,
-        markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
@@ -3512,7 +3527,6 @@ const mapStateToProps = (state) => {
         spellCheckToggle: state.toolbarReducer.spellCheckToggle,
         cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
         isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
-        figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
         deletedKeysValue: state.appStore.deletedElementKeysData,
