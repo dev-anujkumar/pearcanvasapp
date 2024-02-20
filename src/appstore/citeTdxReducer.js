@@ -1,3 +1,5 @@
+import { GET_SINGLE_ASSESSMENT_TITLE } from "../component/AssessmentSlateCanvas/AssessmentSlateConstants"
+
 const INITIAL_STATE = {
     citeData: [],
     tdxData: [],
@@ -67,7 +69,7 @@ export default function citeTdxReducer (state = INITIAL_STATE, action = INITIAL_
                 isLoading: action.payload.isLoading
             }
         }
-        case "GET_SINGLE_ASSESSMENT_TITLE": {
+        case GET_SINGLE_ASSESSMENT_TITLE: {
             return {
                 ...state,
                 singleAssessmentTitle: action.payload,             
