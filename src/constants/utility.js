@@ -849,13 +849,15 @@ export const stopRerendering = (nextProps, prevProps) => {
     Object.keys(nextProps)
         .filter(key => nextProps[key] !== prevProps[key])
         .forEach((key) => {
-            if (JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key])) {
-                // console.log('ElementContainer.jsx not changed property:', key, 'from', this.props[key], 'to', nextProps[key]);
-                return false
-            }
-            else {
-                // console.log('ElementContainer.jsx changed property:', key, 'from', this.props[key], 'to', nextProps[key]);
-                return true
+            if (typeof key === 'object' && key !== null) {
+                if (JSON.stringify(prevProps?.[key]) === JSON.stringify(nextProps?.[key])) {
+                    // console.log('ElementContainer.jsx not changed property:', key, 'from', this.props[key], 'to', nextProps[key]);
+                    return false
+                }
+                else {
+                    // console.log('ElementContainer.jsx changed property:', key, 'from', this.props[key], 'to', nextProps[key]);
+                    return true
+                }
             }
         });
     return true
