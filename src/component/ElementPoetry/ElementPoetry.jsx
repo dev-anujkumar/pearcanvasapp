@@ -11,6 +11,7 @@ import Sortable from 'react-sortablejs';
 import { POETRY_SOURCE } from '../../constants/Element_Constants.js';
 import LazyLoad from "react-lazyload";
 import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
+import { createPoetryUnit } from '../CanvasWrapper/CanvasWrapper_Actions.js';
 
 let random = guid();
 
@@ -285,6 +286,7 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        swapElement
+        swapElement,
+        createPoetryUnit
     }
 )(ElementContainerWrapper(ElementPoetry));
