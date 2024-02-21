@@ -1023,7 +1023,7 @@ class ElementContainer extends Component {
                 titleHTML = previousElementData.displayedlabel;
             }
             /* Handling the existing asset value saved in wip */
-            if(previousElementData.figuretype == 'video' && previousElementData.figuredata?.videos[0]?.charAt){
+            if(previousElementData.figuretype == 'video' && previousElementData.figuredata?.videos[0] && previousElementData.figuredata.videos[0].hasOwnProperty('charAt')){
                 delete previousElementData.figuredata.videos[0].charAt
             }
             return (titleHTML !== previousElementData.displayedlabel ||

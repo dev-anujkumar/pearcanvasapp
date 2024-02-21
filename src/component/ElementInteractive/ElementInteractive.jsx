@@ -397,7 +397,7 @@ class Interactive extends React.Component {
                     showSinglePopup: value,
                     setCurrentAssessment: {
                         id: this.state.itemParentID,
-                        title: this.state.interactiveTitle,
+                        title: this.props.singleAssessmentTitle.data
                     },
                     openedFrom: 'singleAssessment'
                 });
@@ -954,7 +954,8 @@ const mapStateToProps = (state) => {
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isCiteChanged : state.alfrescoReducer.isCiteChanged,
-        changedSiteData: state.alfrescoReducer.changedSiteData
+        changedSiteData: state.alfrescoReducer.changedSiteData,
+        singleAssessmentTitle: state.citeTdxReducer.singleAssessmentTitle
     }
 }
 
