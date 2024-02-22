@@ -484,6 +484,8 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         sectionType,
         index2ShowHide
     }
+    if(selectedElement.type === "element-authoredtext") {
+    pasteFnArgs.output = selectedElement?.output }
     separatorProps?.pasteElement(pasteFnArgs)
 }
 
