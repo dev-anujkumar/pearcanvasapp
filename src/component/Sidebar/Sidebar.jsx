@@ -1306,7 +1306,7 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && !(this.state.activeElementType === 'element-authoredtext' && this.props?.asideData?.type === 'manifestlist') && !(["element-pdf", "element-assessment"].includes(activeElement?.elementWipType)) && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && !(PDF_AND_ASSESSMENT_TYPE.includes(activeElement?.elementWipType)) && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.outputTypeOption()}
