@@ -14,7 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
         PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE,
         DISABLE_PLAYBACK_MODE_VENDORS, 
-        outputTypeData,DIGITAL,PRINT} from '../SlateWrapper/SlateWrapperConstants.js';
+        outputTypeData,DIGITAL,PRINT, PDF_AND_ASSESSMENT_TYPE} from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, ELEMENT_ASSESSMENT_LOWERCASE, POINTER_EVENTS_NONE, PRIMARY_BLOCKCODE_EQUATION, ELEMENT_ASIDE, SIDEBAR_DISABLE } from '../../constants/Element_Constants.js';
@@ -349,8 +349,8 @@ class Sidebar extends Component {
      outputTypeOption = () => {
         const isReadOnly =  hasReviewerRole();
         const { activeElementType } = this.state;
-        const { asideData } = this.props;
-         if (activeElementType === 'element-authoredtext' && asideData?.type !== 'manifestlist') {
+        const { asideData,activeElement } = this.props;
+         if (activeElementType === 'element-authoredtext' && asideData?.type !== 'manifestlist' && !(PDF_AND_ASSESSMENT_TYPE.includes(activeElement?.elementWipType))) {
              return (
                  <FormControl>
                      <FormLabel id="demo-radio-buttons-group-label" className= {`radioHeading ${isReadOnly ? "textDisable" : "" }`}>Output Type</FormLabel>
@@ -1306,7 +1306,7 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && !(this.state.activeElementType === 'element-authoredtext' && this.props?.asideData?.type === 'manifestlist') && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && !(PDF_AND_ASSESSMENT_TYPE.includes(activeElement?.elementWipType)) && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.outputTypeOption()}

@@ -288,9 +288,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if(conversionDataToSend?.status === "approved"){
         config.savingInProgress = true
     }
-    if(allowedOutputTypes.includes(oldElementData.type)){
-        conversionDataToSend["output"] = 'all';
-    }
     config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), {

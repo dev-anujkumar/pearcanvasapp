@@ -15,6 +15,7 @@ import ElementContainerType from '../ElementContainerType/ElementContainerType.j
 import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { allowedOutputTypes } from '../SlateWrapper/SlateWrapperConstants.js';
 
 const { TEXT,
     IMAGE,
@@ -484,6 +485,8 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         sectionType,
         index2ShowHide
     }
+    if(allowedOutputTypes?.includes(selectedElement.type)) {
+    pasteFnArgs.output = selectedElement?.output }
     separatorProps?.pasteElement(pasteFnArgs)
 }
 
