@@ -1567,7 +1567,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
     })
 }
 
-export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN, element) => (dispatch, getState) => {
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN, element, showHideType) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
@@ -1631,12 +1631,13 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                         })
                     })
                 } else if (targetPoetryElement?.type == "showhide") {
-                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                    const showhideType = parentElement?.showHideType ? parentElement?.showHideType : showHideType
+                    targetPoetryElement.interactivedata[showhideType].map((element2, index) => {
                         if (element2.type == "poetry" && element2.id == activeElementId) {
                             element2.contents[poetryField] = [response.data]
                             element2.contents[poetryField][0].html.text = elemNode.innerHTML
                             element2.contents[poetryField][0].elementdata.text = elemNode.innerText
-                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                            targetPoetryElement.interactivedata[showhideType][index] = element2
                         }
                     })
                 }
@@ -1722,7 +1723,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                         })
                     })
                 }  else if (targetPoetryElement?.type == "showhide") {
-                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                    const showhideType = parentElement?.showHideType ? parentElement?.showHideType : showHideType
+                    targetPoetryElement.interactivedata[showhideType]?.map((element2, index) => {
                         if (element2.type == "poetry" && element2.id == activeElementId) {
                             element2.contents[FORMATTED_TITLE] = response.data
                             element2.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
