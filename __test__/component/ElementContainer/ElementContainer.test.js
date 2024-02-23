@@ -48,6 +48,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     isOwnerRole:jest.fn(()=>{return true}),
     removeSpellCheckDOMAttributes: jest.fn(() => ''),
     isSlateLocked: jest.fn(() => false),
+    checkOwnerRole: jest.fn(() => true),
     checkHTMLdataInsideString: () => {
         return ({
             toLowerCase: jest.fn(),

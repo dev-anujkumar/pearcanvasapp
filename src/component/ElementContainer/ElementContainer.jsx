@@ -162,6 +162,7 @@ class ElementContainer extends Component {
         })
         /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
         let { element } = this.props
+        const isOwner = checkOwnerRole();
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
         if (this.props.element && embeddedAssessment === true && !config.updatedAssessmentAPITriggered && !this.props.assessmentReducer?.updatedAssessmentData?.length) {
             this.props.fetchAssessmentUpdatedData(); // calling assessment API to fetch latest assessment details
@@ -177,7 +178,8 @@ class ElementContainer extends Component {
             const showAsideTitle =  element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false
             this.props.enableAsideNumbering(showAsideTitle,element.id)
         }
-        if(element?.type === ELEMENT_TYPE_PDF) {
+        //updating store after creating a new owner pdf slate
+        if(element?.type === ELEMENT_TYPE_PDF && isOwner) {
             this.props.pdfSlatedNavigated(true)
         }
         document.addEventListener('click', () => {

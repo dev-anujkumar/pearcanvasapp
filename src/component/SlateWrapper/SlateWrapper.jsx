@@ -492,7 +492,7 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
-        if (this.checkLockStatus() && !this.props.newlyPdfSlateCreated) {
+        if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
         }
@@ -724,12 +724,21 @@ class SlateWrapper extends Component {
      * Toggles popup
      */
     togglePopup = (toggleValue, event) => {
-        const stateValues = {
-            showOwnerSlatePopup: toggleValue,
-            showSubscriberSlatePopup: toggleValue,
+        let stateValues;
+        if(this.props.newlyPdfSlateCreated) {
+            stateValues = {
+                showOwnerSlatePopup: false,
+                showSubscriberSlatePopup: false,
+            }
+            this.props.showBlocker(false);
+        } else {
+            stateValues = {
+                showOwnerSlatePopup: toggleValue,
+                showSubscriberSlatePopup: toggleValue,
+            }
+            this.props.showBlocker(toggleValue);
         }
         this.setState(stateValues);
-        this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(event)
