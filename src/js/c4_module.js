@@ -74,7 +74,7 @@ export const publishSlate = (project, section, cite, message) => {
     proactiveSlatePreview: proactiveSlatePreview,
   }
   if(message?.slatePreviewType){
-    content_data.outputType = message?.slatePreviewType
+    content_data.output = message?.slatePreviewType
   }
   // GTM event object
   const content_data_GTM = {
