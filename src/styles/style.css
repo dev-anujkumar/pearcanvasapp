@@ -586,6 +586,53 @@ div.asideSidebar01BorderBottom, div.asideSidebar02BorderBottom, div.asideSidebar
     padding-top: 0em;
     margin-top: -0.15em;
 }
+div.asideSidebar02BorderBottom {
+    border-bottom-color: #007FA3;
+}
+div.asideSidebar03BorderBottom {
+    border-bottom-color: #d40b0b;
+}
+div.asideSidebar04BorderBottom {
+    border-bottom: 3px solid #E8E8E8;
+}
+aside.asideSidebar02, aside.asideSidebar03 {
+    background-color: transparent;
+    margin-bottom: 3em;
+}
+div.asideTacticBoxBorderBottom {
+    border-bottom: 1px solid #000;
+    padding-top: 0em 
+}
+aside.asideTacticBox {
+    background-color: transparent;
+    margin-bottom: 3em;
+    border-right-width: 0px;
+    border-left-width: 0px 
+}
+div.asideActivityBorderBottom {
+    border-bottom-color: #007FA3;
+}
+h3.heading3ActivityLabel {
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    letter-spacing: 0.02em;
+    padding-top: 0.115em;
+    padding-bottom: 0.125em;
+}
+h5.heading5NummerEinsSidebar04 {
+    color: #000;
+    padding-top: 0.42em;
+    padding-bottom: 0.4em;
+    font-family: Helvetica, sans-serif;
+    font-size: 1.165em;
+    font-weight: 800;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.2em;
+}
 
 
 h4.heading4VideoNumberLabel, h4.heading4Image25TextNumberLabel, h4.heading4Image25TextTableImageNumberLabel, h4.heading4Image25TextMathImageNumberLabel,
@@ -1000,8 +1047,6 @@ H3.pullQuoteNumeroUno {
     letter-spacing: 0.002em;
     margin: 2em 2.75em 2em 2.5em;
 }
-
-
 td ol, ul {
     counter-reset: item;
 }
@@ -1015,6 +1060,7 @@ ul {
     list-style-type: none;
     margin-left: 2.65em;
 }
+
 li.listItemNumeroUno, li.listItemNumeroUnoNumber, li.listItemNumeroUnoLowerAlpha, li.listItemNumeroUnoUpperAlpha, li.listItemNumeroUnoUpperRoman,
 li.listItemNumeroUnoLowerRoman, li.listItemNumeroUnoNone {
     color: #000;
@@ -1041,7 +1087,6 @@ ol, ul {
 ol li {
     display: block;
     padding: 0 0 0 0.5em;
-    /* text-indent: 0em;
 }
 ol li.listItemNumeroUno:before, ol li.listItemNumeroUnoNumber:before, ol li.listItemNumeroUnoLowerAlpha:before, ol li.listItemNumeroUnoUpperAlpha:before,
 ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNummerEins:before,
@@ -1082,14 +1127,6 @@ td ol li.listItemNumeroUnoNone:before {
 }
 td ol li.listItemNumeroUnoNumber:before {
     content: counter(item, decimal) ". ";
-}
-td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td ol li.listItemNumeroUnoLowerAlpha:before, td ol li.listItemNumeroUnoUpperAlpha:before, td ol li.listItemNumeroUnoUpperRoman:before, td ol li.listItemNumeroUnoLowerRoman:before, td ol li.listItemNumeroUnoNone:before {
-    font-weight: bold;
-    padding-right: 0.1em;
-    text-align: right;
-    position: relative;
-    width: 4.5em;
-    margin: 0 0 1em -4.9em;
 }
 td ul li.listItemNumeroUnoBullet:before {
     font-weight: bold;
@@ -1163,9 +1200,59 @@ ol ol {
     margin-top: 0.5em;
     margin-left: 1.25em;
     margin-bottom: 0.5em;
-}*/
+} */
 
 /* hide-buttons for read only figure elements */
 .hide-buttons{
     display: none;
+}
+
+ol li.listItemNumeroUnoNumber:before {
+    content: counter(section,decimal)". " !important;
+    counter-increment: section !important;
+}
+
+ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(section,upper-alpha)". " !important;
+    counter-increment: section !important;
+}
+ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(section,lower-alpha)". " !important;
+    counter-increment: section !important;
+}
+ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(section,upper-roman)". " !important;
+    counter-increment: section !important;
+}
+ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(section,lower-roman)". " !important;
+    counter-increment: section !important;
+}
+
+td ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(item, upper-alpha) ". ";
+    counter-increment: item !important;
+}
+
+td ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(item, lower-alpha) ". ";
+    counter-increment: item !important;
+}
+
+td ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(item, upper-roman) ". ";
+    counter-increment: item !important;
+}
+
+td ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(item, lower-roman) ". ";
+    counter-increment: item !important;
+}
+
+td ol li.listItemNumeroUnoNone:before {
+    content: none;
+}
+td ol li.listItemNumeroUnoNumber:before {
+    content: counter(item, decimal) ". ";
+    counter-increment: item !important;
 }
