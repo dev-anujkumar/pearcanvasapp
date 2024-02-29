@@ -13,7 +13,7 @@ const axiosRequestCreator = () => {
         apiCall = axios.CancelToken.source();
         return axios.get(url, {
             cancelToken: apiCall.token,
-            headers: {
+            headers:{
             'myCloudProxySession': config.myCloudProxySession
         }});
     };

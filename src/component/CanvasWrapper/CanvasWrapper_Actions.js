@@ -1855,7 +1855,7 @@ const getLOBList = () => {
 	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
 		headers: {
 			"ApiKey": config.STRUCTURE_APIKEY,
-            'myCloudProxySession': config.myCloudProxySession,
+            "myCloudProxySession": config.myCloudProxySession,
 			"Content-Type": CONTENT_TYPE,
 			"x-Roles": "LearningAdmin",
 		}

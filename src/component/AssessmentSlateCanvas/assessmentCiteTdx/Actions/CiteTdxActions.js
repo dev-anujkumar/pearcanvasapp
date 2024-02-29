@@ -70,7 +70,7 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
     let url =`${config.REACT_APP_API_URL}v1/slate/assessment/${currentAssessmentSelected}/items`;
     return axios.get(url, {
-        headers: {
+          headers:  {
             myCloudProxySession: config.myCloudProxySession
         }
     }).then((res) => {
@@ -158,7 +158,7 @@ export async function getMCQGuidedData(workUrn) {
         let responseData = await axios.get(`${config.ASSESSMENT_ENDPOINT}assessmentitem/v2/${workUrn}/content`,
             {
                 headers: {
-                    myCloudProxySession: config.myCloudProxySession
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             });
 

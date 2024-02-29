@@ -87,7 +87,7 @@ export const getCommentElements = (q) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
-            'myCloudProxySession': config.myCloudProxySession            
+            'myCloudProxySession': config.myCloudProxySession  
         }
     });
 
