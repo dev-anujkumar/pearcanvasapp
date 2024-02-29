@@ -46,8 +46,8 @@ _window_.Text && function (TextPrototype) {
     TextPrototype.closest = TextPrototype?.closest ||
         function (selector) {
             var el = this;
-            while (el?.matches && !el?.matches(selector)) el = el?.parentNode;
-            return el?.matches ? el : null;
+            while (el.matches && !el.matches(selector)) el = el.parentNode;
+            return el.matches ? el : null;
         }
 }(Text.prototype);
 
