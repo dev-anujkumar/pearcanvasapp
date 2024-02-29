@@ -17,18 +17,18 @@ export const triggerSlateLevelSave = (entityURN, triggerAction, paramDetails = {
     // Check whether any change made in slate for triggering slate level save api
     let isChangeInSlate = localStorage.getItem('isChangeInSlate');
     if (isChangeInSlate === 'true') {
-        let projectEntity, slateEntity, userId, PearsonExtSSOSession;
+        let projectEntity, slateEntity, userId, myCloudProxySession;
         if (Object.keys(paramDetails)?.length > 0) {
             projectEntity = paramDetails?.projectUrn
             slateEntity = paramDetails?.slateEntityURN;
             userId = paramDetails?.userId;
-            PearsonExtSSOSession = paramDetails?.PearsonExtSSOSession;
+            myCloudProxySession = paramDetails?.myCloudProxySession;
             localStorage.removeItem('paramDetails');
         } else {
             projectEntity = config.projectUrn;
             slateEntity = entityURN;
             userId = config.userId;
-            PearsonExtSSOSession = config.PearsonExtSSOSession;
+            myCloudProxySession = config.myCloudProxySession;
         }
         let url = `${config.STRUCTURE_API_URL}structure-api/context/v1/${projectEntity}/container/${slateEntity}/notifySlateStateChange`;
         let requestBody = {
@@ -39,6 +39,7 @@ export const triggerSlateLevelSave = (entityURN, triggerAction, paramDetails = {
         return axios.post(url, requestBody, {
             headers: {
                 "Content-Type": "application/json",
+                'myCloudProxySession': myCloudProxySession
             }
         })
             .then(res => {

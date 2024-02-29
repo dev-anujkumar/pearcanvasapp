@@ -86,9 +86,8 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
     currentlySearching = true;
     return dispatch => fetch(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
       method: 'GET',
-      credentials: 'include',
       headers: {
-        
+        myCloudProxySession: config.myCloudProxySession
       }
     }).then(res => res.json()).then(
       (data) => {
@@ -143,11 +142,10 @@ export async function getAssetPopoverId(workUrn) {
     sendDataToIframe({'type': ShowLoader,'message': { status: true }});
     let response = await fetch(config.NARRATIVE_API_ENDPOINT + 'v2', {
       method: 'POST',
-      credentials: 'include',
       headers: {
         'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
-        
+        myCloudProxySession: config.myCloudProxySession
       }
     })
 
@@ -169,11 +167,10 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let response = await fetch(url, {
       method: 'GET',
-      credentials: 'include',
       headers: {
         'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
-        
+        myCloudProxySession: config.myCloudProxySession
       }
 
     })
@@ -222,11 +219,10 @@ export const getElementVersionContent = async (elementId) =>{
       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
       let response = await fetch(workUrl, {
         method: 'GET',
-        credentials: 'include',
         headers: {
           'Content-Type': CONTENT_TYPE,
           'apikey': config.APO_API_KEY,
-          
+          myCloudProxySession: config.myCloudProxySession
         }
       })
       let data = await response.json()

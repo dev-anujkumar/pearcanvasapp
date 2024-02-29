@@ -49,7 +49,7 @@ class MetaDataPopUp extends React.Component {
 			headers: {
 				"Content-Type": "application/json",
 				"apikey": config.CMDS_APIKEY,
-				
+				'myCloudProxySession': config.myCloudProxySession
 			}
 		}).then(response => {
 			const { properties } = response?.data?.entry || {};
@@ -110,7 +110,7 @@ class MetaDataPopUp extends React.Component {
 			headers: {
 				"Content-Type": "application/json",
 				"apikey": config.CMDS_APIKEY,
-				
+				'myCloudProxySession': config.myCloudProxySession
 			}
 		}).then(response => {
 				/* -- if update alfresco metadata put call success then update wip also */

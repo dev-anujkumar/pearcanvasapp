@@ -21,6 +21,8 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     let url = `${config.TCM_SRVR_STATUS_URL}${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {
+            withCredentials: true,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         if (response && response.data && response.data.elements) {
@@ -73,7 +75,7 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 const callSnapshotAPI = async (snapshotData) => {
     return axios.post(config.TCM_SNAPSHOT_URL, snapshotData, {
         headers: {
-            
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((res) => {
         console.log("Successs !!!")
@@ -92,7 +94,7 @@ export const getLatestVersion = async (containerUrn) => {
         const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
-                
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         return response.data[0];
@@ -111,7 +113,7 @@ export const slateLinkDetails = async (containerUrn) => {
         const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}`, {
             headers: {
                 "Content-Type": "application/json",
-                
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         return response.data;
@@ -127,7 +129,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
         config.updatedAssessmentAPITriggered = false;
@@ -168,7 +170,7 @@ export const callCutCopySnapshotAPI = async (snapshotData,isAutoNumberingEnabled
         }
         return axios.post(url, snapshotData, {
             headers: {
-                
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then((res) => {
             console.log("Successs !!!")
@@ -179,7 +181,7 @@ export const callCutCopySnapshotAPI = async (snapshotData,isAutoNumberingEnabled
     else{
         return axios.put(url, snapshotData, {
             headers: {
-                
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then((res) => {
             console.log("Successs !!!")

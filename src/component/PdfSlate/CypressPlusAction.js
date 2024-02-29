@@ -27,7 +27,7 @@ const startPdfConversion = async (wUrn) => {
       {
         headers: {
           "Content-Type": "application/json",
-          
+          'myCloudProxySession': config.myCloudProxySession
         }
       }
     )
@@ -43,7 +43,7 @@ const pdfConversionStatus = async () => {
                 ${config.projectUrn}/manifest/${config.slateManifestURN}/entity/${config.slateEntityURN}`, {
       headers: {
         "Content-Type": "application/json",
-        
+        'myCloudProxySession': config.myCloudProxySession
       }
     }, { validateStatus: false })
     return res

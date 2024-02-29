@@ -76,7 +76,7 @@ let cypressConfig = {
     textcolors:["option1", "option2"],
     parentOfParentItem:[],
     ssoToken: "7WpBpWgu4SZMGX3Zav05HbfEj6JCGSAd6F99ZnvJ1S8VuOfuVrGZNE1tFctKNcRYPHAU4b4vP0fCwep6UXmxW0TqzUqDVbYSurqTEGaFTbc3ZQj94Z",
-    PearsonExtSSOSession:"PilpXKVfaH0t4Spy7wTeSaitoXfeN2c6L7QPZDvY2hhPJLwEbDFYACKQpVwKirL3PMR9AGOec9a91C4escwMupBpGdBjbBfYaPXMAGjESaRDBpLDk3",
+    myCloudProxySession:"PilpXKVfaH0t4Spy7wTeSaitoXfeN2c6L7QPZDvY2hhPJLwEbDFYACKQpVwKirL3PMR9AGOec9a91C4escwMupBpGdBjbBfYaPXMAGjESaRDBpLDk3",
     projectUrn: "urn:pearson:distributable:cbcd2b0c-7a44-423d-9b8a-61be2dd7b9d1",
     projectEntityUrn:"urn:pearson:entity:b22320ea-3141-45ab-b45a-63b65886fe49",
     slateEntityURN : "urn:pearson:entity:5c77d3b2-bcad-4470-ba8f-018730070bf1",

@@ -43,7 +43,7 @@ describe('Slate level Save testing', () => {
             projectUrn: 'urn:pearson:distributable:67b91207-85d2-4f4d-9af0-e3ad8d7f1d3f',
             slateEntityURN: 'urn:pearson:entity:daecc899-819a-410e-bfe9-c603496689f9',
             userId: 'user123',
-            PearsonExtSSOSession: 'nnrRleqr6liWQgjQwVrT3tFN5nsv1ibZoAmFBevUcKKJGYAWB6Jy79NRKtx46PXLblgiJeMoPnwmc2HVMUYtCudVOsqROC7rx6dkGXhrvBqKzGWlr7'
+            myCloudProxySession: 'nnrRleqr6liWQgjQwVrT3tFN5nsv1ibZoAmFBevUcKKJGYAWB6Jy79NRKtx46PXLblgiJeMoPnwmc2HVMUYtCudVOsqROC7rx6dkGXhrvBqKzGWlr7'
         };
 
         // axios.post.mockImplementation(() => Promise.resolve(true));

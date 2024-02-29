@@ -89,7 +89,7 @@ export class CanvasWrapper extends Component {
             const paramDetails = {
                 'slateEntityURN': slateEntityURN,
                 'projectUrn': config.projectUrn,
-                
+                'myCloudProxySession': config.myCloudProxySession,
                 'userId': config.userId
             }
             localStorage.setItem('paramDetails', JSON.stringify(paramDetails));
