@@ -1230,22 +1230,22 @@ ol li.listItemNumeroUnoLowerRoman:before {
 }
 
 td ol li.listItemNumeroUnoUpperAlpha:before {
-    content: counter(item, upper-alpha) ". ";
+    content: counter(item, upper-alpha) ". " !important;
     counter-increment: item !important;
 }
 
 td ol li.listItemNumeroUnoLowerAlpha:before {
-    content: counter(item, lower-alpha) ". ";
+    content: counter(item, lower-alpha) ". " !important;
     counter-increment: item !important;
 }
 
 td ol li.listItemNumeroUnoUpperRoman:before {
-    content: counter(item, upper-roman) ". ";
+    content: counter(item, upper-roman) ". " !important;
     counter-increment: item !important;
 }
 
 td ol li.listItemNumeroUnoLowerRoman:before {
-    content: counter(item, lower-roman) ". ";
+    content: counter(item, lower-roman) ". " !important;
     counter-increment: item !important;
 }
 
@@ -1253,6 +1253,6 @@ td ol li.listItemNumeroUnoNone:before {
     content: none;
 }
 td ol li.listItemNumeroUnoNumber:before {
-    content: counter(item, decimal) ". ";
+    content: counter(item, decimal) ". " !important;
     counter-increment: item !important;
 }
