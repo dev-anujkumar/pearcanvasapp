@@ -605,7 +605,7 @@ export const updateElementInStore = (paramsObj) => {
                                     ...nestedEle,
                                     popupdata: {
                                         ...nestedEle.popupdata,
-                                        FORMATTED_TITLE: { ...updatedData }
+                                        [FORMATTED_TITLE]: { ...updatedData }
                                     },
                                     tcm: _slateObject.tcm ? true : false //add tcm to popup
                                 };
@@ -656,7 +656,7 @@ export const updateElementInStore = (paramsObj) => {
                                             ...ele,
                                             popupdata: {
                                                 ...ele.popupdata,
-                                                FORMATTED_TITLE: { ...updatedData }
+                                                [FORMATTED_TITLE]: { ...updatedData }
                                             },
                                             tcm: _slateObject.tcm ? true : false //add tcm to popup
                                         };
@@ -695,7 +695,7 @@ export const updateElementInStore = (paramsObj) => {
                         ...element,
                         popupdata: {
                             ...element.popupdata,
-                            FORMATTED_TITLE: { ...updatedData }
+                            [FORMATTED_TITLE]: { ...updatedData }
                         },
                         tcm: _slateObject.tcm ? true : false //add tcm to popup
                     };
