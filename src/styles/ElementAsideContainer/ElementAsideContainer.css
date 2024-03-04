@@ -112,7 +112,7 @@
 }
 
 aside.remove-margin-top{
-    margin-top: 0em;
+    margin-top: 0em !important;
 }
 
 
@@ -144,6 +144,7 @@ div.asideSidebar03BorderTop {
 
 div.asideTacticBoxBorderTop {
     border-top: 7px solid #000 !important;
+    padding-bottom: 1.25em;
 }
 
 

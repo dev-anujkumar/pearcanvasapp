@@ -123,7 +123,7 @@
     border: solid 1px #dcdcdc;
   }
 
-  .cancel-button-import{
+  .cancel-button-import, .disable-cancel-button-import{
     border: 1px solid #337B8C;
     margin-right: 16px;
     border-radius: 4px;
@@ -139,6 +139,12 @@
     font-weight: 500;
     cursor: pointer;
   }
+
+  .disable-cancel-button-import{
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   .file-description-container{
     display: flex;
     flex-direction: column;

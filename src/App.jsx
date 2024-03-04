@@ -17,8 +17,9 @@ import CanvasWrapper from './component/CanvasWrapper';
 import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets //
 import './styles/style.css';
+import './styles/bookStyle.css';
 
-console.log("!!!!! ---- canvas-ui.v1.0.7 ---- !!!!!")
+console.log("!!!!! ---- canvas-ui.v1.0.14 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {

@@ -1,0 +1,4587 @@
+@charset "UTF-8";
+
+body {
+  background: #fff;
+  margin: 0px;
+}
+
+body.is-loading *, body.is-loading *:before, body.is-loading *:after {
+  -moz-animation: none !important;
+  -webkit-animation: none !important;
+  -o-animation: none !important;
+  -ms-animation: none !important;
+  animation: none !important;
+  -moz-transition: none !important;
+  -webkit-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
+  -webkit-text-size-adjust: none !important;
+}
+    
+
+/* Container to force wrapping and enforce line length or 60 characters */  
+div.container {
+  max-width: 680px;
+  margin: 0 auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 680px) { 
+  div.container {
+  margin:0 0.75em;
+  }
+}
+
+/* -------- */
+
+
+
+/* CHAPTER OPENER ELEMENT */
+
+
+/* -------- */
+
+
+
+
+
+/* PARALLAX  */
+
+
+
+/* Item */
+
+.item {
+  padding: 0em 0em 0em 0em;
+  background-color: #ffffff;
+  border-radius: 0px;
+  text-align: center;
+}
+
+.item header {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  margin: -3em 0 3em -3em;
+  width: calc(100% + 6em);
+  height: 15em;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
+  background-color: #444;
+  color: rgba(255, 255, 255, 0.75);
+  position: relative;
+  overflow: hidden;
+}
+
+.item header input, .item header select, .item header textarea {
+  color: #ffffff;
+}
+
+.item header a:hover {
+  color: #EF6480 !important;
+}
+
+.item header strong, .item header b {
+  color: #ffffff;
+}
+
+.item header h1, .item header h2, .item header h3, .item header h4, .item header h5, .item header h6 {
+  color: #ffffff;
+}
+
+.item header blockquote {
+  border-left-color: #ffffff;
+}
+
+.item header code {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: #ffffff;
+}
+
+.item header hr {
+  border-bottom-color: #ffffff;
+}
+
+.item header a {
+  -moz-transition: -moz-transform 0.2s ease;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  -ms-transition: -ms-transform 0.2s ease;
+  transition: transform 0.2s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: inherit;
+}
+
+.item header a:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.item header:hover a {
+  -moz-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.item header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.item header h3 {
+  margin: 0;
+  -moz-pointer-events: none;
+  -webkit-pointer-events: none;
+  -ms-pointer-events: none;
+  -pointer-events: none;
+}
+
+.items {
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  -moz-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: calc(100% + 2em);
+  margin: -2em 0 0 -2em;
+}
+
+.items .item {
+  margin: 2em 0 0 2em;
+  width: calc(50% - 2em);
+}
+
+@media screen and (max-width: 980px) {
+
+  .item header {
+    height: 25em;
+  }
+
+  .items {
+    -moz-flex-direction: column;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -moz-flex-wrap: nowrap;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin: 0;
+  }
+
+  .items .item {
+    width: 100%;
+    margin: 0 0 2em 0;
+  }
+
+  .items .item:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media screen and (max-width: 736px) {
+
+  .item header {
+    height: 15em;
+  }
+
+  .items .item {
+    margin: 0 0 1em 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  .item {
+    padding: 2em 1em 0.1em 1em;
+  }
+
+  .item header {
+    height: 12em;
+    margin: -2em 0 2em -1em;
+    width: calc(100% + 2em);
+  }
+}
+
+
+
+/* Header */
+
+#header {
+  background-color: #444;
+  color: rgba(255, 255, 255, 0.75);
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
+  -moz-flex-direction: column;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding: 0em 0 0em 0;
+  margin-bottom: 2.5em;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  text-align: center;
+  position: relative;
+  cursor: default;
+}
+
+#header input, #header select, #header textarea {
+  color: #FFFFFF;
+}
+
+#header a {
+  color: inherit;
+}
+
+#header a:hover {
+  color: #EF6480 !important;
+}
+
+#header strong, #header b {
+  color: #ffffff;
+}
+
+#header h1, #header h2, #header h3, #header h4, #header h5, #header h6 {
+  color: #ffffff;
+}
+
+#header h2 {
+  font-family: 'OpenSans', Helvetica, sans-serif;
+  font-size: 2.125em;
+  letter-spacing: 0.045em;
+}
+
+#header blockquote {
+  border-left-color: #ffffff;
+}
+
+#header code {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: #ffffff;
+}
+
+#header hr {
+  border-bottom-color: #ffffff;
+}
+
+#header:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+#header h1 {
+  margin-bottom: 0.5em;
+}
+
+#header .inner {
+  position: relative;
+  z-index: 1;
+}
+
+#header.alt {
+  height: 20em;
+  min-height: 20em;
+  min-height: 75vh;
+}
+
+#header.alt:before {
+  -moz-transition: background-color 3s ease;
+  -webkit-transition: background-color 3s ease;
+  -ms-transition: background-color 3s ease;
+  transition: background-color 3s ease;
+  -moz-transition-delay: 1s;
+  -webkit-transition-delay: 1s;
+  -ms-transition-delay: 1s;
+  transition-delay: 1s;
+}
+
+#header.alt h1 {
+  font-size: 4em;
+  padding: 0 3em 0.25em 3em;
+  font-weight: 800;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  text-transform: none;
+  letter-spacing: -0.03rem;
+}
+
+/*'OpenSans'*/
+
+#header.alt p {
+  text-transform: uppercase;
+  letter-spacing: 0.325rem;
+  font-weight: 400;
+  font-size: 0.8em;
+  padding: 0 1.25em;
+}
+
+#header.alt .inner {
+  -moz-transition: opacity 2s ease;
+  -webkit-transition: opacity 2s ease;
+  -ms-transition: opacity 2s ease;
+  transition: opacity 2s ease;
+  opacity: 1;
+}
+
+body.is-loading #header.alt:before {
+  background-color: black;
+}
+
+body.is-loading #header.alt .inner {
+  opacity: 0;
+}
+
+@media screen and (max-width: 1280px) {
+
+  #header {
+    background-attachment: scroll;
+  }
+}
+
+@media screen and (max-width: 980px) {
+
+  #header {
+    padding: 4em 2em 2em 2em;
+  }
+  
+  #header h2 {
+  font-family: 'OpenSans', Helvetica, sans-serif;
+  font-size: 2.0em;
+  letter-spacing: 0.045em;
+}
+
+  #header.alt h1 {
+    font-size: 3.5em;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+  }
+
+  #header.alt p {
+    padding: 0;
+  }
+
+  #header.alt .inner {
+    max-width: 40em;
+  }
+}
+
+@media screen and (max-width: 736px) {
+
+  #header {
+    padding: 4em 2em 2em 2em;
+  }
+  
+  #header h2 {
+  font-family: 'OpenSans', Helvetica, sans-serif;
+  font-size: 1.5em;
+  letter-spacing: 0.045em;
+}
+
+  #header.alt h1 {
+    font-size: 2.5em;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #header.alt p {
+    padding: 0;
+  }
+
+  #header.alt .inner {
+    max-width: 20em;
+  }
+}
+
+     
+     
+     
+  /* Chapter Opener Subtitle */
+  
+  /* Sits below parallax effect */
+
+p.chapterSubtitle {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, serif;
+  font-weight: 600;
+  font-size: 1.15em;
+  line-height: 1.5em;
+  letter-spacing: 0.03em;
+  margin-bottom: 2.0em;
+}
+
+
+
+
+
+/* -------- */
+
+
+
+/* HEADINGS */
+
+
+/* -------- */
+
+
+  /* H1 / Level 1 Heading */
+  /* SANS-SERIF */
+  
+H1.heading1NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 2.520em;
+  font-weight: 400;
+  line-height: 1.28em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.40em;
+  margin-left: 0em;
+}
+
+
+
+  /* Learning Objective Item */
+
+H2.heading2learningObjectiveItem {
+  color: #727272;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 1.5em;
+  font-weight: 300;
+  font-style: normal;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  margin: -.15em 0 1.5em 0;
+}
+
+
+
+/* H2 / Level 2 Heading */
+  /* SANS-SERIF */
+
+H2.heading2NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 1.70em;
+  font-weight: normal;
+  line-height: 1.40em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.55em;
+  margin-left: 0em;
+}
+
+
+/* H3 / Level 3 Heading */
+  /* SANS-SERIF */
+  
+H3.heading3NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 1.4em;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.65em;
+  margin-left: 0em;
+}
+  
+  
+
+  /* H4 / Level 4 Heading */
+  /* SANS-SERIF */
+  
+H4.heading4NummerEins {
+  color: #525252;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 1.40em;
+  font-weight: 300;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.70em;
+  margin-left: 0em;
+}
+
+
+
+
+/* H5 / Level 5 Heading */
+  /* SANS-SERIF */
+  
+H5.heading5NummerEins {
+  color: #525252;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 1.105em;
+  font-weight: 800;
+  line-height: 1.5em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.75em;
+  margin-left: 0em;
+}
+  
+  
+  /* H6 / Level 6 Heading */
+  /* SANS-SERIF */
+  
+  
+H6.heading6NummerEins {
+  color: #525252;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.105em;
+  font-weight: 500;
+  line-height: 1.5em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.75em;
+  margin-left: 0em;
+}
+
+
+
+/* -------- */
+
+
+
+/* MAIN BODY TEXT */
+
+
+/* -------- */
+ 
+p.paragraphNumeroUno {
+  color: #000;
+  margin: 0em 0em 1.70em 0em;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.180em;
+  font-weight: normal;
+  line-height: 1.70em;
+  letter-spacing: 0.01em;
+}
+
+em {
+  font-style: italic;
+}
+
+p b, p .strong {
+  font-weight: bold;
+}
+
+a.paragraphNumeroUno {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a.paragraphNumeroUno:hover {
+  text-decoration: underline;
+}
+
+P.paragraphNumeroUnoIndentLevel1 {
+  color: #000;
+  margin: 0em 0em 1.70em 2em;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.180em;
+  font-weight: normal;
+  line-height: 1.70em;
+  letter-spacing: 0.01em;
+}
+
+P.paragraphNumeroUnoIndentLevel2 {
+  color: #000;
+  margin: 0em 0em 1.70em 4em;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.180em;
+  font-weight: normal;
+  line-height: 1.70em;
+  letter-spacing: 0.01em;
+}
+
+P.paragraphNumeroUnoIndentLevel3 {
+  color: #000;
+  margin: 0em 0em 1.70em 6em;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.180em;
+  font-weight: normal;
+  line-height: 1.70em;
+  letter-spacing: 0.01em;
+}
+
+ /*  Hanging Indent */
+
+.hangingIndent {
+  color: #000;
+  margin: 0em 0em 1.70em 0em;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.180em;
+  font-weight: normal;
+  line-height: 1.70em;
+  letter-spacing: 0.01em;
+  background: transparent;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0em;
+  padding-left: 2.5em;
+  text-indent: -2.5em;
+}
+
+
+ /*  Glossary Terms */
+
+dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: inherit;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+  
+}
+
+dfn.GlossaryTerm:hover {
+  color: #9E007E;
+  cursor: pointer;
+  border-bottom: none;
+}
+
+
+ /* Glossary Term Extras */
+
+h1 dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+h2 dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+h3 dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+h4 dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+h5 dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+h6 dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+
+ /* Glossary Term In a List */
+li dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+
+ /* Glossary Term in Figure Title */
+.heading4Image25TextTitle dfn.GlossaryTerm,
+.heading4Image25TextTableImageTitle dfn.GlossaryTerm,
+.heading4Image25TextMathImageTitle dfn.GlossaryTerm,
+.heading4Image50TextTitle dfn.GlossaryTerm,
+.heading4Image50TextTableImageTitle dfn.GlossaryTerm,
+.heading4Image50TextMathImageTitle dfn.GlossaryTerm, 
+.heading4ImageTextWidthTitle dfn.GlossaryTerm,
+.heading4ImageTextWidthTableImageTitle dfn.GlossaryTerm,
+.heading4ImageTextWidthMathImageTitle dfn.GlossaryTerm, 
+.heading4ImageWiderThanTextTitle dfn.GlossaryTerm,
+.heading4ImageWiderThanTextTableImageTitle dfn.GlossaryTerm,
+.heading4ImageWiderThanTextMathImageTitle dfn.GlossaryTerm, 
+.heading4ImageFullscreenTitle dfn.GlossaryTerm,
+.heading4ImageFullscreenTableImageTitle dfn.GlossaryTerm,
+.heading4ImageFullscreenMathImageTitle dfn.GlossaryTerm,
+.heading4VideoTitle dfn.GlossaryTerm,
+.heading4Widget3PITitle dfn.GlossaryTerm,
+.heading4Widget3PISETitle dfn.GlossaryTerm,
+.heading4WidgetMDITitle dfn.GlossaryTerm,
+.heading4Widget3PITitle.SocialExplorer dfn.GlossaryTerm,
+.heading4Widget3PITitle.GeoGebra dfn.GlossaryTerm,
+.heading4Widget3PITitle.CloserLook dfn.GlossaryTerm,
+.heading4Widget3PITitle.Default dfn.GlossaryTerm,
+.heading4WidgetAccountingTableTitle dfn.GlossaryTerm,
+.heading4ContextualAudioTitle dfn.GlossaryTerm,
+.heading4WidgetFlashcardsTitle dfn.GlossaryTerm,
+.heading4WidgetImgSlideshowTitle dfn.GlossaryTerm,
+.heading4WidgetVidSlideshowTitle dfn.GlossaryTerm,
+.heading4WidgetUCATitle dfn.GlossaryTerm,
+.heading4WidgetSurveyTitle dfn.GlossaryTerm,
+.heading4WidgetTimelineTitle dfn.GlossaryTerm,
+.heading4WidgetMCQTitle dfn.GlossaryTerm,
+.heading4WidgetImageIdTitle dfn.GlossaryTerm,
+.heading4WidgetHotspotTitle dfn.GlossaryTerm,
+.heading4WidgetFIBTitle dfn.GlossaryTerm,
+.heading4WidgetGraphTitlev dfn.GlossaryTerm,
+.heading4WidgetVideoMcqTitle .dfn.GlossaryTerm,
+.heading4WidgetFPOTitle dfn.GlossaryTerm,
+.heading4WidgetFPOAVTitle dfn.GlossaryTerm,
+.heading4WidgetFPOINTitle dfn.GlossaryTerm,
+.heading4WidgetFPOASTitle dfn.GlossaryTerm,
+.heading4WidgetFPOACTitle dfn.GlossaryTerm,
+.heading4AssessmentTitle dfn.GlossaryTerm,
+.heading4AssessmentItemTitle dfn.GlossaryTerm,
+.heading4TdxAssessmentTitle dfn.GlossaryTerm,
+.heading4TdxAssessmentItemTitle dfn.GlossaryTerm,
+.heading4WidgetShowHideTitle dfn.GlossaryTerm,
+.heading4WidgetPDFTitle dfn.GlossaryTerm,
+.heading4WidgetPUTitle dfn.GlossaryTerm,
+.heading4WidgetPUSLTitle dfn.GlossaryTerm,
+.heading4WidgetEWLTitle dfn.GlossaryTerm,
+.heading4WidgetTableSLTitle dfn.GlossaryTerm {
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.07em;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+ /* Glossary Term in Figure Caption */
+figcaption dfn.GlossaryTerm {
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.09em;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+ /* Glossary Term in Figure Credit */
+.paragraphImage25TextCredit dfn.GlossaryTerm,
+.paragraphImage25TextTableImageCredit dfn.GlossaryTerm,
+.paragraphImage25TextMathImageCredit dfn.GlossaryTerm,  
+.paragraphImage50TextCredit dfn.GlossaryTerm,
+.paragraphImage50TextTableImageCredit dfn.GlossaryTerm,
+.paragraphImage50TextMathImageCredit dfn.GlossaryTerm, 
+.paragraphImageTextWidthCredit dfn.GlossaryTerm,
+.paragraphImageTextWidthTableImageCredit dfn.GlossaryTerm,
+.paragraphImageTextWidthMathImageCredit dfn.GlossaryTerm, 
+.paragraphImageWiderThanTextCredit dfn.GlossaryTerm,
+.paragraphImageWiderThanTextTableImageCredit dfn.GlossaryTerm,
+.paragraphImageWiderThanTextMathImageCredit dfn.GlossaryTerm, 
+.paragraphImageFullscreenCredit dfn.GlossaryTerm,
+.paragraphImageFullscreenTableImageCredit dfn.GlossaryTerm,
+.paragraphImageFullscreenMathImageCredit dfn.GlossaryTerm,
+.paragraphAudioCredit dfn.GlossaryTerm,
+.paragraphVideoCredit dfn.GlossaryTerm,
+.paragraphWidget3PICredit dfn.GlossaryTerm,
+.paragraphWidget3PISECredit dfn.GlossaryTerm,
+.paragraphWidgetMDICredit dfn.GlossaryTerm,
+.paragraphWidget3PICredit.SocialExplorer dfn.GlossaryTerm,
+.paragraphWidget3PICredit.GeoGebra dfn.GlossaryTerm,
+.paragraphWidget3PICredit.CloserLook dfn.GlossaryTerm,
+.paragraphWidget3PICredit.Default dfn.GlossaryTerm,
+.paragraphWidgetAccountingTableCredit dfn.GlossaryTerm,
+.paragraphWidgetFlashcardsCredit dfn.GlossaryTerm,
+.paragraphWidgetImgSlideshowCredit dfn.GlossaryTerm,
+.paragraphWidgetVidSlideshowCredit dfn.GlossaryTerm,
+.paragraphContextualAudioCredit dfn.GlossaryTerm,
+.paragraphWidgetUCACredit dfn.GlossaryTerm,
+.paragraphWidgetSurveyCredit dfn.GlossaryTerm,
+.paragraphWidgetTimelineCredit dfn.GlossaryTerm,
+.paragraphWidgetMCQCredit dfn.GlossaryTerm,
+.paragraphWidgetImageIdCredit dfn.GlossaryTerm,
+.paragraphWidgetHotspotCredit dfn.GlossaryTerm,
+.paragraphWidgetFIBCredit dfn.GlossaryTerm,
+.paragraphWidgetGraphCredit dfn.GlossaryTerm,
+.paragraphWidgetVideoMcqCredit dfn.GlossaryTerm,
+.paragraphWidgetFPOCredit dfn.GlossaryTerm,
+.paragraphWidgetFPOAVCredit dfn.GlossaryTerm,
+.paragraphWidgetFPOINCredit dfn.GlossaryTerm,
+.paragraphWidgetFPOASCredit dfn.GlossaryTerm,
+.paragraphWidgetFPOACCredit dfn.GlossaryTerm,
+.paragraphAssessmentCredit dfn.GlossaryTerm,
+.paragraphAssessmentItemCredit dfn.GlossaryTerm,
+.paragraphTdxAssessmentCredit dfn.GlossaryTerm,
+.paragraphTdxAssessmentItemCredit dfn.GlossaryTerm,
+.paragraphWidgetPDFCredit dfn.GlossaryTerm,
+.paragraphWidgetPUCredit dfn.GlossaryTerm,
+.paragraphWidgetPUSLCredit dfn.GlossaryTerm,
+.paragraphWidgetEWLCredit dfn.GlossaryTerm,
+.paragraphWidgetTableSLCredit dfn.GlossaryTerm,
+.paragraphTextCredit dfn.GlossaryTerm,
+.paragraphCodeSnippetCredit dfn.GlossaryTerm,
+.paragraphJournalAssessmentCredit dfn.GlossaryTerm,
+.paragraphMCQAssessmentCredit dfn.GlossaryTerm {
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.10em;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+
+
+
+    /*  Footnotes */
+
+a.paragraphNumeroUnoFootnote {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+a.paragraphNumeroUnoFootnote:hover {
+  text-decoration: underline;
+}
+
+    /* Footnote Extras */
+    /* Footnote in Head levels 1-6 */
+
+h1 a.paragraphNumeroUnoFootnote { 
+  font-size: .63em;
+  margin-left: -.20em;
+  line-height: 1.28em;
+ }
+
+ h2 a.paragraphNumeroUnoFootnote {
+   font-size: .80em;
+   margin-left: -.15em;
+  line-height: 1.40em;
+ }
+
+ h3 a.paragraphNumeroUnoFootnote {
+   font-size: .90em;
+   margin-left: -.05em;
+   line-height: 1.45em;
+ }
+
+ h4 a.paragraphNumeroUnoFootnote {
+   font-size: .85em;
+   margin-left: -.10em;
+   line-height: 1.5em;
+ }
+
+ h5 a.paragraphNumeroUnoFootnote {
+   font-size: 1.09em;
+   margin-left: -.10em;
+   line-height: 1.5em;
+ }
+
+ h6 a.paragraphNumeroUnoFootnote {
+   font-size: 1.09em;
+   margin-left: -.10em;
+   line-height: 1.5em;
+ }
+
+
+/* Footnote in Titles */
+.heading4Image25TextTitle .paragraphNumeroUnoFootnote,
+.heading4Image25TextTableImageTitle .paragraphNumeroUnoFootnote,
+.heading4Image25TextMathImageTitle .paragraphNumeroUnoFootnote,
+.heading4Image50TextTitle .paragraphNumeroUnoFootnote,
+.heading4Image50TextTableImageTitle .paragraphNumeroUnoFootnote,
+.heading4Image50TextMathImageTitle .paragraphNumeroUnoFootnote, 
+.heading4ImageTextWidthTitle .paragraphNumeroUnoFootnote,
+.heading4ImageTextWidthTableImageTitle .paragraphNumeroUnoFootnote,
+.heading4ImageTextWidthMathImageTitle .paragraphNumeroUnoFootnote, 
+.heading4ImageWiderThanTextTitle .paragraphNumeroUnoFootnote,
+.heading4ImageWiderThanTextTableImageTitle .paragraphNumeroUnoFootnote,
+.heading4ImageWiderThanTextMathImageTitle .paragraphNumeroUnoFootnote, 
+.heading4ImageFullscreenTitle .paragraphNumeroUnoFootnote,
+.heading4ImageFullscreenTableImageTitle .paragraphNumeroUnoFootnote,
+.heading4ImageFullscreenMathImageTitle .paragraphNumeroUnoFootnote,
+.heading4VideoTitle .paragraphNumeroUnoFootnote,
+.heading4Widget3PITitle .paragraphNumeroUnoFootnote,
+.heading4Widget3PISETitle .paragraphNumeroUnoFootnote,
+.heading4WidgetMDITitle .paragraphNumeroUnoFootnote,
+.heading4Widget3PITitle.SocialExplorer .paragraphNumeroUnoFootnote,
+.heading4Widget3PITitle.GeoGebra .paragraphNumeroUnoFootnote,
+.heading4Widget3PITitle.CloserLook .paragraphNumeroUnoFootnote,
+.heading4Widget3PITitle.Default .paragraphNumeroUnoFootnote,
+.heading4WidgetAccountingTableTitle .paragraphNumeroUnoFootnote,
+.heading4ContextualAudioTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFlashcardsTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetImgSlideshowTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetVidSlideshowTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetUCATitle .paragraphNumeroUnoFootnote,
+.heading4WidgetSurveyTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetTimelineTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetMCQTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetImageIdTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetHotspotTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFIBTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetGraphTitlev .paragraphNumeroUnoFootnote,
+.heading4WidgetVideoMcqTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFPOTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFPOAVTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFPOINTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFPOASTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetFPOACTitle .paragraphNumeroUnoFootnote,
+.heading4AssessmentTitle .paragraphNumeroUnoFootnote,
+.heading4AssessmentItemTitle .paragraphNumeroUnoFootnote,
+.heading4TdxAssessmentTitle .paragraphNumeroUnoFootnote,
+.heading4TdxAssessmentItemTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetShowHideTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetPDFTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetPUTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetPUSLTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetEWLTitle .paragraphNumeroUnoFootnote,
+.heading4WidgetTableSLTitle .paragraphNumeroUnoFootnote {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.0em;
+  font-weight: normal;
+  text-decoration: none;
+  margin-left: 1px;
+}
+
+/* Footnote in Captions */
+figcaption .paragraphNumeroUnoFootnote {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.25em;
+  font-weight: normal;
+  text-decoration: none;
+  margin-left: 2px;
+}
+
+/* Footnote in Credit */
+.paragraphImage25TextCredit .paragraphNumeroUnoFootnote,
+.paragraphImage25TextTableImageCredit .paragraphNumeroUnoFootnote,
+.paragraphImage25TextMathImageCredit .paragraphNumeroUnoFootnote,  
+.paragraphImage50TextCredit .paragraphNumeroUnoFootnote,
+.paragraphImage50TextTableImageCredit .paragraphNumeroUnoFootnote,
+.paragraphImage50TextMathImageCredit .paragraphNumeroUnoFootnote, 
+.paragraphImageTextWidthCredit .paragraphNumeroUnoFootnote,
+.paragraphImageTextWidthTableImageCredit .paragraphNumeroUnoFootnote,
+.paragraphImageTextWidthMathImageCredit .paragraphNumeroUnoFootnote, 
+.paragraphImageWiderThanTextCredit .paragraphNumeroUnoFootnote,
+.paragraphImageWiderThanTextTableImageCredit .paragraphNumeroUnoFootnote,
+.paragraphImageWiderThanTextMathImageCredit .paragraphNumeroUnoFootnote, 
+.paragraphImageFullscreenCredit .paragraphNumeroUnoFootnote,
+.paragraphImageFullscreenTableImageCredit .paragraphNumeroUnoFootnote,
+.paragraphImageFullscreenMathImageCredit .paragraphNumeroUnoFootnote,
+.paragraphAudioCredit .paragraphNumeroUnoFootnote,
+.paragraphVideoCredit .paragraphNumeroUnoFootnote,
+.paragraphWidget3PICredit .paragraphNumeroUnoFootnote,
+.paragraphWidget3PISECredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetMDICredit .paragraphNumeroUnoFootnote,
+.paragraphWidget3PICredit.SocialExplorer .paragraphNumeroUnoFootnote,
+.paragraphWidget3PICredit.GeoGebra .paragraphNumeroUnoFootnote,
+.paragraphWidget3PICredit.CloserLook .paragraphNumeroUnoFootnote,
+.paragraphWidget3PICredit.Default .paragraphNumeroUnoFootnote,
+.paragraphWidgetAccountingTableCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFlashcardsCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetImgSlideshowCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetVidSlideshowCredit .paragraphNumeroUnoFootnote,
+.paragraphContextualAudioCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetUCACredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetSurveyCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetTimelineCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetMCQCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetImageIdCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetHotspotCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFIBCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetGraphCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetVideoMcqCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFPOCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFPOAVCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFPOINCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFPOASCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetFPOACCredit .paragraphNumeroUnoFootnote,
+.paragraphAssessmentCredit .paragraphNumeroUnoFootnote,
+.paragraphAssessmentItemCredit .paragraphNumeroUnoFootnote,
+.paragraphTdxAssessmentCredit .paragraphNumeroUnoFootnote,
+.paragraphTdxAssessmentItemCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetPDFCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetPUCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetPUSLCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetEWLCredit .paragraphNumeroUnoFootnote,
+.paragraphWidgetTableSLCredit .paragraphNumeroUnoFootnote,
+.paragraphTextCredit .paragraphNumeroUnoFootnote,
+.paragraphCodeSnippetCredit .paragraphNumeroUnoFootnote,
+.paragraphJournalAssessmentCredit .paragraphNumeroUnoFootnote,
+.paragraphMCQAssessmentCredit .paragraphNumeroUnoFootnote {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.25em;
+  font-weight: normal;
+  text-decoration: none;
+  margin-left: 2px;
+}
+
+/* Glossary Term in Marginalia */
+blockquote dfn.GlossaryTerm {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.10em;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+/* Glossary Term in Pull Quote */
+.pullQuoteNumeroUno dfn.GlossaryTerm {
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: inherit;
+  font-weight: Bold;
+  font-style: normal;
+  border-bottom: 1px dotted #000;
+}
+
+/* Footnote in Pull Quote */
+.pullQuoteNumeroUno .paragraphNumeroUnoFootnote {
+  color: #007FA3;
+  font-family: inherit;
+  font-size: .85em;
+  font-weight: normal;
+  text-decoration: none;
+  margin-left: 2px;
+}
+
+
+/*  Superscript and Subscript line spacing adjustment  */
+
+sup, sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.4em;
+}
+sub { 
+  top: 0.4em; 
+}
+
+
+/* Small Caps */
+span.smallcaps {
+  font-variant: small-caps;
+}
+
+
+/* Page Numbers */
+.pageNumberBlock {
+     position: relative;
+     font-family: Palatino, serif;
+     color: #000;
+     font-weight: 700;
+     font-size: 14px;
+     -webkit-user-select: none;
+     -moz-user-select: none;
+     -ms-user-select: none;
+     user-select: none;
+     left: -80px;
+     top: 0px;
+}
+
+
+/*  Code - Inline  */
+
+p code {
+  color: #000;
+  font-family: monospace;
+  font-size: 1.05em;
+}
+
+h1 code {
+  color: #000;
+  font-family: monospace;
+  font-size: 1.10em;
+}
+
+h2 code {
+  color: #000;
+  font-family: monospace;
+  font-size: 1.10em;
+}
+
+h3 code {
+  color: #000;
+  font-family: monospace;
+  font-size: 1.10em;
+}
+
+h4 code {
+  color: #525252;
+  font-family: monospace;
+  font-size: 1.10em;
+}
+
+h5 code {
+  color: #525252;
+  font-family: monospace;
+  font-size: 1.2175em;
+  font-style: normal;
+}
+
+h6 code {
+  color: #525252;
+  font-family: monospace;
+  font-size: 1.150em;
+}
+
+
+ul code {
+  color: #000;
+  font-family: monospace;
+  font-size: 105%;
+}
+
+ol code {
+  color: #000;
+  font-family: monospace;
+  font-size: 105%;
+}
+
+.heading4ImageTextWidthTitle code {
+  color: #000;
+  font-family: monospace;
+  font-size: 1.125em;
+}
+
+figcaption code {
+  font-size: 1.125em;
+}
+
+
+
+/* -------- */
+
+
+/* LISTS */
+
+
+/* -------- */
+
+ol, ul {
+  margin-left: 2em;
+  margin-top: 0em;
+  margin-bottom: 1.70em;
+  padding-left: .85em;
+  counter-reset: item;
+}
+
+ul {
+  list-style-type: none;
+  margin-left: 2.65em;
+}
+
+      /* List Items */
+      /* serif */
+li.listItemNumeroUno,
+li.listItemNumeroUnoNumber,
+li.listItemNumeroUnoLowerAlpha,
+li.listItemNumeroUnoUpperAlpha,
+li.listItemNumeroUnoUpperRoman,
+li.listItemNumeroUnoLowerRoman,
+li.listItemNumeroUnoNone {
+  color: #000;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: 1.180em;
+  font-weight: normal;
+  line-height: 1.70em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-bottom: 0.5em;
+}
+
+li li.listItemNumeroUno,
+li li.listItemNumeroUnoNumber,
+li li.listItemNumeroUnoLowerAlpha,
+li li.listItemNumeroUnoUpperAlpha,
+li li.listItemNumeroUnoUpperRoman,
+li li.listItemNumeroUnoLowerRoman,
+li li.listItemNumeroUnoNone {
+  font-size: 100%;
+}
+
+      /* sans */
+li.listItemNummerEins,
+li.listItemNummerEinsNumber,
+li.listItemNummerEinsLowerAlpha,
+li.listItemNummerEinsUpperAlpha,
+li.listItemNummerEinsUpperRoman,
+li.listItemNummerEinsLowerRoman,
+li.listItemNummerEinsNone {
+  color: #000;
+  font-family: sans-serif;
+  font-size: 1.070em;
+  font-weight: 400;
+  line-height: 1.80em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-bottom: 0.5em;
+}
+
+li li.listItemNummerEins,
+li li.listItemNummerEinsNumber,
+li li.listItemNummerEinsLowerAlpha,
+li li.listItemNummerEinsUpperAlpha,
+li li.listItemNummerEinsUpperRoman,
+li li.listItemNummerEinsLowerRoman,
+li li.listItemNummerEinsNone {
+  font-size: 100%;
+}
+
+
+/* Nested Lists */
+ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+
+ol ul {
+  margin-top: 0.5em;
+  margin-left: 1.0em;
+  margin-bottom: 0em;
+}
+
+
+ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+ol ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+ul ul:first-child li.listItemNumeroUno,
+ul ul:first-child li.listItemNummerEins {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+ul ul ul:first-child li.listItemNumeroUno,
+ul ul ul:first-child li.listItemNummerEins {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+ul ul ul ul:first-child li.listItemNumeroUno,
+ul ul ul ul:first-child li.listItemNummerEins {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+ul ul,
+ul ul ul,
+ul ul ul ul {
+  margin-bottom: 0.5em;
+}
+
+
+
+/* Bold list numbering */
+
+ol li { 
+ display: block;
+ padding: 0 0 0 0.5em;
+ text-indent: 0em;
+}
+
+
+ol li:before {
+ counter-increment: item;
+}
+
+/* ----- Counter resets for lists not starting at 1 ----- */
+ol[start="2"] { counter-reset: item 1; }
+ol[start="3"] { counter-reset: item 2; }
+ol[start="4"] { counter-reset: item 3; }
+ol[start="5"] { counter-reset: item 4; }
+ol[start="6"] { counter-reset: item 5; }
+ol[start="7"] { counter-reset: item 6; }
+ol[start="8"] { counter-reset: item 7; }
+ol[start="9"] { counter-reset: item 8; }
+ol[start="10"] { counter-reset: item 9; }
+ol[start="11"] { counter-reset: item 10; }
+ol[start="12"] { counter-reset: item 11; }
+ol[start="13"] { counter-reset: item 12; }
+ol[start="14"] { counter-reset: item 13; }
+ol[start="15"] { counter-reset: item 14; }
+ol[start="16"] { counter-reset: item 15; }
+ol[start="17"] { counter-reset: item 16; }
+ol[start="18"] { counter-reset: item 17; }
+ol[start="19"] { counter-reset: item 18; }
+ol[start="20"] { counter-reset: item 19; }
+ol[start="21"] { counter-reset: item 20; }
+ol[start="22"] { counter-reset: item 21; }
+ol[start="23"] { counter-reset: item 22; }
+ol[start="24"] { counter-reset: item 23; }
+ol[start="25"] { counter-reset: item 24; }
+ol[start="26"] { counter-reset: item 25; }
+ol[start="27"] { counter-reset: item 26; }
+ol[start="28"] { counter-reset: item 27; }
+ol[start="29"] { counter-reset: item 28; }
+ol[start="30"] { counter-reset: item 29; }
+ol[start="31"] { counter-reset: item 30; }
+ol[start="32"] { counter-reset: item 31; }
+ol[start="33"] { counter-reset: item 32; }
+ol[start="34"] { counter-reset: item 33; }
+ol[start="35"] { counter-reset: item 34; }
+ol[start="36"] { counter-reset: item 35; }
+ol[start="37"] { counter-reset: item 36; }
+ol[start="38"] { counter-reset: item 37; }
+ol[start="39"] { counter-reset: item 38; }
+ol[start="40"] { counter-reset: item 39; }
+ol[start="41"] { counter-reset: item 40; }
+ol[start="42"] { counter-reset: item 41; }
+ol[start="43"] { counter-reset: item 42; }
+ol[start="44"] { counter-reset: item 43; }
+ol[start="45"] { counter-reset: item 44; }
+ol[start="46"] { counter-reset: item 45; }
+ol[start="47"] { counter-reset: item 46; }
+ol[start="48"] { counter-reset: item 47; }
+ol[start="49"] { counter-reset: item 48; }
+ol[start="50"] { counter-reset: item 49; }
+ol[start="51"] { counter-reset: item 50; }
+ol[start="52"] { counter-reset: item 51; }
+ol[start="53"] { counter-reset: item 52; }
+ol[start="54"] { counter-reset: item 53; }
+ol[start="55"] { counter-reset: item 54; }
+ol[start="56"] { counter-reset: item 55; }
+ol[start="57"] { counter-reset: item 56; }
+ol[start="58"] { counter-reset: item 57; }
+ol[start="59"] { counter-reset: item 58; }
+ol[start="60"] { counter-reset: item 59; }
+ol[start="61"] { counter-reset: item 60; }
+ol[start="62"] { counter-reset: item 61; }
+ol[start="63"] { counter-reset: item 62; }
+ol[start="64"] { counter-reset: item 63; }
+ol[start="65"] { counter-reset: item 64; }
+ol[start="66"] { counter-reset: item 65; }
+ol[start="67"] { counter-reset: item 66; }
+ol[start="68"] { counter-reset: item 67; }
+ol[start="69"] { counter-reset: item 68; }
+ol[start="70"] { counter-reset: item 69; }
+ol[start="71"] { counter-reset: item 70; }
+ol[start="72"] { counter-reset: item 71; }
+ol[start="73"] { counter-reset: item 72; }
+ol[start="74"] { counter-reset: item 73; }
+ol[start="75"] { counter-reset: item 74; }
+ol[start="76"] { counter-reset: item 75; }
+ol[start="77"] { counter-reset: item 76; }
+ol[start="78"] { counter-reset: item 77; }
+ol[start="79"] { counter-reset: item 78; }
+ol[start="80"] { counter-reset: item 79; }
+ol[start="81"] { counter-reset: item 80; }
+ol[start="82"] { counter-reset: item 81; }
+ol[start="83"] { counter-reset: item 82; }
+ol[start="84"] { counter-reset: item 83; }
+ol[start="85"] { counter-reset: item 84; }
+ol[start="86"] { counter-reset: item 85; }
+ol[start="87"] { counter-reset: item 86; }
+ol[start="88"] { counter-reset: item 87; }
+ol[start="89"] { counter-reset: item 88; }
+ol[start="90"] { counter-reset: item 89; }
+ol[start="91"] { counter-reset: item 90; }
+ol[start="92"] { counter-reset: item 91; }
+ol[start="93"] { counter-reset: item 92; }
+ol[start="94"] { counter-reset: item 93; }
+ol[start="95"] { counter-reset: item 94; }
+ol[start="96"] { counter-reset: item 95; }
+ol[start="97"] { counter-reset: item 96; }
+ol[start="98"] { counter-reset: item 97; }
+ol[start="99"] { counter-reset: item 98; }
+ol[start="100"] { counter-reset: item 99; }
+ol[start="101"] { counter-reset: item 100; }
+ol[start="102"] { counter-reset: item 101; }
+ol[start="103"] { counter-reset: item 102; }
+ol[start="104"] { counter-reset: item 103; }
+ol[start="105"] { counter-reset: item 104; }
+ol[start="106"] { counter-reset: item 105; }
+ol[start="107"] { counter-reset: item 106; }
+ol[start="108"] { counter-reset: item 107; }
+ol[start="109"] { counter-reset: item 108; }
+ol[start="110"] { counter-reset: item 109; }
+ol[start="111"] { counter-reset: item 110; }
+ol[start="112"] { counter-reset: item 111; }
+ol[start="113"] { counter-reset: item 112; }
+ol[start="114"] { counter-reset: item 113; }
+ol[start="115"] { counter-reset: item 114; }
+ol[start="116"] { counter-reset: item 115; }
+ol[start="117"] { counter-reset: item 116; }
+ol[start="118"] { counter-reset: item 117; }
+ol[start="119"] { counter-reset: item 118; }
+ol[start="120"] { counter-reset: item 119; }
+ol[start="121"] { counter-reset: item 120; }
+ol[start="122"] { counter-reset: item 121; }
+ol[start="123"] { counter-reset: item 122; }
+ol[start="124"] { counter-reset: item 123; }
+ol[start="125"] { counter-reset: item 124; }
+ol[start="126"] { counter-reset: item 125; }
+ol[start="127"] { counter-reset: item 126; }
+ol[start="128"] { counter-reset: item 127; }
+ol[start="129"] { counter-reset: item 128; }
+ol[start="130"] { counter-reset: item 129; }
+ol[start="131"] { counter-reset: item 130; }
+ol[start="132"] { counter-reset: item 131; }
+ol[start="133"] { counter-reset: item 132; }
+ol[start="134"] { counter-reset: item 133; }
+ol[start="135"] { counter-reset: item 134; }
+ol[start="136"] { counter-reset: item 135; }
+ol[start="137"] { counter-reset: item 136; }
+ol[start="138"] { counter-reset: item 137; }
+ol[start="139"] { counter-reset: item 138; }
+ol[start="140"] { counter-reset: item 139; }
+ol[start="141"] { counter-reset: item 140; }
+ol[start="142"] { counter-reset: item 141; }
+ol[start="143"] { counter-reset: item 142; }
+ol[start="144"] { counter-reset: item 143; }
+ol[start="145"] { counter-reset: item 144; }
+ol[start="146"] { counter-reset: item 145; }
+ol[start="147"] { counter-reset: item 146; }
+ol[start="148"] { counter-reset: item 147; }
+ol[start="149"] { counter-reset: item 148; }
+ol[start="150"] { counter-reset: item 149; }
+ol[start="151"] { counter-reset: item 150; }
+
+/* --- Global ol styles --- */
+ol li.listItemNumeroUno:before,
+ol li.listItemNumeroUnoNumber:before,
+ol li.listItemNumeroUnoLowerAlpha:before,
+ol li.listItemNumeroUnoUpperAlpha:before,
+ol li.listItemNumeroUnoUpperRoman:before,
+ol li.listItemNumeroUnoLowerRoman:before,
+ol li.listItemNumeroUnoNone:before,
+ol li.listItemNummerEins:before,
+ol li.listItemNummerEinsNumber:before,
+ol li.listItemNummerEinsLowerAlpha:before,
+ol li.listItemNummerEinsUpperAlpha:before,
+ol li.listItemNummerEinsUpperRoman:before,
+ol li.listItemNummerEinsLowerRoman:before,
+ol li.listItemNummerEinsNone:before {
+ content: counter(item) ". ";
+ counter-increment: item;
+ font-weight: bold;
+ padding-right: 0.1em;      
+ text-align: right;
+ position: absolute;
+ width: 4.5em;
+ margin: 0 0 1em -4.90em;
+}
+
+/* --- Global ul styles --- */
+ul li.listItemNumeroUno:before,
+ul li.listItemNumeroUnoNumber:before,
+ul li.listItemNumeroUnoLowerAlpha:before,
+ul li.listItemNumeroUnoUpperAlpha:before,
+ul li.listItemNumeroUnoUpperRoman:before,
+ul li.listItemNumeroUnoLowerRoman:before,
+ul li.listItemNumeroUnoNone:before,
+ul li.listItemNummerEins:before,
+ul li.listItemNummerEinsNumber:before,
+ul li.listItemNummerEinsLowerAlpha:before,
+ul li.listItemNummerEinsUpperAlpha:before,
+ul li.listItemNummerEinsUpperRoman:before,
+ul li.listItemNummerEinsLowerRoman:before,
+ul li.listItemNummerEinsNone:before {
+ content: '\2022';
+ padding-right: 0.1em;      
+ text-align: right;
+ position: absolute;
+ width: 4.40em;
+ margin: 0 0 1em -5em;
+}
+
+
+ul li.listItemNumeroUno:before ,
+ul li.listItemNumeroUnoNumber:before ,
+ul li.listItemNumeroUnoLowerAlpha:before ,
+ul li.listItemNumeroUnoUpperAlpha:before ,
+ul li.listItemNumeroUnoUpperRoman:before ,
+ul li.listItemNumeroUnoLowerRoman:before ,
+ul li.listItemNumeroUnoNone:before {
+ font-size: 0.75em;
+}
+
+ul li.listItemNummerEins:before ,
+ul li.listItemNummerEinsNumber:before ,
+ul li.listItemNummerEinsLowerAlpha:before ,
+ul li.listItemNummerEinsUpperAlpha:before ,
+ul li.listItemNummerEinsUpperRoman:before ,
+ul li.listItemNummerEinsLowerRoman:before ,
+ul li.listItemNummerEinsNone:before {
+ font-size: 1.25em;
+}
+
+ol li.listItemNumeroUnoUpperAlpha:before,
+ol li.listItemNummerEinsUpperAlpha:before {
+    content: counter(item, upper-alpha) ". ";
+}
+
+ol li.listItemNumeroUnoLowerAlpha:before,
+ol li.listItemNummerEinsLowerAlpha:before {
+    content: counter(item, lower-alpha) ". ";
+}
+
+ol li.listItemNumeroUnoUpperRoman:before,
+ol li.listItemNummerEinsUpperRoman:before {
+    content: counter(item, upper-roman) ". ";
+}
+
+ol li.listItemNumeroUnoLowerRoman:before,
+ol li.listItemNummerEinsLowerRoman:before {
+    content: counter(item, lower-roman) ". ";
+}
+
+ol li.listItemNumeroUnoNone:before,
+ol li.listItemNummerEinsNone:before {
+    content: none;
+}
+
+
+
+
+/* Styles for elements within a List */
+
+li div.divImageTextWidth {
+  margin-top: 0.85em;
+  margin-bottom: 0.85em;
+  font-size: 90%;
+}
+
+li blockquote.blockquoteMarginalia {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+ol li blockquote.blockquoteMarginalia .paragraphNummerEins {
+  font-size: 100%;
+}
+
+ul li blockquote.blockquoteMarginalia .paragraphNummerEins {
+  font-size: 100%;
+}
+
+
+li h3.pullQuoteNumeroUno {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 0em;
+}
+
+li p.paragraphNummerEins {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 100%;
+}
+
+li p.paragraphNumeroUno {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 100%;
+}
+
+
+
+/* -------- */
+
+
+/* BLOCK QUOTES AND PULL QUOTES */
+
+
+/* -------- */
+
+
+  
+  /* Pull Quote */
+
+H3.pullQuoteNumeroUno {
+  color: #000;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: 400;
+  font-size: 1.5em;
+  line-height: 1.65em;
+  letter-spacing: 0.002em;
+  margin: 2.0em 2.75em 2.0em 2.5em;
+}
+
+
+  /* Marginalia */
+
+blockquote.blockquoteMarginalia {
+  background-color: transparent;
+  border-left: 1px solid #047a9c;
+  margin-left: 0;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  padding: 1.0em 0 1.05em 1.5em;
+}
+
+blockquote.blockquoteMarginalia .paragraphNummerEins {
+  color: #000;
+  margin: 0 0 0 0;
+  font-family: sans-serif;
+  font-size: 1.120em;
+  font-weight: 400;
+  line-height: 1.65em;
+  letter-spacing: 0.01em;
+}
+
+
+  /* Blockquote with Attribution Element */
+
+blockquote.blockquoteMarginaliaAttr {
+  background-color: transparent;
+  border-left: 1px solid #047a9c;
+  margin-left: 0;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  padding: 1.0em 0 0.25em 1.5em;
+}
+
+
+blockquote.blockquoteMarginaliaAttr .paragraphNummerEins {
+  color: #000;
+  margin: 0 0 0 0;
+  font-family: sans-serif;
+  font-size: 1.120em;
+  font-weight: 400;
+  line-height: 1.65em;
+  letter-spacing: 0.01em;
+}
+
+  
+  /*  Blockquote source attribution text */
+
+p.blockquoteTextCredit {
+  color: #505759;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-style: italic;
+  margin-top: 0.70em;
+  font-size: 1.115em;
+  font-weight: 400;
+  line-height: 1.35em;
+  letter-spacing: 0.03em;
+}  
+  
+  
+  
+  
+  
+/* -------- */
+
+
+
+/* CONTAINERS - ASIDES & SPECIAL FIGURES */
+
+
+/* -------- */
+
+
+/* Learning Objectives Container */
+
+
+aside.divLearningObjectives {
+  background-color: transparent;
+  position: relative;
+  padding-left: 0;
+  padding-bottom: 0;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+      
+    /* Learning Objectives Label */
+H2.heading2LearningObjectiveListHeaderLabel {
+  color: #007FA3;
+  font-family: "PMNCaeciliaETW02-Bold", serif;
+  margin: 0 0 0.60em 0;
+  font-size: 1.75em;
+  font-weight: 600;
+  line-height: 1.5em;
+  letter-spacing: 0.01em;
+}
+
+aside.divLearningObjectives p span.number {
+  color: #007FA3;
+  font-weight: bold;
+  position: absolute;
+  text-align: right;
+  width: 4em;
+  margin: 0em 0em 1em -5em;
+}
+
+p.paragraphLearningObjective {
+  color: #666;
+  font-family: sans-serif;
+  text-decoration: none;
+  font-size: 1.08em;
+  font-weight: 100;
+  line-height: 1.60em;
+  margin: 0em 0em 0.55em 5em;
+}
+
+p.paragraphLearningObjective span.number {
+  color: #007FA3;
+  font-weight: bold;
+}
+
+aside.divLearningObjectives p.paragraphNummerEins {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 1.10em;
+  margin-top: -0.65em;
+  margin-bottom: 0.95em;
+}
+
+aside.divLearningObjectives p.paragraphNumeroUno {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 1.10em;
+  line-height: 1.40em;  
+  margin-top: -0.65em;
+  margin-bottom: 0.95em;
+}
+
+aside.divLearningObjectives H3.heading3NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 1.08em;
+  font-weight: 500;
+  line-height: 1.40em;
+  letter-spacing: 0.01em;
+  margin: 0.85em 0em 1em 0em;
+}
+
+
+
+ /* SIDEBAR 01 container to wrap sidebar in an aside */
+aside.asideSidebar01 {
+  background-color: transparent;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+aside.asideSidebar01 .heading4NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 1.4em;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.65em;
+  margin-left: 0em;
+  }
+
+        
+        
+  /* SIDEBAR 02 container to wrap sidebar in an aside */
+aside.asideSidebar02 {
+  background-color: transparent;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+aside.asideSidebar02 .heading4NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 1.4em;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.65em;
+  margin-left: 0em;
+  }
+
+
+
+    /* SIDEBAR 03 container to wrap sidebar in an aside */
+aside.asideSidebar03 {
+  background-color: transparent;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+aside.asideSidebar03 .heading4NummerEins {
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 1.4em;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0.65em;
+  margin-left: 0em;
+  }
+
+
+
+  /* SIDEBAR 04 container to wrap sidebar in an aside */
+      aside.asideSidebar04 {
+         background-color: transparent;
+         max-width: 680px;
+         padding-right: 2em;
+         padding-left: 2em;
+         margin: 3em auto 3em auto;
+        }
+
+      div.divSidebar04 {
+         background-color: #E8E8E8;
+         border-style: none;
+         padding-left: 2em;
+         margin-left: -2em;
+         margin-right: -2em;
+         margin-bottom: -0.25em;
+        }
+      
+      H5.heading5NummerEinsSidebar04 {
+         color: #000;
+         padding-top: 0.42em;
+         padding-bottom: 0.40em;
+         font-family: Helvetica, sans-serif;
+         font-size: 1.165em;
+         font-weight: 800;
+         line-height: 1.5em;
+         letter-spacing: 0.01em;
+         margin-bottom: 1.20em;
+        }
+
+      aside.asideSidebar04 H2.heading2NummerEins {
+         margin-top: 0em;
+      }
+
+      aside.asideSidebar04 H3.heading3NummerEins {
+         margin-top: 0em;
+         margin-bottom: 0.65em;
+      }
+
+
+
+/* Sidebar 05 */
+
+
+ /* SIDEBAR 05 container to wrap sidebar in an aside */
+aside.asideSidebar05 {
+    background-color: #ececec;
+    max-width: 680px;
+    padding-top: 0em;
+    padding-right: 2em;
+    padding-bottom: 0.20em;
+    padding-left: 2em;
+    margin-top: 3em;
+    margin-right: auto;
+    margin-bottom: 3em;
+    margin-left: auto;
+    border-top: 3px solid #007494;
+  }
+      
+
+H4.heading4NumeroUnoSidebar05 {
+    color: #007494;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.5em;
+    font-weight: 800;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    margin-top: -0.35em;
+    margin-left: 0em;
+    margin-bottom: 0.5em;
+  }
+
+
+aside.asideSidebar05 > :first-child {
+    margin-top: 1.55em;
+}
+
+
+aside.asideSidebar05 > :last-child {
+    margin-bottom: 1.5em;
+}
+
+    
+/*  Bottom and Top borders for sidebars 1-4, Activity */
+
+div.asideSidebar01BorderTop,
+div.asideSidebar02BorderTop,
+div.asideSidebar03BorderTop {
+  border-top: 6px solid #FFB81C;
+  padding-bottom: .85em;
+}
+div.asideSidebar02BorderTop { border-top-color: #007FA3; }
+div.asideSidebar03BorderTop { border-top-color: #d40b0b; }
+
+div.asideSidebar01BorderBottom,
+div.asideSidebar02BorderBottom,
+div.asideSidebar03BorderBottom,
+div.asideActivityBorderBottom  {
+  border-bottom: 1px solid #FFB81C;
+  padding-top: 0em;
+  margin-top: -.15em;
+}
+
+div.asideSidebar04BorderBottom {
+  border-bottom: 3px solid #E8E8E8;
+  margin-left: -2em;
+  margin-right: -2em;
+  margin-top: -0.45em;
+}
+
+div.asideSidebar02BorderBottom { border-bottom-color: #007FA3; }
+div.asideSidebar03BorderBottom { border-bottom-color: #d40b0b; }
+div.asideActivityBorderBottom { border-bottom-color: #007FA3; }
+  
+
+  /*  FEATURE container to wrap sidebar in an aside */
+  aside.asideSidebarFeature {
+    background-color: #f0f0f0;
+    max-width: 680px;
+    padding: 0em 2.0em 0.25em 2.0em;
+    margin: 3em auto 3em auto;
+    border-top: 1px solid #000000;
+  }
+
+/*.asideSidebarFeature p {
+    margin-right: 2.0em;
+  } */
+
+  h4.heading4NumeroUnoSidebarFeature {
+    color: #666;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.5em;
+    font-weight: 800;
+    line-height: 1.5em;
+    margin: 0em 1.0em 0.60em 0em;
+    letter-spacing: 0.01em;
+  }
+
+  aside.asideSidebarFeature .heading5NummerEins {
+    color: #666;
+    font-size: 1.20em;
+    margin-top: 0em;
+    margin-bottom: 0.75em;
+    font-weight: 800;
+  }
+
+  aside.asideSidebarFeature > :first-child {
+    margin-top: 1.5em;
+  }
+
+
+  aside.asideSidebarFeature > :last-child {
+    margin-bottom: 1.5em;
+  }
+
+
+/* Activity */
+
+/* Activity Aside  */
+  aside.asideActivity {
+    background-color: #fff;
+    max-width: 680px;
+    margin: 3.0em auto 3.0em auto;
+    padding-right: 2em;
+    padding-left: 2em;
+  }
+       
+    /* Activity Label */
+
+  
+  H3.heading3ActivityLabel {
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    letter-spacing: 0.02em;
+    padding-top: 0.115em;
+    padding-bottom: 0.125em;
+  }
+  
+
+  div.divActivity {
+    background-color: #007FA3;
+    border-style: none;
+    margin-bottom: 1.5em;
+  }
+
+  div.divActivity,
+  div.asideActivityBorderBottom {
+    margin-left: -2em;
+    margin-right: -2em;
+    padding-left: 2em;
+    margin-top: 0em;
+  }
+
+
+/* Worked Examples */
+
+
+    /* Worked Example 1 */
+aside.asideWorkedExample1 {
+  background-color: transparent;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  border-right-width: 0px;
+  border-left-width: 0px;
+}
+
+aside.asideWorkedExample1 .heading4NummerEins {
+  color: #000;
+  font-size: 1.5em;
+  font-weight: 800;
+  margin-bottom: -.05em;
+}
+
+aside.asideWorkedExample1 .heading5NummerEins {
+  color: #000;
+  font-size: 1.30em;
+  margin-top: 0em;
+  margin-bottom: 1.0em;
+  font-weight: 800;
+}
+
+div.asideWorkedExample1BorderTop {
+  border-top: 6px solid #000;
+  padding-bottom: 1.25em;
+}
+
+div.asideWorkedExample1BorderBottom {
+  border-bottom: 1px solid #000;
+  padding-top: 0em;
+}
+
+
+div.divWorkedExample1TransBGborderTop {
+  border-top: solid 1px #9d9d9d;
+  padding-bottom: 21px;
+  margin-top: 24px;
+}
+  
+
+
+    /* Worked Example 2 */
+aside.asideWorkedExample2 {
+  background-color: transparent;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  border-right-width: 0px;
+  border-left-width: 0px;
+}
+
+aside.asideWorkedExample2 .heading4NummerEins {
+  color: #008638;
+  font-size: 1.5em;
+  font-weight: 800;
+  margin-bottom: -.05em;
+}
+
+aside.asideWorkedExample2 .heading5NummerEins {
+  color: #000;
+  font-size: 1.30em;
+  margin-top: 0em;
+  margin-bottom: 1.0em;
+  font-weight: 800;
+}
+
+div.asideWorkedExample2BorderTop {
+  border-top: 6px solid #008638;
+  padding-bottom: 1.25em;
+}
+
+div.asideWorkedExample2BorderBottom {
+  border-bottom: 1px solid #008638;
+  padding-top: 0em;
+}
+
+
+div.divWorkedExample2TransBGborderTop {
+  border-top: solid 1px #86b89b;
+  padding-bottom: 21px;
+  margin-top: 24px;
+}
+
+/* Tactic Box*/
+
+aside.asideTacticBox {
+  background-color: transparent;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  border-right-width: 0px;
+  border-left-width: 0px;
+}
+
+aside.asideTacticBox .heading4NummerEins {
+  color: #000;
+  font-size: 1.5em;
+  font-weight: 800;
+  margin-bottom: -.05em;
+}
+
+aside.asideTacticBox .heading5NummerEins {
+  color: #000;
+  font-size: 1.30em;
+  margin-top: 0;
+  margin-bottom: 1em;
+  font-weight: 800;
+}
+
+div.asideTacticBoxBorderTop {
+  border-top: 6px solid #000;
+  padding-bottom: 1.25em;
+}
+
+div.asideTacticBoxBorderBottom {
+  border-bottom: 1px solid #000;
+  padding-top: 0em;
+}
+
+div.divTacticBoxTransBGborderTop {
+  border-top: solid 1px #9d9d9d;
+  padding-bottom: 31px;
+  margin-top: 23px;
+}
+
+
+ /*  Extra Vertical Spacing for Adjacent Asides */
+
+aside + aside.asideSidebar01,
+aside + aside.asideSidebar02,
+aside + aside.asideSidebar03,
+aside + aside.asideSidebar04,
+aside + aside.asideSidebar05,
+aside + aside.asideWorkedExample1,
+aside + aside.asideWorkedExample2,
+aside + aside.asideTacticBox,
+aside + aside.asideActivity,
+aside + aside.asideSidebarFeature {
+ margin-top: 6em;
+}
+
+
+
+
+  /* Body Text for some Asides */
+
+p.paragraphNummerEins {
+  color: #000;
+  margin: 0em 0em 1.45em 0em;
+  font-family: sans-serif;
+  font-size: 1.070em;
+  font-weight: 400;
+  line-height: 1.80em;
+  letter-spacing: 0.01em;
+}
+
+a.paragraphNummerEins {
+  color: #007FA3;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+
+a.paragraphNummerEins:hover {
+  text-decoration: underline;
+}
+
+P.paragraphNummerEinsIndentLevel1 {
+  color: #000;
+  margin: 0em 0em 1.45em 2em;
+  font-family: sans-serif;
+  font-size: 1.070em;
+  font-weight: 400;
+  line-height: 1.80em;
+  letter-spacing: 0.01em;
+}
+
+P.paragraphNummerEinsIndentLevel2 {
+  color: #000;
+  margin: 0em 0em 1.45em 4em;
+  font-family: sans-serif;
+  font-size: 1.070em;
+  font-weight: 400;
+  line-height: 1.80em;
+  letter-spacing: 0.01em;
+}
+
+P.paragraphNummerEinsIndentLevel3 {
+  color: #000;
+  margin: 0em 0em 1.45em 6em;
+  font-family: sans-serif;
+  font-size: 1.070em;
+  font-weight: 400;
+  line-height: 1.80em;
+  letter-spacing: 0.01em;
+}
+
+
+
+  
+/* -------- */
+
+
+/* IMAGE FIGURES */
+
+
+/* -------- */
+  
+
+
+     /*  container to wrap figure container and credit text */
+
+div.divImage25Text,
+div.divImage25TextTableImage,
+div.divImage25TextMathImage,     
+div.divImage50Text,
+div.divImage50TextTableImage,
+div.divImage50TextMathImage,
+div.divImageTextWidth,
+div.divImageTextWidthTableImage,
+div.divImageTextWidthMathImage,
+div.divImageWiderThanText,
+div.divImageWiderThanTextTableImage,
+div.divImageWiderThanTextMathImage,
+div.divImageFullscreen,
+div.divImageFullscreenTableImage,
+div.divImageFullscreenMathImage {
+  background-color: transparent;
+  padding-top: 0;
+  margin: 2.5em auto;
+  border-style: none;
+}
+
+      /* figure container for title, image and fig caption */
+
+figure.figureImage25Text,
+figure.figureImage25TextTableImage,
+figure.figureImage25TextMathImage,
+figure.figureImage50Text,
+figure.figureImage50TextTableImage,
+figure.figureImage50TextMathImage, 
+figure.figureImageTextWidth,
+figure.figureImageTextWidthTableImage,
+figure.figureImageTextWidthMathImage, 
+figure.figureImageWiderThanText,
+figure.figureImageWiderThanTextTableImage,
+figure.figureImageWiderThanTextMathImage, 
+figure.figureImageFullscreen,
+figure.figureImageFullscreenTableImage,
+figure.figureImageFullscreenMathImage {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+}
+       
+ 
+       /* Figure Number Label text */
+
+h4.heading4Image25TextNumberLabel,
+h4.heading4Image25TextTableImageNumberLabel,
+h4.heading4Image25TextMathImageNumberLabel,
+h4.heading4Image50TextNumberLabel,
+h4.heading4Image50TextTableImageNumberLabel,
+h4.heading4Image50TextMathImageNumberLabel, 
+h4.heading4ImageTextWidthNumberLabel,
+h4.heading4ImageTextWidthTableImageNumberLabel,
+h4.heading4ImageTextWidthMathImageNumberLabel,
+h4.heading4ImageWiderThanTextNumberLabel,
+h4.heading4ImageWiderThanTextTableImageNumberLabel,
+h4.heading4ImageWiderThanTextMathImageNumberLabel,
+h4.heading4ImageFullscreenNumberLabel,
+h4.heading4ImageFullscreenTableImageNumberLabel,
+h4.heading4ImageFullscreenMathImageNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}   
+       
+
+      /* image title text */
+h4.heading4Image25TextTitle,
+h4.heading4Image25TextTableImageTitle,
+h4.heading4Image25TextMathImageTitle,
+h4.heading4Image50TextTitle,
+h4.heading4Image50TextTableImageTitle,
+h4.heading4Image50TextMathImageTitle, 
+h4.heading4ImageTextWidthTitle,
+h4.heading4ImageTextWidthTableImageTitle,
+h4.heading4ImageTextWidthMathImageTitle, 
+h4.heading4ImageWiderThanTextTitle,
+h4.heading4ImageWiderThanTextTableImageTitle,
+h4.heading4ImageWiderThanTextMathImageTitle, 
+h4.heading4ImageFullscreenTitle,
+h4.heading4ImageFullscreenTableImageTitle,
+h4.heading4ImageFullscreenMathImageTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0em auto 0em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+      /* image caption text */
+figcaption.figcaptionImage25Text,
+figcaption.figcaptionImage25TextTableImage,
+figcaption.figcaptionImage25TextMathImage,      
+figcaption.figcaptionImage50Text,
+figcaption.figcaptionImage50TextTableImage,
+figcaption.figcaptionImage50TextMathImage, 
+figcaption.figcaptionImageTextWidth,
+figcaption.figcaptionImageTextWidthTableImage,
+figcaption.figcaptionImageTextWidthMathImage, 
+figcaption.figcaptionImageWiderThanText,
+figcaption.figcaptionImageWiderThanTextTableImage,
+figcaption.figcaptionImageWiderThanTextMathImage, 
+figcaption.figcaptionImageFullscreen,
+figcaption.figcaptionImageFullscreenTableImage,
+figcaption.figcaptionImageFullscreenMathImage {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.01em;
+  word-wrap: break-word;
+}
+
+
+  /*  image copyright, credit or source attribution text */
+p.paragraphImage25TextCredit,
+p.paragraphImage25TextTableImageCredit,
+p.paragraphImage25TextMathImageCredit,  
+p.paragraphImage50TextCredit,
+p.paragraphImage50TextTableImageCredit,
+p.paragraphImage50TextMathImageCredit, 
+p.paragraphImageTextWidthCredit,
+p.paragraphImageTextWidthTableImageCredit,
+p.paragraphImageTextWidthMathImageCredit, 
+p.paragraphImageWiderThanTextCredit,
+p.paragraphImageWiderThanTextTableImageCredit,
+p.paragraphImageWiderThanTextMathImageCredit, 
+p.paragraphImageFullscreenCredit,
+p.paragraphImageFullscreenTableImageCredit,
+p.paragraphImageFullscreenMathImageCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+     /* 25% of Text Width Image */
+
+img.image25Text,
+img.image25TextTableImage,
+img.image25TextMathImage {
+  display: block;
+  max-width: 170px;
+  width: 100%;
+  margin: 0.60em auto 0.65em auto;
+}
+
+
+     /* 50% of Text Width Image */
+
+img.image50Text,
+img.image50TextTableImage,
+img.image50TextMathImage {
+  display: block;
+  max-width: 340px;
+  width: 100%;
+  margin: 0.60em auto 0.65em auto;
+}
+
+
+     /* Text Width Image */
+     
+img.imageTextWidth,
+img.imageTextWidthTableImage,
+img.imageTextWidthMathImage {
+  display: block;
+  max-width: 680px;
+  width: 100%;
+  margin: 0.60em auto 0.65em auto;
+}
+
+
+     /* Wider Than Text Image */
+     
+img.imageWiderThanText,
+img.imageWiderThanTextTableImage,
+img.imageWiderThanTextMathImage {
+  display: block;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0.60em auto 0.65em auto;
+}
+
+
+     /* Fullscreen Image */
+     
+img.imageFullscreen,
+img.imageFullscreenTableImage,
+img.imageFullscreenMathImage {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  margin: 0.60em auto 0.65em auto;
+}
+
+  
+  
+/* -------- */
+
+
+
+/* AUDIO & VIDEO FIGURES */
+
+
+/* -------- */
+
+  
+
+/* Audio Player */
+
+     /*  container to wrap figure container and credit text */
+div.divAudio {
+  background-color: transparent;
+  max-width: 680px;
+  margin: 2.0em auto;
+  margin-bottom: 3.0em;
+  border-style: none;
+}
+
+      /* figure container for title, image and fig caption */
+figure.figureAudio {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+       /* Audio Figure Number Label */
+h4.heading4AudioNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  margin: 0 auto 0.45em auto;
+  max-width: 680px;
+  font-size: 1.05em;
+  font-weight: 400;
+  line-height: 1.3em;
+  letter-spacing: 0.03em;
+}       
+
+      /* Audio title text */
+h4.heading4AudioTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  margin: 0 0 0.65em 0;
+  font-size: 0.9150em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.01em;
+}
+       
+       
+       /* Audio Player */
+audio.audioPlayerDefault {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+       
+       
+
+      /* Audio caption text */
+figcaption.figcaptionAudio {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  margin: 0.75em 0 0.45em 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+    /*  Audio copyright, credit or source attribution text */
+  
+p.paragraphAudioCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+
+/* Video Player */
+
+
+   /*  container to wrap video figure container and credit text */
+div.divVideo {
+  background-color: transparent;
+  max-width: 680px;
+  padding: 0;
+  margin: 3.0em auto;
+  border-style: none;
+}
+
+
+
+      /* figure container for title, thumbnail and fig caption */
+figure.figureVideo {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+
+       /* Video Number Label */
+h4.heading4VideoNumberLabel {
+  color:  #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+
+      /* video title text */
+h4.heading4VideoTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+
+
+      /* Video caption text */
+figcaption.figcaptionVideo {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+     /* Video thumbnail image */
+img.video {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
+     /* video thumbnail image */
+video.video {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+  
+  
+  /*  video copyright, credit or source attribution text */
+  
+p.paragraphVideoCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+ 
+ 
+ 
+ 
+ /* -------- */
+
+/* INTERACTIVE FIGURES */
+
+/* -------- */ 
+
+/* 
+
+3PI 3rd Party Interactives
+3PI Social Explorer Smart Link
+MDI Metrodigi Interactives
+
+Flashcards
+Image Slideshow
+Video Slideshow
+Simulation / User Controlled Animation (UCA)
+Survey
+Timeline
+Non Scored Multiple Choice Question
+Image Identify
+Fill In The Blank
+Graph
+Video Multiple Choice
+
+For Placement Only (FPO)
+FPO Image
+FPOAV Audio / Video
+FPOI Interactive
+FPOAS Assessment
+FPOC Container
+
+
+*/
+
+  
+
+
+     /*  INTERACTIVE container to wrap figure container and credit text */
+
+div.divWidgetMDI,
+div.divWidget3PI,
+div.divWidget3PISE,
+div.divWidget3PI.SocialExplorer,
+div.divWidget3PI.GeoGebra,
+div.divWidget3PI.CloserLook,
+div.divWidget3PI.Default,
+div.divWidgetAccountingTable,
+div.divWidgetFlashcards,
+div.divWidgetImgSlideshow,
+div.divWidgetVidSlideshow,
+div.divWidgetUCA,
+div.divWidgetSurvey,
+div.divWidgetTimeline,
+div.divWidgetMCQ,
+div.divWidgetImageId,
+div.divWidgetHotspot,
+div.divWidgetFIB,
+div.divWidgetGraph,
+div.divWidgetVideoMcq,
+div.divWidgetVideo,
+div.divWidgetFPO,
+div.divWidgetFPOAV,
+div.divWidgetFPOIN,
+div.divWidgetFPOAS,
+div.divWidgetFPOAC,
+div.divWidgetGuidedExample {
+  background-color: transparent;
+  padding-top: 0;
+  margin: 3.0em auto;
+  border-style: none;
+}
+
+
+
+      /* INTERACTIVE figure container for title, image and fig caption */
+      
+figure.figureImageIdentifier,
+figure.figureWidget3PI,
+figure.figureWidget3PISE,
+figure.figureWidgetMDI,
+figure.figureWidget3PI.SocialExplorer,
+figure.figureWidget3PI.GeoGebra,
+figure.figureWidget3PI.CloserLook,
+figure.figureWidget3PI.Default,
+figure.figureWidgetAccountingTable,
+figure.figureWidgetFlashcards,
+figure.figureWidgetImgSlideshow,
+figure.figureWidgetVidSlideshow,
+figure.figureWidgetUCA,
+figure.figureWidgetSurvey,
+figure.figureWidgetTimeline,
+figure.figureWidgetMCQ,
+figure.figureWidgetImageId,
+figure.figureWidgetHotspot,
+figure.figureWidgetFIB,
+figure.figureWidgetGraph,
+figure.figureWidgetVideoMcq,
+figure.figureWidgetFPO,
+figure.figureWidgetFPOAV,
+figure.figureWidgetFPOIN,
+figure.figureWidgetFPOAS,
+figure.figureWidgetFPOAC,
+figure.figureWidgetGuidedExample {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+}
+
+
+
+       
+ 
+       /* INTERACTIVE Figure Number Label text */
+       
+h4.heading4Widget3PINumberLabel,
+h4.heading4Widget3PISENumberLabel,
+h4.heading4WidgetMDINumberLabel,
+h4.heading4Widget3PINumberLabel.SocialExplorer,
+h4.heading4Widget3PINumberLabel.GeoGebra,
+h4.heading4Widget3PINumberLabel.CloserLook,
+h4.heading4Widget3PINumberLabel.Default,
+h4.heading4WidgetAccountingTableNumberLabel,
+h4.heading4WidgetFlashcardsNumberLabel,
+h4.heading4WidgetImgSlideshowNumberLabel,
+h4.heading4WidgetVidSlideshowNumberLabel,
+h4.heading4WidgetUCANumberLabel,
+h4.heading4WidgetSurveyNumberLabel,
+h4.heading4WidgetTimelineNumberLabel,
+h4.heading4WidgetMCQNumberLabel,
+h4.heading4WidgetImageIdNumberLabel,
+h4.heading4WidgetHotspotNumberLabel,
+h4.heading4WidgetFIBNumberLabel,
+h4.heading4WidgetGraphNumberLabel,
+h4.heading4WidgetVideoMcqNumberLabel,
+h4.heading4WidgetFPONumberLabel,
+h4.heading4WidgetFPOAVNumberLabel,
+h4.heading4WidgetFPOINNumberLabel,
+h4.heading4WidgetFPOASNumberLabel,
+h4.heading4WidgetFPOACNumberLabel,
+h4.heading4WidgetGuidedExampleNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}   
+       
+
+      /* INTERACTIVE title text */
+      
+h4.heading4Widget3PITitle,
+h4.heading4Widget3PISETitle,
+h4.heading4WidgetMDITitle,
+h4.heading4Widget3PITitle.SocialExplorer,
+h4.heading4Widget3PITitle.GeoGebra,
+h4.heading4Widget3PITitle.CloserLook,
+h4.heading4Widget3PITitle.Default,
+h4.heading4WidgetAccountingTableTitle,
+h4.heading4ContextualAudioTitle,
+h4.heading4WidgetFlashcardsTitle,
+h4.heading4WidgetImgSlideshowTitle,
+h4.heading4WidgetVidSlideshowTitle,
+h4.heading4WidgetUCATitle,
+h4.heading4WidgetSurveyTitle,
+h4.heading4WidgetTimelineTitle,
+h4.heading4WidgetMCQTitle,
+h4.heading4WidgetImageIdTitle,
+h4.heading4WidgetHotspotTitle,
+h4.heading4WidgetFIBTitle,
+h4.heading4WidgetGraphTitle,
+h4.heading4WidgetVideoMcqTitle,
+h4.heading4WidgetFPOTitle,
+h4.heading4WidgetFPOAVTitle,
+h4.heading4WidgetFPOINTitle,
+h4.heading4WidgetFPOASTitle,
+h4.heading4WidgetFPOACTitle,
+h4.heading4WidgetGuidedExampleTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.60em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+
+      /* INTERACTIVE caption text */
+      
+figcaption.figcaptionWidget3PI,
+figcaption.figcaptionWidget3PISE,
+figcaption.figcaptionWidgetMDI,
+figcaption.figcaptionWidget3PI.SocialExplorer,
+figcaption.figcaptionWidget3PI.GeoGebra,
+figcaption.figcaptionWidget3PI.CloserLook,
+figcaption.figcaptionWidget3PI.Default,
+figcaption.figcaptionWidgetAccountingTable,
+figcaption.figcaptionWidgetFlashcards,
+figcaption.figcaptionWidgetImgSlideshow,
+figcaption.figcaptionWidgetVidSlideshow,
+figcaption.figcaptionContextualAudio,
+figcaption.figcaptionWidgetUCA,
+figcaption.figcaptionWidgetSurvey,
+figcaption.figcaptionWidgetTimeline,
+figcaption.figcaptionWidgetMCQ,
+figcaption.figcaptionWidgetImageId,
+figcaption.figcaptionWidgetHotspot,
+figcaption.figcaptionWidgetFIB,
+figcaption.figcaptionWidgetGraph,
+figcaption.figcaptionWidgetVideoMcq,
+figcaption.figcaptionWidgetFPO,
+figcaption.figcaptionWidgetFPOAV,
+figcaption.figcaptionWidgetFPOIN,
+figcaption.figcaptionWidgetFPOAS,
+figcaption.figcaptionWidgetFPOAC,
+figcaption.figcaptionWidgetGuidedExample {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+
+  /*  INTERACTIVE copyright, credit or source attribution text */
+  
+p.paragraphWidget3PICredit,
+p.paragraphWidget3PISECredit,
+p.paragraphWidgetMDICredit,
+p.paragraphWidget3PICredit.SocialExplorer,
+p.paragraphWidget3PICredit.GeoGebra,
+p.paragraphWidget3PICredit.CloserLook,
+p.paragraphWidget3PICredit.Default,
+p.paragraphWidgetAccountingTableCredit,
+p.paragraphWidgetFlashcardsCredit,
+p.paragraphWidgetImgSlideshowCredit,
+p.paragraphWidgetVidSlideshowCredit,
+p.paragraphContextualAudioCredit,
+p.paragraphWidgetUCACredit,
+p.paragraphWidgetSurveyCredit,
+p.paragraphWidgetTimelineCredit,
+p.paragraphWidgetMCQCredit,
+p.paragraphWidgetImageIdCredit,
+p.paragraphWidgetHotspotCredit,
+p.paragraphWidgetFIBCredit,
+p.paragraphWidgetGraphCredit,
+p.paragraphWidgetVideoMcqCredit,
+p.paragraphWidgetFPOCredit,
+p.paragraphWidgetFPOAVCredit,
+p.paragraphWidgetFPOINCredit,
+p.paragraphWidgetFPOASCredit,
+p.paragraphWidgetFPOACCredit,
+p.paragraphWidgetGuidedExampleCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+
+     /* INTERACTIVE IMAGE  */
+
+img.imageWidgetAccountingTable,
+img.imageWidgetFlashcards,
+img.imageWidgetImgSlideshow,
+img.imageWidgetVidSlideshow,
+img.imageWidgetUCA,
+img.imageWidgetSurvey,
+img.imageWidgetTimeline,
+img.imageWidgetMCQ,
+img.imageWidgetImageId,
+img.imageWidgetFIB,
+img.imageWidgetGraph,
+img.imageWidgetVideoMcq,
+img.imageWidgetHotspot,
+img.imageWidgetFPO,
+img.imageWidgetFPOAV,
+img.imageWidgetFPOIN,
+img.imageWidgetFPOAS,
+img.imageWidgetFPOAC,
+img.imageWidgetGuidedExample {
+  display: block;
+  max-width: 680px;
+  width: 100%;
+  margin: 0.60em auto 0.65em auto;
+}
+
+
+
+     /* Metrodigi  */
+     
+img.imageWidgetMDI {
+  background-color: transparent;
+  padding: 0;
+  display: block;
+  max-width: 770px;
+  max-height: 590px;
+  width: 100%;
+  margin: 0.65em auto 0.65em auto;
+}
+
+
+
+     /* Social Explorer  */
+     
+img.imageWidget3PI,
+img.imageWidget3PI.SocialExplorer,
+img.imageWidget3PISE {
+  background-color: transparent;
+  padding: 0;
+  display: block;
+  max-width: 1080px;
+  max-height: 810px;
+  width: 100%;
+  margin: 0.60em auto 0.65em auto;
+}
+
+
+  /* A Closer Look  */
+     
+img.imageWidget3PI.CloserLook
+ {
+  display: block;
+  max-width: 680px;
+  width: 100%;
+  margin: 0.65em auto 0.65em auto;
+}
+
+
+
+     /* GeoGebra  */
+     
+img.imageWidget3PI.GeoGebra {
+  background-color: transparent;
+  padding: 0;
+  display: block;
+  max-width: 750px;
+  max-height: 690px;
+  width: 100%;
+  margin: 0.65em auto 0.65em auto;
+}
+
+
+     /* Default */
+     
+img.imageWidget3PI.Default {
+  background-color: transparent;
+  padding: 0;
+  display: block;
+  max-width: 680px;
+  width: 100%;
+  margin: 0.65em auto 0.65em auto;
+}
+
+
+
+ 
+/* -------- */
+
+/* ASSESSMENT FIGURES */
+
+/* -------- */ 
+
+/* 
+
+TDX
+CITE
+Journal
+Shared Writing
+
+
+
+*/
+
+
+     /*  Assessment container to wrap figure container and credit text */
+     
+     
+div.divAssessment,
+div.divAssessmentItem,
+div.divTdxAssessment,
+div.divTdxAssessmentItem {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 3.0em;
+  border-style: none;
+  border-color: #FFFFFF;
+  border-width: 0px;
+  max-width: 680px;
+}
+
+
+      /*  Assessment figure container for title, thumbnail and fig caption */
+      
+
+figure.figureAssessment,
+figure.figureAssessmentItem,
+figure.figureTdxAssessment,
+figure.figureTdxAssessmentItem {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+
+       /*  Assessment Figure Number Label */
+       
+h4.heading4AssessmentNumberLabel,
+h4.heading4AssessmentItemNumberLabel,
+h4.heading4TdxAssessmentNumberLabel,
+h4.heading4TdxAssessmentItemNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+
+      /*  Assessment title text */
+
+h4.heading4AssessmentTitle,
+h4.heading4AssessmentItemTitle,
+h4.heading4TdxAssessmentTitle,
+h4.heading4TdxAssessmentItemTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+
+      /*  Assessment  caption text */
+
+figcaption.figcaptionAssessment,
+figcaption.figcaptionAssessmentItem,
+figcaption.figcaptionTdxAssessment,
+figcaption.figcaptionTdxAssessmentItem {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+   
+  
+  /*   Assessment copyright, credit or source attribution text */
+    
+
+p.paragraphAssessmentCredit,
+p.paragraphAssessmentItemCredit,
+p.paragraphTdxAssessmentCredit,
+p.paragraphTdxAssessmentItemCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+
+
+
+
+
+/* -------- */
+
+/* BUTTON & LINK FIGURES */
+
+/* -------- */ 
+
+/* 
+
+Show Hide
+PU Pop Up
+PDF 
+Web Link
+
+*/
+
+
+  
+  /* Show Hide Interactive */
+
+
+     /*  Show Hide Interactive container to wrap figure container and credit text */
+div.divWidgetShowHide {
+  background-color: #FFFFFF;
+  max-width: 680px;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 3.0em;
+  border-style: none;
+}
+
+
+      /* Show Hide Interactive figure container for title, thumbnail and fig caption */
+figure.figureWidgetShowHide {
+  background-color: #FFFFFF;
+  padding: 0em;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+
+       /* Show Hide Interactive Figure Number Label */
+h4.heading4WidgetShowHideNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+
+      /* Show Hide Interactive widget title text */
+h4.heading4WidgetShowHideTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+
+P.paragraphShowHideWidgetQuestionText {
+  color: #000;
+  margin: 1em 2em 1em 2em;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.05em;
+  font-weight: 400;
+  line-height: 1.75em;
+  letter-spacing: 0.03em;
+}
+
+a.paragraphShowHideWidgetQuestionText {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.0em;
+  font-weight: bold;
+  line-height: 1.5em;
+  text-decoration: none;
+}
+
+a.paragraphShowHideWidgetQuestionText:hover {
+  text-decoration: underline;
+}
+
+P.paragraphShowHideWidgetAnswerText {
+  color: #000;
+  margin: 0 2em 1em 1.75em;
+  font-family: serif;
+  font-size: 1.25em;
+  font-weight: 400;
+  line-height: 1.75em;
+}
+
+P.paragraphNumeroUno.revealAns {
+  margin: 1em 2em 1em 1.75em;
+}
+       
+
+
+/* PDF, Popup, Web Link, and Smart Link Buttons */
+
+
+/*  Container to wrap figure container and credit text */
+div.divWidgetPDF,
+div.divWidgetPU,
+div.divWidgetPUSL,
+div.divWidgetEWL {
+  background-color: transparent;
+  max-width: 680px;
+  padding: 0 0 0 0;
+  margin: 2.5em auto;
+  margin-bottom: 3.0em;
+  border-style: none;
+}
+
+
+/* Container for title, thumbnail and fig caption */
+figure.figureWidgetPDF,
+figure.figureWidgetPU,
+figure.figureWidgetPUSL,
+figure.figureWidgetEWL {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+
+/* Figure Number Label */
+h4.heading4WidgetPDFNumberLabel,
+h4.heading4WidgetPUNumberLabel,
+h4.heading4WidgetPUSLNumberLabel,
+h4.heading4WidgetEWLNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+/* Title text */
+h4.heading4WidgetPDFTitle,
+h4.heading4WidgetPUTitle,
+h4.heading4WidgetPUSLTitle,
+h4.heading4WidgetEWLTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 0 .55em 0;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+/* Caption text */
+figcaption.figcaptionWidgetPDF,
+figcaption.figcaptionWidgetPU,
+figcaption.figcaptionWidgetPUSL,
+figcaption.figcaptionWidgetEWL {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  margin-top: 1em;
+  margin-bottom: 0.45em;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+/* Copyright, credit or source attribution text */
+p.paragraphWidgetPDFCredit,
+p.paragraphWidgetPUCredit,
+p.paragraphWidgetPUSLCredit,
+p.paragraphWidgetEWLCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  margin-top: 0.45em;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.03em;
+  word-wrap: break-word;
+}
+
+
+/* Web Link & Pop Up Smart Link Button */
+a.buttonWidgetPUSL,
+a.buttonWidgetEWL {
+  background-color: #007FA3;
+  color: #fff;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
+  font-size: 1.040em;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 2px;
+}
+
+a.buttonWidgetPUSL:hover {
+  background-color: #006C8A;
+}
+
+a.buttonWidgetEWL:hover {
+  background-color: #006C8A;
+}
+
+
+/* PDF Button */
+a.buttonWidgetPDF {
+  background-color: #007FA3;
+  color: #fff;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
+  font-size: 1.040em;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  margin-top: 0;
+  margin-bottom: 0em;
+  border-radius: 2px;
+}
+
+a.buttonWidgetPDF:hover {
+  background-color: #006C8A;
+}
+  
+/* Pop Up Button */
+    a.buttonWidgetPU {
+      background-color: #007FA3;
+      color: #fff;
+      padding: 12px 20px;
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
+      font-size: 1.040em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      margin-top: 0;
+      margin-bottom: 0;
+      border-radius: 2px;
+       }
+
+    a.buttonWidgetPU:hover {
+      background-color: #006C8A;
+       }
+
+
+/* Table Smart Link */
+
+
+    /* Table Smart Link container to wrap figure container and credit text */
+div.divWidgetTableSL {
+  background-color: transparent;
+  max-width: 680px;
+  padding: 0;
+  margin: 3.0em auto;
+  border-style: none;
+}
+
+
+    /* Table Smart Link figure container for title, thumbnail and fig caption */
+figure.figureWidgetTableSL {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+
+      /* Table Smart Link Figure Number Label */
+h4.heading4WidgetTableSLNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 800;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+    /* Table Smart Link title text */
+h4.heading4WidgetTableSLTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+    /* Table Smart Link caption text */
+figcaption.figcaptionWidgetTableSL {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+    /* Table Smart Link thumbnail image */
+img.imageWidgetTableSL {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  margin-top: 0em;
+}
+
+
+  
+    /*  Table Smart Link copyright, credit or source attribution text */
+p.paragraphWidgetTableSLCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+
+/* -------- */
+
+
+/* Asset Popover */
+
+
+/* -------- */
+
+a.pearson-component.popoverLink {
+  color: #007FA3;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-weight: bold;
+  font-size: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted #000;
+}
+
+a.popoverLink:after {
+  content: '\25f3';
+  margin-bottom: 3px;
+  margin-left: 0.120em;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 0;
+  font-size: 0.80em;
+  position: relative;
+  top: -7px;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a.popoverLink:hover {
+  color: #9E007E;
+  cursor: pointer;
+  border-bottom: none;
+  transition: 0.4s;
+}
+
+.pearson-component.ld {
+  text-indent: -9999px;
+}
+
+.popovercontent {
+  position: absolute;
+  left: -999em;
+  bottom: 0em;
+}
+
+
+/* -------- */
+
+
+/* FIGURE WITH MathML Text */
+
+
+/* -------- */
+
+
+  /* container to wrap MathML in a figure container and credit text */
+div.divTextFigure {
+  background-color: transparent;
+  padding: 0;
+  margin: 3.0em auto;
+  border-style: none;
+}
+
+  /* figure container for title, image and fig caption */
+figure.figureText {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+  width: auto;
+}
+
+div.divTextFigure p.paragraphNumeroUno {
+  margin-top: 0em;
+  margin-bottom: 1.90em;
+}
+
+  /*  Figure Number Label */
+h4.heading4TextNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 800;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}       
+
+  /* image title text */
+h4.heading4TextTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 2em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+    /* image caption text */
+figcaption.figcaptionText {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+/*  Text credit or source attribution text */
+  
+p.paragraphTextCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+/* -------- */
+
+
+/* Code Snippets Figure Text */
+
+
+/* -------- */
+
+     /*  container to wrap figure container and credit text */
+div.divCodeSnippetFigure {
+  background-color: transparent;
+  max-width: 680px;
+  padding: 0;
+  margin: 3.0em auto;
+  border-style: none;
+}
+
+      /* figure container for title, image and fig caption */
+figure.figureCodeSnippet {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+       /*  Figure Number Label */
+h4.heading4CodeSnippetNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  margin: 0 auto 0.15em auto;
+  padding: 0;
+  font-size: 1.150em;
+  font-weight: 800;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+      /* image title text */
+h4.heading4CodeSnippetTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+      /* image caption text */
+figcaption.figcaptionCodeSnippet {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+      /* image credit text */
+p.paragraphCodeSnippetCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+/*  Center MathML in a Figure */
+
+.centerFigMath {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    text-align: center;
+}
+
+
+
+
+
+/* -------- */
+
+
+/* Assessments */
+
+
+/* -------- */
+
+
+/* Journal Assessment Container */
+
+     /*  container to wrap figure */
+div.divJournalAssessment {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 3.0em;
+  border-style: solid;
+  border-color: #007FA3;
+  border-width: 1px;
+  border-right-width: 0px;
+  border-left-width: 0px;
+}
+
+      /* Journal figure container  */
+figure.figureJournalAssessment {
+  background-color: transparent;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+       
+       
+       /* assessment Number Label */
+h4.heading4JournalAssessmentLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  margin: 0 0 0.15em 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}
+
+      /* assessment title text */
+h4.heading4JournalAssessmentTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+       
+       
+      /* Journal assessment question text */
+p.paragraphJournalAssessmentQuestion {
+  color: #505759;
+  font-family: Helvetica, sans-serif;
+  margin: 0 0 0 0;
+  font-size: 1em;
+  font-weight: 100;
+  line-height: 1.75em;
+  letter-spacing: 0.02em;
+  margin-bottom: 1em;
+}
+
+
+      /* Journal assessment caption text */
+figcaption.figcaptionJournalAssessment {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+  /*  Journal assessment copyright, credit or source attribution text */
+  
+P.paragraphJournalAssessmentCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+a.buttonJournalAssessmentStart {
+  background-color: #007FA3;
+  border: none;
+  color: #FFFFFF;
+  padding: 15px 32px;
+  text-decoration: none;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+a.buttonJournalAssessmentReview {
+  background-color: #CCCCCC;
+  border: none;
+  color: #000000;
+  padding: 15px 32px;
+  text-decoration: none;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+    
+    
+/* MCQ Assessment */
+
+     /*  container to wrap figure container and credit text */
+div.divMCQAssessment {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 3.0em;
+  border-style: solid;
+  border-color: #FCFCFC;
+  border-width: 1px;
+}
+
+      /* figure container for title, image and fig caption */
+figure.figureMCQAssessment {
+  background-color: transparent;
+  padding: 0;
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+       /* Figure Number Label */
+h4.heading4MCQAssessmentNumberLabel {
+  color: #007FA3;
+  font-family: Helvetica, sans-serif;
+  margin: 0 0 0.15em 0;
+  font-size: 1.150em;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: 0.02em;
+}       
+
+      /* image title text */
+h4.heading4MCQAssessmentTitle {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0 auto 0.65em auto;
+  padding: 0;
+  font-size: 1.06em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+}
+
+      /* image caption text */
+figcaption.figcaptionMCQAssessment {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.75em auto 0.45em auto;
+  padding: 0;
+  font-size: 0.90em;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+     /* image */
+img.imageMCQAssessment {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+  /*  MCQ assessment copyright, credit or source attribution text */
+  
+p.paragraphMCQAssessmentCredit {
+  color: #505759;
+  font-family: Open Sans, Helvetica, sans-serif;
+  max-width: 680px;
+  width: auto;
+  margin: 0.45em auto 0 auto;
+  padding: 0;
+  font-size: 0.80em;
+  font-weight: 400;
+  line-height: 1.45em;
+  letter-spacing: 0.02em;
+  word-wrap: break-word;
+}
+
+
+/*  Long Description Display  */
+
+div .pearson-component.longdesccontent {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+
+/* -------- */
+
+/*  Tables  */
+
+/* -------- */
+
+/*  container to wrap Table figure container and credit text */
+div.divTable,
+div.divTable50Text,
+div.divTableTextWidth,
+div.divTableWiderThanText,
+div.divTableFullscreen {
+background-color: transparent;
+padding-top: 0;
+margin: 0 auto;
+margin-bottom: 2.5em;
+margin-top: 2.5em;
+border-style: none;
+border-width: 0px;
+word-break: normal;
+overflow: auto;
+}
+
+div.divTable .pearson-component.table {
+  max-width: initial;
+}
+
+/* figure container for title, Table and fig caption */
+figure.figureTable,
+figure.figureTable50Text,
+figure.figureTableTextWidth,
+figure.figureTableWiderThanText,
+figure.figureTableFullscreen {
+background-color: transparent;
+padding: 0;
+margin: 0 auto;
+}
+
+
+/* Figure Number Label text */
+h4.heading4TableNumberLabel,
+h4.heading4Table50TextNumberLabel,
+h4.heading4TableTextWidthNumberLabel,
+h4.heading4TableWiderThanTextNumberLabel,
+h4.heading4TableFullscreenNumberLabel {
+color: #007FA3;
+font-family: Helvetica, sans-serif;
+max-width: 680px;
+width: auto;
+margin-top: 0;
+margin-left: auto;
+margin-right: auto;
+margin-bottom: 0.35em;
+padding: 0;
+font-size: 1.150em;
+font-weight: 800;
+line-height: 1.3em;
+letter-spacing: 0.03em;
+}
+
+
+/* table title text */
+h4.heading4TableTitle,
+h4.heading4Table50TextTitle,
+h4.heading4TableTextWidthTitle,
+h4.heading4TableWiderThanTextTitle,
+h4.heading4TableFullscreenTitle {
+color: #505759;
+font-family: Helvetica, sans-serif;
+max-width: 680px;
+width: auto;
+margin-top: 0;
+margin-left: auto;
+margin-right: auto;
+margin-bottom: 0.5em;
+padding: 0;
+font-size: 1.06em;
+font-weight: 400;
+line-height: 1.45em;
+letter-spacing: 0.01em;
+}
+
+
+/* Table caption text */
+figcaption.figcaptionTable,
+figcaption.figcaptionTable50Text,
+figcaption.figcaptionTableTextWidth,
+figcaption.figcaptionTableWiderThanText,
+figcaption.figcaptionTableFullscreen {
+color: #505759;
+font-family: Helvetica, sans-serif;
+max-width: 680px;
+width: auto;
+margin-top: 0.85em;
+margin-bottom: 0;
+margin-left: auto;
+margin-right: auto;
+padding: 0;
+font-size: 0.90em;
+font-weight: 400;
+line-height: 1.5em;
+letter-spacing: 0.02em;
+}
+
+/*  Table copyright, credit or source attribution text */
+p.paragraphTableCredit,
+p.paragraphTable50TextCredit,
+p.paragraphTableTextWidthCredit,
+p.paragraphTableWiderThanTextCredit,
+p.paragraphTableFullscreenCredit {
+color: #505759;
+font-family: Helvetica, sans-serif;
+max-width: 680px;
+width: auto;
+margin-top: 0.45em;
+margin-bottom: 0;
+margin-left: auto;
+margin-right: auto;
+padding: 0;
+font-size: 0.80em;
+font-weight: 400;
+line-height: 1.45em;
+letter-spacing: 0.02em;
+}
+
+
+  /* Universal Table Styles */
+
+div.divTable table,
+div.divTable50Text table,
+div.divTableTextWidth table,
+div.divTableWiderThanText table,
+div.divTableFullscreen table {
+  margin: 0 auto;
+}
+
+
+div.divTableContainer,
+div.divTable50TextContainer,
+div.divTableTextWidthContainer,
+div.divTableWiderThanTextContainer,
+div.divTableFullscreenContainer {
+  display: block;
+  margin-top: 0;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+
+div.divTable table,
+div.divTable50Text table,
+div.divTableTextWidth table,
+div.divTableWiderThanText table,
+div.divTableFullscreen table {
+  background: transparent;
+  border-style: solid none solid none;
+  border-width: 1px;
+  border-collapse: collapse;
+}
+
+div.divTable table td,
+div.divTable50Text table td,
+div.divTableTextWidth table td,
+div.divTableWiderThanText table td,
+div.divTableFullscreen table td {
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: .95em;
+  line-height: 1.65em;
+  color: #000;
+  background: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #007FA3;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  padding: 0.45em;
+  margin: 0;
+  text-align: left;
+  word-break: normal;
+  width: 1%;
+}
+
+div.divTable table th,
+div.divTable50Text table th,
+div.divTableTextWidth table th,
+div.divTableWiderThanText table th,
+div.divTableFullscreen table th {
+  font-family: Helvetica, sans-serif;
+  font-size: .90em;
+  line-height: 1.70em;
+  font-weight: bold;
+  color: white;
+  border-color: #EBF8FF;
+  border-right-color: white;
+  background: #007FA3;
+  border-style: solid;
+  border-width: 1px;
+  padding: 0.45em;
+  margin: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  text-align: left;
+  white-space: nowrap;
+  width: 1%;
+}
+
+div.divTable table th:last-child,
+div.divTable50Text table th:last-child,
+div.divTableTextWidth table th:last-child,
+div.divTableWiderThanText table th:last-child,
+div.divTableFullscreen table th:last-child,
+div.divTable table td:last-child,
+div.divTable50Text table td:last-child,
+div.divTableTextWidth table td:last-child,
+div.divTableWiderThanText table td:last-child,
+div.divTableFullscreen table td:last-child {
+  border-right: none;
+}
+
+
+div.divTable table th:first-child,
+div.divTable50Text table th:first-child,
+div.divTableTextWidth table th:first-child,
+div.divTableWiderThanText table th:first-child,
+div.divTableFullscreen table th:first-child,
+div.divTable table td:first-child,
+div.divTable50Text table td:first-child,
+div.divTableTextWidth table td:first-child,
+div.divTableWiderThanText table td:first-child,
+div.divTableFullscreen table td:first-child {
+  border-left: none;
+  border-right: none;
+}
+
+
+div.divTable table tr,
+div.divTable50Text table tr,
+div.divTableTextWidth table tr,
+div.divTableWiderThanText table tr,
+div.divTableFullscreen table tr {
+  background: white;
+}
+
+
+div.divTable table tr:nth-child(even),
+div.divTable50Text table tr:nth-child(even),
+div.divTableTextWidth table tr:nth-child(even),
+div.divTableWiderThanText table tr:nth-child(even),
+div.divTableFullscreen table tr:nth-child(even) {
+  background: #EBF8FF;
+}
+
+
+div.divTable table td ul,
+div.divTable50Text table td ul,
+div.divTableTextWidth table td ul,
+div.divTableWiderThanText table td ul,
+div.divTableFullscreen table td ul,
+div.divTable table td ol,
+div.divTable50Text table td ol,
+div.divTableTextWidth table td ol,
+div.divTableWiderThanText table td ol,
+div.divTableFullscreen table td ol {
+    margin-left: 2pt;
+}
+
+
+/* Additional List Table Styles */
+table b,
+table b *,
+table strong,
+table strong * {
+  font-weight: 700;
+}
+
+table .Wirisformula {
+  margin-top: -5px;
+}
+
+
+table pre {
+  font-family: monospace;
+    font-size: .95em;
+}
+
+table a[href] {
+  text-decoration: underline;
+}
+
+table ul {
+  list-style-position: outside;
+  margin-bottom: 1em;
+  list-style-type: disc;
+}
+
+
+table ul li {
+  margin-left: 12px;
+  margin-bottom: 12px;
+  color: #000;
+    text-indent: -4px;
+}
+
+table code {
+  color: #000;
+  font-family: monospace;
+  font-size: .95em;
+}
+
+
+table ol li:before {
+  float: left;
+}
+
+
+.textbasecell {
+  height: auto;
+}
+
+
+.acctcell {
+  height: auto;
+}
+
+
+/* Lists In Tables */
+
+
+table ol, ul {
+  margin-left: 2em;
+  margin-top: 0em;
+  margin-bottom: 1em;
+  padding-left: 0.85em;
+}
+
+      /* List Items */
+      /* serif */
+td li.listItemNumeroUno,
+td li.listItemNumeroUnoNumber,
+td li.listItemNumeroUnoLowerAlpha,
+td li.listItemNumeroUnoUpperAlpha,
+td li.listItemNumeroUnoUpperRoman,
+td li.listItemNumeroUnoLowerRoman,
+td li.listItemNumeroUnoNone {
+  color: #000;
+  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+  font-size: .95em;
+  font-weight: normal;
+  line-height: 1.65em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-bottom: 0.5em;
+}
+
+td li li.listItemNumeroUno,
+td li li.listItemNumeroUnoNumber,
+td li li.listItemNumeroUnoLowerAlpha,
+td li li.listItemNumeroUnoUpperAlpha,
+td li li.listItemNumeroUnoUpperRoman,
+td li li.listItemNumeroUnoLowerRoman,
+td li li.listItemNumeroUnoNone {
+  font-size: 100%;
+}
+
+
+/* Nested Lists in Tables */
+td ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+
+td ol ul {
+  margin-top: 0.5em;
+  margin-left: 1.0em;
+  margin-bottom: 0em;
+}
+
+
+td ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+td ol ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+td ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+td ul ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+td ul ul ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+td ul ul,
+td ul ul ul,
+td ul ul ul ul {
+  margin-bottom: 0.5em;
+}
+
+
+
+/* Bold list numbering */
+
+td ol, ul {
+ counter-reset: item;
+}
+
+td ol li { 
+ display: block;
+ padding: 0 0 0 0.5em;
+ text-indent: 0em;
+}
+
+
+td ol li:before {
+ counter-increment: item;
+}
+
+/* ----- Counter resets for lists not starting at 1 ----- */
+td ol[start="2"] { counter-reset: item 1; }
+td ol[start="3"] { counter-reset: item 2; }
+td ol[start="4"] { counter-reset: item 3; }
+td ol[start="5"] { counter-reset: item 4; }
+td ol[start="6"] { counter-reset: item 5; }
+td ol[start="7"] { counter-reset: item 6; }
+td ol[start="8"] { counter-reset: item 7; }
+td ol[start="9"] { counter-reset: item 8; }
+td ol[start="10"] { counter-reset: item 9; }
+td ol[start="11"] { counter-reset: item 10; }
+td ol[start="12"] { counter-reset: item 11; }
+td ol[start="13"] { counter-reset: item 12; }
+td ol[start="14"] { counter-reset: item 13; }
+td ol[start="15"] { counter-reset: item 14; }
+td ol[start="16"] { counter-reset: item 15; }
+td ol[start="17"] { counter-reset: item 16; }
+td ol[start="18"] { counter-reset: item 17; }
+td ol[start="19"] { counter-reset: item 18; }
+td ol[start="20"] { counter-reset: item 19; }
+td ol[start="21"] { counter-reset: item 20; }
+td ol[start="22"] { counter-reset: item 21; }
+td ol[start="23"] { counter-reset: item 22; }
+td ol[start="24"] { counter-reset: item 23; }
+td ol[start="25"] { counter-reset: item 24; }
+td ol[start="26"] { counter-reset: item 25; }
+
+
+/* --- Global ol styles --- */
+td ol li.listItemNumeroUno:before,
+td ol li.listItemNumeroUnoNumber:before,
+td ol li.listItemNumeroUnoLowerAlpha:before,
+td ol li.listItemNumeroUnoUpperAlpha:before,
+td ol li.listItemNumeroUnoUpperRoman:before,
+td ol li.listItemNumeroUnoLowerRoman:before,
+td ol li.listItemNumeroUnoNone:before {
+ content: counter(item) ". ";
+ counter-increment: item;
+ color: #000;
+ font-weight: bold;
+ padding-right: 0.1em;      
+ text-align: right;
+ position: relative;
+ width: 4.5em;
+ margin: 0 0 1em -4.90em;
+}
+
+
+/* td ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(item, upper-alpha) ". " !important;
+}
+
+td ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(item, lower-alpha) ". " !important;
+}
+
+td ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(item, upper-roman) ". " !important;
+}
+
+td ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(item, lower-roman) ". " !important;
+}
+
+td ol li.listItemNumeroUnoNone:before {
+    content: none !important;
+} */
+
+
