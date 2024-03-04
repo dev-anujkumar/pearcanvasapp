@@ -809,7 +809,6 @@ class SlateWrapper extends Component {
     // Handles Import button handling on preview file popup
     handleImportButton = (toggleValue, event) => {
         this.setState({showUploadFilePopup: toggleValue})
-        console.log(this.state.importData, "ddd");
         sendDataToIframe({type: 'proceed for import word file', message: this.state.importData})
         this.props.showBlocker(toggleValue);
         hideBlocker()
