@@ -800,11 +800,9 @@ li dfn.GlossaryTerm {
 .heading4WidgetFPOINTitle dfn.GlossaryTerm,
 .heading4WidgetFPOASTitle dfn.GlossaryTerm,
 .heading4WidgetFPOACTitle dfn.GlossaryTerm,
-.heading4AssessmentTitle dfn.GlossaryTerm,
 .heading4AssessmentItemTitle dfn.GlossaryTerm,
 .heading4TdxAssessmentTitle dfn.GlossaryTerm,
 .heading4TdxAssessmentItemTitle dfn.GlossaryTerm,
-.heading4WidgetShowHideTitle dfn.GlossaryTerm,
 .heading4WidgetPDFTitle dfn.GlossaryTerm,
 .heading4WidgetPUTitle dfn.GlossaryTerm,
 .heading4WidgetPUSLTitle dfn.GlossaryTerm,
@@ -881,8 +879,7 @@ figcaption dfn.GlossaryTerm {
 .paragraphWidgetTableSLCredit dfn.GlossaryTerm,
 .paragraphTextCredit dfn.GlossaryTerm,
 .paragraphCodeSnippetCredit dfn.GlossaryTerm,
-.paragraphJournalAssessmentCredit dfn.GlossaryTerm,
-.paragraphMCQAssessmentCredit dfn.GlossaryTerm {
+.paragraphJournalAssessmentCredit dfn.GlossaryTerm {
   font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
   font-size: 1.10em;
   font-weight: Bold;
@@ -989,11 +986,9 @@ h1 a.paragraphNumeroUnoFootnote {
 .heading4WidgetFPOINTitle .paragraphNumeroUnoFootnote,
 .heading4WidgetFPOASTitle .paragraphNumeroUnoFootnote,
 .heading4WidgetFPOACTitle .paragraphNumeroUnoFootnote,
-.heading4AssessmentTitle .paragraphNumeroUnoFootnote,
 .heading4AssessmentItemTitle .paragraphNumeroUnoFootnote,
 .heading4TdxAssessmentTitle .paragraphNumeroUnoFootnote,
 .heading4TdxAssessmentItemTitle .paragraphNumeroUnoFootnote,
-.heading4WidgetShowHideTitle .paragraphNumeroUnoFootnote,
 .heading4WidgetPDFTitle .paragraphNumeroUnoFootnote,
 .heading4WidgetPUTitle .paragraphNumeroUnoFootnote,
 .heading4WidgetPUSLTitle .paragraphNumeroUnoFootnote,
@@ -1072,8 +1067,7 @@ figcaption .paragraphNumeroUnoFootnote {
 .paragraphWidgetTableSLCredit .paragraphNumeroUnoFootnote,
 .paragraphTextCredit .paragraphNumeroUnoFootnote,
 .paragraphCodeSnippetCredit .paragraphNumeroUnoFootnote,
-.paragraphJournalAssessmentCredit .paragraphNumeroUnoFootnote,
-.paragraphMCQAssessmentCredit .paragraphNumeroUnoFootnote {
+.paragraphJournalAssessmentCredit .paragraphNumeroUnoFootnote {
   color: #007FA3;
   font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
   font-size: 1.25em;
@@ -1364,158 +1358,6 @@ ol li:before {
  counter-increment: item;
 }
 
-/* ----- Counter resets for lists not starting at 1 ----- */
-ol[start="2"] { counter-reset: item 1; }
-ol[start="3"] { counter-reset: item 2; }
-ol[start="4"] { counter-reset: item 3; }
-ol[start="5"] { counter-reset: item 4; }
-ol[start="6"] { counter-reset: item 5; }
-ol[start="7"] { counter-reset: item 6; }
-ol[start="8"] { counter-reset: item 7; }
-ol[start="9"] { counter-reset: item 8; }
-ol[start="10"] { counter-reset: item 9; }
-ol[start="11"] { counter-reset: item 10; }
-ol[start="12"] { counter-reset: item 11; }
-ol[start="13"] { counter-reset: item 12; }
-ol[start="14"] { counter-reset: item 13; }
-ol[start="15"] { counter-reset: item 14; }
-ol[start="16"] { counter-reset: item 15; }
-ol[start="17"] { counter-reset: item 16; }
-ol[start="18"] { counter-reset: item 17; }
-ol[start="19"] { counter-reset: item 18; }
-ol[start="20"] { counter-reset: item 19; }
-ol[start="21"] { counter-reset: item 20; }
-ol[start="22"] { counter-reset: item 21; }
-ol[start="23"] { counter-reset: item 22; }
-ol[start="24"] { counter-reset: item 23; }
-ol[start="25"] { counter-reset: item 24; }
-ol[start="26"] { counter-reset: item 25; }
-ol[start="27"] { counter-reset: item 26; }
-ol[start="28"] { counter-reset: item 27; }
-ol[start="29"] { counter-reset: item 28; }
-ol[start="30"] { counter-reset: item 29; }
-ol[start="31"] { counter-reset: item 30; }
-ol[start="32"] { counter-reset: item 31; }
-ol[start="33"] { counter-reset: item 32; }
-ol[start="34"] { counter-reset: item 33; }
-ol[start="35"] { counter-reset: item 34; }
-ol[start="36"] { counter-reset: item 35; }
-ol[start="37"] { counter-reset: item 36; }
-ol[start="38"] { counter-reset: item 37; }
-ol[start="39"] { counter-reset: item 38; }
-ol[start="40"] { counter-reset: item 39; }
-ol[start="41"] { counter-reset: item 40; }
-ol[start="42"] { counter-reset: item 41; }
-ol[start="43"] { counter-reset: item 42; }
-ol[start="44"] { counter-reset: item 43; }
-ol[start="45"] { counter-reset: item 44; }
-ol[start="46"] { counter-reset: item 45; }
-ol[start="47"] { counter-reset: item 46; }
-ol[start="48"] { counter-reset: item 47; }
-ol[start="49"] { counter-reset: item 48; }
-ol[start="50"] { counter-reset: item 49; }
-ol[start="51"] { counter-reset: item 50; }
-ol[start="52"] { counter-reset: item 51; }
-ol[start="53"] { counter-reset: item 52; }
-ol[start="54"] { counter-reset: item 53; }
-ol[start="55"] { counter-reset: item 54; }
-ol[start="56"] { counter-reset: item 55; }
-ol[start="57"] { counter-reset: item 56; }
-ol[start="58"] { counter-reset: item 57; }
-ol[start="59"] { counter-reset: item 58; }
-ol[start="60"] { counter-reset: item 59; }
-ol[start="61"] { counter-reset: item 60; }
-ol[start="62"] { counter-reset: item 61; }
-ol[start="63"] { counter-reset: item 62; }
-ol[start="64"] { counter-reset: item 63; }
-ol[start="65"] { counter-reset: item 64; }
-ol[start="66"] { counter-reset: item 65; }
-ol[start="67"] { counter-reset: item 66; }
-ol[start="68"] { counter-reset: item 67; }
-ol[start="69"] { counter-reset: item 68; }
-ol[start="70"] { counter-reset: item 69; }
-ol[start="71"] { counter-reset: item 70; }
-ol[start="72"] { counter-reset: item 71; }
-ol[start="73"] { counter-reset: item 72; }
-ol[start="74"] { counter-reset: item 73; }
-ol[start="75"] { counter-reset: item 74; }
-ol[start="76"] { counter-reset: item 75; }
-ol[start="77"] { counter-reset: item 76; }
-ol[start="78"] { counter-reset: item 77; }
-ol[start="79"] { counter-reset: item 78; }
-ol[start="80"] { counter-reset: item 79; }
-ol[start="81"] { counter-reset: item 80; }
-ol[start="82"] { counter-reset: item 81; }
-ol[start="83"] { counter-reset: item 82; }
-ol[start="84"] { counter-reset: item 83; }
-ol[start="85"] { counter-reset: item 84; }
-ol[start="86"] { counter-reset: item 85; }
-ol[start="87"] { counter-reset: item 86; }
-ol[start="88"] { counter-reset: item 87; }
-ol[start="89"] { counter-reset: item 88; }
-ol[start="90"] { counter-reset: item 89; }
-ol[start="91"] { counter-reset: item 90; }
-ol[start="92"] { counter-reset: item 91; }
-ol[start="93"] { counter-reset: item 92; }
-ol[start="94"] { counter-reset: item 93; }
-ol[start="95"] { counter-reset: item 94; }
-ol[start="96"] { counter-reset: item 95; }
-ol[start="97"] { counter-reset: item 96; }
-ol[start="98"] { counter-reset: item 97; }
-ol[start="99"] { counter-reset: item 98; }
-ol[start="100"] { counter-reset: item 99; }
-ol[start="101"] { counter-reset: item 100; }
-ol[start="102"] { counter-reset: item 101; }
-ol[start="103"] { counter-reset: item 102; }
-ol[start="104"] { counter-reset: item 103; }
-ol[start="105"] { counter-reset: item 104; }
-ol[start="106"] { counter-reset: item 105; }
-ol[start="107"] { counter-reset: item 106; }
-ol[start="108"] { counter-reset: item 107; }
-ol[start="109"] { counter-reset: item 108; }
-ol[start="110"] { counter-reset: item 109; }
-ol[start="111"] { counter-reset: item 110; }
-ol[start="112"] { counter-reset: item 111; }
-ol[start="113"] { counter-reset: item 112; }
-ol[start="114"] { counter-reset: item 113; }
-ol[start="115"] { counter-reset: item 114; }
-ol[start="116"] { counter-reset: item 115; }
-ol[start="117"] { counter-reset: item 116; }
-ol[start="118"] { counter-reset: item 117; }
-ol[start="119"] { counter-reset: item 118; }
-ol[start="120"] { counter-reset: item 119; }
-ol[start="121"] { counter-reset: item 120; }
-ol[start="122"] { counter-reset: item 121; }
-ol[start="123"] { counter-reset: item 122; }
-ol[start="124"] { counter-reset: item 123; }
-ol[start="125"] { counter-reset: item 124; }
-ol[start="126"] { counter-reset: item 125; }
-ol[start="127"] { counter-reset: item 126; }
-ol[start="128"] { counter-reset: item 127; }
-ol[start="129"] { counter-reset: item 128; }
-ol[start="130"] { counter-reset: item 129; }
-ol[start="131"] { counter-reset: item 130; }
-ol[start="132"] { counter-reset: item 131; }
-ol[start="133"] { counter-reset: item 132; }
-ol[start="134"] { counter-reset: item 133; }
-ol[start="135"] { counter-reset: item 134; }
-ol[start="136"] { counter-reset: item 135; }
-ol[start="137"] { counter-reset: item 136; }
-ol[start="138"] { counter-reset: item 137; }
-ol[start="139"] { counter-reset: item 138; }
-ol[start="140"] { counter-reset: item 139; }
-ol[start="141"] { counter-reset: item 140; }
-ol[start="142"] { counter-reset: item 141; }
-ol[start="143"] { counter-reset: item 142; }
-ol[start="144"] { counter-reset: item 143; }
-ol[start="145"] { counter-reset: item 144; }
-ol[start="146"] { counter-reset: item 145; }
-ol[start="147"] { counter-reset: item 146; }
-ol[start="148"] { counter-reset: item 147; }
-ol[start="149"] { counter-reset: item 148; }
-ol[start="150"] { counter-reset: item 149; }
-ol[start="151"] { counter-reset: item 150; }
-
 /* --- Global ol styles --- */
 ol li.listItemNumeroUno:before,
 ol li.listItemNumeroUnoNumber:before,
@@ -1736,19 +1578,8 @@ p.blockquoteTextCredit {
   letter-spacing: 0.03em;
 }  
   
-  
-  
-  
-  
-/* -------- */
-
-
 
 /* CONTAINERS - ASIDES & SPECIAL FIGURES */
-
-
-/* -------- */
-
 
 /* Learning Objectives Container */
 
@@ -1780,21 +1611,6 @@ aside.divLearningObjectives p span.number {
   text-align: right;
   width: 4em;
   margin: 0em 0em 1em -5em;
-}
-
-p.paragraphLearningObjective {
-  color: #666;
-  font-family: sans-serif;
-  text-decoration: none;
-  font-size: 1.08em;
-  font-weight: 100;
-  line-height: 1.60em;
-  margin: 0em 0em 0.55em 5em;
-}
-
-p.paragraphLearningObjective span.number {
-  color: #007FA3;
-  font-weight: bold;
 }
 
 aside.divLearningObjectives p.paragraphNummerEins {
@@ -2090,94 +1906,6 @@ div.asideActivityBorderBottom { border-bottom-color: #007FA3; }
     margin-top: 0em;
   }
 
-
-/* Worked Examples */
-
-
-    /* Worked Example 1 */
-aside.asideWorkedExample1 {
-  background-color: transparent;
-  margin-top: 3em;
-  margin-bottom: 3em;
-  border-right-width: 0px;
-  border-left-width: 0px;
-}
-
-aside.asideWorkedExample1 .heading4NummerEins {
-  color: #000;
-  font-size: 1.5em;
-  font-weight: 800;
-  margin-bottom: -.05em;
-}
-
-aside.asideWorkedExample1 .heading5NummerEins {
-  color: #000;
-  font-size: 1.30em;
-  margin-top: 0em;
-  margin-bottom: 1.0em;
-  font-weight: 800;
-}
-
-div.asideWorkedExample1BorderTop {
-  border-top: 6px solid #000;
-  padding-bottom: 1.25em;
-}
-
-div.asideWorkedExample1BorderBottom {
-  border-bottom: 1px solid #000;
-  padding-top: 0em;
-}
-
-
-div.divWorkedExample1TransBGborderTop {
-  border-top: solid 1px #9d9d9d;
-  padding-bottom: 21px;
-  margin-top: 24px;
-}
-  
-
-
-    /* Worked Example 2 */
-aside.asideWorkedExample2 {
-  background-color: transparent;
-  margin-top: 3em;
-  margin-bottom: 3em;
-  border-right-width: 0px;
-  border-left-width: 0px;
-}
-
-aside.asideWorkedExample2 .heading4NummerEins {
-  color: #008638;
-  font-size: 1.5em;
-  font-weight: 800;
-  margin-bottom: -.05em;
-}
-
-aside.asideWorkedExample2 .heading5NummerEins {
-  color: #000;
-  font-size: 1.30em;
-  margin-top: 0em;
-  margin-bottom: 1.0em;
-  font-weight: 800;
-}
-
-div.asideWorkedExample2BorderTop {
-  border-top: 6px solid #008638;
-  padding-bottom: 1.25em;
-}
-
-div.asideWorkedExample2BorderBottom {
-  border-bottom: 1px solid #008638;
-  padding-top: 0em;
-}
-
-
-div.divWorkedExample2TransBGborderTop {
-  border-top: solid 1px #86b89b;
-  padding-bottom: 21px;
-  margin-top: 24px;
-}
-
 /* Tactic Box*/
 
 aside.asideTacticBox {
@@ -2227,8 +1955,6 @@ aside + aside.asideSidebar02,
 aside + aside.asideSidebar03,
 aside + aside.asideSidebar04,
 aside + aside.asideSidebar05,
-aside + aside.asideWorkedExample1,
-aside + aside.asideWorkedExample2,
 aside + aside.asideTacticBox,
 aside + aside.asideActivity,
 aside + aside.asideSidebarFeature {
@@ -2526,16 +2252,7 @@ img.imageFullscreenMathImage {
   margin: 0.60em auto 0.65em auto;
 }
 
-  
-  
-/* -------- */
-
-
-
 /* AUDIO & VIDEO FIGURES */
-
-
-/* -------- */
 
   
 
@@ -2723,47 +2440,6 @@ p.paragraphVideoCredit {
   letter-spacing: 0.02em;
   word-wrap: break-word;
 }
-
- 
- 
- 
- 
- /* -------- */
-
-/* INTERACTIVE FIGURES */
-
-/* -------- */ 
-
-/* 
-
-3PI 3rd Party Interactives
-3PI Social Explorer Smart Link
-MDI Metrodigi Interactives
-
-Flashcards
-Image Slideshow
-Video Slideshow
-Simulation / User Controlled Animation (UCA)
-Survey
-Timeline
-Non Scored Multiple Choice Question
-Image Identify
-Fill In The Blank
-Graph
-Video Multiple Choice
-
-For Placement Only (FPO)
-FPO Image
-FPOAV Audio / Video
-FPOI Interactive
-FPOAS Assessment
-FPOC Container
-
-
-*/
-
-  
-
 
      /*  INTERACTIVE container to wrap figure container and credit text */
 
@@ -3039,21 +2715,6 @@ img.imageWidgetGuidedExample {
 }
 
 
-
-     /* Metrodigi  */
-     
-img.imageWidgetMDI {
-  background-color: transparent;
-  padding: 0;
-  display: block;
-  max-width: 770px;
-  max-height: 590px;
-  width: 100%;
-  margin: 0.65em auto 0.65em auto;
-}
-
-
-
      /* Social Explorer  */
      
 img.imageWidget3PI,
@@ -3112,20 +2773,6 @@ img.imageWidget3PI.Default {
 
 /* ASSESSMENT FIGURES */
 
-/* -------- */ 
-
-/* 
-
-TDX
-CITE
-Journal
-Shared Writing
-
-
-
-*/
-
-
      /*  Assessment container to wrap figure container and credit text */
      
      
@@ -3160,9 +2807,7 @@ figure.figureTdxAssessmentItem {
 
        /*  Assessment Figure Number Label */
        
-h4.heading4AssessmentNumberLabel,
 h4.heading4AssessmentItemNumberLabel,
-h4.heading4TdxAssessmentNumberLabel,
 h4.heading4TdxAssessmentItemNumberLabel {
   color: #007FA3;
   font-family: Helvetica, sans-serif;
@@ -3178,8 +2823,6 @@ h4.heading4TdxAssessmentItemNumberLabel {
 
 
       /*  Assessment title text */
-
-h4.heading4AssessmentTitle,
 h4.heading4AssessmentItemTitle,
 h4.heading4TdxAssessmentTitle,
 h4.heading4TdxAssessmentItemTitle {
@@ -3235,114 +2878,6 @@ p.paragraphTdxAssessmentItemCredit {
   line-height: 1.45em;
   letter-spacing: 0.02em;
   word-wrap: break-word;
-}
-
-
-
-
-
-
-
-/* -------- */
-
-/* BUTTON & LINK FIGURES */
-
-/* -------- */ 
-
-/* 
-
-Show Hide
-PU Pop Up
-PDF 
-Web Link
-
-*/
-
-
-  
-  /* Show Hide Interactive */
-
-
-     /*  Show Hide Interactive container to wrap figure container and credit text */
-div.divWidgetShowHide {
-  background-color: #FFFFFF;
-  max-width: 680px;
-  padding: 0;
-  margin: 0 auto;
-  margin-bottom: 3.0em;
-  border-style: none;
-}
-
-
-      /* Show Hide Interactive figure container for title, thumbnail and fig caption */
-figure.figureWidgetShowHide {
-  background-color: #FFFFFF;
-  padding: 0em;
-  margin: 0 auto;
-  margin-bottom: 0;
-}
-
-
-       /* Show Hide Interactive Figure Number Label */
-h4.heading4WidgetShowHideNumberLabel {
-  color: #007FA3;
-  font-family: Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0 auto 0.15em auto;
-  padding: 0;
-  font-size: 1.150em;
-  font-weight: 600;
-  line-height: 1.3em;
-  letter-spacing: 0.02em;
-}
-
-
-      /* Show Hide Interactive widget title text */
-h4.heading4WidgetShowHideTitle {
-  color: #000;
-  font-family: Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0 auto 0.65em auto;
-  padding: 0;
-  font-size: 1.06em;
-  font-weight: 400;
-  line-height: 1.45em;
-  letter-spacing: 0.01em;
-}
-
-
-P.paragraphShowHideWidgetQuestionText {
-  color: #000;
-  margin: 1em 2em 1em 2em;
-  font-family: Helvetica, sans-serif;
-  font-size: 1.05em;
-  font-weight: 400;
-  line-height: 1.75em;
-  letter-spacing: 0.03em;
-}
-
-a.paragraphShowHideWidgetQuestionText {
-  color: #007FA3;
-  font-family: Helvetica, sans-serif;
-  font-size: 1.0em;
-  font-weight: bold;
-  line-height: 1.5em;
-  text-decoration: none;
-}
-
-a.paragraphShowHideWidgetQuestionText:hover {
-  text-decoration: underline;
-}
-
-P.paragraphShowHideWidgetAnswerText {
-  color: #000;
-  margin: 0 2em 1em 1.75em;
-  font-family: serif;
-  font-size: 1.25em;
-  font-weight: 400;
-  line-height: 1.75em;
 }
 
 P.paragraphNumeroUno.revealAns {
@@ -3605,16 +3140,7 @@ p.paragraphWidgetTableSLCredit {
   letter-spacing: 0.02em;
   word-wrap: break-word;
 }
-
-
-
-/* -------- */
-
-
 /* Asset Popover */
-
-
-/* -------- */
 
 a.pearson-component.popoverLink {
   color: #007FA3;
@@ -3657,15 +3183,7 @@ a.popoverLink:hover {
   left: -999em;
   bottom: 0em;
 }
-
-
-/* -------- */
-
-
 /* FIGURE WITH MathML Text */
-
-
-/* -------- */
 
 
   /* container to wrap MathML in a figure container and credit text */
@@ -3749,15 +3267,7 @@ p.paragraphTextCredit {
   letter-spacing: 0.02em;
   word-wrap: break-word;
 }
-
-
-/* -------- */
-
-
 /* Code Snippets Figure Text */
-
-
-/* -------- */
 
      /*  container to wrap figure container and credit text */
 div.divCodeSnippetFigure {
@@ -3843,230 +3353,6 @@ p.paragraphCodeSnippetCredit {
 }
 
 
-
-
-
-/* -------- */
-
-
-/* Assessments */
-
-
-/* -------- */
-
-
-/* Journal Assessment Container */
-
-     /*  container to wrap figure */
-div.divJournalAssessment {
-  background-color: transparent;
-  padding: 0;
-  margin: 0 auto;
-  margin-bottom: 3.0em;
-  border-style: solid;
-  border-color: #007FA3;
-  border-width: 1px;
-  border-right-width: 0px;
-  border-left-width: 0px;
-}
-
-      /* Journal figure container  */
-figure.figureJournalAssessment {
-  background-color: transparent;
-  margin: 0 auto;
-  margin-bottom: 0;
-}
-       
-       
-       /* assessment Number Label */
-h4.heading4JournalAssessmentLabel {
-  color: #007FA3;
-  font-family: Helvetica, sans-serif;
-  margin: 0 0 0.15em 0;
-  font-size: 1.150em;
-  font-weight: 600;
-  line-height: 1.3em;
-  letter-spacing: 0.02em;
-}
-
-      /* assessment title text */
-h4.heading4JournalAssessmentTitle {
-  color: #000;
-  font-family: Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0 auto 0.65em auto;
-  padding: 0;
-  font-size: 1.06em;
-  font-weight: 400;
-  line-height: 1.45em;
-  letter-spacing: 0.01em;
-}
-
-       
-       
-      /* Journal assessment question text */
-p.paragraphJournalAssessmentQuestion {
-  color: #505759;
-  font-family: Helvetica, sans-serif;
-  margin: 0 0 0 0;
-  font-size: 1em;
-  font-weight: 100;
-  line-height: 1.75em;
-  letter-spacing: 0.02em;
-  margin-bottom: 1em;
-}
-
-
-      /* Journal assessment caption text */
-figcaption.figcaptionJournalAssessment {
-  color: #505759;
-  font-family: Open Sans, Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0.75em auto 0.45em auto;
-  padding: 0;
-  font-size: 0.90em;
-  font-weight: 400;
-  line-height: 1.5em;
-  letter-spacing: 0.02em;
-  word-wrap: break-word;
-}
-
-
-  /*  Journal assessment copyright, credit or source attribution text */
-  
-P.paragraphJournalAssessmentCredit {
-  color: #505759;
-  font-family: Open Sans, Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0.45em auto 0 auto;
-  padding: 0;
-  font-size: 0.80em;
-  font-weight: 400;
-  line-height: 1.45em;
-  letter-spacing: 0.02em;
-  word-wrap: break-word;
-}
-
-a.buttonJournalAssessmentStart {
-  background-color: #007FA3;
-  border: none;
-  color: #FFFFFF;
-  padding: 15px 32px;
-  text-decoration: none;
-  display: inline-block;
-  font-family: sans-serif;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 1em;
-}
-
-a.buttonJournalAssessmentReview {
-  background-color: #CCCCCC;
-  border: none;
-  color: #000000;
-  padding: 15px 32px;
-  text-decoration: none;
-  display: inline-block;
-  font-family: sans-serif;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 1em;
-}
-
-    
-    
-/* MCQ Assessment */
-
-     /*  container to wrap figure container and credit text */
-div.divMCQAssessment {
-  background-color: transparent;
-  padding: 0;
-  margin: 0 auto;
-  margin-bottom: 3.0em;
-  border-style: solid;
-  border-color: #FCFCFC;
-  border-width: 1px;
-}
-
-      /* figure container for title, image and fig caption */
-figure.figureMCQAssessment {
-  background-color: transparent;
-  padding: 0;
-  margin: 0 auto;
-  margin-bottom: 0;
-}
-
-       /* Figure Number Label */
-h4.heading4MCQAssessmentNumberLabel {
-  color: #007FA3;
-  font-family: Helvetica, sans-serif;
-  margin: 0 0 0.15em 0;
-  font-size: 1.150em;
-  font-weight: 600;
-  line-height: 1.3em;
-  letter-spacing: 0.02em;
-}       
-
-      /* image title text */
-h4.heading4MCQAssessmentTitle {
-  color: #000;
-  font-family: Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0 auto 0.65em auto;
-  padding: 0;
-  font-size: 1.06em;
-  font-weight: 400;
-  line-height: 1.45em;
-  letter-spacing: 0.01em;
-}
-
-      /* image caption text */
-figcaption.figcaptionMCQAssessment {
-  color: #505759;
-  font-family: Open Sans, Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0.75em auto 0.45em auto;
-  padding: 0;
-  font-size: 0.90em;
-  font-weight: 400;
-  line-height: 1.5em;
-  letter-spacing: 0.02em;
-  word-wrap: break-word;
-}
-
-     /* image */
-img.imageMCQAssessment {
-  display: block;
-  max-width: 100%;
-  width: auto;
-  margin-top: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-  /*  MCQ assessment copyright, credit or source attribution text */
-  
-p.paragraphMCQAssessmentCredit {
-  color: #505759;
-  font-family: Open Sans, Helvetica, sans-serif;
-  max-width: 680px;
-  width: auto;
-  margin: 0.45em auto 0 auto;
-  padding: 0;
-  font-size: 0.80em;
-  font-weight: 400;
-  line-height: 1.45em;
-  letter-spacing: 0.02em;
-  word-wrap: break-word;
-}
-
-
 /*  Long Description Display  */
 
 div .pearson-component.longdesccontent {
@@ -4078,33 +3364,7 @@ div .pearson-component.longdesccontent {
   overflow: hidden;
 }
 
-
-/* -------- */
-
 /*  Tables  */
-
-/* -------- */
-
-/*  container to wrap Table figure container and credit text */
-div.divTable,
-div.divTable50Text,
-div.divTableTextWidth,
-div.divTableWiderThanText,
-div.divTableFullscreen {
-background-color: transparent;
-padding-top: 0;
-margin: 0 auto;
-margin-bottom: 2.5em;
-margin-top: 2.5em;
-border-style: none;
-border-width: 0px;
-word-break: normal;
-overflow: auto;
-}
-
-div.divTable .pearson-component.table {
-  max-width: initial;
-}
 
 /* figure container for title, Table and fig caption */
 figure.figureTable,
@@ -4137,214 +3397,6 @@ font-size: 1.150em;
 font-weight: 800;
 line-height: 1.3em;
 letter-spacing: 0.03em;
-}
-
-
-/* table title text */
-h4.heading4TableTitle,
-h4.heading4Table50TextTitle,
-h4.heading4TableTextWidthTitle,
-h4.heading4TableWiderThanTextTitle,
-h4.heading4TableFullscreenTitle {
-color: #505759;
-font-family: Helvetica, sans-serif;
-max-width: 680px;
-width: auto;
-margin-top: 0;
-margin-left: auto;
-margin-right: auto;
-margin-bottom: 0.5em;
-padding: 0;
-font-size: 1.06em;
-font-weight: 400;
-line-height: 1.45em;
-letter-spacing: 0.01em;
-}
-
-
-/* Table caption text */
-figcaption.figcaptionTable,
-figcaption.figcaptionTable50Text,
-figcaption.figcaptionTableTextWidth,
-figcaption.figcaptionTableWiderThanText,
-figcaption.figcaptionTableFullscreen {
-color: #505759;
-font-family: Helvetica, sans-serif;
-max-width: 680px;
-width: auto;
-margin-top: 0.85em;
-margin-bottom: 0;
-margin-left: auto;
-margin-right: auto;
-padding: 0;
-font-size: 0.90em;
-font-weight: 400;
-line-height: 1.5em;
-letter-spacing: 0.02em;
-}
-
-/*  Table copyright, credit or source attribution text */
-p.paragraphTableCredit,
-p.paragraphTable50TextCredit,
-p.paragraphTableTextWidthCredit,
-p.paragraphTableWiderThanTextCredit,
-p.paragraphTableFullscreenCredit {
-color: #505759;
-font-family: Helvetica, sans-serif;
-max-width: 680px;
-width: auto;
-margin-top: 0.45em;
-margin-bottom: 0;
-margin-left: auto;
-margin-right: auto;
-padding: 0;
-font-size: 0.80em;
-font-weight: 400;
-line-height: 1.45em;
-letter-spacing: 0.02em;
-}
-
-
-  /* Universal Table Styles */
-
-div.divTable table,
-div.divTable50Text table,
-div.divTableTextWidth table,
-div.divTableWiderThanText table,
-div.divTableFullscreen table {
-  margin: 0 auto;
-}
-
-
-div.divTableContainer,
-div.divTable50TextContainer,
-div.divTableTextWidthContainer,
-div.divTableWiderThanTextContainer,
-div.divTableFullscreenContainer {
-  display: block;
-  margin-top: 0;
-  margin-left: 1em;
-  margin-right: 1em;
-}
-
-
-div.divTable table,
-div.divTable50Text table,
-div.divTableTextWidth table,
-div.divTableWiderThanText table,
-div.divTableFullscreen table {
-  background: transparent;
-  border-style: solid none solid none;
-  border-width: 1px;
-  border-collapse: collapse;
-}
-
-div.divTable table td,
-div.divTable50Text table td,
-div.divTableTextWidth table td,
-div.divTableWiderThanText table td,
-div.divTableFullscreen table td {
-  font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
-  font-size: .95em;
-  line-height: 1.65em;
-  color: #000;
-  background: transparent;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #007FA3;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-  padding: 0.45em;
-  margin: 0;
-  text-align: left;
-  word-break: normal;
-  width: 1%;
-}
-
-div.divTable table th,
-div.divTable50Text table th,
-div.divTableTextWidth table th,
-div.divTableWiderThanText table th,
-div.divTableFullscreen table th {
-  font-family: Helvetica, sans-serif;
-  font-size: .90em;
-  line-height: 1.70em;
-  font-weight: bold;
-  color: white;
-  border-color: #EBF8FF;
-  border-right-color: white;
-  background: #007FA3;
-  border-style: solid;
-  border-width: 1px;
-  padding: 0.45em;
-  margin: 0;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-  text-align: left;
-  white-space: nowrap;
-  width: 1%;
-}
-
-div.divTable table th:last-child,
-div.divTable50Text table th:last-child,
-div.divTableTextWidth table th:last-child,
-div.divTableWiderThanText table th:last-child,
-div.divTableFullscreen table th:last-child,
-div.divTable table td:last-child,
-div.divTable50Text table td:last-child,
-div.divTableTextWidth table td:last-child,
-div.divTableWiderThanText table td:last-child,
-div.divTableFullscreen table td:last-child {
-  border-right: none;
-}
-
-
-div.divTable table th:first-child,
-div.divTable50Text table th:first-child,
-div.divTableTextWidth table th:first-child,
-div.divTableWiderThanText table th:first-child,
-div.divTableFullscreen table th:first-child,
-div.divTable table td:first-child,
-div.divTable50Text table td:first-child,
-div.divTableTextWidth table td:first-child,
-div.divTableWiderThanText table td:first-child,
-div.divTableFullscreen table td:first-child {
-  border-left: none;
-  border-right: none;
-}
-
-
-div.divTable table tr,
-div.divTable50Text table tr,
-div.divTableTextWidth table tr,
-div.divTableWiderThanText table tr,
-div.divTableFullscreen table tr {
-  background: white;
-}
-
-
-div.divTable table tr:nth-child(even),
-div.divTable50Text table tr:nth-child(even),
-div.divTableTextWidth table tr:nth-child(even),
-div.divTableWiderThanText table tr:nth-child(even),
-div.divTableFullscreen table tr:nth-child(even) {
-  background: #EBF8FF;
-}
-
-
-div.divTable table td ul,
-div.divTable50Text table td ul,
-div.divTableTextWidth table td ul,
-div.divTableWiderThanText table td ul,
-div.divTableFullscreen table td ul,
-div.divTable table td ol,
-div.divTable50Text table td ol,
-div.divTableTextWidth table td ol,
-div.divTableWiderThanText table td ol,
-div.divTableFullscreen table td ol {
-    margin-left: 2pt;
 }
 
 
@@ -4516,33 +3568,6 @@ td ol li:before {
  counter-increment: item;
 }
 
-/* ----- Counter resets for lists not starting at 1 ----- */
-td ol[start="2"] { counter-reset: item 1; }
-td ol[start="3"] { counter-reset: item 2; }
-td ol[start="4"] { counter-reset: item 3; }
-td ol[start="5"] { counter-reset: item 4; }
-td ol[start="6"] { counter-reset: item 5; }
-td ol[start="7"] { counter-reset: item 6; }
-td ol[start="8"] { counter-reset: item 7; }
-td ol[start="9"] { counter-reset: item 8; }
-td ol[start="10"] { counter-reset: item 9; }
-td ol[start="11"] { counter-reset: item 10; }
-td ol[start="12"] { counter-reset: item 11; }
-td ol[start="13"] { counter-reset: item 12; }
-td ol[start="14"] { counter-reset: item 13; }
-td ol[start="15"] { counter-reset: item 14; }
-td ol[start="16"] { counter-reset: item 15; }
-td ol[start="17"] { counter-reset: item 16; }
-td ol[start="18"] { counter-reset: item 17; }
-td ol[start="19"] { counter-reset: item 18; }
-td ol[start="20"] { counter-reset: item 19; }
-td ol[start="21"] { counter-reset: item 20; }
-td ol[start="22"] { counter-reset: item 21; }
-td ol[start="23"] { counter-reset: item 22; }
-td ol[start="24"] { counter-reset: item 23; }
-td ol[start="25"] { counter-reset: item 24; }
-td ol[start="26"] { counter-reset: item 25; }
-
 
 /* --- Global ol styles --- */
 td ol li.listItemNumeroUno:before,
@@ -4562,26 +3587,3 @@ td ol li.listItemNumeroUnoNone:before {
  width: 4.5em;
  margin: 0 0 1em -4.90em;
 }
-
-
-/* td ol li.listItemNumeroUnoUpperAlpha:before {
-    content: counter(item, upper-alpha) ". " !important;
-}
-
-td ol li.listItemNumeroUnoLowerAlpha:before {
-    content: counter(item, lower-alpha) ". " !important;
-}
-
-td ol li.listItemNumeroUnoUpperRoman:before {
-    content: counter(item, upper-roman) ". " !important;
-}
-
-td ol li.listItemNumeroUnoLowerRoman:before {
-    content: counter(item, lower-roman) ". " !important;
-}
-
-td ol li.listItemNumeroUnoNone:before {
-    content: none !important;
-} */
-
-
