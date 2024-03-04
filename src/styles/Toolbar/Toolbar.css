@@ -717,7 +717,7 @@ margin-left:6px;
   padding-left: 15px;
   border-left: 1px solid #777777
 }
-.approved-banner{
+.approved-banner, .import-banner{
   height: 48px;
   background: #E6E6E6;
   display: flex;

@@ -20,7 +20,7 @@ import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, LOCKED_BANNER_MESSAGE, SLATES_DEFAULT_LABEL,
-        SUBSCRIBER_BANNER_MESSAGE, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
+        SUBSCRIBER_BANNER_MESSAGE, IN_PROGRESS_IMPORT_STATUS, IMPORT_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
 import Button from '@mui/material/Button';
 
 const _Toolbar = props => {
@@ -149,6 +149,8 @@ const _Toolbar = props => {
         searchElm = false;
         searchTerm = '';
     }
+    const importStatus = props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS
+    const importingUser = props?.slateLevelData[config?.slateManifestURN]?.importData?.user && props?.slateLevelData[config?.slateManifestURN]?.importData?.user;
     const isReviewerRole = (roleId === 'comment_only')
     const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
     const slatePublishStatus = (slateStatus === "approved") && !popupSlate && !isReviewerRole
@@ -156,13 +158,12 @@ const _Toolbar = props => {
     config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
     const isApprovedCondition = (slatePublishStatus && !isReviewerRole);
     const isLockedSlate = isSlateLocked();
-    const bannerClass = isSubscribed ? 'read-only-banner' : (isApprovedCondition || isLockedSlate) ? 'approved-banner' : 'banner';
+    const bannerClass = isSubscribed ? 'read-only-banner' : (isApprovedCondition || isLockedSlate) ? 'approved-banner' : importStatus ? 'import-banner' : 'banner';
     const isReadOnly = (isApprovedCondition || isLockedSlate) ? 'hideToolbar' : ''
-    const toolbarClass = (isSubscribed || isApprovedCondition || isLockedSlate) ? 'subscribe-approved-container' : 'toolbar-container'
+    const toolbarClass = (isSubscribed || isApprovedCondition || isLockedSlate || importStatus) ? 'subscribe-approved-container' : 'toolbar-container'
     const separatorClass = isSubscribed || isApprovedCondition ? 'separatorClass' : ''
     const lockedByUser = props.slateLockInfo ? props.slateLockInfo.firstName !== "" ? `${props.slateLockInfo.lastName}, ${props.slateLockInfo.firstName}` :
     `${props.slateLockInfo.userId}` : ""
-    const importStatus = props.importDataFromResponse?.importStatus === IN_PROGRESS_IMPORT_STATUS
     return (
         <div className={bannerClass}>
             <div className={toolbarClass}>
@@ -190,7 +191,12 @@ const _Toolbar = props => {
                 <Button className="lock-button" variant="outlined"  onClick={handleUnlockClick}>Unlock Slate</Button>
                 }
                 </div>
-            </div> : '' }
+            </div> : 
+            importStatus ? 
+            <div className='toolbar-text'>
+                <LockIcon />
+                <div className='read-only'>{`${IMPORT_BANNER_MESSAGE} ${importingUser}`}</div>
+            </div> : ''}
 
                 <div className={`header ${isToolBarBlocked} ${accessToolbar} ${isReadOnly}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
