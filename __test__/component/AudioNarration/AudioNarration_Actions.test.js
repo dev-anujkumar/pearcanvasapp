@@ -364,7 +364,7 @@ describe('actions', () => {
             ];
            
             const store = mockStore( {audioReducer : mockGlossaryData.audioGlossaryData} )
-            global.fetch = jest.fn();
+            axios.get = jest.fn();
             return store.dispatch(actions.addAudioNarrationForContainer(audioData,isGlossary)).then(() => {
                 actions.fetchAudioNarrationForContainer(audioData,isGlossary)
             });
@@ -392,7 +392,7 @@ describe('actions', () => {
                     addAudioNarrationFlag = true;
                 }
             }
-            global.fetch = jest.fn();
+            axios.get = jest.fn();
             await actions.addAudioNarrationForContainer(audioData)(dispatch);
             setTimeout(() => {
                 expect(openAudioFlag).toEqual(false)
@@ -425,7 +425,7 @@ describe('actions', () => {
                     addAudioNarrationFlag = false;
                 }
             }
-            global.fetch = jest.fn();
+            axios.get = jest.fn();
             await actions.addAudioNarrationForContainer(audioData)(dispatch);
             setTimeout(() => {
                 expect(openAudioFlag).toEqual(true)
@@ -441,7 +441,7 @@ describe('actions', () => {
                 format: "test"
             }
             const store = mockStore( {audioReducer : mockGlossaryData.audioGlossaryData} )
-            global.fetch = jest.fn();
+            axios.get = jest.fn();
             return store.dispatch(actions.addAudioNarrationForContainer(audioData,isGlossary)).then(() => {
                 actions.fetchAudioNarrationForContainer(audioData,isGlossary)
             });
@@ -451,7 +451,7 @@ describe('actions', () => {
             let isGlossary = true;
             let audioData = {}
             const store = mockStore( {audioReducer : mockGlossaryData.audioGlossaryData} )
-            global.fetch = jest.fn();
+            axios.get = jest.fn();
             return store.dispatch(actions.addAudioNarrationForContainer(audioData,isGlossary)).then(() => {
                 actions.fetchAudioNarrationForContainer(audioData,isGlossary)
             });

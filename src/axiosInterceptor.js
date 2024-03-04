@@ -1,4 +1,5 @@
 import axios from "axios"
+import { redirect } from "./config/redirectUtility";
 // eslint-disable-next-line import/prefer-default-export
 export const interceptor = () => {
     axios.defaults.withCredentials = true;
@@ -6,7 +7,7 @@ export const interceptor = () => {
         (res) => res, (err) => errorHandler(err))
 }
 
-const errorHandler = (err) => {
+export const errorHandler = (err) => {
     switch (err.response.status) {
         case 400:
             console.log('Invalid Request')
@@ -14,7 +15,6 @@ const errorHandler = (err) => {
         case 401:
             console.log('Unauthorized')
             redirect()
-            // sendDataToIframe({ type: "redirectToIAM" })
             break;
         case 403:
             console.log('This is Approved Content.Please create new version.')

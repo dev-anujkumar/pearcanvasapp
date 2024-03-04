@@ -95,7 +95,7 @@ describe('testingAssetPopoverActions',() => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         const users = [{name: 'Bob'}];
         const resp = { data: users, status: 200, json:jest.fn(() => users) };
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
            });
@@ -112,7 +112,7 @@ describe('testingAssetPopoverActions',() => {
         const users = [];
         const resp = { data: users,json: jest.fn(() => []) };
 
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
            });
@@ -126,7 +126,7 @@ describe('testingAssetPopoverActions',() => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d";
         const resp = {status:400,data:{}};   
 
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              reject(resp);
            });
@@ -140,7 +140,7 @@ describe('testingAssetPopoverActions',() => {
         let id = "/work/g"
         const users = [{name: 'Bob'}];
         const resp = { data: users, status: 200, json:jest.fn(() => users) };
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
            });
@@ -151,7 +151,7 @@ describe('testingAssetPopoverActions',() => {
         let id = "/work/g"
         const users = [{name: 'Bob'}];
         const resp = { data: users, status: 200, json:jest.fn(() => users) };
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              reject(resp);
            });
@@ -162,7 +162,7 @@ describe('testingAssetPopoverActions',() => {
         let id = "work"
         const users = [{name: 'Bob'}];
         const resp = { data: users, status: 200, json:jest.fn(() => users) };
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
            });
@@ -173,7 +173,7 @@ describe('testingAssetPopoverActions',() => {
         let id = "work"
         const users = [{name: 'Bob'}];
         const resp = { data: users, status: 200, json:jest.fn(() => users) };
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              reject(resp);
            });
@@ -204,7 +204,7 @@ describe('testingAssetPopoverActions',() => {
                 expect(obj.type).toEqual('IMAGES_FROM_API');
             }
         }
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
                 resolve(resp);
             });
@@ -224,7 +224,7 @@ describe('testingAssetPopoverActions',() => {
                 expect(obj.type).toEqual('IMAGES_FROM_API');
             }
         }
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.get = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
                 reject(resp);
             });
@@ -256,7 +256,7 @@ describe('testingAssetPopoverActions',() => {
         const users = [{id : '123'}];
         const resp = {data: users, json: jest.fn(() => [])};   
 
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.post = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
            });
@@ -281,7 +281,7 @@ describe('testingAssetPopoverActions',() => {
         const users = [{id : '123'}];
         const resp = {data: users, json: jest.fn(() => [])};   
 
-        global.fetch = jest.fn().mockImplementationOnce(() => {
+        axios.post = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              reject(resp);
            });
