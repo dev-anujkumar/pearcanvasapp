@@ -763,11 +763,13 @@ class SlateWrapper extends Component {
 
     // Create payload for the import word api call
     onImport = (importData, filename) => {
+        const importingUser = config?.fullName?.replace(',', ', ');
         const res = createPayloadForWordImport(importData, 0)
         this.setState({
             importData: {
                 data: res,
-                filename: filename.substring(0, filename.lastIndexOf('.docx'))
+                filename: filename?.substring(0, filename?.lastIndexOf('.docx')),
+                user: importingUser
             },
         })
     }
@@ -807,6 +809,7 @@ class SlateWrapper extends Component {
     // Handles Import button handling on preview file popup
     handleImportButton = (toggleValue, event) => {
         this.setState({showUploadFilePopup: toggleValue})
+        console.log(this.state.importData, "ddd");
         sendDataToIframe({type: 'proceed for import word file', message: this.state.importData})
         this.props.showBlocker(toggleValue);
         hideBlocker()
