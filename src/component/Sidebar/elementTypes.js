@@ -95,13 +95,7 @@ export default {
                 'secondary-marginalia-attribution': {
                     text: 'Marginalia with Attribution',
                     labelText: 'BQ',
-                    enum: 'MARGINALIA',
-                    attributes: {
-                        attribution: {
-                            text: 'Attribution',
-                            isEditable: true
-                        }
-                    }
+                    enum: 'MARGINALIA'
                 }
             }
         },
