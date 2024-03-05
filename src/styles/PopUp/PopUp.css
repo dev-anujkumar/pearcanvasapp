@@ -1499,18 +1499,18 @@ ol li.listItemNumeroUnoLowerRoman {
 
 /**Popup Buttons Focus Classes Start*/
 .primary {
-  outline-offset: 1.5px;
-  outline-style: solid;
-  outline-color: #005A70;
-  outline-width: 3px;
+  outline-offset: 1.5px !important;
+  outline-style: solid !important;
+  outline-color: #005A70 !important;
+  outline-width: 3px !important;
 }
 
 .secondary {
-  border: 1.5px solid #005A70;
-  outline-offset: 1.5px;
-  outline-style: solid;
-  outline-color: #005A70;
-  outline-width: 3px;
+  border: 1.5px solid #005A70 !important;
+  outline-offset: 1.5px !important;
+  outline-style: solid !important;
+  outline-color: #005A70 !important;
+  outline-width: 3px !important;
 }
 /**Popup Buttons Focus Classes End*/
 
