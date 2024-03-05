@@ -3207,7 +3207,43 @@ export class TinyMceEditor extends Component {
         else if (this.props.element.type === "poetry") {
             let tempIndex = this.props.index.split('-');
             let indexesLen = tempIndex.length;
-            if ((this.props.poetryField === "creditsarray" || this.props.poetryField === "formatted-subtitle") && !this.props.currentElement) {
+            if(this.props.poetryField === "creditsarray") {
+                if (indexesLen === 2) {
+                    switch (tempIndex[1]) {
+                        case "4":
+                            if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                                return false;
+                            }
+                    }
+                } else if (indexesLen === 3) {
+                    switch (tempIndex[2]) {
+                        case "4":
+                            if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                                return false;
+                            }
+                    }
+                } else if (indexesLen === 4) {
+                    switch (tempIndex[3]) {
+                        case "4":
+                            if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                                return false;
+                            }
+                    }
+                } else if (indexesLen === 5) {
+                    switch (tempIndex[4]) {
+                        case "4":
+                            if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                                return false;
+                            }
+                    }
+                }
+                elementId = this.props.elementId
+                let footNoteSpan = document.getElementById('footnote-attacher');
+                if (!footNoteSpan) {
+                    editor.selection.setContent('<span id="footnote-attacher"></span>');
+                }
+            }
+            else if (this.props.poetryField === "formatted-subtitle" && !this.props.currentElement) {
                 let footNoteSpan = document.getElementById('footnote-attacher');
                 if (!footNoteSpan) {
                     editor.selection.setContent('<span id="footnote-attacher"></span>');
@@ -4286,6 +4322,9 @@ export class TinyMceEditor extends Component {
                 }
             }).catch((err) => console.log(err));
             this.setToolbarByElementType();
+        }
+        if (this.props?.element?.type === "poetry" && !this.props?.currentElement && !this.props?.element?.contents?.creditsarray) {
+            this.props.createPoetryElements("creditsarray", true, this.props.index, this.props.element)
         }
         /**
          * case - continuing with toggling glossary & footnote popup
