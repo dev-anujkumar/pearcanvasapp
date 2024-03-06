@@ -109,6 +109,7 @@ class SlateWrapper extends Component {
                 importCompleteStatus: true,
                 showSnackbarOnce: true
             })
+            sendDataToIframe({'type': 'importStatusChangedToCompletedFromInProgress', 'message': true})
         }
         if(prevProps?.newlyPdfSlateCreated) {
             this.props.pdfSlatedNavigated(false)
