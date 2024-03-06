@@ -27,4 +27,5 @@ export const errorHandler = (err) => {
         default:
             console.log('Unwanted Error')
     }
+    return Promise.reject(err);
 }
