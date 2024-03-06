@@ -203,8 +203,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
     try {
         if (fileExtension != 'mp3' && fileExtension != 'ogg' && fileExtension != 'opus' && fileExtension != 'wav') {
           //  document.getElementsByClassName('.audio-block').style.pointerEvents  = "none"
-            let redirectionURL = await fetch(fileName);
-            let mp3LocationData = redirectionURL?.url;
+            let redirectionURL = await axios.get(fileName)
+            let mp3LocationData = redirectionURL?.request.responseURL;
             audioData = {
                 "narrativeAudioUrn": audioData?.narrativeAudioUrn || "4567",
                 "location": mp3LocationData,

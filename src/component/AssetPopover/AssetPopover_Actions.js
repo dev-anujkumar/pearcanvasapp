@@ -13,6 +13,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 import { slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { CONTENT_TYPE } from '../../constants/Element_Constants.js';
+import axios from 'axios';
 let currentlySearching = false;
 let searchterm = "";
 
@@ -84,14 +85,10 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
     versionUrn = config.projectUrn;
 
     currentlySearching = true;
-    return dispatch => fetch(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        
-      }
-    }).then(res => res.json()).then(
-      (data) => {
+    return dispatch => axios.get(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
+      headers:{}
+    }).then((res) => {
+        const data = res.data
         currentlySearching = false;
         dispatch({
           type: IMAGES_FROM_API,
@@ -141,18 +138,14 @@ export const assetPopoverPopup = (args) => {
 export async function getAssetPopoverId(workUrn) {
   try {
     sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-    let response = await fetch(config.NARRATIVE_API_ENDPOINT + 'v2', {
-      method: 'POST',
-      credentials: 'include',
+    let response = await axios.post(config.NARRATIVE_API_ENDPOINT + 'v2', "", {
       headers: {
         'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
-        
       }
     })
-
-    let data = await response.json()
-    sendDataToIframe({'type': HideLoader,'message': { status: false }});
+    const data = response.data
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     return data.id
   } catch (err) {
     sendDataToIframe({'type': HideLoader,'message': { status: false }});
@@ -167,17 +160,14 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
 
   try {
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-    let response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
+    let response = await axios.get(url, {
       headers: {
-        'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
-        
-      }
-
+        'Content-Type': CONTENT_TYPE
+      },
+      data:{}
     })
-    let data = await response?.json()
+    let data = await response?.data
     if (data.length && response?.status == 200) {
       let latestIndex = 0;
       for (let index = 1; index < data.length; index++) {
@@ -220,16 +210,14 @@ export const getElementVersionContent = async (elementId) =>{
     try {
       let workUrl = config.NARRATIVE_READONLY_ENDPOINT+"v2/" + elementId + "/content"
       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-      let response = await fetch(workUrl, {
-        method: 'GET',
-        credentials: 'include',
+      let response = await axios.get(workUrl, {
         headers: {
           'Content-Type': CONTENT_TYPE,
           'apikey': config.APO_API_KEY,
-          
+
         }
       })
-      let data = await response.json()
+      let data = await response.data
           sendDataToIframe({'type': HideLoader,'message': { status: false }});
           currentlyLinkedData["id"] = data?.id ? data.id : "";
           currentlyLinkedData["title"] = data?.title?.text ? data.title.text : "";
