@@ -223,3 +223,25 @@ export const saveLockDetails = (lockInfo) => (dispatch, getState) =>{
         })
     }
 }
+
+/**
+  * Action Creator
+  * Release slate lock on tab close
+  * @param {String} projectUrn Project URN
+  * @param {String} slateId Slate manifest URN
+  */
+export const releaseSlateLockOnTabClose = (projectUrn, slateId) => {
+    let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
+    let data = {
+        projectUrn,
+        slateId,
+        firstName: getCookieByName('FIRST_NAME'),
+        userName: getCookieByName('USER_NAME')
+    }
+    fetch(`${url}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        keepalive: true
+    });
+}
