@@ -16,7 +16,7 @@ import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole, stopRerendering } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus, releaseSlateLock, saveLockDetails } from './SlateLock_Actions'
+import { getSlateLockStatus, releaseSlateLock, saveLockDetails, releaseSlateLockOnTabClose } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
@@ -96,6 +96,7 @@ export class CanvasWrapper extends Component {
             localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId);
+            this.props.releaseSlateLockOnTabClose(config.projectUrn, slateId);
         }
         // Trigger slate level save api on browser refresh
         setTimeout(() => {
@@ -410,6 +411,7 @@ export default connect(
         saveSelectedAlfrescoElement,
         currentNodeAncestorData,
         saveLockDetails,
-        setImportMessageForWordImport
+        setImportMessageForWordImport,
+        releaseSlateLockOnTabClose
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
