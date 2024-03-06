@@ -95,7 +95,7 @@ export class CanvasWrapper extends Component {
             localStorage.setItem('paramDetails', JSON.stringify(paramDetails));
             localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-            this.props.releaseSlateLock(config.projectUrn, slateId);
+            // this.props.releaseSlateLock(config.projectUrn, slateId);
             this.props.releaseSlateLockOnTabClose(config.projectUrn, slateId);
         }
         // Trigger slate level save api on browser refresh
