@@ -7,6 +7,7 @@ let cypressConfig = {
     TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
     TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/tctx` :"http://localhost:5000/tctx",
     TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
+    IES_REDIRECT_URL: 'https://iam-stage.pearson.com/auth/loginRedirect.html?tree=Login&url=',
     getENVConfig: process.env.NODE_ENV === "development" ? `https://pace-${ENV_NAME}.pearson.com/cypress/api/canvas/cypress-api/` : '/cypress/api/canvas/cypress-api/',
     TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tinymce-srvr/ephox-spelling/',
     CYPRESS_API_ENDPOINT : `https://pace-${ENV_NAME}.pearson.com/cypress/api/canvas/cypress-api/`,
