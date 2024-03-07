@@ -105,7 +105,7 @@ export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio',
 export const allowedParentType = ['popup', 'showhide']
 export const containersInSH = ['CONTAINER', 'CITATION', 'WORKED_EXAMPLE', 'POETRY'];
 export const interactivetype = ['3rd-party', 'web-link'];
-
+export const outputType = ["digital","print"];
 export const TE_POP_UP_HEADER_TEXT = 'Select an Image';
 export const TE_POP_UP_NORMAL_TEXT = 'Please select an image to open it in Alfresco for editing in a different tab on your browser';
 // PCAT-18694 - read only element labels for showing grey border
