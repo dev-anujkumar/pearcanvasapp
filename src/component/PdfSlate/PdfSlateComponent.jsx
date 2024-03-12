@@ -4,7 +4,7 @@ import Tooltip from '../Tooltip';
 import {CYPRESS_PLUS_TOOLTIP} from '../../constants/ToolTip_Constant'
 function PdfSlateComponent(props)  {
 
-	const { showDetails, pdfId, filetitle, OpenAlfresco ,element} = props;
+	const { showDetails, pdfId, filetitle, OpenAlfresco ,element, slateStatus} = props;
 
 	function showPDFDetails() {
 		return (
@@ -38,7 +38,7 @@ function PdfSlateComponent(props)  {
 			{
 				showDetails ? showPDFDetails() :
 				<div
-					className = "slate_assessment_type_button add-pdf-button"
+					className = {`slate_assessment_type_button add-pdf-button ${(config?.isCypressPlusEnabled && slateStatus === 'approved') ? 'disable_add_pdf_button': ''}`}
 					onClick = { OpenAlfresco }
 				>
 					Add PDF

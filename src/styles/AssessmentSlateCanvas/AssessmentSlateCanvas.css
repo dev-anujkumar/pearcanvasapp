@@ -512,3 +512,8 @@ font-weight: bold;
 .time-updated-embedded {
   padding-top: 1px;
 }
+
+.disable_add_pdf_button {
+  opacity: 0.5;
+  pointer-events: none;
+}

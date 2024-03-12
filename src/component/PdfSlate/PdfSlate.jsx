@@ -139,6 +139,7 @@ class PdfSlate extends Component {
 					filetitle = {this.state.filetitle}
 					OpenAlfresco = {this.OpenAlfresco}
 					element={this.props.element}
+					slateStatus= {this.props?.slateLevelData[config?.slateManifestURN]?.status}
 				/>
 				<TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
@@ -169,7 +170,8 @@ const mapStateToProps = (state) => {
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isCiteChanged : state.alfrescoReducer.isCiteChanged,
-        changedSiteData: state.alfrescoReducer.changedSiteData
+        changedSiteData: state.alfrescoReducer.changedSiteData,
+		slateLevelData: state.appStore.slateLevelData
     }
 }
 export default connect(mapStateToProps, dispatchActions)(PdfSlate);
