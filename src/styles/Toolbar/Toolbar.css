@@ -150,6 +150,7 @@
 }
 .learningobjectivedropdown ul ,.learningobjectivedropdown2 ul{
   padding:0;
+  margin: 0;
 }
 .slate-tag-icon, .audio{
   display:none;
