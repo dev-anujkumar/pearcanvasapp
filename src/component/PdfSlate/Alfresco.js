@@ -30,7 +30,7 @@ export const handleC2MediaClick = (props) => {
                     rootNodeId: citeNodeRef,
                     elementId: props.element.id,
                     currentAsset: { type: "Pdf" },
-                    defaultCategory:'other'
+                    defaultCategory:'pdf'
                 }
                 sendDataToIframe({ 'type': LAUNCH_CAT_TOOL, 'message': messageObj })
                 const messageDataToSave = {
