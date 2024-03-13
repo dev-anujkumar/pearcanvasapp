@@ -37,11 +37,11 @@ const _Toolbar = props => {
     useEffect(() => {
         setLODropdown(false);
         hideSlateTagIcon()
-      }, [props.setSlateEntity, props.setSlateParent, props.importDataFromResponse?.importStatus]);
+      }, [props.setSlateEntity, props.setSlateParent, props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus]);
 
     useEffect(() => {
         changeAudioNarration()
-    }, [props.openAudio ,props.addAudio, props.importDataFromResponse?.importStatus])
+    }, [props.openAudio ,props.addAudio, props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus])
 
     /**
     * Function for show/hide slate tag icon
