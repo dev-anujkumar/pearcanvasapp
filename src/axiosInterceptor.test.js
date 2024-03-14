@@ -1,39 +1,39 @@
 import axios from 'axios';
 import { errorHandler, interceptor } from './axiosInterceptor.js';
 
-xdescribe('errorHandler', () => {
-    it('should log "Invalid Request" for status code 400', () => {
+describe('errorHandler', () => {
+    it('should log "Invalid Request" for status code 400', async () => {
         const err = { response: { status: 400 } };
         console.log = jest.fn();
-        errorHandler(err);
+        await expect(errorHandler(err)).rejects.toEqual(err);
         expect(console.log).toHaveBeenCalledWith('Invalid Request');
     });
 
-    it('should log "Unauthorized" and call redirect for status code 401', () => {
+    it('should log "Unauthorized" and call redirect for status code 401', async () => {
         const err = { response: { status: 401 } };
         console.log = jest.fn();
-        errorHandler(err);
+        await expect(errorHandler(err)).rejects.toEqual(err);
         expect(console.log).toHaveBeenCalledWith('Unauthorized');
     });
 
-    it('should log "This is Approved Content.Please create new version." for status code 403', () => {
+    it('should log "This is Approved Content.Please create new version." for status code 403', async () => {
         const err = { response: { status: 403 } };
         console.log = jest.fn();
-        errorHandler(err);
+        await expect(errorHandler(err)).rejects.toEqual(err);
         expect(console.log).toHaveBeenCalledWith('This is Approved Content.Please create new version.');
     });
 
-    it('should log "Server Error: Please check you token" for status code 500 and call redirect if response data contains "401" or "UNAUTHORIZED"', () => {
+    it('should log "Server Error: Please check you token" for status code 500 and call redirect if response data contains "401" or "UNAUTHORIZED"', async () => {
         const err = { response: { status: 500, data: "UNAUTHORIZED" } };
         console.log = jest.fn();
-        errorHandler(err);
+        await expect(errorHandler(err)).rejects.toEqual(err);
         expect(console.log).toHaveBeenCalledWith('Server Error: Please check you token', err.response);
     });
 
-    it('should log "Unwanted Error" for any other status code', () => {
+    it('should log "Unwanted Error" for any other status code', async () => {
         const err = { response: { status: 404 } };
         console.log = jest.fn();
-        errorHandler(err);
+        await expect(errorHandler(err)).rejects.toEqual(err);
         expect(console.log).toHaveBeenCalledWith('Unwanted Error');
     });
 });
