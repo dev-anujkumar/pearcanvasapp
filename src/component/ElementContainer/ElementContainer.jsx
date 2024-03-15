@@ -435,7 +435,7 @@ class ElementContainer extends Component {
         
         // disabling Add comment icon for TCC Element in TOC
         if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
-            this.handleCommunication(this.props.element.contentUrn);
+            this.handleCommunication(this.props.element.id);
         }
     }
 
