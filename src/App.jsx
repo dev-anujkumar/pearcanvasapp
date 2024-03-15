@@ -19,7 +19,7 @@ import { modifyObjKeys } from './js/appUtils';
 import './styles/style.css';
 import './styles/bookStyle.css';
 
-console.log("!!!!! ---- canvas-ui.v1.0.27 ---- !!!!!")
+console.log("!!!!! ---- canvas-ui.v1.0.28 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
