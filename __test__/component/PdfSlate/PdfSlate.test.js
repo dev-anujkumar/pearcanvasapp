@@ -7,6 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import axios from 'axios';
 import config from '../../../src/config/config';
 import PdfSlate from '../../../src/component/PdfSlate/PdfSlate';
+import { listMockData } from '../../../fixtures/slateTestingData';
 
 const alfresco = {
    "alfresco":{
@@ -63,7 +64,11 @@ let initialState = {
 	launchAlfrescoPopup: true,
 	editor: true,
 	Permission: false
-}};
+	},
+	appStore: {
+    	slateLevelData: listMockData
+	}
+};
 const event = {
 	stopPropagation: jest.fn(),
 	preventDefault: jest.fn()
@@ -379,7 +384,10 @@ describe('1. PDF Slate test cases', () => {
 				launchAlfrescoPopup: false,
 				editor: true,
 				Permission: false
-			}};
+			},
+			appStore: {
+				slateLevelData: listMockData}
+			};
 			const store = mockStore(initialState2);
     		const component = mount(<Provider store={store}><PdfSlate {...props2} /></Provider>);
 			const compInstance = component.find('PdfSlate').instance();
