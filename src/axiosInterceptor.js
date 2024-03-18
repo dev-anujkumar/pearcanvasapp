@@ -1,5 +1,6 @@
 import axios from "axios"
 import { redirect } from "./config/redirectUtility";
+import config from "./config/config";
 // eslint-disable-next-line import/prefer-default-export
 export const interceptor = () => {
     axios.defaults.withCredentials = true;
@@ -14,7 +15,8 @@ export const errorHandler = (err) => {
             break;
         case 401:
             console.log('Unauthorized')
-            redirect()
+            if (!err?.response?.config?.url.includes(config.ALFRESCO_EDIT_METADATA))
+                redirect()
             break;
         case 403:
             console.log('This is Approved Content.Please create new version.')
