@@ -485,6 +485,8 @@ function CommunicationChannel(WrappedComponent) {
                 case 'lockUserDetailsFromCount' :
                     this.props.saveLockDetails(message.lockInfo)
                     break;
+                case 'showToast':
+                    showNotificationOnCanvas('Word File import is completed');
             }
         }
 

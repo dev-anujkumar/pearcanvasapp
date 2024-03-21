@@ -637,9 +637,11 @@ class SlateWrapper extends Component {
                     showSnackbarOnce: false
                 })
             }, 3000);
+            let toastMsgPresent = document?.getElementById('link-notification')?.innerText
             return (
-                <Snackbar open={this.state.importCompleteStatus} className='imported-alert'
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Snackbar id='sssss' open={this.state.importCompleteStatus} className='imported-alert'
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} 
+                    style={toastMsgPresent ? { position: 'fixed', bottom: '70px', left: '50%', transform: 'translateX(-50%)' } : {}}>
                     <Alert iconMapping={{
                         success: <CheckCircleOutline fontSize="inherit" />,
                     }}
