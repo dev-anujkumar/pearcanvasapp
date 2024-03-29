@@ -60,7 +60,8 @@ import {
     SAVE_IMPORT_MESSAGE,
     SET_IMPORT_DETAILS_ACTION,
     PDF_SLATE_NAVIGATED,
-    CONDITIONAL_CONTENT_STATUS
+    CONDITIONAL_CONTENT_STATUS,
+    SET_CURRENT_USER_DETAILS
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -917,6 +918,16 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: CONDITIONAL_CONTENT_STATUS,
             payload: true
+        })).toEqual(output);
+    });
+        it('case 63- SET_CURRENT_USER_DETAILS ', () => {
+        let output = {
+            ...initialState,
+            currentUserDetails: {}
+        }
+        expect(reducer(initialState, {
+            type: SET_CURRENT_USER_DETAILS,
+            payload: {}
         })).toEqual(output);
     });
 });

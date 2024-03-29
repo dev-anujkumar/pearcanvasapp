@@ -554,37 +554,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear()
         })
     });
-    describe('Test-2- fetchAuthUser', () => {
-        it('Test-2.1-fetchAuthUser', () => {
-            let dispatch = jest.fn();
-            let responseData = { data: slateTestData.fetchAuthUserResponse }
-            const spyFunction = jest.spyOn(canvasActions, 'fetchAuthUser')
-            axios.get = jest.fn(() => Promise.resolve(responseData))
-            canvasActions.fetchAuthUser()(dispatch);
-            expect(spyFunction).toHaveBeenCalled();
-            expect(dispatch).not.toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
-        it('Test-2.2-fetchAuthUser - Catch Block', () => {
-            let dispatch = jest.fn();
-            const spyFunction = jest.spyOn(canvasActions, 'fetchAuthUser')
-            axios.get = jest.fn(() => Promise.reject({}))
-            canvasActions.fetchAuthUser()(dispatch);
-            expect(spyFunction).toHaveBeenCalled();
-            expect(dispatch).not.toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
-        it('Test-2.3-fetchAuthUser - then - else cases', () => {
-            let dispatch = jest.fn();
-            let responseData = { data: slateTestData.fetchAuthUserResponse2 }
-            const spyFunction = jest.spyOn(canvasActions, 'fetchAuthUser')
-            axios.get = jest.fn(() => Promise.resolve(responseData))
-            canvasActions.fetchAuthUser()(dispatch);
-            expect(spyFunction).toHaveBeenCalled();
-            expect(dispatch).not.toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
-    });
+
     describe('Test-3- setActiveElement', () => {
         config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
         it('Test-3.1-setActiveElement - Citations', () => {
@@ -3424,7 +3394,20 @@ it('Test: setTocSlateLabel function', () => {
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
+it('Test: setCurrentUserDetails function', () => {
+    const expectedActions = {
+        type: "SET_CURRENT_USER_DETAILS",
+        payload: {}
+    };
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
 
+    const spyFunction = jest.spyOn(canvasActions, 'setCurrentUserDetails')
+    canvasActions.setCurrentUserDetails({})(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
 it('Testing fetchLOBList - try block', async () => {
     const response = {
         status: 200,
