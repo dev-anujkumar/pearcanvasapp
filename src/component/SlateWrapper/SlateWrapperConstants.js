@@ -249,4 +249,4 @@ export const ELEMENT_ON_SLATE_CREATION_INPROGRESS = 'Conversion on slate is in p
 export const IMPORTED_DATA_STATUS = 'imported_data_status'
 export const DIGITAL = 'digital'
 export const PRINT = 'print'
-export const PDF_AND_ASSESSMENT_TYPE = ["element-pdf", "element-assessment"]
+export const PDF_ASSESSMENT_AND_TCC_TYPE = ["element-pdf", "element-assessment", "element-tcc"]
