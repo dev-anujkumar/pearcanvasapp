@@ -1920,12 +1920,6 @@ export const getDefaultPlaybackMode = (elementData) => {
     }
 }
 /**
- * Set import message in canvas
- */
-export const setImportMessageForWordImport = () => (dispatch) => {
-    return dispatch({ type: 'save-import-message', payload: true })
-}
-/**
  * Set isConditionalContent status
  */
 export const setCondtionalContentStatus = (isConditionalContent) => (dispatch) => {
