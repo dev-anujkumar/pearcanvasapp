@@ -402,3 +402,13 @@ p.blockquoteTextCredit {
     width: 22px;
     margin-bottom: -2px;
 }
+
+.p .imageAssetContent, .h1 .imageAssetContent, .h2 .imageAssetContent, .h3 .imageAssetContent,
+.h4 .imageAssetContent, .h5 .imageAssetContent, .h6 .imageAssetContent, .bq .imageAssetContent,
+.pq .imageAssetContent, .lo .imageAssetContent, .hs .imageAssetContent, .ol .imageAssetContent,
+.ul .imageAssetContent
+{
+    max-height: 1.7em !important;
+    width: auto !important;
+    vertical-align: middle !important;
+}
