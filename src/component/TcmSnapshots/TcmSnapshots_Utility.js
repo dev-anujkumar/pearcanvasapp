@@ -431,8 +431,8 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
             elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) :
                 JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
             firstName: currentUserDetails?.firstName || '',
-            lastName: currentUserDetails?.lastName,
-            userId: currentUserDetails?.userId,
+            lastName: currentUserDetails?.lastName || '',
+            userId: currentUserDetails?.userId || '',
             ...defaultKeys
         };
         if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) ||
