@@ -605,6 +605,10 @@ font-size: 14px;
   width: 1000px !important;
 }
 
+.preview-file-popup-banner{
+  width: 1000px !important;
+}
+
 .import-and-drop-file-heading{
   color: var(--text-primary, #081E27);
 font-feature-settings: 'clig' off, 'liga' off;
@@ -1672,6 +1676,14 @@ padding-left: 9px;
   .word-file-import .tox-tinymce {
     height: 240px !important;
   }
+  .preview-file-popup-banner {
+    top: 0vh !important;
+    width: 700px !important;
+    left: 10vh
+  }
+  .word-file-import-banner .tox-tinymce {
+    height: 240px !important;
+  }
   .upload-file-popup {
     top: 5vh !important
   }
@@ -1701,6 +1713,14 @@ padding-left: 9px;
     width: 800px !important;
     left: 4vh;
   }
+  .preview-file-popup-banner {
+    top: 0vh !important;
+    width: 800px !important;
+    left:12vh !important;
+  }
+  .word-file-import-banner .tox-tinymce {
+    height: 268px !important;
+  }
   .word-file-import .tox-tinymce {
     height: 310px !important;
   }
@@ -1714,6 +1734,9 @@ padding-left: 9px;
     top: 18vh
   }
   .preview-file-popup {
+    top: 10vh !important
+  }
+  .preview-file-popup-banner {
     top: 10vh !important
   }
   .upload-file-popup {
@@ -1732,6 +1755,13 @@ padding-left: 9px;
     .word-file-import .tox-tinymce {
       height: 345px !important;
   }
+  .preview-file-popup-banner {
+    top: 8vh !important;
+      width: 900px !important;
+    }
+    .word-file-import-banner .tox-tinymce {
+      height: 345px !important;
+  }
 }
 
 @media screen and (min-width: 1920px) and (max-width: 2560px){
@@ -1744,5 +1774,12 @@ padding-left: 9px;
   }
   .word-file-import .tox-tinymce {
     height: 440px !important;
+}
+.preview-file-popup-banner {
+  top: 12vh !important;
+  width: 1100px !important;
+}
+.word-file-import-banner .tox-tinymce {
+  height: 440px !important;
 }
 }
