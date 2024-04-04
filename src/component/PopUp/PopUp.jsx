@@ -870,7 +870,7 @@ class PopUp extends React.Component {
                     </div>
                 <div className='preview-container'>
                 </div>
-                    <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} onImport={this.props.onImport} enableImportButton={this.enableImportButton} togglePopup={props.togglePopup} isBannerVisible ={props.isBannerVisible}/> 
+                    <PreviewWordFile fileToBeUploaded={this.props.fileToBeUploaded} onImport={this.props.onImport} enableImportButton={this.enableImportButton} togglePopup={props.togglePopup} isBannerVisible ={props?.isBannerVisible}/>
                 </div>
             )
         }
