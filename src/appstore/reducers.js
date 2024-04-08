@@ -67,7 +67,8 @@ import {
     SAVE_IMPORT_MESSAGE,
     SET_IMPORT_DETAILS_ACTION,
     PDF_SLATE_NAVIGATED,
-    CONDITIONAL_CONTENT_STATUS
+    CONDITIONAL_CONTENT_STATUS,
+    SET_CURRENT_USER_DETAILS
 } from '../constants/Action_Constants';
 
 /**
@@ -145,7 +146,8 @@ const INITIAL_STATE = {
     importMsgCanvas: false,
     importDataFromResponse: {},
     newlyPdfSlateCreated: {},
-    isConditionalContent: false
+    isConditionalContent: false,
+    currentUserDetails:{}
 };
 
 const INITIAL_ACTION = {
@@ -484,6 +486,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 isConditionalContent: action.payload
+            }
+        case SET_CURRENT_USER_DETAILS:
+            return {
+                ...state,
+                currentUserDetails: action.payload
             }
         default:
             return state;

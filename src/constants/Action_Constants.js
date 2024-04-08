@@ -261,3 +261,6 @@ export const PDF_SLATE_NAVIGATED = 'PDF_SLATE_NAVIGATED'
 
 export const CONDITIONAL_CONTENT_STATUS = 'CONDITIONAL_CONTENT_STATUS'
 export const SLATE_TYPES_FOR_CONDITIONAL_CONTENT = ['manifest', 'chapterintro', 'volumeintro', 'partintro']
+
+/*----------------- CURRENT USER DETAILS ---------*/
+export const SET_CURRENT_USER_DETAILS = "SET_CURRENT_USER_DETAILS"

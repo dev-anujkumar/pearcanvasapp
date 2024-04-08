@@ -112,6 +112,7 @@ jest.mock('../../../src/component/Sidebar', () => {
     }
 })
 jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
+
     return {
         getSlateLockStatus: function () {
             return {
@@ -142,9 +143,7 @@ jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
                 userId: 'vmetcda'
             })
         },
-        releaseSlateLockWithCallback: ({ }, { }, response) => {
-            response({})
-        }
+        releaseSlateLockWithCallback: jest.fn()
     }
 })
 jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {

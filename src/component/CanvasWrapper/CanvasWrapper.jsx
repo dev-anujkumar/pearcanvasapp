@@ -20,9 +20,9 @@ import { getSlateLockStatus, releaseSlateLock, saveLockDetails, releaseSlateLock
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs,
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs,
      setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus,
-      isSubscribersSubscribedSlate,setTocSlateLabel, setImportMessageForWordImport } from './CanvasWrapper_Actions';
+      isSubscribersSubscribedSlate,setTocSlateLabel, setImportMessageForWordImport, setCurrentUserDetails } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -86,6 +86,7 @@ export class CanvasWrapper extends Component {
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
             let slateEntityURN = this.props?.popupParentSlateData?.isPopupSlate ? this.props?.popupParentSlateData?.parentSlateEntityUrn : config.slateEntityURN;
+            const currentUserDetails = this.props.currentUserDetails
             const paramDetails = {
                 'slateEntityURN': slateEntityURN,
                 'projectUrn': config.projectUrn,
@@ -96,7 +97,7 @@ export class CanvasWrapper extends Component {
             localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             // this.props.releaseSlateLock(config.projectUrn, slateId);
-            this.props.releaseSlateLockOnTabClose(config.projectUrn, slateId);
+            this.props.releaseSlateLockOnTabClose(config.projectUrn, slateId, currentUserDetails);
         }
         // Trigger slate level save api on browser refresh
         setTimeout(() => {
@@ -333,7 +334,8 @@ const mapStateToProps = state => {
         locationData: state.alfrescoReducer.locationData,
         calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote,
         calledFromImageGlossaryFootnote: state.alfrescoReducer.calledFromImageGlossaryFootnote,
-        popupParentSlateData: state.autoNumberReducer.popupParentSlateData
+        popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
+        currentUserDetails: state.appStore.currentUserDetails,
     };
 };
 
@@ -356,7 +358,6 @@ export default connect(
         setSlateType,
         setSlateEntity,
         publishContent,
-        fetchAuthUser,
         handleSlateRefresh,
         logout,
         getProjectDetails,
@@ -412,6 +413,7 @@ export default connect(
         currentNodeAncestorData,
         saveLockDetails,
         setImportMessageForWordImport,
-        releaseSlateLockOnTabClose
+        releaseSlateLockOnTabClose,
+        setCurrentUserDetails
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

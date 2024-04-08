@@ -154,7 +154,6 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
                     config.book_title = message.name;
-                    this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
@@ -164,6 +163,11 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
+                    break;
+                case 'updateUserDetail':
+                    config.userEmail = message.email;
+                    config.fullName = message.lastName + ',' + message.firstName
+                    this.props.setCurrentUserDetails(message)
                     break;
                 case 'statusForSave':
                     this.handleLOData(message);
@@ -737,7 +741,8 @@ function CommunicationChannel(WrappedComponent) {
          */
         releaseLockAndLogout = () => {
             const { projectUrn, slateManifestURN } = config;
-            releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
+            const { currentUserDetails } = this.props
+            releaseSlateLockWithCallback(projectUrn, slateManifestURN, currentUserDetails, (res) => {
                 setTimeout(this.props.logout, 500)
             })
         }
@@ -746,7 +751,8 @@ function CommunicationChannel(WrappedComponent) {
             let projectUrn = config.projectUrn
             let slateId = config.slateManifestURN
             if (projectUrn && slateId) {
-                releaseSlateLockWithCallback(projectUrn, slateId, (response) => {
+                const { currentUserDetails } = this.props
+                releaseSlateLockWithCallback(projectUrn, slateId, currentUserDetails, (response) => {
                     this.redirectDashboard();
                 });
             }
@@ -882,7 +888,7 @@ function CommunicationChannel(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
-            const { projectSubscriptionDetails } = this.props;
+            const { projectSubscriptionDetails, currentUserDetails } = this.props;
             localStorage.removeItem('newElement');
             config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
@@ -896,7 +902,7 @@ function CommunicationChannel(WrappedComponent) {
             if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
                 sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
             }
-            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
+            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, currentUserDetails, (response) => {
                 config.page = 0;
                 config.scrolling = true;
                 config.totalPageCount = 0;
