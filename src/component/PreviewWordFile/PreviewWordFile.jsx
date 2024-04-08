@@ -122,7 +122,7 @@ const PreviewWordFile = (props) => {
     }, [])
 
     return(
-        <div className="word-file-import">
+        <div className={`${props?.isBannerVisible ? 'word-file-import-banner' : 'word-file-import'}`}>
             <div className="sub-heading-container">
                 <div className="original-text">Original - {props?.fileToBeUploaded?.name}</div>
                 <div className="converted-text">Converted-Preview</div>

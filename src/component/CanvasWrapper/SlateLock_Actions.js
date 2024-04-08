@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
-import { getCookieByName, hasReviewerRole, sendDataToIframe } from '../../constants/utility';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave.js';
 import { RELEASE_SLATE_LOCK_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 
@@ -90,20 +90,20 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
  * @param {*} slateId Slate manifest URN
  * @param {*} lockDuration Lock duration
  */
-export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) => {
+export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch,getState) => {
     if(process.env.NODE_ENV === "development"){
         return false
     }
     if(hasReviewerRole()) return;
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/setlock`
-
+    const currentUserDetails = getState()?.appStore?.currentUserDetails
     let data = {
         projectUrn,
         slateId,
         lockDuration,
-        firstName: getCookieByName('FIRST_NAME'),
-        lastName: getCookieByName('LAST_NAME'),
-        userName: getCookieByName('USER_NAME')
+        firstName: currentUserDetails?.firstName || "",
+        lastName: currentUserDetails?.lastName || "",
+        userName: currentUserDetails?.userId || ""
     }
     return axios.post(url, data, {
         headers: {
@@ -127,13 +127,14 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRole) => (dispatch) => {
+export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRole) => (dispatch,getState) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
+    const currentUserDetails = getState()?.appStore?.currentUserDetails
     let data = {
         projectUrn,
         slateId,
-        firstName: getCookieByName('FIRST_NAME'),
-        userName: getCookieByName('USER_NAME')
+        firstName: currentUserDetails?.firstName || "",
+        userName: currentUserDetails?.userId || ""
     }
     if (userRole) data.roleId = userRole
     return axios.post(url, data, {
@@ -163,13 +164,13 @@ export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRol
  * @param {*} slateId Slate manifest URN
  * @param {*} callback Callback method to be executed
  */
-export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
+export const releaseSlateLockWithCallback = (projectUrn, slateId, currentUserDetails, callback) =>{
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId,
-       firstName: getCookieByName('FIRST_NAME'),
-       userName: getCookieByName('USER_NAME')
+        firstName: currentUserDetails?.firstName || "",
+        userName: currentUserDetails?.userId || ""
     }
     return axios.post(url, data, {
         headers: {
@@ -230,13 +231,13 @@ export const saveLockDetails = (lockInfo) => (dispatch, getState) =>{
   * @param {String} projectUrn Project URN
   * @param {String} slateId Slate manifest URN
   */
-export const releaseSlateLockOnTabClose = (projectUrn, slateId) => {
+export const releaseSlateLockOnTabClose = (projectUrn, slateId, currentUserDetails) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
         projectUrn,
         slateId,
-        firstName: getCookieByName('FIRST_NAME'),
-        userName: getCookieByName('USER_NAME')
+        firstName: currentUserDetails?.firstName || "",
+        userName: currentUserDetails?.userId || ""
     }
     fetch(`${url}`, {
         method: "POST",

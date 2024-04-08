@@ -420,6 +420,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
     try{
         let res = Object.assign({}, wipData);
         delete res["html"];
+        const currentUserDetails = store?.getState()?.appStore?.currentUserDetails
         let currentSnapshot = {
             elementUrn: elementDetails.elementUrn,
             snapshotUrn: elementDetails.elementUrn,
@@ -428,7 +429,10 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
             elementVersionUrn: res?.versionUrn || res?.id,
             elementEntityUrn: res?.contentUrn,
             elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) :
-            JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
+                JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
+            firstName: currentUserDetails?.firstName || '',
+            lastName: currentUserDetails?.lastName || '',
+            userId: currentUserDetails?.userId || '',
             ...defaultKeys
         };
         if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) ||

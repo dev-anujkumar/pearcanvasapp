@@ -135,7 +135,9 @@ let cypressConfig = {
     elementSlateRefresh: false,
     tcmStatusPopupGlossary: false,
     pendingTcmStatus: false,
-    updatedAssessmentAPITriggered: false
+    updatedAssessmentAPITriggered: false,
+    firstName: '',
+    lastName: ''
 }
 
 export default cypressConfig;

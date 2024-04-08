@@ -37,7 +37,8 @@ import {
     SET_TOC_SLATE_LABEL,
     SET_IMPORT_DETAILS_ACTION,
     CONDITIONAL_CONTENT_STATUS,
-    SLATE_TYPES_FOR_CONDITIONAL_CONTENT
+    SLATE_TYPES_FOR_CONDITIONAL_CONTENT,
+    SET_CURRENT_USER_DETAILS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1267,42 +1268,6 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
             break;
     }
 }
-export const fetchAuthUser = () => dispatch => {
-    return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
-        headers: {
-            "Content-Type": CONTENT_TYPE,
-            
-        }
-    }).then((response) => {
-        let userInfo = response.data;
-		config.userEmail = userInfo.email;
-        config.fullName = userInfo.lastName + ',' + userInfo.firstName
-        document.cookie = (userInfo.userId)?`USER_NAME=${userInfo.userId};path=/;`:`USER_NAME=;path=/;`;
-        document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
-		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
-		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
-
-        /*
-        To update the latest info
-        Since GetFirst Salte was called before fetch user
-        so sending user info with postmessage
-        */
-
-        sendDataToIframe({
-            type: 'updateUserDetail',
-            message : {
-                userId: userInfo.userId ? userInfo.userId : '',
-                firstName: userInfo.firstName ? userInfo.firstName : '',
-                lastName: userInfo.lastName ? userInfo.lastName : ''
-            }
-
-        });
-    })
-        .catch(err => {
-            console.error('axios Error', err);
-            //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
-        })
-}
 export const openPopupSlate = (element, popupId) => dispatch => {
 	if(element){
 		/* dispatch({
@@ -1926,5 +1891,16 @@ export const setCondtionalContentStatus = (isConditionalContent) => (dispatch) =
     dispatch({
         type: CONDITIONAL_CONTENT_STATUS,
         payload: isConditionalContent
+    })
+}
+
+/**
+ * Set Current user details
+ * @param {Object} payload 
+ */
+export const setCurrentUserDetails = (payload) => (dispatch) => {
+    dispatch({
+        type: SET_CURRENT_USER_DETAILS,
+        payload: payload
     })
 }

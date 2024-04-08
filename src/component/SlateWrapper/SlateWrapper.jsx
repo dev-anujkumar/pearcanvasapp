@@ -599,6 +599,7 @@ class SlateWrapper extends Component {
                     previewUploadedFilePopup={true}
                     onImport={this.onImport}
                     fileToBeUploaded={this.state.fileToBeUploaded}
+                    isBannerVisible={this.props?.isBannerVisible}
                 />
             )
         }
@@ -1911,7 +1912,8 @@ const mapStateToProps = state => {
         unlockSlateToggle: state.toolbarReducer.unlockSlateToggle,
         importDataFromResponse: state.appStore.importDataFromResponse,
         slateLevelData: state.appStore.slateLevelData,
-        newlyPdfSlateCreated: state.appStore.newlyPdfSlateCreated
+        newlyPdfSlateCreated: state.appStore.newlyPdfSlateCreated,
+        isBannerVisible: state.projectInfo.isBannerVisible
     };
 };
 
