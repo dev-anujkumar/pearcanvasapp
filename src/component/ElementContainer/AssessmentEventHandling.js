@@ -64,13 +64,14 @@ export const handleElmPortalEvents = (action,eventType) => {
 /** This function handles Slate-Refresh when an Elm Event is received */
 export const handleRefreshSlate = (dispatch) => {
     localStorage.removeItem('newElement');
+    const currentUserDetails = store?.getState()?.appStore?.currentUserDetails
     config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
     config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
     config.tempSlateManifestURN = null
     config.tempSlateEntityURN = null
     config.isPopupSlate = false
     let id = config.slateManifestURN;
-    releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
+    releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, currentUserDetails,(response) => {
         config.page = 0;
         config.scrolling = true;
         config.totalPageCount = 0;
