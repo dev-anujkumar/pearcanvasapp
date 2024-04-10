@@ -68,7 +68,8 @@ import {
     SET_IMPORT_DETAILS_ACTION,
     PDF_SLATE_NAVIGATED,
     CONDITIONAL_CONTENT_STATUS,
-    SET_CURRENT_USER_DETAILS
+    SET_CURRENT_USER_DETAILS,
+    SET_IMPORT_COMPLETE_TOAST
 } from '../constants/Action_Constants';
 
 /**
@@ -147,7 +148,8 @@ const INITIAL_STATE = {
     importDataFromResponse: {},
     newlyPdfSlateCreated: {},
     isConditionalContent: false,
-    currentUserDetails:{}
+    currentUserDetails:{},
+    showImportCompleteToast: false
 };
 
 const INITIAL_ACTION = {
@@ -491,6 +493,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 currentUserDetails: action.payload
+            }
+        case SET_IMPORT_COMPLETE_TOAST:
+            return {
+                ...state,
+                showImportCompleteToast: action.payload
             }
         default:
             return state;

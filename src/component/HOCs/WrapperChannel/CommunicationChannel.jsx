@@ -489,8 +489,12 @@ function CommunicationChannel(WrappedComponent) {
                 case 'lockUserDetailsFromCount' :
                     this.props.saveLockDetails(message.lockInfo)
                     break;
-                case 'showToast':
-                    showNotificationOnCanvas('Word File import is completed');
+                case 'Import_Process_Completed_Show_Toast':
+                    this.props?.showImportCompleteToast(true)
+                    showNotificationOnCanvas('Word File import is completed');   //showing toast message for import complete
+                    setTimeout(() => {
+                        this.props?.showImportCompleteToast(false)
+                    }, 3000);
             }
         }
 

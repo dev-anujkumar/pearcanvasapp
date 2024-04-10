@@ -1125,11 +1125,6 @@ export const showNotificationOnCanvas = (message, type) => {
             linkNotification.style.background = '#000000'
             linkNotification.style.fontSize = '14px'
         }
-        else if(type==='import'){
-            let snackbar = document.getElementById('sssss')
-            if(snackbar)
-            linkNotification.style.bottom = '110px';
-        }
         linkNotification.innerText = message;
         linkNotification.style.display = "block";
         setTimeout(() => {

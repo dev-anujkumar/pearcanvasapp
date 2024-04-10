@@ -38,7 +38,8 @@ import {
     SET_IMPORT_DETAILS_ACTION,
     CONDITIONAL_CONTENT_STATUS,
     SLATE_TYPES_FOR_CONDITIONAL_CONTENT,
-    SET_CURRENT_USER_DETAILS
+    SET_CURRENT_USER_DETAILS,
+    SET_IMPORT_COMPLETE_TOAST
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1907,6 +1908,17 @@ export const setCondtionalContentStatus = (isConditionalContent) => (dispatch) =
 export const setCurrentUserDetails = (payload) => (dispatch) => {
     dispatch({
         type: SET_CURRENT_USER_DETAILS,
+        payload: payload
+    })
+}
+
+/**
+ * Set showImportCompleteToast flag for displaying import complete toast message
+ * @param {Boolean} payload
+ */
+export const showImportCompleteToast = (payload) => (dispatch) => {
+    dispatch({
+        type: SET_IMPORT_COMPLETE_TOAST,
         payload: payload
     })
 }
