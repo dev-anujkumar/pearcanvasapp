@@ -42,7 +42,7 @@ class App extends Component {
                 
             }
         }).then((response) => {
-            if(response){
+            if(response && response.data && Object.keys(response.data).length){
                 let uri = response.data.env;
                 cypressConfig.currentEnv = uri;
                 modifyObjKeys(config, response.data)
