@@ -52,7 +52,7 @@ let config = {
         { "repo": "https://staging.api.pearson.com/content/cmis/uswip", "repoName": "US" }],
     CMDS_AUTHORIZATION: process.env.NODE_ENV === "production" ? "Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==" : 'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==',
     EPS_API: process.env.NODE_ENV === "production" ? "https://us-school.pearsoned.com/school" : 'https://us-school-stg.pearsoned.com/school',
-    REACT_APP_API_URL :"https://10.11.7.24:8081/cypress-api/",
+    REACT_APP_API_URL: process.env.NODE_ENV === "production" ? "https://pace.pearson.com/cypress/api/canvas/cypress-api/" : "https://pace-dev.pearson.com/cypress/api/canvas/cypress-api/",
     JAVA_API_URL: process.env.NODE_ENV === "production" ? "https://pace.pearson.com/cypress/api/toc/app/toc-javaapp/" : "https://pace-dev.pearson.com/cypress/api/toc/app/toc-javaapp/",
     //c4 required keys
     CTOOL_APIKEY: process.env.NODE_ENV === "production" ? "rGeFx6GAhgAU7XylJjWlGEhtvmAMW4xj" : 'INpAP0MaiVP9Rohy4rB0ue3j2SGE3Abk',
