@@ -1183,3 +1183,10 @@ export const getDEClassName = (classList) => {
 export const removeBlankSpaceAndConvertToLowercase = (string) => {
     if (string) return string.split(' ').join('').toLowerCase()
 }
+
+export const isViewInCypressClickFromCM = () => {
+    const searchString = window.location.search
+    const src = new URLSearchParams(searchString)
+    const isViewInCypress = src?.get('q')
+    return isViewInCypress
+  }

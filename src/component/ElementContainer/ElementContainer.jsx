@@ -32,8 +32,8 @@ import {
 } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags,
-         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, checkOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole,
-        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase, stopRerendering } from '../../constants/utility.js';
+         removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, checkOwnerRole, removeSpellCheckDOMAttributes,
+        isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase, stopRerendering, isViewInCypressClickFromCM } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -435,7 +435,7 @@ class ElementContainer extends Component {
         
         // disabling Add comment icon for TCC Element in TOC
         if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
-            this.handleCommunication(this.props.element.id);
+            this.handleCommunication(this.props.element.contentUrn);
         }
     }
 
@@ -2133,8 +2133,8 @@ class ElementContainer extends Component {
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
-        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
-        let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.id && commentFlag === true).length > 0
+        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.contentUrn).length > 0
+        let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.contentUrn && commentFlag === true).length > 0
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
@@ -2714,7 +2714,7 @@ class ElementContainer extends Component {
 
         // Check if searched URN match the element URN
         let searched = '';
-        if (this.props.searchUrn !== '' && this.props.searchUrn === element.id) {
+        if (this.props.searchUrn !== '' && (this.props.searchUrn === element.id || (this.props.searchUrn === element.contentUrn && isViewInCypressClickFromCM()))) {
             searched = 'searched';
         }
 
@@ -2772,9 +2772,9 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} importStatus={this.props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} importStatus={this.props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus} onClick={ (e) => this.addOrViewComment(e, element.contentUrn,'addComment')} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.contentUrn,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.contentUrn,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>

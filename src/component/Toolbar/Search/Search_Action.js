@@ -11,7 +11,7 @@ export const searchEvent = {
     totalCount: 0,
 };
 
-export const getContainerData = (searchTerm, deeplink = false) => {
+export const getContainerData = (searchTerm, status, deeplink = false) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
         let multiColumnIndex = null;
         let slateData = getState().appStore?.slateLevelData[config.slateManifestURN] ? getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter || {} : {};
 
-        if(/^(urn\:pearson\:(work|manifest)\:\w{8}(\-\w{4}){3}\-\w{12})$/gi.test(searchTerm) ) {
+        if(/^(urn\:pearson\:(work|manifest)\:\w{8}(\-\w{4}){3}\-\w{12})$/gi.test(searchTerm) || (status && /^(urn\:pearson\:(entity)\:\w{8}(\-\w{4}){3}\-\w{12})$/gi.test(searchTerm)) ) {
             await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`)
             .then(res => {
                 bodymatter = res.data[config.slateManifestURN].contents.bodymatter;
@@ -51,6 +51,9 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                         parent = item.id;
                         if(searchTerm === item.id) {
                             totalCount++;
+                        } else if (searchTerm === item.contentUrn && status) {
+                            totalCount++;
+                            payload = item.contentUrn;
                         }
                     }
                 });
@@ -64,7 +67,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                 } while(elementIndex > slateLength);
 
                 searchEvent.index = 1;
-                searchEvent.totalCount = ((JSON.stringify(bodymatter)).match(new RegExp(`(id(\"|\'|):(\"|\'|)${searchTerm})`, 'g'))).length;
+                searchEvent.totalCount = (((JSON.stringify(bodymatter)).match(new RegExp(`(id(\"|\'|):(\"|\'|)${searchTerm})`, 'g')))?.length || ((JSON.stringify(bodymatter)).match(new RegExp(`(contentUrn(\"|\'|):(\"|\'|)${searchTerm})`, 'g')))?.length);
             }
         } else {
             searchEvent.index = 0;

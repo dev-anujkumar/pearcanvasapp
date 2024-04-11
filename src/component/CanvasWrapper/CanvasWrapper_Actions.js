@@ -42,7 +42,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel, removeBlankSpaceAndConvertToLowercase, isViewInCypressClickFromCM } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
@@ -923,13 +923,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         });
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
-                        let searchString = window.location.search;
-                        let src = new URLSearchParams(searchString);
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
                         }
-                        if(src && src.get('q') && currentParentData && !config.elementSlateRefresh) {
-                            dispatch(getContainerData(src.get('q')));
+                        if(isViewInCypressClickFromCM() && currentParentData && !config.elementSlateRefresh) {
+                            dispatch(getContainerData(isViewInCypressClickFromCM(), true));
                         } else if(currentParentData && config.elementSlateRefresh) {
                             dispatch(getContainerData(''));
                         } else if(config.currentElementUrn && currentParentData && !config.elementSlateRefresh){
