@@ -466,3 +466,29 @@ it('testing 3------- getContainerData ', () => {
     // expect(spygetContainerData).toHaveBeenCalled();
     // spygetContainerData.mockClear();
 });
+
+it('testing 3------- getContainerData --else', () => {
+    let getState = () => {
+        return {
+            appStore: {
+                pageNumberData: {},
+                slateLevelData: DefaultAssessmentSlateData,
+                isLearnosityProjectInfo: [],
+            },
+        };
+    }
+    const searchTerm = 'urn:pearson:entity:c565f350-b712-41ef-823a-a66baffa0b89'
+    const responseData = {
+        data: {
+            "urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89": {
+                contents: {
+                    bodymatter: [{
+                        "id": "urn:pearson:entity:c565f350-b712-41ef-823a-a66baffa0b89",
+                    }]
+                }
+            }
+        }
+    }
+    axios.get = jest.fn(() => Promise.resolve(responseData));
+    actions.getContainerData(searchTerm, true)(jest.fn(), getState)
+});
