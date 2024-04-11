@@ -757,10 +757,11 @@ class SlateWrapper extends Component {
 
     //Toggle preview file popup
     togglePopupForUploadFilePopup = (toggleValue, event) => {
+        event && event.stopPropagation()
+        event && event.preventDefault()
         this.props.showBlocker(toggleValue);
         hideBlocker();
         this.setState({showUploadFilePopup: toggleValue});
-        event && this.prohibitPropagation(event)
     }
 
     // Create payload for the import word api call
