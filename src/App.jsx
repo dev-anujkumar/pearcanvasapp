@@ -19,7 +19,7 @@ import { modifyObjKeys } from './js/appUtils';
 import './styles/style.css';
 import './styles/bookStyle.css';
 
-console.log("!!!!! ---- canvas-ui.v1.0.35 ---- !!!!!")
+console.log("!!!!! ---- canvas-ui.v1.0.36 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -42,7 +42,7 @@ class App extends Component {
                 
             }
         }).then((response) => {
-            if(response){
+            if(response && response.data && Object.keys(response.data).length){
                 let uri = response.data.env;
                 cypressConfig.currentEnv = uri;
                 modifyObjKeys(config, response.data)
