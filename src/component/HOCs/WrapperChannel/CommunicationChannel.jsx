@@ -15,7 +15,9 @@ import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_EL
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION,
-        CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
+        CHANGE_SLATE_ACTION, 
+        IMPORT_PROCESS_COMPLETED_SHOW_TOAST,
+        IMPORT_COMPLETED_TOAST_MESSAGE} from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, IMG_HTML, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -489,9 +491,9 @@ function CommunicationChannel(WrappedComponent) {
                 case 'lockUserDetailsFromCount' :
                     this.props.saveLockDetails(message.lockInfo)
                     break;
-                case 'Import_Process_Completed_Show_Toast':
+                case IMPORT_PROCESS_COMPLETED_SHOW_TOAST:
                     this.props?.showImportCompleteToast(true)
-                    showNotificationOnCanvas('Word File import is completed');   //showing toast message for import complete
+                    showNotificationOnCanvas(IMPORT_COMPLETED_TOAST_MESSAGE);   //showing toast message for import complete
                     setTimeout(() => {
                         this.props?.showImportCompleteToast(false)
                     }, 3000);
