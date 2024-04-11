@@ -611,7 +611,7 @@ class SlateWrapper extends Component {
     showImportAlertMessage = () => {
         const showSnackbar = this.props.slateLevelData[config?.slateManifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS ? true : false;
             return (
-                <Snackbar open={showSnackbar} className='import-alert'
+                <Snackbar id={this.props?.showImportCompleteToast ? 'snackbar-complete-alert-with-toast': 'snackbar-complete-alert-without-toast'} open={showSnackbar} className='import-alert'
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                         <Alert severity="error" className='alert'>
                             <AlertTitle ><strong>{ELEMENT_ON_SLATE_CREATION_INPROGRESS}</strong></AlertTitle>
@@ -639,7 +639,7 @@ class SlateWrapper extends Component {
                 })
             }, 3000);
             return (
-                <Snackbar open={this.state.importCompleteStatus} className='imported-alert'
+                <Snackbar id={this.props?.showImportCompleteToast ? 'snackbar-complete-alert-with-toast': 'snackbar-complete-alert-without-toast'} open={this.state.importCompleteStatus} className='imported-alert'
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                     <Alert iconMapping={{
                         success: <CheckCircleOutline fontSize="inherit" />,
@@ -1914,7 +1914,8 @@ const mapStateToProps = state => {
         importDataFromResponse: state.appStore.importDataFromResponse,
         slateLevelData: state.appStore.slateLevelData,
         newlyPdfSlateCreated: state.appStore.newlyPdfSlateCreated,
-        isBannerVisible: state.projectInfo.isBannerVisible
+        isBannerVisible: state.projectInfo.isBannerVisible,
+        showImportCompleteToast: state.appStore.showImportCompleteToast
     };
 };
 

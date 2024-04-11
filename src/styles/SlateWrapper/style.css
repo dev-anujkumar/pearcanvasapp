@@ -396,4 +396,8 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
     width: 18px !important;
     height: 18px !important;
 }
+/* for shifting the snackbar's position upwards for displaying toast message */
+#snackbar-complete-alert-with-toast{
+    bottom: 78px;
+}
 

@@ -250,3 +250,5 @@ export const IMPORTED_DATA_STATUS = 'imported_data_status'
 export const DIGITAL = 'digital'
 export const PRINT = 'print'
 export const PDF_ASSESSMENT_AND_TCC_TYPE = ["element-pdf", "element-assessment", "element-tcc"]
+export const IMPORT_PROCESS_COMPLETED_SHOW_TOAST = 'Import_Process_Completed_Show_Toast'
+export const IMPORT_COMPLETED_TOAST_MESSAGE = 'Word File import is completed'
