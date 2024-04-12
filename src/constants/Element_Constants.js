@@ -479,3 +479,4 @@ export const PREVIEW_POPUP_STEPPER_TEXT_FIRST = 'Upload Word File'
 export const PREVIEW_POPUP_STEPPER_TEXT_SECOND = "Preview"
 export const EMPTY_FILE_ERROR_MESSAGE = "Empty File"
 export const SAVE_AND_UPDATE = 'SAVE_AND_UPDATE'
+export const DISCARD_POPUP_MESSAGE = 'Closing this modal will discard any progress made in the first step. Are you sure you want to close it?'

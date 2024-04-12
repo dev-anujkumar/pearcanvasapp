@@ -19,7 +19,7 @@ import importPopupSS17 from './Assets/importPopup-ss-17.svg';
 import importPopupSS18 from './Assets/importPopup-ss-18.svg';
 import CloseIcon from './Assets/CloseIcon.svg';
 import PropTypes from 'prop-types'
-import { COMPLETED_TEXT, EMPTY_FILE_ERROR_MESSAGE, FILE_SIZE_ERROR_MESSAGE, IMPORTING_TIPS_CONTENT_TEXT_FIFTH, IMPORTING_TIPS_CONTENT_TEXT_FIRST, IMPORTING_TIPS_CONTENT_TEXT_FOURTH, IMPORTING_TIPS_CONTENT_TEXT_SECOND, IMPORTING_TIPS_CONTENT_TEXT_SEVENTH, IMPORTING_TIPS_CONTENT_TEXT_SIXTH, IMPORTING_TIPS_CONTENT_TEXT_THIRD, IMPORTING_TIPS_TEXT, NEXT_BUTTON_TEXT, PREVIEW_POPUP_HEADING, PREVIEW_POPUP_STEPPER_TEXT_FIRST, PREVIEW_POPUP_STEPPER_TEXT_SECOND, SECTION_BREAK_DELETE_TEXT, START_IMPORTING_BUTTON_TEXT, STEPPER_TEXT_PREVIEW, STEPPER_TEXT_UPLOAD_WORD_FILE, SUPPORTED_FILE_MESSAGE, UNSUPPORTED_FILE_ERROR_MESSAGE, UPLOAD_CONTAINER_TEXT, UPLOAD_CONTAINER_TEXT_SECOND_HALF, WARNING_TEXT_FOR_IMPORT_WORD_FILE, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
+import { COMPLETED_TEXT, DISCARD_POPUP_MESSAGE, EMPTY_FILE_ERROR_MESSAGE, FILE_SIZE_ERROR_MESSAGE, IMPORTING_TIPS_CONTENT_TEXT_FIFTH, IMPORTING_TIPS_CONTENT_TEXT_FIRST, IMPORTING_TIPS_CONTENT_TEXT_FOURTH, IMPORTING_TIPS_CONTENT_TEXT_SECOND, IMPORTING_TIPS_CONTENT_TEXT_SEVENTH, IMPORTING_TIPS_CONTENT_TEXT_SIXTH, IMPORTING_TIPS_CONTENT_TEXT_THIRD, IMPORTING_TIPS_TEXT, NEXT_BUTTON_TEXT, PREVIEW_POPUP_HEADING, PREVIEW_POPUP_STEPPER_TEXT_FIRST, PREVIEW_POPUP_STEPPER_TEXT_SECOND, SECTION_BREAK_DELETE_TEXT, START_IMPORTING_BUTTON_TEXT, STEPPER_TEXT_PREVIEW, STEPPER_TEXT_UPLOAD_WORD_FILE, SUPPORTED_FILE_MESSAGE, UNSUPPORTED_FILE_ERROR_MESSAGE, UPLOAD_CONTAINER_TEXT, UPLOAD_CONTAINER_TEXT_SECOND_HALF, WARNING_TEXT_FOR_IMPORT_WORD_FILE, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import PreviewWordFile from '../PreviewWordFile/PreviewWordFile.jsx';
@@ -494,7 +494,7 @@ class PopUp extends React.Component {
                 </div>
                 <div>
                     <button type='button' id='nextButtonForImport' className={this.state.fileToBeUploaded.name ? "start-import-button" : "start-import-button-disabled"} onClick={(e) => props.toggleNextButton(false, e, this.state.fileToBeUploaded)}>{NEXT_BUTTON_TEXT}<ArrowForwardIosIcon className='forward-arrow'/></button>
-                    <span className="cancel-button-import" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span className="cancel-button-import" onClick={(e) => props.togglePopup(false, e, this.state?.fileToBeUploaded)}>{props.cancelBtnText}</span>
                 </div>
             </div>
             )
@@ -504,6 +504,14 @@ class PopUp extends React.Component {
                 <div className='dialog-buttons-preview'>
                     <span className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
                     <span className="cancel-button-import" id='close-container-preview' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
+        else if(props?.showDiscardPopup){
+            return (
+                <div className='discard-import-buttons'>
+                    <span className="discard-popup-button-cancel" onClick={(e) => props?.toggleCloseButton(false, e)}>{props?.cancelButtonText}</span>
+                    <span className="discard-popup-button-continue" onClick={(e) => props?.toggleContinueButton(false, e)}>{props?.continueButtonText}</span>
                 </div>
             )
         }
@@ -526,7 +534,7 @@ class PopUp extends React.Component {
             props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup ||
             props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup ||
             props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle || props.importWordFilePopup || 
-            props.previewUploadedFilePopup || props.importAndDropPopup) {
+            props.previewUploadedFilePopup || props.importAndDropPopup || props?.showDiscardPopup) {
             return null
         }
         else if (props.assessmentAndInteractive) {
@@ -613,7 +621,7 @@ class PopUp extends React.Component {
             props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup ||
             props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate ||
             props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex ||
-            props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle|| props.importAndDropPopup || props.previewUploadedFilePopup) {
+            props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle|| props.importAndDropPopup || props.previewUploadedFilePopup || props?.showDiscardPopup) {
             return null
         }
         else {
@@ -908,6 +916,18 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if(props?.showDiscardPopup){
+            return(
+                <>
+                    <div className='discard-popup-title'>
+                        {props?.dialogText}
+                    </div>
+                    <div className='discard-popup-content'>
+                        {DISCARD_POPUP_MESSAGE}
+                    </div>
+                </>
+            )
+        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
@@ -998,7 +1018,9 @@ class PopUp extends React.Component {
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
                             <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent || this.state.isPowerPasteLimitExceeding ? 'wPasteClswithInvalidContent': ''}` :
                                 this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` :
-                                `modal-content alfresco-short-popup` : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.previewUploadedFilePopup ? this.props.isBannerVisible ? 'preview-file-popup-banner import-word-file-popup' : 'preview-file-popup import-word-file-popup' : this.props.importAndDropPopup ? 'upload-file-popup import-word-file-popup' : `modal-content ${assessmentConfirmation} ${assessmentClass}`)} id={isGlossary ? 'popup' : 'popup-visible'}>
+                                `modal-content alfresco-short-popup` : this.props.importWordFilePopup ? 'import-word-file-popup' : (this.props.previewUploadedFilePopup ? this.props.isBannerVisible ? 'preview-file-popup-banner import-word-file-popup' : 'preview-file-popup import-word-file-popup' :
+                                this.props.importAndDropPopup ? 'upload-file-popup import-word-file-popup' : (this.props?.showDiscardPopup ? 'discard-import-popup discard-popup-handle': `modal-content ${assessmentConfirmation} ${assessmentClass}`))} id={isGlossary ? 'popup' : 'popup-visible'}>
+                                {(this.props?.importAndDropPopup || this.props?.previewUploadedFilePopup) && this.props?.isDiscardPopupOpen && <div className='blocker-over-popup'></div>}
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}
@@ -1007,7 +1029,7 @@ class PopUp extends React.Component {
                                     `dialog-input-poc ${this.state.wordPasteProceed && 'enable-scrolling'}` : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
-                                {this.props.importWordFilePopup ? null : !isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
+                                {this.props.importWordFilePopup || this.props?.showDiscardPopup? null : !isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
                                 {this.renderCommentPanelInput(this.props)}
                                 {this.renderButtons(this.props)}
                             </div>

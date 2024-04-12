@@ -601,6 +601,81 @@ font-size: 14px;
   border-radius: 4px;
 }
 
+.discard-import-popup{
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  font-family: "Open Sans", sans-serif;
+  color: #000;
+  padding: 16px 24px;
+  position: relative;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 444px;
+  font-size: 16px;
+  line-height: 16px;
+  background-color: #ffffff;
+  top: 14vh;    
+  /* transform: translateY(-50%); */
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.discard-popup-title{
+  padding-bottom: 16px;
+  color:#081E27;
+  font-family: "Open Sans";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 24px */
+}
+
+.discard-popup-content{
+  padding-bottom: 16px;
+  color:#081E27;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 19.6px */
+}
+
+.discard-import-buttons{
+  padding: 16px 0px 8px 0px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.discard-popup-button-continue{
+  border-radius: 4px;
+  background:#005A70;
+  padding: 6px 16px;
+/* elevation/2 */
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20);
+  color:#FFF;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  cursor: pointer;
+}
+
+.discard-popup-button-cancel{
+  padding: 6px 16px;
+  border-radius: 4px;
+  border: 1px solid #337B8C;
+  color: #005A70;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  cursor: pointer;
+}
+
 .preview-file-popup{
   width: 1000px !important;
 }
@@ -1727,6 +1802,9 @@ padding-left: 9px;
   .upload-file-popup {
     top: 15vh !important
   }
+  .discard-popup-handle{
+    top: 24vh !important
+  }
 }
 
 @media screen and (min-width: 1440px) and (max-width: 1599px) {
@@ -1742,11 +1820,17 @@ padding-left: 9px;
   .upload-file-popup {
     top: 20vh !important
   }
+  .discard-popup-handle{
+    top: 29vh !important
+  }
 }
 
 @media screen and (min-width: 1600px) and (max-width: 1919px) {
   .import-word-file-popup, .upload-file-popup{
     top: 16vh
+  }
+  .discard-popup-handle{
+    top: 23vh !important
   }
   .preview-file-popup {
     top: 8vh !important;
@@ -1768,6 +1852,9 @@ padding-left: 9px;
   .import-word-file-popup, .upload-file-popup{
     top: 20vh !important
   }
+  .discard-popup-handle{
+    top: 26vh !important
+  }
   .preview-file-popup {
     top: 12vh !important;
     width: 1100px !important;
@@ -1782,4 +1869,14 @@ padding-left: 9px;
 .word-file-import-banner .tox-tinymce {
   height: 440px !important;
 }
+}
+
+.blocker-over-popup{
+  height: 100%;
+  width: 100%;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  z-index: 999;
 }
