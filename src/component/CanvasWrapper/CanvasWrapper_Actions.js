@@ -923,11 +923,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         });
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
+                        const isViewInCypress = isViewInCypressClickFromCM()
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
                         }
-                        if(isViewInCypressClickFromCM() && currentParentData && !config.elementSlateRefresh) {
-                            dispatch(getContainerData(isViewInCypressClickFromCM(), true));
+                        if(isViewInCypress && currentParentData && !config.elementSlateRefresh) {
+                            dispatch(getContainerData(isViewInCypress, true));
                         } else if(currentParentData && config.elementSlateRefresh) {
                             dispatch(getContainerData(''));
                         } else if(config.currentElementUrn && currentParentData && !config.elementSlateRefresh){

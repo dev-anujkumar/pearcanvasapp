@@ -11,7 +11,7 @@ export const searchEvent = {
     totalCount: 0,
 };
 
-export const getContainerData = (searchTerm, status, deeplink = false) => {
+export const getContainerData = (searchTerm, status = false, deeplink = false) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
@@ -49,11 +49,8 @@ export const getContainerData = (searchTerm, status, deeplink = false) => {
                         }
                         elementIndex = index + 1;
                         parent = item.id;
-                        if(searchTerm === item.id) {
+                        if(searchTerm === item.id || searchTerm === item.contentUrn && status) {
                             totalCount++;
-                        } else if (searchTerm === item.contentUrn && status) {
-                            totalCount++;
-                            payload = item.contentUrn;
                         }
                     }
                 });
@@ -67,7 +64,7 @@ export const getContainerData = (searchTerm, status, deeplink = false) => {
                 } while(elementIndex > slateLength);
 
                 searchEvent.index = 1;
-                searchEvent.totalCount = (((JSON.stringify(bodymatter)).match(new RegExp(`(id(\"|\'|):(\"|\'|)${searchTerm})`, 'g')))?.length || ((JSON.stringify(bodymatter)).match(new RegExp(`(contentUrn(\"|\'|):(\"|\'|)${searchTerm})`, 'g')))?.length);
+                searchEvent.totalCount = (((JSON.stringify(bodymatter)).match(new RegExp(`(id(\"|\'|):(\"|\'|)${searchTerm})`, 'g')))?.length || (((JSON.stringify(bodymatter)).match(new RegExp(`(contentUrn(\"|\'|):(\"|\'|)${searchTerm})`, 'g')))?.length && status));
             }
         } else {
             searchEvent.index = 0;
