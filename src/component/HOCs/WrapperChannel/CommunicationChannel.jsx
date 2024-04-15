@@ -271,7 +271,7 @@ function CommunicationChannel(WrappedComponent) {
                     let slateEntityURN = this.props?.popupParentSlateData?.isPopupSlate ? this.props?.popupParentSlateData?.parentSlateEntityUrn : config.slateEntityURN;
                     if (messageType === 'slatePreview') {
                         triggerSlateLevelSave(slateEntityURN, CHANGE_SLATE_ACTION);
-                    } else {
+                    } else if (messageType === 'projectPreview') {
                         triggerSlateLevelSave(slateEntityURN, PROJECT_PREVIEW_ACTION);
                     }
                     if (!config.savingInProgress) {
