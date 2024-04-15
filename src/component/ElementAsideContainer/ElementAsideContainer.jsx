@@ -9,7 +9,7 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import ContainerHeader from '../ContainerHeader/ContainerHeader.jsx';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
-import { guid } from '../../constants/utility.js';
+import { guid, isViewInCypressClickFromCM } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
@@ -320,7 +320,7 @@ class ElementAsideContainer extends Component {
 
         // Check if searched URN match the section break URN
         let searched = '';
-        if(this.props.searchUrn !== '' && this.props.searchUrn === _elementId) {
+        if(this.props.searchUrn !== '' && (this.props.searchUrn === _elementId || (this.props.searchUrn === _element.contentUrn && isViewInCypressClickFromCM()))) {
             searched = 'searched';
         }
 
