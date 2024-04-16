@@ -107,6 +107,8 @@ import {
     AssetPopOverMockState
 } from '../../../fixtures/slateTestingData.js';
 import { mount, shallow } from 'enzyme';
+import tinymce from 'tinymce/tinymce';
+
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -322,6 +324,26 @@ describe('Testing <CanvasWrapper> Component', () => {
         it('showingToastMessage function', () => {
             canvasWrapperInstance.showingToastMessage(true);
             expect(canvasWrapperInstance.showingToastMessage).toBeTruthy();
+        })
+        it('handlePasteBeforeTinymce function when nodeName is P', () => {
+            const event = {
+                preventDefault:jest.fn(),
+                target: {
+                    nodeName:"P"
+                },
+            }
+            canvasWrapperInstance.handlePasteBeforeTinymce(event);
+            expect(canvasWrapperInstance.handlePasteBeforeTinymce).toBeTruthy();
+        })
+        it('handlePasteBeforeTinymce function when nodeName INPUT ', () => {
+            const event = {
+                preventDefault: jest.fn(),
+                target: {
+                    nodeName: "INPUT"
+                },
+            }
+            canvasWrapperInstance.handlePasteBeforeTinymce(event);
+            expect(canvasWrapperInstance.handlePasteBeforeTinymce).toBeTruthy();
         })
     })
 })

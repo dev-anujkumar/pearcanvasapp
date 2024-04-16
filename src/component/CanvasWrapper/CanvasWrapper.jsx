@@ -70,6 +70,23 @@ export class CanvasWrapper extends Component {
         return null;
      }
 
+    /**
+     * This function is used to prevent browser's default paste behavior
+     * when tinymce is not initialized. This function also allow input and textarea
+     * field to allow paste
+     * @param {Object} event 
+     * @returns false
+     */
+    handlePasteBeforeTinymce = (event) => {
+        // allow browser's default paste behavior for input and textarea field
+        const ALLOWED_NODE_NAME = ["INPUT", "TEXTAREA"]
+        // if there is no focused editor and node-name is not input or textarea
+        // then prevent  the paste action
+        if (!tinymce?.focusedEditor && !ALLOWED_NODE_NAME.includes(event?.target?.nodeName)) {
+            event.preventDefault();
+            return false;
+        } 
+    }
 
     componentDidMount() {
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed, a moment ago'} });
@@ -82,6 +99,8 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
+        // adding an event listener to paste operation to fix PCAT-21630
+        document.addEventListener('paste',this.handlePasteBeforeTinymce)
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN)
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
@@ -106,6 +125,9 @@ export class CanvasWrapper extends Component {
         }, 5000);
     }
 
+    componentWillUnmount() {
+        document.removeEventListener('paste',this.handlePasteBeforeTinymce)
+    }
     showingToastMessage = (status, toastMsgText) => {
         this.setState({
             toastMessage: status,
