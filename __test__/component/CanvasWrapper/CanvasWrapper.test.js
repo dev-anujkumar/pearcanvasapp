@@ -107,8 +107,6 @@ import {
     AssetPopOverMockState
 } from '../../../fixtures/slateTestingData.js';
 import { mount, shallow } from 'enzyme';
-import tinymce from 'tinymce/tinymce';
-
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
