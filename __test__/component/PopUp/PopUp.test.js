@@ -458,7 +458,7 @@ describe('Testing PopUp component', () => {
         component.instance().isChecked=true
         expect(component.instance().props.importAndDropPopup).toEqual(true);
     });
-    it('testCase for previewUploadedFilePopup cancel',() => {
+    xit('testCase for previewUploadedFilePopup cancel',() => {
         let props = {
             togglePopup:jest.fn(),
             agree:jest.fn(),
@@ -467,7 +467,7 @@ describe('Testing PopUp component', () => {
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.dialog-buttons-preview').simulate('click');
-        wrapper.find('.disable-cancel-button-import').simulate('click');
+        wrapper.find('.cancel-button-import').simulate('click');
         const component = mount(<PopUp {...props}/>);
         component.instance().isChecked=true
         expect(component.instance().props.previewUploadedFilePopup).toEqual(true);

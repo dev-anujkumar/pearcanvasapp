@@ -84,7 +84,8 @@ class SlateWrapper extends Component {
             fileToBeUploaded: {},
             importData: {},
             importCompleteStatus: false,
-            showSnackbarOnce: false
+            showSnackbarOnce: false,
+            showDiscardPopup: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -600,6 +601,7 @@ class SlateWrapper extends Component {
                     onImport={this.onImport}
                     fileToBeUploaded={this.state.fileToBeUploaded}
                     isBannerVisible={this.props?.isBannerVisible}
+                    isDiscardPopupOpen={this.state?.showDiscardPopup}
                 />
             )
         }
@@ -679,6 +681,25 @@ class SlateWrapper extends Component {
                     toggleNextButton={this.toggleNextButton}
                     togglePopup={this.toggleShowImportAndDropPopup}
                     handleImportingTipsClick={this.handleImportingTipsClick}
+                    isDiscardPopupOpen={this.state?.showDiscardPopup}
+                />
+            )
+        }
+
+        return null
+    }
+    // Displays discard file popup for word import
+    showDiscardPopup = () => {
+        if (this.state.showDiscardPopup) {
+            return (
+                <PopUp  
+                    dialogText='Discard Progress'
+                    active
+                    showDiscardPopup={true}
+                    toggleContinueButton={this.toggleContinueButton}
+                    toggleCloseButton={this.toggleCloseButton}
+                    continueButtonText="Continue Import"
+                    cancelButtonText="Close and Discard"
                 />
             )
         }
@@ -703,12 +724,30 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    // Toggles upload file popup
-    toggleShowImportAndDropPopup = (toggleValue, e) => {
+    // Continue button handling for discard file popup
+    toggleContinueButton = (toggleValue, event) => {
+        this.prohibitPropagation(event)
+        this.setState({showDiscardPopup: toggleValue})
+    }
+
+    // Cancel button handling for discard file popup
+    toggleCloseButton = (toggleValue, event) => {
+        this.prohibitPropagation(event)
+        this.setState({showDiscardPopup: toggleValue, showImportAndDragFile: toggleValue, showUploadFilePopup: toggleValue})
         this.props.showBlocker(toggleValue);
         hideBlocker()
-        this.setState({showImportAndDragFile: false})
+    }
+
+    // Toggles upload file popup
+    toggleShowImportAndDropPopup = (toggleValue, e, file) => {
         this.prohibitPropagation(e);
+        if(file?.name)
+            this.setState({showDiscardPopup: true})
+        else{
+            this.props.showBlocker(toggleValue);
+            hideBlocker();
+            this.setState({showImportAndDragFile: false});    
+        }
     }
 
     // Handle importing tips click in upload file popup
@@ -759,9 +798,7 @@ class SlateWrapper extends Component {
     togglePopupForUploadFilePopup = (toggleValue, event) => {
         event && event.stopPropagation()
         event && event.preventDefault()
-        this.props.showBlocker(toggleValue);
-        hideBlocker();
-        this.setState({showUploadFilePopup: toggleValue});
+        this.setState({showDiscardPopup: true})
     }
 
     // Create payload for the import word api call
@@ -1848,6 +1885,8 @@ class SlateWrapper extends Component {
                 {this.showImportAlertMessage()}
                 {/* **************** To display import elements complete alert ************* */}
                 {this.showImportCompleteAlertMessage()}
+                {/* **************** To display discard import popup ************* */}
+                {this.showDiscardPopup()}
             </React.Fragment>
         );
     }

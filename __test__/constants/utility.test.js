@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import { utility, matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom, labelValueForFiguretype, labelValue, Table, Equation, Exhibit, dropdownValueForFiguretype, dropdownList, subtype, preformattedtext, mathml, image, tableasmarkup, getCookieByName, handleTextToRetainFormatting, showNotificationOnCanvas, removeBlankSpaceAndConvertToLowercase, getDEClassName, getDEClassType, getDesignType, isOwnerRole, isSubscriberRole, prepareStageDirectionDom, releaseOwnerPopup, replaceUnwantedtags, removeStyleAttribute, removeMarkedIndexDOMAttributes, removedDOMAttributes } from '../../src/constants/utility.js';
+import { utility, matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom, labelValueForFiguretype, labelValue, Table, Equation, Exhibit, dropdownValueForFiguretype, dropdownList, subtype, preformattedtext, mathml, image, tableasmarkup, getCookieByName, handleTextToRetainFormatting, showNotificationOnCanvas, removeBlankSpaceAndConvertToLowercase, getDEClassName, getDEClassType, getDesignType, isOwnerRole, isSubscriberRole, prepareStageDirectionDom, releaseOwnerPopup, replaceUnwantedtags, removeStyleAttribute, removeMarkedIndexDOMAttributes, removedDOMAttributes, isViewInCypressClickFromCM } from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
 import { newFigureObj, textRetainObject } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
@@ -985,6 +985,13 @@ describe('Testing Function - removedDOMAttributes', () => {
     it('Case 1', () => {
         const html = '<>'
         let result = removedDOMAttributes(html);
+        expect(result).toBeDefined;
+    })
+})
+
+describe('Testing Function - isViewInCypressClickFromCM', () => {
+    it('Case 1', () => {
+        let result = isViewInCypressClickFromCM();
         expect(result).toBeDefined;
     })
 })
