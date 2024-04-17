@@ -1,4 +1,4 @@
-var axios = require('axios')
+import axios from 'axios';
 let IF_MATCH = "";
 import store from '../appstore/store';
 import config_object from '../config/config';
@@ -29,6 +29,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
     }
 
     axios.post(content_url, JSON.stringify(content_data), {
+      withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
         'aws-resource': config_object.AWS_RESOURCE,
@@ -91,6 +92,7 @@ export const publishSlate = (project, section, cite, message) => {
   document.cookie = `CTOOL_APIKEY=${xApiKey}; domain=.pearson.com; path=/; secure=true`
 
   axios.post(content_url, JSON.stringify(content_data), {
+    withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
       

@@ -20,7 +20,8 @@
     width: 48%;
 }
 
-.word-file-import{
+.word-file-import,
+.word-file-import-banner{
     display: flex;
     column-gap: 40px;
     flex-direction: column;
@@ -36,7 +37,9 @@
     position: relative;
 }
 
-.word-file-import .tox-tinymce {
+.word-file-import .tox-tinymce,
+.word-file-import-banner .tox-tinymce 
+ {
     border-radius: 20px 20px 0px 0px!important;
     border-left: solid 8px #EFF1F3 !important;
     border-top: solid 8px #EFF1F3 !important;
