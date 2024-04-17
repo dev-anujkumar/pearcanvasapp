@@ -510,8 +510,8 @@ class PopUp extends React.Component {
         else if(props?.showDiscardPopup){
             return (
                 <div className='discard-import-buttons'>
-                    <span className="discard-popup-button-cancel" onClick={(e) => props?.toggleCloseButton(false, e)}>{props?.cancelButtonText}</span>
-                    <span className="discard-popup-button-continue" onClick={(e) => props?.toggleContinueButton(false, e)}>{props?.continueButtonText}</span>
+                    <span className="discard-popup-button-cancel" onClick={(e) => props.toggleCloseButton(false, e)}>{props?.cancelButtonText}</span>
+                    <span className="discard-popup-button-continue" onClick={(e) => props.toggleContinueButton(false, e)}>{props?.continueButtonText}</span>
                 </div>
             )
         }

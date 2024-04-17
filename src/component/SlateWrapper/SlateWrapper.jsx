@@ -732,7 +732,8 @@ class SlateWrapper extends Component {
 
     // Cancel button handling for discard file popup
     toggleCloseButton = (toggleValue, event) => {
-        this.prohibitPropagation(event)
+        event && event.stopPropagation()
+        event && event.preventDefault()
         this.setState({showDiscardPopup: toggleValue, showImportAndDragFile: toggleValue, showUploadFilePopup: toggleValue})
         this.props.showBlocker(toggleValue);
         hideBlocker()
