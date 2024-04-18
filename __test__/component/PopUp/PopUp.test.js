@@ -458,12 +458,14 @@ describe('Testing PopUp component', () => {
         component.instance().isChecked=true
         expect(component.instance().props.importAndDropPopup).toEqual(true);
     });
-    xit('testCase for previewUploadedFilePopup cancel',() => {
+    it('testCase for previewUploadedFilePopup cancel',() => {
         let props = {
             togglePopup:jest.fn(),
             agree:jest.fn(),
             previewUploadedFilePopup:true,
-            proceed:jest.fn()
+            proceed:jest.fn(),
+            isDiscardPopupOpen:true,
+            isBannerVisible: true
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.dialog-buttons-preview').simulate('click');
@@ -471,6 +473,22 @@ describe('Testing PopUp component', () => {
         const component = mount(<PopUp {...props}/>);
         component.instance().isChecked=true
         expect(component.instance().props.previewUploadedFilePopup).toEqual(true);
+    });
+    it('testCase for discard popup',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            agree:jest.fn(),
+            showDiscardPopup:true,
+            proceed:jest.fn(),
+            toggleCloseButton: jest.fn(),
+            toggleContinueButton: jest.fn()
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.discard-popup-button-cancel').simulate('click');
+        let wrapper1 = mount(<PopUp {...props}/>);
+        wrapper1.find('.discard-popup-button-continue').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.showDiscardPopup).toEqual(true);
     });
     it('testCase for previewUploadedFilePopup',() => {
         let props = {

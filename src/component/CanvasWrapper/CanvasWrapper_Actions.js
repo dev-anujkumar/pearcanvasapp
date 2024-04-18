@@ -67,7 +67,7 @@ import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnc
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 import TcmConstants from '../TcmSnapshots/TcmConstants';
 import { closeTcmPopup } from './TCM_Canvas_Popup_Integrations';
-import { DEFAULT_PLAYBACK_MODE, IMPORTED_DATA_STATUS, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
+import { COMPLETED_IMPORT_STATUS, DEFAULT_PLAYBACK_MODE, IMPORTED_DATA_STATUS, IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -653,6 +653,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         config.updatedAssessmentAPITriggered = false;
         dispatch({type: SET_IMPORT_DETAILS_ACTION, payload: slateData?.data[manifestURN]?.importData})
         sendDataToIframe({ 'type': IMPORTED_DATA_STATUS, 'message': slateData?.data[manifestURN]?.importData });
+        // Sending message to TOC to sync TOC and canvas import status
+        if(slateData?.data[manifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS)
+        sendDataToIframe({ 'type': 'importCompletedForCurrentSlate', 'message': {slateManifestURN: manifestURN} })
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
         {
             config.isSlateElementCompleted = true;
