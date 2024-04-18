@@ -50,8 +50,8 @@ const PreviewWordFile = (props) => {
                     .then((result) => {
                         const html = result?.value; // The generated HTML
                         editor?.setContent(html);
-                        readonlyPreviewView(editor)
-                        if(editor?.getBody()) setBackdropOrig(false)
+                        if(editor && editor?.getBody) editor.getBody().style.pointerEvents = "none";
+                        setBackdropOrig(false);
                     })
                     .catch(function(error) {
                         console.error(error);
@@ -96,11 +96,10 @@ const PreviewWordFile = (props) => {
                         const doc = parser?.parseFromString(html, "text/html")
                         editor?.setContent(html);
                         pastePostProcess(doc,props, 'importWord');
-                        readonlyPreviewView(editor)
-                        if(editor?.getBody()){
                         setBackdropConv(false);
                         props?.enableImportButton()
-                        }
+                        editor?.getBody()?.setAttribute('contenteditable', false);
+                        if(editor && editor?.getBody) editor.getBody().style.pointerEvents = "none";
                     })
                     .catch(function(error) {
                         console.error(error);
@@ -110,11 +109,6 @@ const PreviewWordFile = (props) => {
             })
         },
         readonly: 1,
-    }
-
-    const readonlyPreviewView = (editor) => {
-        if(editor && editor?.getBody()?.style) editor.getBody().style.pointerEvents = "none";
-        editor?.getBody()?.setAttribute('contenteditable', false);
     }
 
     useEffect(() => {

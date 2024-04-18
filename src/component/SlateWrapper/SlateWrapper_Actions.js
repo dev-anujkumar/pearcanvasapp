@@ -21,8 +21,7 @@ import {
     CYPRESS_PLUS_ENABLED,
     SET_SLATE_MATTER_TYPE,
     UPDATE_CARET_OFFSET,
-    PDF_SLATE_NAVIGATED,
-    SAVE_IMPORT_MESSAGE
+    PDF_SLATE_NAVIGATED
 } from '../../constants/Action_Constants';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -1873,7 +1872,7 @@ const triggerVersioningFlow = () => {
 }
 
 export const setImportWordFileMessageInCanvas = (value) => (dispatch) => {
-    dispatch({type: SAVE_IMPORT_MESSAGE, payload: value})
+    dispatch({type: 'save-import-message', payload: value})
 }
 
 export const pdfSlatedNavigated = (data) => (dispatch) => {

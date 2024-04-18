@@ -22,10 +22,10 @@ import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopu
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs,
      setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus,
-      isSubscribersSubscribedSlate,setTocSlateLabel, setCurrentUserDetails, showImportCompleteToast } from './CanvasWrapper_Actions';
+      isSubscribersSubscribedSlate,setTocSlateLabel, setImportMessageForWordImport, setCurrentUserDetails, showImportCompleteToast } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled, setImportWordFileMessageInCanvas } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO, fetchDefaultLF } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
@@ -434,7 +434,7 @@ export default connect(
         saveSelectedAlfrescoElement,
         currentNodeAncestorData,
         saveLockDetails,
-        setImportWordFileMessageInCanvas,
+        setImportMessageForWordImport,
         releaseSlateLockOnTabClose,
         setCurrentUserDetails,
         showImportCompleteToast
