@@ -1,7 +1,7 @@
 import { modifyObjKeys, removeWirisOverlay, timeSince } from '../../src/js/appUtils';
 import { describe, test, expect } from '@jest/globals'
 
-xdescribe('appUtils test cases', () => {
+describe('appUtils test cases', () => {
   test('modifyObjKeys development', () => {
     const obj = {
         NODE_ENV : process.env.NODE_ENV || "development",
