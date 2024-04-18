@@ -503,15 +503,15 @@ class PopUp extends React.Component {
             return (
                 <div className='dialog-buttons-preview'>
                     <span className={this.state.enableImport ? "import-button-import-word" :"import-button-import-word-disable"} onClick={(e) => props.proceed(false, e)}>{props.saveButtonText}<img src={importPopupSS18} /></span>
-                    <span className="cancel-button-import" id='close-container-preview' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span className={this.state.enableImport ? "cancel-button-import" : "disable-cancel-button-import"} id='close-container-preview' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
         else if(props?.showDiscardPopup){
             return (
                 <div className='discard-import-buttons'>
-                    <span className="discard-popup-button-cancel" onClick={(e) => props.toggleCloseButton(false, e)}>{props?.cancelButtonText}</span>
-                    <span className="discard-popup-button-continue" onClick={(e) => props.toggleContinueButton(false, e)}>{props?.continueButtonText}</span>
+                    <span className="discard-popup-button-cancel" onClick={(e) => props?.toggleCloseButton(false, e)}>{props?.cancelButtonText}</span>
+                    <span className="discard-popup-button-continue" onClick={(e) => props?.toggleContinueButton(false, e)}>{props?.continueButtonText}</span>
                 </div>
             )
         }

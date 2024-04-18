@@ -732,8 +732,7 @@ class SlateWrapper extends Component {
 
     // Cancel button handling for discard file popup
     toggleCloseButton = (toggleValue, event) => {
-        event && event.stopPropagation()
-        event && event.preventDefault()
+        this.prohibitPropagation(event)
         this.setState({showDiscardPopup: toggleValue, showImportAndDragFile: toggleValue, showUploadFilePopup: toggleValue})
         this.props.showBlocker(toggleValue);
         hideBlocker()
@@ -804,7 +803,7 @@ class SlateWrapper extends Component {
 
     // Create payload for the import word api call
     onImport = (importData, filename) => {
-        const importingUser = config?.fullName?.replace(',', ', ');
+        const importingUser = this.props?.currentUserDetails?.lastName + ', ' + this.props?.currentUserDetails?.firstName
         const res = createPayloadForWordImport(importData, 0)
         this.setState({
             importData: {
@@ -1955,7 +1954,8 @@ const mapStateToProps = state => {
         slateLevelData: state.appStore.slateLevelData,
         newlyPdfSlateCreated: state.appStore.newlyPdfSlateCreated,
         isBannerVisible: state.projectInfo.isBannerVisible,
-        showImportCompleteToast: state.appStore.showImportCompleteToast
+        showImportCompleteToast: state.appStore.showImportCompleteToast,
+        currentUserDetails: state.appStore.currentUserDetails
     };
 };
 
