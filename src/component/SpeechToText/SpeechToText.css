@@ -1,0 +1,17 @@
+
+.MuiInputAdornment-root{
+    color: #005a70 !important;
+}
+
+.MuiInputBase-root{
+    height: 65px;
+}
+
+.MuiFormControl-root{
+    width: 100% !important;
+}
+
+.MuiFormLabel-root{
+    font-size: 18px !important;
+    color: #005a70 !important;
+}

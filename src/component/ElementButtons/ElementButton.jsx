@@ -51,6 +51,7 @@ import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
 import tabIcon from '../../images/ElementButtons/tabIcon.png'
 import ElementConstants from '../ElementContainer/ElementConstants';
 import blureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
+import microphone from '../../images/ElementButtons/microphone.png';
 import { IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants.js';
 class ElementButton extends Component {
 
@@ -107,6 +108,11 @@ class ElementButton extends Component {
                 buttonJSX = <span className={`btn-element small tcm-icon ${btnClassName}`} title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
+                break;
+            case buttonTypes.MIC:
+                buttonJSX = <span className={`btn-element`} title="Record" onClick={clickHandlerFn}>
+                    <img className='mic-icon' src={microphone} />
+                </span>
                 break;
             case buttonTypes.EXPAND:
                 buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>

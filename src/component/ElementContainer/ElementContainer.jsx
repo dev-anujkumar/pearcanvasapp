@@ -138,7 +138,9 @@ class ElementContainer extends Component {
             showActionUndone : false,
             listElementWarningPopupCheckbox: false,
             showFirstTimeUndo : false,
-            pdfSlateAssetId:""
+            pdfSlateAssetId:"",
+            isSpeechToTextEnabled: false,
+            recordedSpeech: ''
         };
         this.wrapperRef = React.createRef();
 
@@ -2122,6 +2124,25 @@ class ElementContainer extends Component {
         return tcmStatus;
     }
 
+    handleSpeechToTextLaunch = (event, element, value) =>{
+        this.props.showBlocker(value);
+        showTocBlocker();
+        this.setState({
+            popup: value,
+            isSpeechToTextEnabled: value
+        })
+    }
+
+    handleRecordedText = (transcript) =>{
+        console.log('ISNIDE ELEMENT CONTAINER', transcript)
+        this.props.showBlocker(false);
+        hideBlocker()
+        this.setState({
+            isSpeechToTextEnabled: false,
+            popup: false,
+            recordedSpeech: transcript
+        })
+    }
     /**
      * Render Element function takes current element from bodymatter and render it into current slate
      * @param {element}
@@ -2192,7 +2213,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
                     editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect}
-                            parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
+                            parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder} recordedSpeech={this.state.recordedSpeech}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     {isBlockquote ?
@@ -2775,6 +2796,7 @@ class ElementContainer extends Component {
                         {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} importStatus={this.props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus} onClick={ (e) => this.addOrViewComment(e, element.contentUrn,'addComment')} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.contentUrn,'viewComment')} type="view-comment" elementType={element?.type} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.contentUrn,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        <Button elementId={element.id} type="mic" onClick={(event) => this.handleSpeechToTextLaunch(event, element, true)} /> 
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2812,6 +2834,9 @@ class ElementContainer extends Component {
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
                         handleUndoOption = {this.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
+                        isSpeechToTextEnabled={this.state.isSpeechToTextEnabled}
+                        handleRecordingCancel = {this.handleSpeechToTextLaunch}
+                        handleTextSet={this.handleRecordedText}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp

@@ -3953,6 +3953,12 @@ export class TinyMceEditor extends Component {
         return stopRerendering(nextProps, this.props);
     }
 
+    removeAttributionTextElemBr = () => {
+        let attributionNodeBr = (document.querySelector(`#cypress-${this.props.index} p.paragraphNumeroUno br`) || document.querySelector(`#cypress-${this.props.index} h1.heading1NummerEins br`) || document.querySelector(`#cypress-${this.props.index} h2.heading2NummerEins br`) || document.querySelector(`#cypress-${this.props.index} h3.heading3NummerEins br`))
+        attributionNodeBr && attributionNodeBr.remove();
+        return
+    }
+
     /**
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
@@ -3973,6 +3979,14 @@ export class TinyMceEditor extends Component {
                 highlightListIcon(this.props);
             }
             this.elementConverted = false;
+        }
+        if(prevProps.recordedSpeech !== this.props.recordedSpeech){
+            this.removeAttributionTextElemBr()
+            let currentId = this.props.index;
+            let node = document.getElementById('cypress-' + currentId);
+            node = node.firstElementChild
+            const text = document.createTextNode(this.props.recordedSpeech)
+            node.appendChild(text)
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()

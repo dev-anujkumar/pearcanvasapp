@@ -33,6 +33,7 @@ import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
+import SpeechToText from '../SpeechToText/SpeechToText.jsx'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -54,6 +55,7 @@ class PopUp extends React.Component {
             errorFileEmpty: false,
             importwordFileCheckbox: false,
             enableImport: false,
+            enableChildCalled : false
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleFileChangeOnInput = this.handleFileChangeOnInput.bind(this);
@@ -515,6 +517,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        else if(props?.isSpeechToTextEnabled){
+            return (
+                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                    <span option={PRIMARY_BUTTON} className="save-button" onClick={(e) => this.CallChild()}>{props.saveButtonText}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.handleRecordingCancel(false, e, false)}>Cancel</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -534,7 +544,7 @@ class PopUp extends React.Component {
             props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup ||
             props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup ||
             props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.unlockSlateToggle || props.importWordFilePopup || 
-            props.previewUploadedFilePopup || props.importAndDropPopup || props?.showDiscardPopup) {
+            props.previewUploadedFilePopup || props.importAndDropPopup || props?.showDiscardPopup || props.isSpeechToTextEnabled) {
             return null
         }
         else if (props.assessmentAndInteractive) {
@@ -616,12 +626,23 @@ class PopUp extends React.Component {
         };
         }
 
+    CallChild = () => {
+        this.setState({
+            enableChildCalled: !this.state.enableChildCalled
+        })
+    }
+
+        handleRecordedText = (transcript) =>{
+            this.CallChild()
+            this.props.handleTextSet(transcript)
+        }
+
     renderCloseSymbol = (props) => {
         if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation ||
             props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup ||
             props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate ||
             props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex ||
-            props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle|| props.importAndDropPopup || props.previewUploadedFilePopup || props?.showDiscardPopup) {
+            props.isApprovedSlate || props.renderTcmPopupIcons || props.unlockSlateToggle|| props.importAndDropPopup || props.previewUploadedFilePopup || props?.showDiscardPopup || props.isSpeechToTextEnabled) {
             return null
         }
         else {
@@ -640,6 +661,9 @@ class PopUp extends React.Component {
     * @param {event}
     */
     renderDialogText = (props) => {
+        if(props.isSpeechToTextEnabled){
+            return null
+        }
         if(props.alfrescoExpansionPopup){
             let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
                   <div className='imageContainer'>
@@ -941,7 +965,7 @@ class PopUp extends React.Component {
             props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation ||
             props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate ||
             props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.unlockSlateToggle || 
-            props.importWordFilePopup) {
+            props.importWordFilePopup || props.isSpeechToTextEnabled) {
             return null
         }
         else {
@@ -957,7 +981,7 @@ class PopUp extends React.Component {
         if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation ||
             props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup ||
             props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup ||
-            props.showBlockCodeElemPopup || props.unlockSlateToggle) {
+            props.showBlockCodeElemPopup || props.unlockSlateToggle || props.isSpeechToTextEnabled) {
             return null
         }
         else {
@@ -1029,8 +1053,9 @@ class PopUp extends React.Component {
                                     `dialog-input-poc ${this.state.wordPasteProceed && 'enable-scrolling'}` : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
-                                {this.props.importWordFilePopup || this.props?.showDiscardPopup? null : !isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
+                                {this.props.importWordFilePopup || this.props?.showDiscardPopup || this.props.isSpeechToTextEnabled ? null : !isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
                                 {this.renderCommentPanelInput(this.props)}
+                                {this.props.isSpeechToTextEnabled && <SpeechToText handleRecordedText={this.handleRecordedText} enableChildCalled={this.state.enableChildCalled}/>}
                                 {this.renderButtons(this.props)}
                             </div>
                         </div>

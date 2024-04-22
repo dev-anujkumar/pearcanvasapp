@@ -37,6 +37,7 @@ export class ElementAuthoring extends Component {
           openMarkedIndexPopUp = {openMarkedIndexPopUp}
           markedIndexValue={markedIndexValue}
           parentManifestListItem={this?.props?.parentManifestListItem}
+          recordedSpeech={this.props.recordedSpeech}
         />
        </KeyboardWrapper>
 
