@@ -419,6 +419,7 @@ class ElementDialogue extends React.PureComponent {
     /* Update the data to server */
     callUpdateApi = (newPSData) => {
         /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+        if(hasReviewerRole()) return;
         const { index, parentUrn, asideData, parentElement } = this.props;
         const dataToSend = createPSDataForUpdateAPI(this.props, newPSData)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
