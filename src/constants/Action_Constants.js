@@ -264,4 +264,7 @@ export const SLATE_TYPES_FOR_CONDITIONAL_CONTENT = ['manifest', 'chapterintro', 
 
 /*----------------- CURRENT USER DETAILS ---------*/
 export const SET_CURRENT_USER_DETAILS = "SET_CURRENT_USER_DETAILS"
+
+/*----------------- IMPORT WORD MESSAGES ---------*/
 export const SET_IMPORT_COMPLETE_TOAST = "SET_IMPORT_COMPLETE_TOAST"
+export const IMPORT_COMPLETED_FOR_CURRENT_SLATE = "importCompletedForCurrentSlate"

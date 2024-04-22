@@ -469,7 +469,6 @@ describe('Testing PopUp component', () => {
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.dialog-buttons-preview').simulate('click');
-        wrapper.find('.cancel-button-import').simulate('click');
         const component = mount(<PopUp {...props}/>);
         component.instance().isChecked=true
         expect(component.instance().props.previewUploadedFilePopup).toEqual(true);

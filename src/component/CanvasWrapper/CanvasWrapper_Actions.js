@@ -39,7 +39,8 @@ import {
     CONDITIONAL_CONTENT_STATUS,
     SLATE_TYPES_FOR_CONDITIONAL_CONTENT,
     SET_CURRENT_USER_DETAILS,
-    SET_IMPORT_COMPLETE_TOAST
+    SET_IMPORT_COMPLETE_TOAST,
+    IMPORT_COMPLETED_FOR_CURRENT_SLATE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -655,7 +656,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         sendDataToIframe({ 'type': IMPORTED_DATA_STATUS, 'message': slateData?.data[manifestURN]?.importData });
         // Sending message to TOC to sync TOC and canvas import status
         if(slateData?.data[manifestURN]?.importData?.importStatus === COMPLETED_IMPORT_STATUS)
-        sendDataToIframe({ 'type': 'importCompletedForCurrentSlate', 'message': {slateManifestURN: manifestURN} })
+        sendDataToIframe({ 'type': IMPORT_COMPLETED_FOR_CURRENT_SLATE, 'message': {slateEntityUrn: slateData?.data[manifestURN]?.contentUrn} })
         if(slateData?.data[manifestURN]?.importData?.importStatus === IN_PROGRESS_IMPORT_STATUS)
         {
             config.isSlateElementCompleted = true;
