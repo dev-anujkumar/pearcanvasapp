@@ -1331,6 +1331,30 @@ describe("SlateWrapper Component import word file", () => {
         expect(spy4).toHaveBeenCalled();
         spy.mockClear()
     })
+    it('3.1.1 Discard file popup', () => {
+        const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                importData: {
+                    importStatus: 'in-progress'
+                }
+            }
+        }, importMsgCanvas: true}};
+        const newProps = {...props, setImportWordFileMessageInCanvas: jest.fn()}
+        const compInstance = slateWrapInstance(newProps, newInitialState);
+        compInstance.setState({showDiscardPopup: true});
+        const spy = jest.spyOn(compInstance, 'showDiscardPopup')
+        const spy2 = jest.spyOn(compInstance, 'toggleContinueButton')
+        const spy3 = jest.spyOn(compInstance, 'toggleCloseButton')
+        compInstance.showDiscardPopup();
+        compInstance.toggleContinueButton(false);
+        compInstance.toggleCloseButton(false);
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+        expect(spy3).toHaveBeenCalled();
+        spy.mockClear();
+        spy2.mockClear();
+        spy3.mockClear();
+    })
     it('3.2 Upload file popup', () => {
         const newInitialState = {...initialState, appStore: {userRole: 'admin', slateLevelData: {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
