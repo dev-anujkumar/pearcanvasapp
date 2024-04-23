@@ -2135,8 +2135,8 @@ class ElementContainer extends Component {
 
     handleRecordedText = (transcript) =>{
         console.log('ISNIDE ELEMENT CONTAINER', transcript)
-        this.props.showBlocker(false);
         hideBlocker()
+        this.props.showBlocker(false);
         this.setState({
             isSpeechToTextEnabled: false,
             popup: false,
@@ -2796,7 +2796,7 @@ class ElementContainer extends Component {
                         {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} importStatus={this.props?.slateLevelData[config?.slateManifestURN]?.importData?.importStatus} onClick={ (e) => this.addOrViewComment(e, element.contentUrn,'addComment')} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.contentUrn,'viewComment')} type="view-comment" elementType={element?.type} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.contentUrn,'viewComment')} type="comment-flagged" elementType={element?.type} />}
-                        <Button elementId={element.id} type="mic" onClick={(event) => this.handleSpeechToTextLaunch(event, element, true)} /> 
+                        {element.type === elementTypeConstant.AUTHORED_TEXT && <Button elementId={element.id} type="mic" btnClassName={this.state.isSpeechToTextEnabled && 'activeTagBgColor'} onClick={(event) => this.handleSpeechToTextLaunch(event, element, true)} /> }
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>

@@ -1055,7 +1055,7 @@ class PopUp extends React.Component {
                                 </div>
                                 {this.props.importWordFilePopup || this.props?.showDiscardPopup || this.props.isSpeechToTextEnabled ? null : !isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
                                 {this.renderCommentPanelInput(this.props)}
-                                {this.props.isSpeechToTextEnabled && <SpeechToText handleRecordedText={this.handleRecordedText} enableChildCalled={this.state.enableChildCalled}/>}
+                                {this.props.isSpeechToTextEnabled && <SpeechToText handleRecordedText={this.handleRecordedText} enableChildCalled={this.state.enableChildCalled} isSpeechToTextEnabled={this.props.isSpeechToTextEnabled}/>}
                                 {this.renderButtons(this.props)}
                             </div>
                         </div>

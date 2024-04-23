@@ -6,30 +6,33 @@ import InputAdornment from '@mui/material/InputAdornment';
 import './SpeechToText.css'
 
 function SpeechToText(props) {
-  const [isRecording, setIsRecording] = useState('');
   const {
     transcript,
     listening,
     browserSupportsSpeechRecognition,
     finalTranscript,
-    interimTranscript,
     resetTranscript,
     ...data
   } = useSpeechRecognition();
 
   useEffect(() => {
-    if (props.enableChildCalled) {
-      console.log('INSIDE USEEFFECT', isRecording)
-      props.handleRecordedText(isRecording)
+    if(props?.isSpeechToTextEnabled){
+      startMic()
     }
-  }, [props.enableChildCalled]);
+    if (props.enableChildCalled) {
+      SpeechRecognition.stopListening()
+      props.handleRecordedText(finalTranscript)
+      resetTranscript()
+    }
+  }, [props.isSpeechToTextEnabled, props.enableChildCalled]);
 
-  const startMic = (e) =>{
-    console.log("CHECING TEXT VALUE", e.target.value)
-    setIsRecording(e.target.value)
-    // startListening();
+  const startMic = (e) => {
     console.log("isRecodring startMic", transcript, "Listening", listening);
-    // props.handleRecordedText(text)
+    if (listening) {
+      SpeechRecognition.stopListening()
+      resetTranscript()
+    }
+    startListening()
   }
 
   const startListening = () =>
@@ -42,7 +45,6 @@ function SpeechToText(props) {
         <TextField
         id="input-with-icon-textfield"
         label="Recording..."
-        onChange={(e) => startMic(e)}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -51,7 +53,7 @@ function SpeechToText(props) {
           ),
         }}
         variant="standard"
-        value = {isRecording}
+        value ={transcript}
       />
   );
 }

@@ -3959,6 +3959,10 @@ export class TinyMceEditor extends Component {
         return
     }
 
+    checkIFSringEmpty = (text) =>{
+       return typeof text === 'string' && text.trim()?.length === 0
+    }
+
     /**
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
@@ -3981,12 +3985,18 @@ export class TinyMceEditor extends Component {
             this.elementConverted = false;
         }
         if(prevProps.recordedSpeech !== this.props.recordedSpeech){
+            console.log("CHECKING THE REFERENCE INSIDE TINYMCE EDITOR", this.editorRef)
             this.removeAttributionTextElemBr()
             let currentId = this.props.index;
             let node = document.getElementById('cypress-' + currentId);
             node = node.firstElementChild
+            if(!this.checkIFSringEmpty(this.props.recordedSpeech)){
+                if(this.checkIFSringEmpty(node.textContent)){
+                    node.removeAttribute("placeholder")
+                }
+            }
             const text = document.createTextNode(this.props.recordedSpeech)
-            node.appendChild(text)
+            node?.appendChild(text)
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
