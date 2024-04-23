@@ -100,7 +100,7 @@ export class TinyMceEditor extends Component {
             force_br_newlines: true,
             forced_root_block: '',
             remove_linebreaks: false,
-            object_resizing : 'img',
+            object_resizing : false,
             resize_img_proportional: false,
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
