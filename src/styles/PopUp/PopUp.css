@@ -1038,7 +1038,7 @@ letter-spacing: 0.17px;
 }
 
 .alert-Message{
-  color: var(--alert-errorContent, #54000E);
+  color: #54000E;
   font-family: "Open Sans" , sans-serif;
   font-size: 14px;
   font-weight: 400;
