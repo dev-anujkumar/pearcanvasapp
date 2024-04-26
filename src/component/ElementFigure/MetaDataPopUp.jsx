@@ -10,6 +10,7 @@ import { checkImageForMetadata, checkOpenerElement, checkSmartLinkInteractive } 
 import { showNotificationOnCanvas } from '../../constants/utility';
 import { CPLG_ALT, CPLG_LONGDESCRIPTION } from '../../constants/Element_Constants';
 import { checkMetadataIdentical } from '../ElementContainer/ElementContainerUpdate_helpers';
+import MetadataAlertBox from './MetadataAlertBox.jsx';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -24,7 +25,8 @@ class MetaDataPopUp extends React.Component {
 		   fetchedLongDesc: '',
 		   active:'',
 		   disableTextFields:false,
-		   disableUpdateButton:false
+		   disableUpdateButton:false,
+		   showAlertMessage:false
         }
     }
 
@@ -121,10 +123,20 @@ class MetaDataPopUp extends React.Component {
 				showNotificationOnCanvas('Smart Link Metadata has been updated', 'metadataUpdated')
 				else if(checkOpenerElement(this?.props?.element))
 				showNotificationOnCanvas('Opener Element has been updated', 'metadataUpdated')
+				this.props.togglePopup(false);
 			}).catch(error => {
 				console.error("error--", error);
+				if (error?.response && error?.response?.status === 403) {
+					/* -- if update alfresco metadata put call fail then reset the alt text and long description and show alert message */
+					this.setState({
+						showAlertMessage: true,
+						altText: this.state.fetchedAltText,
+						longDescription: this.state.fetchedLongDesc 
+					})
+				} else {
+					this.props.togglePopup(false)
+				}
 			})
-		this.props.togglePopup(false);
 	}
 
 	updateElementData = () => {
@@ -173,7 +185,7 @@ class MetaDataPopUp extends React.Component {
         return (
             <div className="model">
 				<div tabIndex="0" className="model-popup">
-					<div className="figure-popup">
+					<div className= {`figure-popup ${this.state.showAlertMessage ? 'popup-alert' : ''}`}>
 						<div className="dialog-button">
 						    <div className="edit-metadata">{checkImageForMetadata(this.props.element) ? 'Image Metadata' :
 							 checkSmartLinkInteractive(this.props.element) ? 'Smart Link Metadata' : 'Opener Element Metadata'}</div>
@@ -184,7 +196,8 @@ class MetaDataPopUp extends React.Component {
 								checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} in your team's Projects.
 							</div>
 						</div>
-						<div className="figuremetadata-field">
+						<div className={`figuremetadata-field ${this.state.showAlertMessage ? 'metadata-alert' : ''}`}>
+							{ this.state.showAlertMessage && <MetadataAlertBox /> }
 							<div className={`alt-text-body ${active === 'altBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('altBody')} >
 								<p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}>Alt Text</p>
 								<input

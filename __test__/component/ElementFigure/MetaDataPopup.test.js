@@ -3,6 +3,11 @@ import { mount } from 'enzyme';
 import axios from 'axios';
 import MetaDataPopup from '../../../src/component/ElementFigure/MetaDataPopUp';
 
+jest.mock('../../../src/component/ElementFigure/MetadataAlertBox', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 describe('Testcase for MetaDataPopup Component', () => {
     let wrapper;
     let props = {
@@ -260,6 +265,42 @@ describe('Testcase for MetaDataPopup Component', () => {
         component.setState({metaData:{
             "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Geogebra\",\n\"linkLongDesc\":\"link long desc data to fetch\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"This is the sample  alt text from gk new data\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}"
         }})   
+        component.find('.metadata-import-button').simulate('click');
+        expect(axios.put).toHaveBeenCalledTimes(1);
+    })
+    it('onClick Event metadata-import-button for catch', () => {
+        const error = {
+            response: {
+                status: 403
+            }
+        };
+        let togglePopup = jest.fn();
+        const props = {
+            element:{
+                type: 'dummy',
+                backgroundimage: {
+                    imageid: 'urn'
+                }
+            },
+            togglePopup: jest.fn(),
+            updateFigureData: jest.fn(),
+            handleFocus: jest.fn(),
+            handleBlur: jest.fn()
+        }
+        const component = mount(<MetaDataPopup {...props} togglePopup={togglePopup} />);
+        component.setState({
+        fetchedAltText: 'mocked alt text',
+        fetchedLongDesc: 'mocked long description'
+        });
+        component.setState({
+        showAlertMessage: false
+        });
+        component.setState({
+        error: error 
+        });
+        expect(component.state.showAlertMessage).toBe(undefined);
+        expect(component.state.altText).toBe(undefined);
+        expect(component.state.longDescription).toBe(undefined);
         component.find('.metadata-import-button').simulate('click');
         expect(axios.put).toHaveBeenCalledTimes(1);
     })

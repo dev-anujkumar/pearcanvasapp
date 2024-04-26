@@ -926,6 +926,9 @@ letter-spacing: 0.17px;
   border-top: 4px solid #005a70;
   padding: 20px;
 }
+.figure-popup.popup-alert{
+  height: 590px !important;
+}
 
 .figure-popup.editPopupforTE{
   width: 960px;
@@ -1024,6 +1027,40 @@ letter-spacing: 0.17px;
   /* float: left; */
 }
 
+.alertBox {
+  display: flex;
+  padding: 8px 16px;
+  align-items: flex-start;
+  align-self: stretch;
+  border-radius: 4px;
+  background: var(--alert-infoFill, #FFEBFC);
+  margin-bottom: 20px;
+}
+
+.alert-Message{
+  color: var(--alert-errorContent, #54000E);
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 21px */
+}
+
+.alertMessageBody{
+  display: flex;
+  padding: 8px 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1 0 0;
+}
+
+.alert-Icon{
+display: flex;
+padding: 8px 12px 8px 0px;
+align-items: flex-start;
+}
+
 .alt-text-body {
   padding: 8px 12px;
   background-color: #f7f7f7;
@@ -1117,6 +1154,10 @@ letter-spacing: 0.17px;
 }
 .figuremetadata-field {
   margin-top:15px;
+}
+.figuremetadata-field.metadata-alert{
+  margin-top: 8px;
+  max-height: 410px !important;
 }
 .metadata-button{
   margin-top: 25px;

@@ -398,6 +398,7 @@ export const MULTIPLE_ELEMENT_CLASSES = '.power-paste-icon,.split-icon, .delete-
 export const ELEMENT_ASSESSMENT_LOWERCASE = 'element-assessment'
 export const CPLG_ALT = 'cplg:altText'
 export const CPLG_LONGDESCRIPTION = 'cplg:longDescription'
+export const METADATA_ALERT_MESSAGE = 'You do not have access to the Alfresco site of the asset. Please raise a request with the administrator of the Alfresco site to edit the asset metadata.'
 export const ELEMENT_CONTAINER_DELETE_HELPERS_FILE_PATH = './ElementContainerDelete_helpers.js'
 export const SCHEMA_URL = 'http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext'
 export const BLOCK_TEXT_BUTTON = 'block-text-button'
