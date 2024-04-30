@@ -3997,6 +3997,8 @@ export class TinyMceEditor extends Component {
             }
             const text = document.createTextNode(this.props.recordedSpeech)
             node?.appendChild(text)
+            this.editorRef.current.focus();
+            this.editorRef.current.blur();
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
