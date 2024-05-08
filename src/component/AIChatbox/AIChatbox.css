@@ -1,0 +1,70 @@
+.chatbox-wrapper {
+    height: 100%;
+    background-color: #fff;
+    overflow: hidden;
+    border-left: 1px solid #005a70;
+}
+.wrapper-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0px 10px 20px 10px;
+}
+
+.chatbox-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 8px 0px 0px;
+}
+
+.chatbox-close-icon {
+    cursor: pointer;
+}
+
+.header-label {
+    font-weight: 700;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+/********** AI Message CSS ************/
+
+.ai-message-wrapper {
+    width: 210px;
+    border: 1px solid #367ABF;
+    border-radius: 0px 8px 8px 8px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.ai-message {
+    padding: 0px 10px 0px 0px;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 12px;
+}
+
+.ai-message > ul {
+    list-style-type: inherit;
+}
+
+.ai-message > p,h1,h2,h3,h4,h5,h6 {
+    margin: 2px;
+}
+.addToSlateBtn {
+    border: 1px solid #367ABF;
+    color: #0D61A4;
+    background: #EAF1FF;
+    cursor: pointer;
+
+}
+.chatbox-with-banner {
+    height: 53% !important;
+}
+
+.chatbox-without-header {
+    height: 67% !important;
+}
