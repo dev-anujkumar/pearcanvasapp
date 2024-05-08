@@ -60,6 +60,7 @@ export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 export const TOGGLE_PAGE_NUMBER = 'TOGGLE_PAGE_NUMBER'
 export const TOGGLE_SPELL_CHECK = 'TOGGLE_SPELL_CHECK'
 export const TOGGLE_UNLOCK_SLATE = 'TOGGLE_UNLOCK_SLATE'
+export const HANDLE_TOGGLE_HEADER = 'HANDLE_TOGGLE_HEADER'
 
 
 /*---------------Slate Lock -------------------*/
@@ -268,3 +269,7 @@ export const SET_CURRENT_USER_DETAILS = "SET_CURRENT_USER_DETAILS"
 /*----------------- IMPORT WORD MESSAGES ---------*/
 export const SET_IMPORT_COMPLETE_TOAST = "SET_IMPORT_COMPLETE_TOAST"
 export const IMPORT_COMPLETED_FOR_CURRENT_SLATE = "importCompletedForCurrentSlate"
+
+/*--------------- AI CHATBOX ACTION CONSTANTS --------*/
+export const TOGGLE_AI_CHATBOX = "TOGGLE_AI_CHATBOX"
+export const UPDATE_CHAT_HISTORY = "UPDATE_CHAT_HISTORY"

@@ -107,6 +107,14 @@ export const pastePostProcess = (data, props, processType) => {
       // elements?.length ? tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', false) : tinymce?.activeEditor?.getBody()?.setAttribute('contenteditable', true);
       props.onImport(updatedElements, props?.fileToBeUploaded?.name);    //used to send final created elements to Slatewrapper for preview and API call
     }
+  } else if (processType === 'aiGeneratedText') {
+    console.log('data', data)
+    console.log("pros", props)
+    const childNodes = data;
+    const elements = [];
+    createPastedElements(childNodes, elements, processType);
+    console.log('elements', elements)
+    props.createPowerPasteElements(elements,0,"","")
   }
   else{
   if (data.node) {

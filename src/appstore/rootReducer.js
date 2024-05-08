@@ -20,7 +20,8 @@ import alfrescoReducer from './alfrescoReducer';
 import { projectInfo } from './projectInfoReducer';
 import markedIndexReducer from './markedIndexReducer';
 import autoNumberReducer from './autoNumberReducer';
-import {keyboardReducer} from './keyboardReducer';
+import { keyboardReducer } from './keyboardReducer';
+import chatboxAIReducer from './chatAIReducer.js';
 
 export default combineReducers({
     appStore: appReducer,
@@ -46,4 +47,5 @@ export default combineReducers({
     markedIndexReducer,
     autoNumberReducer,
     keyboardReducer,
+    chatboxAIReducer
 });

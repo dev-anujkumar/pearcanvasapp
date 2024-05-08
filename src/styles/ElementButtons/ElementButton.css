@@ -95,6 +95,18 @@
     margin-left: -10px;
 }
 
+.ai-gen-icon {
+    background: #0D61A4;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    left: -2px;
+    z-index: 10;
+    cursor: pointer;
+    margin-bottom: -13px;
+    padding: 3px 0px 0px 3px;
+    margin-left: -13px;
+}
 .container-aside .power-paste-icon, .show-hide-component .power-paste-icon {
     margin-left: -35px;
 }

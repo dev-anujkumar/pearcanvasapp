@@ -5,6 +5,7 @@ import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
 import Tooltip from '../Tooltip';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import {
     stageDirectionIcon,
     dialougeElementIcon,
@@ -52,6 +53,7 @@ import tabIcon from '../../images/ElementButtons/tabIcon.png'
 import ElementConstants from '../ElementContainer/ElementConstants';
 import blureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { IN_PROGRESS_IMPORT_STATUS } from '../SlateWrapper/SlateWrapperConstants.js';
+import { AIChatBox2 } from '../../images/TinyMce/TinyMce.jsx';
 class ElementButton extends Component {
 
   /**
@@ -253,6 +255,14 @@ class ElementButton extends Component {
                 break;
             case ButtonTypes.POWERPASTE:
                 buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
+                break;
+            case "ai-gen-icon":
+                buttonJSX = <span className="btn-element power-paste-icon ai-gen-icon " onClick={clickHandlerFn}>
+                    {/* <AutoAwesomeOutlinedIcon 
+                    style={{backgroundColor:'blue', color: 'white', borderRadius:'50%'}} 
+                    />  */opw
+                    {AIChatBox2}
+                </span>
                 break;
             case ButtonTypes.ALFRESCO_METADATA:
                 buttonJSX = <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`}

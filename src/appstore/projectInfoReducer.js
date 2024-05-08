@@ -1,6 +1,8 @@
 import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS,
   SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE,
-  UPDATE_LOB_WORKFLOW, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, BANNER_IS_VISIBLE, SUBSCRIBERS_SUBSCRIBED_SLATE, SET_TOC_SLATE_LABEL } from "../constants/Action_Constants";
+  UPDATE_LOB_WORKFLOW, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, BANNER_IS_VISIBLE, SUBSCRIBERS_SUBSCRIBED_SLATE, SET_TOC_SLATE_LABEL, 
+  HANDLE_TOGGLE_HEADER
+} from "../constants/Action_Constants";
 
 var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
 let isSubscriberKeyExist = localStorage.getItem('hasSubscriberView');
@@ -20,7 +22,8 @@ const initialState = {
   showDiscussionLOBDropdown: false,
   isBannerVisible: false,
   isSubscribersSubscribedSlateChecked : isSubscriberKeyExist ? false : true,
-  slateTocLabel:{}
+  slateTocLabel: {},
+  isHeaderCollapsed: false
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
@@ -110,7 +113,11 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
               ...state,
               slateTocLabel:action.payload
             }
-
+      case HANDLE_TOGGLE_HEADER:
+        return {
+          ...state,
+          isHeaderCollapsed: !state.isHeaderCollapsed,
+        }
         default : {
             return {
                 ...state

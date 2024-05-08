@@ -8,7 +8,8 @@ import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
 import { toggleUnlockSlateAction } from './Toolbar_Actions.js';
 import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader, searchIcon,
-    searchClose, searchUp, searchDown } from '../../images/TinyMce/TinyMce.jsx';
+    searchClose, searchUp, searchDown, 
+    AIChatBox} from '../../images/TinyMce/TinyMce.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
@@ -16,12 +17,13 @@ import { hasReviewerRole, isOwnerRole, isSlateLocked, isSubscriberRole, sendData
 import SearchComponent from './Search/Search.jsx';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LockIcon from '@mui/icons-material/Lock';
-import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
+import { handleToggleHeader, slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, LOCKED_BANNER_MESSAGE, SLATES_DEFAULT_LABEL,
         SUBSCRIBER_BANNER_MESSAGE, IN_PROGRESS_IMPORT_STATUS, IMPORT_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
 import Button from '@mui/material/Button';
+import { toggleAIChatbox } from '../AIChatbox/chatboxAIActions.js';
 
 const _Toolbar = props => {
     const { isToolBarBlocked,roleId } = props;
@@ -109,6 +111,7 @@ const _Toolbar = props => {
      */
     function showHideHeader() {
         setHeaderValue(!showHeader);
+        props.handleToggleHeader()
         sendDataToIframe({ 'type': 'collapseHeader', 'message': !showHeader});
     }
     let accessToolbar = (props.permissions && props.permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
@@ -262,7 +265,13 @@ const _Toolbar = props => {
                     </div>
                 }
                 {/* *****end**** */}
+                {/*********************************************************/}
+                <div className='ai-chatbox' onClick={() => props.toggleAIChatbox(!props.isAIChatboxOpen)}>
+                    {AIChatBox}</div>
             </div>
+            {/*********************************************************/}
+            {/* <div className='ai-chatbox' onClick={() => props.toggleAIChatbox(!props.isAIChatboxOpen)}> 
+                {AIChatBox}</div> */}
             {/* ***********************Collapse Header******************************************** */}
             <div className="side-icons">
                 {<div className={`icon search-urn ${separatorClass}`} onClick={e => { handleSearchToggle(e, true) }}>
@@ -298,7 +307,8 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         roleId:state.appStore.roleId,
         slateTocLabel:state.projectInfo.slateTocLabel,
-        importDataFromResponse: state.appStore.importDataFromResponse
+        importDataFromResponse: state.appStore.importDataFromResponse,
+        isAIChatboxOpen: state.chatboxAIReducer.isAIChatboxOpen
     }
 }
 
@@ -312,6 +322,13 @@ const mapActionToProps = (dispatch) =>{
         },
         toggleUnlockSlateAction: (payloadObj) => {
             dispatch(toggleUnlockSlateAction(payloadObj))
+        },
+        toggleAIChatbox: (payloadOb) => {
+            dispatch(toggleAIChatbox(payloadOb));
+        },
+        
+        handleToggleHeader: () => {
+            dispatch(handleToggleHeader())
         }
     }
 }

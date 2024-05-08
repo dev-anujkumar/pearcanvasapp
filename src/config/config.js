@@ -68,7 +68,8 @@ let config = {
     SHOW_CYPRESS_PLUS:true,
     ENABLE_AUTO_NUMBER_CONTENT: false,
     LOCK_DURATION: 0,
-    VERSIONING_DELAY_INTERVAL:5000
+    VERSIONING_DELAY_INTERVAL: 5000,
+    AI_TIMER_REF:0
 };
 
 if (process.env.NODE_ENV === "development") {

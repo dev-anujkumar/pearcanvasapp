@@ -762,3 +762,14 @@ margin-left:6px;
 .locked-user{
   padding-right: 5px;
 }
+
+.ai-chatbox {
+  cursor: pointer;
+    position: relative;
+    border-left: 1px solid #979797;
+    height: 32px;
+    margin-left: 8px;
+    padding-left: 8px;
+    padding-top: 4px;
+
+}

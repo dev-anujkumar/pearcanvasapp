@@ -46,6 +46,7 @@ import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHe
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 import { REFRESH_BROWSER_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave';
+import AIChatbox from '../AIChatbox/AIChatbox.jsx';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -293,14 +294,16 @@ export class CanvasWrapper extends Component {
                                                     audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData}
                                                     markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
                                         }
-                                        if(markIndexpopUpStatus){
-                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup}
-                                            markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue}
-                                            isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}
-                                            showBlocker = {this.props.showCanvasBlocker}/>
+                                        if (markIndexpopUpStatus) {
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup={this.props.markedIndexPopup}
+                                                markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue}
+                                                isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage={this.showingToastMessage}
+                                                showBlocker={this.props.showCanvasBlocker} />
 
                                         }
-                                        else {
+                                        else if (this.props.isAIChatboxOpen) { 
+                                            return <AIChatbox />
+                                        } else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
                                         }
                                     }
@@ -358,6 +361,7 @@ const mapStateToProps = state => {
         calledFromImageGlossaryFootnote: state.alfrescoReducer.calledFromImageGlossaryFootnote,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
         currentUserDetails: state.appStore.currentUserDetails,
+        isAIChatboxOpen: state.chatboxAIReducer.isAIChatboxOpen
     };
 };
 

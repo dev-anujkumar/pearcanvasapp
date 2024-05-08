@@ -21,7 +21,8 @@ import {
     CYPRESS_PLUS_ENABLED,
     SET_SLATE_MATTER_TYPE,
     UPDATE_CARET_OFFSET,
-    PDF_SLATE_NAVIGATED
+    PDF_SLATE_NAVIGATED,
+    HANDLE_TOGGLE_HEADER
 } from '../../constants/Action_Constants';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -1880,4 +1881,11 @@ export const pdfSlatedNavigated = (data) => (dispatch) => {
         type: PDF_SLATE_NAVIGATED,
         payload: data
     })
+}
+
+
+export const handleToggleHeader = () => {
+    return {
+        type: HANDLE_TOGGLE_HEADER
+    }
 }

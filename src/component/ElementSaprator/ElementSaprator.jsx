@@ -191,6 +191,16 @@ export function ElementSaprator(props) {
         )
     }
 
+    const renderAIGenIcon = () => {
+
+        return (
+            <div className={'elemDiv-expand'} >
+                <Tooltip direction='poc' tooltipText='Text Generator'>
+                    <Button type="ai-gen-icon" />
+                </Tooltip>
+            </div>
+        )
+    }
     let pasteRender = false;
     let operationType = '';
     if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
@@ -218,6 +228,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
+            {renderAIGenIcon()}
             {renderWordPasteButton(elementType, props)}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
