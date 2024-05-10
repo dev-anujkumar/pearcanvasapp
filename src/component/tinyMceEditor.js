@@ -20,7 +20,7 @@ import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary,
     undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList,
-    unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, markedIndex
+    unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, markedIndex, convertToWirisIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -28,7 +28,8 @@ import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnot
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE,
         removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS,
-        isSubscriberRole, withoutCursorInitailizedElements, isElementIndent, isDialogueIndent, ALLOWED_FORMATTING_TAGS, stopRerendering } from '../constants/utility.js';
+        isSubscriberRole, withoutCursorInitailizedElements, isElementIndent, isDialogueIndent, ALLOWED_FORMATTING_TAGS, stopRerendering, 
+        filterMathmlFromString} from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY,
      INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
@@ -49,6 +50,7 @@ import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NU
      autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
 import checkmark from '../images/ElementButtons/checkmark.svg';
 import { ENTER_CHARACTER_NAME, WIRIS_FORMULA_CLASS, CLASS_ANSWER_LINE_CONTENT, CLASS_TEMP_WIRISFORMULA, CLASS_WIRISFORMULA, CYPRESS_EDITABLE_CLASS, DATA_MCE_STYLE, ELEMENT_ASIDE, ELEMENT_BLOCKFEATURE, ELEMENT_DIALOGUE, ELEMENT_LIST, ENTER_BUTTON_LABEL, IMAGE_ASSET_CONTENT_CLASS, PLACE_HOLDER, POETRY_LINE_CLASS, SPAN_SELECTOR_BOOKMARK } from '../constants/Element_Constants';
+import axios from 'axios';
 
 let context = {};
 let clickedX = 0;
@@ -116,6 +118,8 @@ export class TinyMceEditor extends Component {
                     this.setMathmlFormulaIcon(editor);
                     this.addChemistryFormulaButton(editor);
                     this.addMathmlFormulaButton(editor);
+                    this.setConvertToWirisIcon(editor)
+                    this.addConvertToWirisButton(editor)
                 }
 
                 this.setAlignmentIcon(editor);
@@ -434,7 +438,7 @@ export class TinyMceEditor extends Component {
                     this.handleOutdent(e, editor, content, this.props.element.type, node)
                     break;
                 case "updateFormula":
-                    editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                        editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     break;
             }
             if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
@@ -889,6 +893,9 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorClick = (editor) => {
+        editor.on('dblclick', () => {
+           console.log('dblclick') 
+        }),
         editor.on('click', (e) => {
 
             if (e && e.target && e.target.classList.contains('Wirisformula')) {
@@ -2442,6 +2449,90 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon("tinymceFormulaIcon", tinymceFormulaIcon);
     };
 
+    setConvertToWirisIcon = editor => {
+        editor.ui.registry.addIcon("convertToWiris", convertToWirisIcon);
+    };
+
+    addConvertToWirisButton = editor => {
+        let self = this;
+        editor.ui.registry.addButton("convertToWiris", {
+            icon: "convertToWiris",
+            tooltip: "Convert To WIRIS",
+            onAction: async function (_) {
+                let imageUrl = ""
+                let base64data = ''
+                let activeSpace = tinymce?.activeEditor?.selection?.getNode();
+                let selectedText = window?.getSelection();
+                imageUrl = activeSpace.getAttribute('src')
+                if (activeSpace.tagName === "IMG" && activeSpace?.classList?.contains("imageAssetContent")) {
+                const imgResponse = await fetch(imageUrl);
+                const blob = await imgResponse.blob();
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = async () => {
+                    base64data = reader.result;
+                    const payload = {
+                        "messages": [
+                            {
+                                "role": "system",
+                                "content": "You are a helpful assistant."
+                            },
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Give the accurate Mathml of this image."
+                                    },
+                                    {
+                                        "type": "image_url",
+                                        "image_url": {
+                                            "url": `${base64data}`
+                                            // "url": `${imageUrl}`
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "max_tokens": 4095,
+                        "stream": false
+                    }
+                    const url_pearson = {
+                        url: 'https://content-gen-gpt-vision.openai.azure.com/openai/deployments/gpt4-vision/chat/completions?api-version=2023-12-01-preview',
+                        api_key: '35456c7bb50a4675a9a1cb04486cd5e2'
+                    }
+                    const url_openai = {
+                        url: 'https://openailm2023eastus2.openai.azure.com/openai/deployments/vision-test/chat/completions?api-version=2023-12-01-preview',
+                        api_key: '87ada06a3562492b88950ea78ab4d02c'
+                    }
+                        try {
+                            const response = await axios.post(url_openai.url, payload, {
+                                headers: {
+                                    'api-key': url_openai.api_key,
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            console.log('response', response)
+                            const mathmlString = await filterMathmlFromString(response.data)
+                            // const mathmlString = `<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mn>32</mn><mn>22</mn></msub></math>`
+                            if (mathmlString) {
+                                var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
+                                wirisPluginInstance.core.getCustomEditors().disable();
+                                // wirisPluginInstance.setMathML('<math/>',true);
+                                console.log('wirisPluginInstance', wirisPluginInstance); 
+                                wirisPluginInstance.updateFormula(mathmlString);
+                            }
+                        } catch (e) {
+                            console.error(e)
+                        }
+                    }
+                };
+                
+            },
+            onSetup: (buttonApi) => {
+                            }
+        });
+    };
     /**
      * Adding button and bind exec command on clicking the button to open the chemistry editor
      * @param {*} editor  editor instance

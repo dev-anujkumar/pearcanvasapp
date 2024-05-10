@@ -16,7 +16,7 @@ export const errorHandler = (err) => {
         case 401:
             console.log('Unauthorized')
             if (!err?.response?.config?.url.includes(config.ALFRESCO_EDIT_METADATA))
-                redirect()
+                // redirect()
             break;
         case 403:
             console.log('This is Approved Content.Please create new version.')
@@ -24,7 +24,7 @@ export const errorHandler = (err) => {
         case 500:
             console.log('Server Error: Please check you token', err.response)
             if (err.response.data.includes("401") || err.response.data.includes("UNAUTHORIZED"))
-                redirect()
+                // redirect()
             break;
         default:
             console.log('Unwanted Error')

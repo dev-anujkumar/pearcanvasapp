@@ -28,8 +28,7 @@ export const EditorConfig = {
           ]
     },
     toolbar: `undo redo | insertMedia | formatSelector | casechange bold italic underline strikethrough removeformat subscript superscript 
-            specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry 
-            code IndexEntry | customListButton customUoListButton indent outdent | slateTag `,
+            specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry convertToWiris code IndexEntry | customListButton customUoListButton indent outdent | slateTag `,
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist  charmap paste casechange",
 }

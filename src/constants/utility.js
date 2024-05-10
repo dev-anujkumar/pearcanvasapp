@@ -1192,4 +1192,14 @@ export const isViewInCypressClickFromCM = () => {
     const src = new URLSearchParams(searchString)
     const isViewInCypress = src?.get('q')
     return isViewInCypress
-  }
+}
+  
+
+export const filterMathmlFromString = (data) => {
+    console.log('data')
+    const pattern = /<math[^>]*>[\s\S]*?<\/math>/g;
+    const content = data?.choices[0]?.message?.content
+    const mathTagContent = content?.match(pattern);
+    console.log('mathTag',mathTagContent)
+    return mathTagContent[0]
+}

@@ -14,7 +14,7 @@ let cypressConfig = {
     CYPRESS_TOC_JAVA_ENDPOINT : `https://pace-${ENV_NAME}.pearson.com/cypress/api/toc/app/toc-javaapp/`,
     prodUrl : 'https://structuredauthoring.pearson.com',
     toolBarList : ['undo', 'redo','insertMedia','formatSelector','casechange', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript',
-                'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist',
+        'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml','convertToWirisIcon','inlinecode', 'IndexEntry', 'orderedlist',
                 'unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
