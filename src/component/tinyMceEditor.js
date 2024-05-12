@@ -2460,72 +2460,71 @@ export class TinyMceEditor extends Component {
             tooltip: "Convert To WIRIS",
             onAction: async function (_) {
                 let imageUrl = ""
-                let base64data = ''
                 let activeSpace = tinymce?.activeEditor?.selection?.getNode();
-                let selectedText = window?.getSelection();
                 imageUrl = activeSpace.getAttribute('src')
                 if (activeSpace.tagName === "IMG" && activeSpace?.classList?.contains("imageAssetContent")) {
-                const imgResponse = await fetch(imageUrl);
-                const blob = await imgResponse.blob();
-                const reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = async () => {
-                    base64data = reader.result;
-                    const payload = {
-                        "messages": [
-                            {
-                                "role": "system",
-                                "content": "You are a helpful assistant."
-                            },
-                            {
-                                "role": "user",
-                                "content": [
-                                    {
-                                        "type": "text",
-                                        "text": "Give the accurate Mathml of this image."
-                                    },
-                                    {
-                                        "type": "image_url",
-                                        "image_url": {
-                                            "url": `${base64data}`
-                                            // "url": `${imageUrl}`
-                                        }
-                                    }
-                                ]
+                    // if (activeSpace.tagName === "IMG") {
+                    // const imgResponse = await fetch(imageUrl);
+                    try {
+                        const response = await axios.post('http://127.0.0.1:5000/process_image', { "image_url": imageUrl}, {
+                            headers: {
+                                // 'api-key': url_openai.api_key,
+                                'Content-Type': 'application/json'
                             }
-                        ],
-                        "max_tokens": 4095,
-                        "stream": false
-                    }
-                    const url_pearson = {
-                        url: 'https://content-gen-gpt-vision.openai.azure.com/openai/deployments/gpt4-vision/chat/completions?api-version=2023-12-01-preview',
-                        api_key: '35456c7bb50a4675a9a1cb04486cd5e2'
-                    }
-                    const url_openai = {
-                        url: 'https://openailm2023eastus2.openai.azure.com/openai/deployments/vision-test/chat/completions?api-version=2023-12-01-preview',
-                        api_key: '87ada06a3562492b88950ea78ab4d02c'
-                    }
-                        try {
-                            const response = await axios.post(url_openai.url, payload, {
-                                headers: {
-                                    'api-key': url_openai.api_key,
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            console.log('response', response)
-                            const mathmlString = await filterMathmlFromString(response.data)
-                            // const mathmlString = `<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mn>32</mn><mn>22</mn></msub></math>`
-                            if (mathmlString) {
-                                var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
-                                wirisPluginInstance.core.getCustomEditors().disable();
-                                // wirisPluginInstance.setMathML('<math/>',true);
-                                console.log('wirisPluginInstance', wirisPluginInstance); 
-                                wirisPluginInstance.updateFormula(mathmlString);
-                            }
-                        } catch (e) {
-                            console.error(e)
+                        })
+                        console.log('response', response)
+                        const mathmlString = response?.data
+                        // const mathmlString = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtable displaystyle="true" rowspacing="3pt" columnspacing="0em 2em"><mtr><mtd columnalign="right"><mi>sin</mi><mi>&#x003B8;</mi></mtd><mtd columnalign="left"><mi /><mo>&#x0003D;</mo><mi>&#x003B8;</mi><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>3</mn></msup></mrow><mrow><mn>3</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>5</mn></msup></mrow><mrow><mn>5</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>7</mn></msup></mrow><mrow><mn>7</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mo>&#x022EF;</mo></mtd></mtr><mtr><mtd columnalign="right"><mi>cos</mi><mi>&#x003B8;</mi></mtd><mtd columnalign="left"><mi /><mo>&#x0003D;</mo><mn>1</mn><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>2</mn></msup></mrow><mrow><mn>2</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>4</mn></msup></mrow><mrow><mn>4</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>6</mn></msup></mrow><mrow><mn>6</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mo>&#x022EF;</mo></mtd></mtr></mtable></mrow></math>`
+                        if (mathmlString) {
+                            var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
+                            wirisPluginInstance.core.getCustomEditors().disable();
+                            // wirisPluginInstance.setMathML('<math/>',true);
+                            console.log('wirisPluginInstance', wirisPluginInstance);
+                            wirisPluginInstance.updateFormula(mathmlString);
                         }
+                    } catch (e) {
+                        console.error(e)
                     }
+                // const blob = await imgResponse.blob();
+                // const reader = new FileReader();
+                // reader.readAsDataURL(blob);
+                // reader.onloadend = async () => {
+                //     base64data = reader.result;
+                //     const payload = {
+                //         "messages": [
+                //             {
+                //                 "role": "system",
+                //                 "content": "You are a helpful assistant."
+                //             },
+                //             {
+                //                 "role": "user",
+                //                 "content": [
+                //                     {
+                //                         "type": "text",
+                //                         "text": "Give the accurate Mathml of this image."
+                //                     },
+                //                     {
+                //                         "type": "image_url",
+                //                         "image_url": {
+                //                             "url": `${base64data}`
+                //                             // "url": `${imageUrl}`
+                //                         }
+                //                     }
+                //                 ]
+                //             }
+                //         ],
+                //         "max_tokens": 4095,
+                //         "stream": false
+                //     }
+                //     const url_pearson = {
+                //         url: 'https://content-gen-gpt-vision.openai.azure.com/openai/deployments/gpt4-vision/chat/completions?api-version=2023-12-01-preview',
+                //         api_key: '35456c7bb50a4675a9a1cb04486cd5e2'
+                //     }
+                //     const url_openai = {
+                //         url: 'https://openailm2023eastus2.openai.azure.com/openai/deployments/vision-test/chat/completions?api-version=2023-12-01-preview',
+                //         api_key: '87ada06a3562492b88950ea78ab4d02c'
+                //     }
+                //     }
                 };
                 
             },
