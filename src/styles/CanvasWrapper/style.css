@@ -218,3 +218,10 @@ h1 sup a{
   font-size: 14px;
   font-family: 'Open Sans', sans-serif;
 }
+
+.chatbox-container {
+  position: absolute;
+    z-index: 999;
+    right: 0;
+    height: 100%;
+}

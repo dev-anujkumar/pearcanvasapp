@@ -8,8 +8,9 @@ import { handleSendMessageAPI, updateChatHistory } from './chatboxAIActions';
 
 const useStyle = makeStyles((theme) => ({
     textboxWrapper: {
-        position: 'fixed !important',
+        // position: 'fixed !important',
         bottom: '0 !important',
+        width: "100%",
     },
     textField: {
         height: '125px !important',

@@ -95,7 +95,7 @@
     margin-left: -10px;
 }
 
-.ai-gen-icon {
+/* .ai-gen-icon {
     background: #0D61A4;
     border-radius: 50%;
     width: 24px;
@@ -106,6 +106,16 @@
     margin-bottom: -13px;
     padding: 3px 0px 0px 3px;
     margin-left: -13px;
+} */
+
+.aiGenIcon {
+    background: #0D61A4;
+    color: white;
+    border-radius: 50%;
+    height: 23px !important;
+    width: 23px !important;
+    padding: 3px 2px 3px 0px !important;
+    margin-left: -8px;
 }
 .container-aside .power-paste-icon, .show-hide-component .power-paste-icon {
     margin-left: -35px;

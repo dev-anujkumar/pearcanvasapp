@@ -277,6 +277,9 @@ export class CanvasWrapper extends Component {
 
                         </div>
                     </div>
+                    <div className='chatbox-container'>
+                        {(this.props.isAIChatboxOpen) && <AIChatbox />}
+                    </div>
                     <div className = "sidebar-panel">
                         {/* pull all sidebar panel */}
                         <CommentsPanel />
@@ -301,9 +304,7 @@ export class CanvasWrapper extends Component {
                                                 showBlocker={this.props.showCanvasBlocker} />
 
                                         }
-                                        else if (this.props.isAIChatboxOpen) { 
-                                            return <AIChatbox />
-                                        } else {
+                                        else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
                                         }
                                     }

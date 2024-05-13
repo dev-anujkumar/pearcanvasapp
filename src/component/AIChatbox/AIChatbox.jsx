@@ -1,11 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { Close } from '@mui/icons-material'
 import './AIChatbox.css'
-import { toggleAIChatbox } from './chatboxAIActions';
 import { makeStyles } from '@mui/styles';
 import Conversation from './Conversation.jsx';
 import PromptBox from './PromptBox.jsx';
+import { ChatboxHeader } from './ChatboxHeader.jsx';
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -21,11 +20,9 @@ const AIChatbox = (props) => {
     const classes = useStyle();
   return (
       <div className="chatbox-wrapper">
+          {/* <div className='draggable'></div> // add draggable option here and give dynamic width to 'chatbox-wrapper' class*/}
           <div className='wrapper-container'>
-              <div className="chatbox-header">
-                  <span className="header-label">Generate Text</span>
-                  <span className="chatbox-close-icon"><Close onClick={() => props?.toggleAIChatbox(false)} /></span>
-              </div>
+                <ChatboxHeader />
               <div className={classes.root}>
                   <Conversation />
                   <PromptBox />
@@ -40,7 +37,6 @@ const mapStateToProps = (state) => {
     }
 }
 const mapActionToProps = {
-    toggleAIChatbox:toggleAIChatbox
 }
 
 export default connect(mapStateToProps, mapActionToProps)(AIChatbox);

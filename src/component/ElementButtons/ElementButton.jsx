@@ -258,10 +258,10 @@ class ElementButton extends Component {
                 break;
             case "ai-gen-icon":
                 buttonJSX = <span className="btn-element power-paste-icon ai-gen-icon " onClick={clickHandlerFn}>
-                    {/* <AutoAwesomeOutlinedIcon 
-                    style={{backgroundColor:'blue', color: 'white', borderRadius:'50%'}} 
-                    />  */opw
-                    {AIChatBox2}
+                    <AutoAwesomeOutlinedIcon 
+                        className='aiGenIcon'
+        />  
+                    {/* {AIChatBox2} */}
                 </span>
                 break;
             case ButtonTypes.ALFRESCO_METADATA:
