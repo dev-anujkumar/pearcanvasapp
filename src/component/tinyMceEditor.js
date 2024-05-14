@@ -2466,6 +2466,7 @@ export class TinyMceEditor extends Component {
                     // if (activeSpace.tagName === "IMG") {
                     // const imgResponse = await fetch(imageUrl);
                     try {
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                         const response = await axios.post('http://127.0.0.1:5000/process_image', { "image_url": imageUrl}, {
                             headers: {
                                 // 'api-key': url_openai.api_key,
@@ -2474,15 +2475,19 @@ export class TinyMceEditor extends Component {
                         })
                         console.log('response', response)
                         const mathmlString = response?.data
-                        // const mathmlString = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtable displaystyle="true" rowspacing="3pt" columnspacing="0em 2em"><mtr><mtd columnalign="right"><mi>sin</mi><mi>&#x003B8;</mi></mtd><mtd columnalign="left"><mi /><mo>&#x0003D;</mo><mi>&#x003B8;</mi><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>3</mn></msup></mrow><mrow><mn>3</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>5</mn></msup></mrow><mrow><mn>5</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>7</mn></msup></mrow><mrow><mn>7</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mo>&#x022EF;</mo></mtd></mtr><mtr><mtd columnalign="right"><mi>cos</mi><mi>&#x003B8;</mi></mtd><mtd columnalign="left"><mi /><mo>&#x0003D;</mo><mn>1</mn><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>2</mn></msup></mrow><mrow><mn>2</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>4</mn></msup></mrow><mrow><mn>4</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x02212;</mo><mfrac><mrow><msup><mi>&#x003B8;</mi><mn>6</mn></msup></mrow><mrow><mn>6</mn><mo>&#x00021;</mo></mrow></mfrac><mo>&#x0002B;</mo><mo>&#x022EF;</mo></mtd></mtr></mtable></mrow></math>`
                         if (mathmlString) {
                             var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
                             wirisPluginInstance.core.getCustomEditors().disable();
                             // wirisPluginInstance.setMathML('<math/>',true);
                             console.log('wirisPluginInstance', wirisPluginInstance);
                             wirisPluginInstance.updateFormula(mathmlString);
+                        } else {
+                            self.props?.wirisAltTextPopup({ showPopup: true, altText: "No MathML  found in the image.", popupFromConverter:true });
                         }
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
                     } catch (e) {
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                        self.props?.wirisAltTextPopup({ showPopup: true, altText: "Error in converting an Image into MathML format.", popupFromConverter: true });
                         console.error(e)
                     }
                 // const blob = await imgResponse.blob();

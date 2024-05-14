@@ -1711,7 +1711,7 @@ class SlateWrapper extends Component {
             return (
                 <PopUp dialogText={this.props.wirisAltText.altText}
                     active={true}
-                    altHeaderText={`Alt Text`}
+                    altHeaderText={this.props?.wirisAltText?.popupFromConverter ? 'Conversion Error': `Alt Text`}
                     togglePopup={this.closeWirisAltTextPopup}
                     altText={true}
                     isInputDisabled={true}
