@@ -191,6 +191,7 @@ export class TinyMceEditor extends Component {
                     /*
                         if content is caused by wiris then call blur
                     */
+                    let self = this
                    const eventTarget = e.target.targetElm
                     if (e.originalEvent && e.originalEvent.command === "mceInsertContent") {
                         let specialCharSpan = document.getElementById('specialChar');
@@ -438,7 +439,18 @@ export class TinyMceEditor extends Component {
                     this.handleOutdent(e, editor, content, this.props.element.type, node)
                     break;
                 case "updateFormula":
-                        editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                    // console.log('formula',e.command)
+                    // const wrapperLoader = parent.document.getElementById("wrapperLoader2")
+                    // const wrapperBlock = parent.document.getElementById("wrapperBlocker")
+                    // wrapperLoader.style.display = "block"
+                    // wrapperBlock.style.display = "block"
+                    // console.log('wrapper',wrapperBlock)
+                    editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                    // setTimeout(() => {
+                    //     wrapperLoader.style.display = "none"
+                    //     wrapperBlock.style.display = "none"
+                    // },3000)
+
                     break;
             }
             if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
@@ -1581,7 +1593,7 @@ export class TinyMceEditor extends Component {
 
             let key = e.keyCode || e.which;
             let isContainsMath = false;
-            let isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes(CLASS_ANSWER_LINE_CONTENT) : false;
+            let isContainsBlankLine = activeElement?.innerHTML.match(/<span/) ? activeElement?.innerHTML.match(/<span/).input.includes(CLASS_ANSWER_LINE_CONTENT) : false;
             if (activeElement) {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA)
                     || activeElement.innerHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)) : false;
@@ -2466,7 +2478,7 @@ export class TinyMceEditor extends Component {
                     // if (activeSpace.tagName === "IMG") {
                     // const imgResponse = await fetch(imageUrl);
                     try {
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true, loaderFromConversion: true } });
                         const response = await axios.post('http://127.0.0.1:5000/process_image', { "image_url": imageUrl}, {
                             headers: {
                                 // 'api-key': url_openai.api_key,
@@ -2484,9 +2496,9 @@ export class TinyMceEditor extends Component {
                         } else {
                             self.props?.wirisAltTextPopup({ showPopup: true, altText: "No MathML  found in the image.", popupFromConverter:true });
                         }
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false, loaderFromConversion: true } });
                     } catch (e) {
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false, loaderFromConversion: true } });
                         self.props?.wirisAltTextPopup({ showPopup: true, altText: "Error in converting an Image into MathML format.", popupFromConverter: true });
                         console.error(e)
                     }

@@ -58,7 +58,7 @@ export const requestConfigURI = () => {
 }
 
 export const sendDataToIframe = (messageObj) => {
-    if(messageObj.type==='ShowLoader'){
+    if (messageObj.type === 'ShowLoader' && !messageObj?.message?.loaderFromConversion){
         /**
          * This code has been written to prevent typing while loader is on
          */

@@ -64,11 +64,11 @@ export const positionListDrop = (event) => {
  * bindKeyDownEvent | binds keydown event on editor instance and handles various scenarios
  */
 export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
-    const anchorNode = editor.selection.getSel().anchorNode;
+    const anchorNode = editor?.selection?.getSel().anchorNode;
     let imgElement = anchorNode && anchorNode.getElementsByTagName ? anchorNode.getElementsByTagName('IMG') : [];
-    const newNode = anchorNode.closest('div.showHide');
-    const _selRange = editor.selection.getRng(true);
-    const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
+    const newNode = anchorNode?.closest('div.showHide');
+    const _selRange = editor?.selection?.getRng(true);
+    const isMultilineSelection = _selRange?.startContainer !== _selRange?.endContainer;
     let listUpdatedOnce = false;
     let isOnlyListElement = element && element.type && element.type === "element-list"
     let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element)
@@ -78,7 +78,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
      * and this happens only when element has only one empty li,
      * then element goes to create new paragraph element next to it
      */
-    if (anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
+    if (anchorNode && anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
             prohibitEventBubling(e);
             createNewParagraphElement(e, editor);
@@ -87,7 +87,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     }
 
     //------- later dependency ----------//
-    if (anchorNode.innerHTML !== '<br>' &&
+    if (anchorNode && anchorNode.innerHTML !== '<br>' &&
         e.target.closest('.divCodeSnippetFigure') &&
         e.target.closest('.code-listing')) {
         return false;
@@ -96,7 +96,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     /**
      * Case - pressing Enter on blank list item
      */
-    if ((anchorNode.tagName === "LI" && !imgElement.length && !anchorNode.textContent) || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
+    if ((anchorNode?.tagName === "LI" && !imgElement.length && !anchorNode?.textContent) || anchorNode?.tagName === "BR" || (nodeNames?.includes(anchorNode?.tagName))) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
 
             // creating new paragraph //
@@ -169,7 +169,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
      * Case - if editor does not contain any list item
      * then perform normal create Para elememt
      */
-    if (editor.targetElm.querySelectorAll('li').length == 0) {
+    if (editor?.targetElm?.querySelectorAll('li').length == 0) {
         if ((e.metaKey && e.which == 13) || (e.which == 13)) {
             prohibitEventBubling(e);
             return false;
@@ -179,7 +179,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     const sel = editor.selection.getSel();
     let atEnd = false;
 
-    if (sel.anchorNode.data && sel.anchorNode.data.length == sel.focusOffset) {
+    if (sel?.anchorNode?.data && sel?.anchorNode?.data?.length == sel.focusOffset) {
         atEnd = true;
     }
 
@@ -187,7 +187,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
      * Facilitate indent feature at end of text on TAB key
      */
     if (atEnd && e.which == 9 && !e.shiftKey) {
-        isOnlyListElement && editor.editorCommands.commands.exec.indent();      // In case of List
+        isOnlyListElement && editor?.editorCommands?.commands?.exec.indent();      // In case of List
         !isOnlyListElement && editor.execCommand('indent')                      // Other then List
     }
     /**
