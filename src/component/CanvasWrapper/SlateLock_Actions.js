@@ -245,4 +245,5 @@ export const releaseSlateLockOnTabClose = (projectUrn, slateId, currentUserDetai
         body: JSON.stringify(data),
         keepalive: true
     });
+    return {type:'abc'}
 }

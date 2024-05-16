@@ -34,6 +34,10 @@ export const publishContent = function (type,message) {
     else {
         publishTitle(projectURN,firstSlate,citeURN, undefined, true, type);
     }
+    return {
+        type: type,
+        payload:message
+    }
 }
 let storageExist = ("sessionStorage" in window && window.sessionStorage);
 /**
