@@ -10,16 +10,16 @@ import { pastePostProcess } from '../PowerPasteElement/PowerPasteElement.jsx';
 
 const useStyle = makeStyles((theme) => ({
     addSlateButton: {
-        border: 'none !important',
+        border: '1px solid #367ABF !important',
         fontSize: '14px !important',
         fontWeight: '600 !important',
         fontFamily: 'Open Sans !important',
         color: '#0D61A4 !important',
         textTransform: 'none !important',
-        margin: '0px 4px 4px 60px !important',
+        margin: '0px 12px 12px 52px !important',
         // color: 'rgba(25, 28, 30, 0.50)',
         '&:hover': {
-            border: 'none !important',
+            // border: 'none !important',
             background: '#EAF1FF !important',
         }
     },

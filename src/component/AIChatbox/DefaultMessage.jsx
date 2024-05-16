@@ -23,33 +23,39 @@ const useStyles = makeStyles((theme) => ({
         margin:'8px 2px 8px 2px !important'
     },
     paceAIIntro: {
+        fontSize: '18px !important',
+        fontFamily: 'Open Sans !important',
+        color: '#354A53 !important',
+        fontWeight:'400 !important'
+    },
+    examplePromptList: {
         fontSize: '14px !important',
         fontFamily: 'Open Sans !important',
+        color: '#354A53 !important',
+        fontWeight: '400 !important',
+        listStyle:'inherit !important'
+    },
+    usageDirection: {
+        fontSize: '14px !important',
+        fontFamily: 'Open Sans !important',
+        color: '#354A53 !important',
+        fontWeight: '400 !important',
     }
 }))
 const DefaultMessage = () => {
     const classes = useStyles()
   return (
       <Box>
-          <Typography className={classes.paceAIIntro}>Welcome to the PAICE Assistant for content generation. Explore AI-powered tools to enhance your writing experience. Prompt history will be discarded when switching slates.</Typography>
-          <Chip
-              variant='outlined'
-              className={classes.defaultMessage}
-              label="Try starting a new paragraph."
-              color='primary'
-          />
-          <Chip
-              variant='outlined'
-              className={classes.defaultMessage}
-              label="Generate ideas for your slate."
-              color='primary'
-          />
-          <Chip
-              variant='outlined'
-              className={classes.defaultMessage}
-              label="Explore AI-generated content for inspiration."
-              color='primary'
-          />
+          <Typography className={classes.paceAIIntro}>Get started using AI in Cypress</Typography>
+          <br/>
+          <Typography className={classes.usageDirection}>Provide a prompt and we’ll generate text you can add directly to your Slate.</Typography>  
+            <br/>
+          <Typography className={classes.usageDirection}>Example prompts:</Typography>
+          <ul className={classes.examplePromptList}>
+              <li>Summarize the stages of the water cycle and their importance in ecosystems.</li>
+              <li>Explain the supply and demand principles in economics.</li>
+              <li>Analyze the symbolism in 'The Great Gatsby' by F. Scott Fitzgerald.</li>
+          </ul>
     </Box>
   )
 }

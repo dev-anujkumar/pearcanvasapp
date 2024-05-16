@@ -4,7 +4,7 @@ import { Close } from '@mui/icons-material'
 import { makeStyles } from '@mui/styles';
 import { toggleAIChatbox } from './chatboxAIActions';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import { Tooltip } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
     helpIcon: {
@@ -17,13 +17,15 @@ const useStyles = makeStyles((theme) => ({
         width: '20px !important',
         margin: '6px !important'
     },
-    tooltip: {
+    tooltipContent: {
         fontSize: "14px !important",
-        fontWeight: '400 !important'
+        fontWeight: '400 !important',
+        color:'#FFF',
+        
     }
 }))
 
-export const ChatboxHeader = (props) => {
+const ChatboxHeader = (props) => {
     const classes = useStyles();
     return (
         <div className="chatbox-header">
@@ -33,9 +35,10 @@ export const ChatboxHeader = (props) => {
             </div>
             <div className='header-icons'>
                 <Tooltip
-                    title="Ai Help"
+                    title={<Typography className={classes.tooltipContent}>Ai Help</Typography> }
                     placement='bottom'
-                    className={classes.tooltip}
+                    sx={{top:'0px !important'}}
+                    // className={classes.tooltip}
                 >
                     <HelpOutlineRoundedIcon className={classes.helpIcon} />
                 </Tooltip>

@@ -52,7 +52,7 @@
 
 .ai-message-wrapper {
     width: 210px;
-    border: 1px solid #367ABF;
+    background:  #EAF1FF;
     border-radius: 0px 8px 8px 8px;
     margin-top: 8px;
     display: flex;
@@ -82,11 +82,11 @@
 
 }
 .chatbox-with-banner {
-    height: 53% !important;
+    height: 40% !important;
 }
 
 .chatbox-without-header {
-    height: 67% !important;
+    height: 59% !important;
 }
 
 .draggable {

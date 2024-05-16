@@ -24,8 +24,8 @@ const initalData = [{
 }
 ]
 const INITIAL_STATE = {
-    isAIChatboxOpen: false,
-    chatHistory: []
+    isAIChatboxOpen: true,
+    chatHistory: [...initalData]
 }
 
 const INITIAL_ACTION = {
